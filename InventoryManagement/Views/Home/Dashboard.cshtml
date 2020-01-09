@@ -1,0 +1,299 @@
+﻿@model InventoryManagement.Entity.Common.Dashboard
+@using InventoryManagement.Entity.Common
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string CurrentUsername = (Session["LoginUser"] as User).UserName;
+    string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+    string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
+}
+
+
+<style type="text/css">
+    .boxhover :hover{
+        border-color: blue; /* make this whatever you want */
+}
+ </style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".preloader").hide();
+        $('#TodayPurchase').on('click', function (event) {
+            if ('@CurrentPartyCode' == "WR")
+            {
+                window.location.href = "/Report/PurchaseSummary?DirectView=D";    
+            }
+            else
+            {
+                window.location.href = "/Report/SalesReport?DirectView=D&Buyer=Current";
+            }
+        });
+
+        $('#MonthPurchase').on('click', function (event) {
+            if ('@CurrentPartyCode' == "WR") {
+                window.location.href = "/Report/PurchaseSummary?DirectView=M";
+            }
+            else {
+                window.location.href = "/Report/SalesReport?DirectView=M&Buyer=Current";
+            }
+        });
+
+        //$('#TodaySaleAssociate').on('click', function (event) {
+        //    window.location.href = "/Report/ProductTransferById?DirectView=D";
+        //});
+
+        //$('#MonthSaleAssociate').on('click', function (event) {
+        //    window.location.href = "/Report/ProductTransferById?DirectView=M";
+        //});
+
+        $('#TodaySaleFranchise').on('click', function (event) {                        
+            window.location.href = "/Report/SalesReport?DirectView=D&SoldBy=NotAdmin";
+        });
+
+        $('#MonthSaleFranchise').on('click', function (event) {
+            window.location.href = "/Report/SalesReport?DirectView=M&SoldBy=NotAdmin";
+        });
+
+        $('#TodaySaleToFranchise').on('click', function (event) {
+            window.location.href = "/Report/SalesReport?DirectView=D&Franchise=1&SoldBy=Current";
+        });
+
+        $('#MonthSaleToFranchise').on('click', function (event) {
+            window.location.href = "/Report/SalesReport?DirectView=M&Franchise=1&SoldBy=Current";
+        });
+        
+        $('#TodaySaleToAssociate').on('click', function (event) {
+            window.location.href = "/Report/SalesReport?DirectView=D&Associate=1&SoldBy=Current";
+        });
+
+        $('#MonthSaleToAssociate').on('click', function (event) {
+            window.location.href = "/Report/SalesReport?DirectView=M&Associate=1&SoldBy=Current";
+        });
+    });
+</script>
+<div class="row">
+
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Dashboard</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+                        
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <h2><span>Welcome @CurrentUsername (@CurrentPartyName) !!</span></h2>
+                   
+                    @if (Model != null)
+                    {
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="TodayPurchase">
+                        <div class="x_panel">
+                                <div class="x_title">
+                                    <h2 class="text-info">Today's Purchase </h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <p>
+                                       @Model.TodayPurchase                                                                    
+                                    </p>
+                                </div>
+                        </div>
+                    </div>
+                    if (CurrentPartyCode == "WR")
+                    {
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="TodaySaleToFranchise">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2 class="text-info">Today's Sale to Franchise </h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <p>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                @Model.TodaysSaletoFr                                            
+                                            </div><div class="col-lg-6" style="text-align:right;padding-right:0px">
+                                                      <a href="/Transaction/PartyBill"><b>New Bill</b></a>
+                                            </div>
+
+                                        </div>
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="TodaySaleToAssociate">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2 class="text-info">Today's Sale to Associate </h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <p>
+                                        <div class="col-lg-12">
+                                            <div class="col-lg-6">
+                                                @Model.TodaysSaletoDr                                               
+                                            </div><div class="col-lg-6" style="text-align:right;padding-right:0px">
+                                                      <a href="/Transaction/DistributorBill"><b> New Bill</b></a>
+                                            </div>
+
+                                        </div>
+
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="TodaySaleFranchise">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2 class="text-info">Today's Franchise Sale</h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <p>
+                                        @Model.TodaysFrSale                                       
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="TodaySaleAssociate" style="display:none">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2 class="text-info">Today's Associate Sale</h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    @Model.TodaysDrSale                                    
+                                </p>
+                            </div>
+                        </div>
+                    </div> 
+                    }
+                        else
+                        {
+                       <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="TodaySaleFranchise">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2 class="text-info">Today's Sale</h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    @Model.TodaysFrSale                                   
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                        }
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="MonthPurchase">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2 class="text-info">This Month Purchase </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    @Model.MonthPurchase
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+if (CurrentPartyCode == "WR")
+{
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="MonthSaleToFranchise">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2 class="text-info">This Month Sale to Franchise</h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    @Model.MonthSaletoFr                                      
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="MonthSaleToAssociate">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2 class="text-info">This Month Sale to Associate </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    @Model.MonthSaletoDr                                 
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="MonthSaleFranchise">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2 class="text-info">This Month Franchise Sale </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    @Model.MonthFrSale
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="MonthSaleAssociate" style="display:none">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2 class="text-info">This Month Associate Sale </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    @Model.MonthDrSale
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+}
+else
+{
+    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12 boxhover" id="MonthSale">
+        <div class="x_panel">
+            <div class="x_title">
+                <h2 class="text-info">This Month Sale </h2>
+                <div class="clearfix"></div>
+            </div>
+            <div class="x_content">
+                <p>
+                    @Model.MonthFrSale
+                </p>
+            </div>
+        </div>
+    </div>
+}
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2 class="text-info">Wallet Balance </h2>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <p>
+                                    @Model.WalletBal   
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6e03417a89da46cebeda9110b63f6fd5" Name="Diagram1" ZoomLevel="48">
+        <EntityTypeShape EntityType="InventoryModel.Inv_M_UserMaster" Width="1.5" PointX="7.375" PointY="32.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_BankMaster" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_BarCodeMaster" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_CatMaster" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_FiscalMaster" Width="1.5" PointX="6.75" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_GroupMaster" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_LedgerMaster" Width="1.5" PointX="8.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_PayModeMaster" Width="1.5" PointX="10.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_TaxMaster" Width="1.5" PointX="4.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.TrnStockJv" Width="1.5" PointX="0.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_NewHOVersionInfo" Width="1.5" PointX="16.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_SessnMaster" Width="1.5" PointX="16.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.TrnPayModeMaster" Width="1.5" PointX="18.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="InventoryModel.M_SubCatMaster" Width="1.5" PointX="21.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_CityStateMaster" Width="1.5" PointX="0.75" PointY="21.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_StateDivMaster" Width="1.5" PointX="21.75" PointY="12.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_InwardData" Width="1.5" PointX="21.375" PointY="16.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_InwardMain" Width="1.5" PointX="3.375" PointY="23.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_InwardDetail" Width="1.5" PointX="23.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.V_MonthWiseSaleSummary" Width="1.5" PointX="23.375" PointY="16.75" />
+        <EntityTypeShape EntityType="InventoryModel.V_MonthWiseSupplierPurchaseSummary" Width="1.5" PointX="9.375" PointY="24.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnPartyOrderDetail" Width="1.5" PointX="23.375" PointY="24.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnPartyOrderMain" Width="1.5" PointX="25.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.Web_M_MenuMaster" Width="1.5" PointX="25.375" PointY="12.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_ProductMaster" Width="1.5" PointX="25.375" PointY="17.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnBillData" Width="1.5" PointX="11.375" PointY="4.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnBillDetail" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnBillMain" Width="1.5" PointX="5.375" PointY="16.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_CompanyMaster" Width="1.5" PointX="17.375" PointY="20.75" />
+        <EntityTypeShape EntityType="InventoryModel.Im_CurrentStock" Width="1.5" PointX="13.375" PointY="21.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnPayModeDetail" Width="1.5" PointX="0.75" PointY="26.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnVoucher" Width="1.5" PointX="27.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.Inv_TempUserMaster" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.TempSalesReturnDetail" Width="1.5" PointX="27.375" PointY="25.75" />
+        <EntityTypeShape EntityType="InventoryModel.TempSalesReturnMain" Width="1.5" PointX="13.375" PointY="28.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_ConfigMaster" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.TargetDetail" Width="1.5" PointX="0.75" PointY="12.75" />
+        <EntityTypeShape EntityType="InventoryModel.TargetMaster" Width="1.5" PointX="15.75" PointY="7.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnSalesReturnDetail" Width="1.5" PointX="27.375" PointY="8.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnSalesReturnMain" Width="1.5" PointX="29.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnPurchaseReturnDetail" Width="1.5" PointX="29.375" PointY="8.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnPurchaseReturnMain" Width="1.5" PointX="15.375" PointY="29.75" />
+        <EntityTypeShape EntityType="InventoryModel.TrnOrderDeliveryDetail" Width="1.5" PointX="27.375" PointY="18.75" />
+        <EntityTypeShape EntityType="InventoryModel.OLDBillDetail" Width="1.5" PointX="29.375" PointY="18.75" />
+        <EntityTypeShape EntityType="InventoryModel.OLDBillMain" Width="1.5" PointX="29.375" PointY="23.75" />
+        <EntityTypeShape EntityType="InventoryModel.MakeKit" Width="1.5" PointX="29.375" PointY="27.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_CourierDetails" Width="1.5" PointX="31.375" PointY="6.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_CourierMaster" Width="1.5" PointX="31.375" PointY="10.75" />
+        <EntityTypeShape EntityType="InventoryModel.WalletReq" Width="1.5" PointX="31.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_GrpPermissionMaster" Width="1.5" PointX="31.375" PointY="14.75" />
+        <EntityTypeShape EntityType="InventoryModel.DeletedBillDetail" Width="1.5" PointX="31.375" PointY="27.75" />
+        <EntityTypeShape EntityType="InventoryModel.V_DeletedSaleSummary" Width="1.5" PointX="31.375" PointY="17.75" />
+        <EntityTypeShape EntityType="InventoryModel.VisionOffer" Width="1.5" PointX="17.375" PointY="29.75" />
+        <EntityTypeShape EntityType="InventoryModel.VisionOfferProduct" Width="1.5" PointX="33.375" PointY="0.75" />
+        <EntityTypeShape EntityType="InventoryModel.V_BillWiseSaleSummary" Width="1.5" PointX="7.375" PointY="11.75" />
+  <EntitySetMapping Name="V_PartyBalance">
+            <EntityTypeMapping TypeName="InventoryModel.V_PartyBalance">
+              <MappingFragment StoreEntitySet="V#PartyBalance">
+                <ScalarProperty Name="Balance" ColumnName="Balance" />
+                <ScalarProperty Name="DrAmt" ColumnName="DrAmt" />
+                <ScalarProperty Name="CrAmt" ColumnName="CrAmt" />
+                <ScalarProperty Name="StateCode" ColumnName="StateCode" />
+                <ScalarProperty Name="UserPartyCode" ColumnName="UserPartyCode" />
+                <ScalarProperty Name="CityName" ColumnName="CityName" />
+                <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
+                <ScalarProperty Name="PartyCode" ColumnName="PartyCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        <EntityTypeShape EntityType="InventoryModel.Web_M_UserPermissionMaster" Width="1.5" PointX="7.375" PointY="21.75" />
+ <EntityTypeShape EntityType="InventoryModel.V_PartyBalance" Width="1.5" PointX="0.75" PointY="33.75" />
+        <EntityTypeShape EntityType="InventoryModel.M_LogMaster" Width="1.5" PointX="3.1297057006180777" PointY="12.354670366437487" />
+        <EntityTypeShape EntityType="InventoryModel.V_CurrentStockDetailNotForStockist" Width="1.5" PointX="7.9895566198926211" PointY="8.207894492991219" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

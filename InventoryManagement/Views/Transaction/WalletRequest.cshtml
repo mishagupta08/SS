@@ -1,0 +1,511 @@
+﻿@model InventoryManagement.Entity.Common.WalletRequest
+@using InventoryManagement.Entity.Common
+@{
+    ViewBag.Title = "WalletRequest";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+    string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
+}
+
+
+<style>
+    .ui-widget-header {
+        margin-top: -1% !important;
+        width: 102% !important;
+        margin-left: -1% !important;
+    }
+
+    .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: scroll !important;
+    }
+
+    .ui-dialog-titlebar-close {
+        margin-right: 1% !important;
+    }
+
+    .ui-widget-content {
+        background: white !important;
+        border-radius: 15px !important;
+        -webkit-border-radius: 4px !important;
+    }
+
+    ui-autocomplete-input {
+        z-index: 100;
+    }
+
+    .input-readonly {
+        background-color: #EBEBE4;
+    }
+</style>
+<script type="text/javascript">
+    function replaceAll(txt, replace, withThis) {
+        return txt.replace(new RegExp(replace, 'g'), withThis);
+    }
+    function postwithCode(tar, to, p) {
+        debugger;
+        var myForm = document.createElement("form");
+        myForm.method = "post";
+        myForm.target = tar;
+        myForm.action = to;
+        var arr = p.split(",");
+        for (var i = 0; i < arr.length; i++) {
+            var inArr = arr[i];
+            var secArr = inArr.split(":");
+            var myInput = document.createElement("input");
+            myInput.setAttribute("name", replaceAll(secArr[0].replace("{", ""), "'", ""));
+            myInput.setAttribute("value", replaceAll(secArr[1].replace("}", ""), "'", ""));
+            myForm.appendChild(myInput);
+        }
+        document.body.appendChild(myForm);
+        myForm.submit();
+        document.body.removeChild(myForm);
+    }
+    var FromDate = "";
+    var formdata;
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var PaymodeArray = [{ "PID": "", "Paymode": "", "TransNoLbl": "", "TransDateLbl": "", "IsBankDtl": "", "IsBranchDtl": "", "BankType": "" }]
+    var BankArray = [{ "BankCode":"0", "BankName": "", "BankType":"", "IsPayTmType":"" }];
+    var SizeOfImage;
+    $(document).ready(function () {
+        $(".preloader").hide();
+        GetBanks();
+        GetPaymodes();
+        var reqBy = '@CurrentPartyCode';
+        $("#ReqBy").val(reqBy);
+        $("#Paymode").on('change', function () {
+            var Pymode = $("#Paymode").find("option:selected").text();
+            $("#hdnPaymode").val(Pymode);
+            var PyId = $("#Paymode").find("option:selected").val();
+            $("#hdnPID").val(PyId);
+           
+            for (var i = 0; i < PaymodeArray.length; i++) {
+                if (PaymodeArray[i].PID == PyId) {
+                    $('#dvTransNo').hide();
+                    $('#dvTransDate').hide();
+                    $("#ChqNo").prop('required', false);
+                    $("#ChqDate").prop('required', false);
+                    $('#BankID').prop('required', false);
+                    $('#BranchName').prop('required', false);
+                    $("#ReqBy").val(reqBy);
+                    var bankType=PaymodeArray[i].BankType;
+                    fillBankList(bankType);
+                    if (PaymodeArray[i].TransNoLbl != "") {
+                        $('#dvTransNo').show();                        
+                        $("#ChqNo").prop('required', true);
+                        $("#lblTransNo").text(PaymodeArray[i].TransNoLbl)
+                    }
+                    if (PaymodeArray[i].TransDateLbl != "") {
+                        $('#dvTransDate').show();
+                        $("#ChqDate").prop('required', true);                        
+                        $("#lblTransDate").text(PaymodeArray[i].TransDateLbl)
+                    }
+                    if (PaymodeArray[i].IsBankDtl == "Y") {
+                        $('#dvBank').show();
+                        $('#BankID').prop('required', true);
+                    }
+                    else {
+                        $('#dvBank').hide();
+                        $('#BankID').prop('required', false);
+                    }                       
+                    if (PaymodeArray[i].IsBranchDtl == "Y")
+                    {
+                        $('#dvBranch').show();
+                        $('#BranchName').prop('required', true);
+                    }
+                    else
+                    {
+                        $('#dvBranch').hide();
+                        $('#BranchName').prop('required', false);
+                    }
+                 break;
+                }
+            }
+        });
+
+        $("#BankID").on('change', function () {
+            var BankNm = $("#BankID").find("option:selected").text();
+            var BankID = $("#BankID").find("option:selected").val();
+            $("#hdnBankCode").val(BankID);
+            $("#hdnBankName").val(BankNm);
+        });
+        $("#ChqDate").datetimepicker({
+            format: 'DD-MMM-YYYY'
+        ,            
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+        }).on('dp.change', function (e) {           
+            var selectedDate = e.date._d;            
+            var lengthOfMonth = ((selectedDate.getMonth() + 1).toString()).length;            
+            var twoDigitMonth = (lengthOfMonth > 1) ? (selectedDate.getMonth() + 1) : '0' + (selectedDate.getMonth() + 1);
+            var newFromDate = selectedDate.getDate() + "-" + months[selectedDate.getMonth()] + "-" + selectedDate.getFullYear();            
+            FromDate = newFromDate;                
+            ToDate = newFromDate;
+        });
+        $("form[name=WalletReqForm]").unbind("submit");
+        $("form[name=WalletReqForm]").bind('submit', function (e) {
+
+            formdata = new FormData($("#WalletReqForm")[0]);
+            postwithCode("_self", "test.aspx", "UniQID:M5atFxiqlc3XGMqzoZBh,regid:415731,amount:657,Mobile:9828669575,shpcharge:57,scmemtype:ExistMember,email:khushbujajoo@gmail.com,coupon:");
+        });
+
+        $('#upload').bind('change', function () {
+            if (this.files && this.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#ProductImage').attr('src', e.target.result);
+                }
+
+                reader.readAsDataURL(this.files[0]);
+                console.log("Size of file:", this.files[0].size);
+                SizeOfImage = this.files[0].size;
+            }
+        });
+    });
+
+    function GetPaymodes()
+    {
+        PaymodeArray = [{}];
+        $.ajax({
+            url: '@Url.Action("GetMPaymodes", "Transaction")',
+            type: 'POST',
+            datatype: "json",
+            success: function (objResult) {
+                console.log("Resp:",objResult);
+                if (objResult!=null) {
+                $("#Paymode").empty();                
+                console.log("Response: ", objResult);
+                //var s = objResult.split("~");
+                //var paymodes = s[0].split(",");
+                //var pids = s[1].split(",");
+               // $("#Paymode").append(" <select name='Paymode' id='Paymode' tabindex='4' required='required' class='form-control col-md-7 col-xs-12'>");
+                for (var i = 0; i < objResult.length; i++) {
+                    PaymodeArray.push({ "PID": objResult[i].PID, "Paymode": objResult[i].Paymode, "TransNoLbl": objResult[i].TransNoLbl, "TransDateLbl": objResult[i].TransDateLbl, "IsBankDtl": objResult[i].IsBankDtl, "IsBranchDtl": objResult[i].IsBranchDtl, "BankType": objResult[i].BankType });
+                    $("#Paymode").append("<option value='" + objResult[i]["PID"].toString() + "' title='" + objResult[i]["Paymode"] + "'>" + objResult[i]["Paymode"] + "</option>");
+                }
+                 
+                }
+                //else
+                //    alert("Error!!");
+                }
+            });
+    }
+
+    function GetBanks() {
+        BankArray = [{}];
+        $.ajax({
+            url: '@Url.Action("GetMBanks", "Transaction")',
+            type: 'POST',
+            datatype: "json",
+            success: function (objResult) {
+                console.log("Resp:", objResult);
+                if (objResult != null) {
+                    $("#BankID").empty();
+                    console.log("Response: ", objResult);
+                    for (var i = 0; i < objResult.length; i++) {
+                        BankArray.push({ "BankCode": objResult[i].BankCode, "BankName": objResult[i].BankName, "BankType": objResult[i].BankType, "IsPayTmType": objResult[i].IsPayTmType });
+                        $("#BankID").append("<option value='" + objResult[i]["BankCode"].toString() + "' title='" + objResult[i]["BankName"] + "'>" + objResult[i]["BankName"] + "</option>");
+                    }
+                }
+                //else
+                //    alert("Error!!");
+            }
+        });
+    }
+    function fillBankList(BankType)
+    {
+        $("#BankID").empty();
+        for (var i = 1; i < BankArray.length; i++) {
+            if ((BankType == "N" && BankArray[i].IsPayTmType != "N" && BankArray[i].BankType=="C") || (BankType == "C" && BankType == BankArray[i].BankType) || BankType == "")
+            $("#BankID").append("<option value='" + BankArray[i]["BankCode"] + "' title='" + BankArray[i]["BankName"] + "'>" + BankArray[i]["BankName"] + "</option>");
+        }
+    }
+    function SaveBill() {
+        var sizeInMb = parseInt(parseInt(parseInt(SizeOfImage) / 1024) / 1024);
+        var ErrorFlag=false;
+        var Amount = $("#Amount").val();
+        if (sizeInMb > 4) {
+            OpenDialog("dialogMessage", "Image size should be less than 4 MB.", "false");
+            ErrorFlag = true;
+        }
+        if (Amount <= 0) {
+            OpenDialog("dialogMessage", "Please enter valid Amount.", "false");
+            ErrorFlag = true;
+        }
+        
+        console.log("form data = > " + formdata);
+        if (ErrorFlag == false) {
+            $("#btnSave").attr("disabled", true);
+            $.ajax({
+                url: '@Url.Action("SaveWalletRequest", "Transaction")',
+                type: 'POST',
+                data: formdata,
+                processData: false,
+                contentType: false,
+                async: false,
+                dataType: "json",
+                success: function (objResponse) {
+                    //$("#btnSave").attr("disabled", false);
+                    $("#btnSave").removeAttr("disabled");
+                    if (objResponse != null) {
+                        if (objResponse.ResponseStatus == "OK") {
+                           // console.log("BillNo", BillNo);
+                            //  openBill(BillNo, SoldBy);
+                            ResetControls();
+                            //   window.location.href = 
+                            OpenDialog("dialogMessage", "Wallet Request sent successfully!.", "false");
+                        }
+                        else {
+                            OpenDialog("dialogMessage", "Please try later.", "false");
+                        }
+                    }
+                },
+                error: function (xhr) {
+                    //  return false;
+                    console.log(xhr);
+                    console.log("Save Error:" );
+                }
+            });
+        }
+        $("#btnSave").attr("disabled", false);
+    }
+
+    function ResetControls()
+    {
+      
+        $("#Amount").val('0');
+        $("#ChqNo").val('');
+        $("#ChqDate").val('');
+        $("#BranchName").val('');
+        $("#Remarks").val('');
+    }
+
+    function OpenDialog(dialogId, Message, isConfirmation) {
+        $("#" + dialogId).empty();
+        $("#" + dialogId).append('<p>' + Message + '</p>');
+        if (isConfirmation == "true") {
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "Yes",
+                    id: "btnYes" + dialogId,
+                    click: function () {
+                        IsYes = true;
+                        $("#" + dialogId).dialog("close");
+
+
+                    }
+                },
+                {
+                    text: "No",
+                    id: "btnNo" + dialogId,
+                    click: function () {
+                        IsYes = false;
+                        $("#" + dialogId).dialog("close");
+                    }
+                }
+                ]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+        else {
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "OK",
+                    id: "btn" + dialogId,
+                    click: function () {
+                        $("#" + dialogId).dialog("close");
+                    }
+                }]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+    }
+</script>
+
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Transaction</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Wallet Request</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <form id="WalletReqForm" method="post" name="WalletReqForm" onsubmit="false" class="form-horizontal form-label-left">
+                        @Html.HiddenFor(m => m.ReqBy, new { name = "ReqBy", id = "ReqBy" })
+                        @Html.HiddenFor(m => m.BankID, new { name = "hdnBankCode", id = "hdnBankCode" })
+                        @Html.HiddenFor(m => m.BankName, new { name = "hdnBankName", id = "hdnBankName" })
+                        @Html.HiddenFor(m => m.PID, new { name = "hdnPID", id = "hdnPID" })
+                        @Html.HiddenFor(m => m.Paymode, new { name = "hdnPaymode", id = "hdnPaymode" })
+                        <div class="col-lg-12">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Amount
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.TextBoxFor(m => m.Amount, new { id = "Amount", @class = "form-control col-md-7 col-xs-12", @required = "required", @type= "number", name = "Amount" })
+                                        @*<select name="kitId" id="kitId" tabindex="3" required="required" class="form-control col-md-7 col-xs-12">
+                                @foreach (var record in Model.kitlist)
+                                {
+                                    <option value="@record.kitId" data-productId="@record.productId">@record.kitName</option>
+                                }
+                            </select>*@
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Paymode
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;" id="dvPaymodes">
+                                        <select name="Paymode" id="Paymode" tabindex="4" required="required" class="form-control col-md-7 col-xs-12"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12" id="dvTransNo">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label id="lblTransNo" class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Transaction No.
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.TextBoxFor(m => m.ChqNo, new { name = "ChqNo", id = "ChqNo", tabindex = "6", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12" id="dvTransDate">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label id="lblTransDate" class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Transaction Date
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.TextBoxFor(m => m.ChqDate, new { name = "ChqDate", id = "ChqDate", tabindex = "6", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12" id="dvBank">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label id="lblBank" class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Bank Name
+                                    </label>
+                                    @*<div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.DropDownListFor(m => m.BankID, ViewBag.BankNames as IEnumerable<SelectListItem>, new { tabindex = "8", @class = "form-control", @name = "BankID", @id = "BankID" })
+                                    </div>*@
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        <select name="BankID" id="BankID" tabindex="4" required="required" class="form-control col-md-7 col-xs-12"></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12" id="dvBranch">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label id="lblBranch" class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Branch Name
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.TextBoxFor(m => m.BranchName, new { name = "BranchName", id = "BranchName", tabindex = "10", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12" id="dvBranch1">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                        Choose Image
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        <input type="file" id="upload" name="upload"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                       
+
+                        <div class="col-lg-12">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Remarks
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.TextBoxFor(m => m.Remarks, new { name = "Remarks", id = "Remarks", tabindex = "15", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-lg-12">
+
+                            <div class="form-group">
+                                <div class="col-lg-12">
+                                    <div class="col-lg-6">&nbsp;</div>
+                                    <div class="col-lg-4">
+
+                                        <input type="submit" id="btnSave" name="btnSave" data-type="save" value="Save" class="btn btn-success" />
+                                        <input type="button" id="btnCancel" name="btnCancel" data-type="Cancel" class="cancel btn btn-success" value="Cancel" />
+
+                                    </div>
+                                    <div class="col-lg-3">&nbsp;</div>
+                                </div>
+                                <br /><br /><center><div class="loader" style="display:none"></div></center>
+
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="dialogMessage" title="Message">
+
+    </div>
+
+</div>
+
+

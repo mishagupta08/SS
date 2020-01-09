@@ -1,0 +1,263 @@
+﻿@model InventoryManagement.Entity.Common.SalesReport
+@using InventoryManagement.Common
+@{
+    ViewBag.Title = "Offer Detail Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .ui-widget-header {
+        margin-top: -1% !important;
+        width: 102% !important;
+        margin-left: -1% !important;
+    }
+
+    .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: scroll !important;
+    }
+
+    .ui-dialog-titlebar-close {
+        margin-right: 1% !important;
+    }
+
+    .ui-widget-content {
+        background: white !important;
+        border-radius: 15px !important;
+        -webkit-border-radius: 4px !important;
+    }
+    /*.ui-widget-header .ui-icon {
+        background-color: black!important;
+    }*/
+    ui-autocomplete-input {
+        z-index: 100;
+    }
+
+    .input-readonly {
+        background-color: #EBEBE4;
+    }
+</style>
+<script type="text/javascript">
+    var grid, dialog;
+    var IsYes = false;
+    var SummGrid = [{}];
+    var SalesType = "BillWise";
+    var IsParty = false;
+    var PartyList = [];
+    var FullPartyList;
+    var mnth1, mnth2, mnth3, mnth4, mnth5, mnth6;
+    $(document).ready(function () {
+      
+        $(".preloader").hide();
+        $("#hiddenInvoiceType").val("");
+        $("#Sessn").change(function () {
+            var SelectedVal = $("#Sessn").val();
+            $("#SessID").val(SelectedVal);
+            mnth1 = (parseFloat(SelectedVal) - 5).toString();
+            mnth1 = $("#Sessn [value=" + mnth1 + "]").text();
+            mnth2 = (parseFloat(SelectedVal) - 4).toString();
+            mnth2 = $("#Sessn [value=" + mnth2 + "]").text();
+            mnth3 = (parseFloat(SelectedVal) - 3).toString();
+            mnth3 = $("#Sessn [value=" + mnth3 + "]").text();
+            mnth4 = (parseFloat(SelectedVal) - 2).toString();
+            mnth4 = $("#Sessn [value=" + mnth4 + "]").text();
+            mnth5 = (parseFloat(SelectedVal) - 1).toString();
+            mnth5 = $("#Sessn [value=" + mnth5 + "]").text();
+            mnth6 = parseFloat(SelectedVal).toString();
+            mnth6 = $("#Sessn [value=" + mnth6 + "]").text();
+            console.log("mnth1", mnth1);
+            onsole.log("mnth2", mnth2);
+            onsole.log("mnth5", mnth5);
+            onsole.log("mnth6", mnth6);
+        });
+
+
+        $("#btnExport").on('click', function () {
+            //var tableToExcel = new TableToExcel();
+            // tableToExcel.render("grid");
+            var UserTypeStr = "BillWiseSalesReport";
+            console.log("in export gridExport", SummGrid);
+            var tableString = "<thead><tr>";
+            tableString += "<th>S.No.</th>";
+            tableString += "<th>ID No.</th>";
+            tableString += "<th>Name</th>";
+            tableString += "<th>City</th>";
+            tableString += "<th>Mobile No.</th>";
+            tableString += "<th>"+ mnth1 +"</th>";
+            tableString += "<th>" + mnth2 + "</th>";
+            tableString += "<th>" + mnth3 + "</th>";
+            tableString += "<th>" + mnth4 + "</th>";
+            tableString += "<th>" + mnth5 + "</th>";
+            tableString += "<th>" + mnth6 + "</th>";
+            tableString += "<th>Status</th>";
+            tableString += "</tr></thead><tbody>";
+            for (var i = 0; i < SummGrid.length; i++) {
+                tableString += "<tr>";
+                tableString += "<td>" + SummGrid[i].SNo + "</td>";
+                tableString += "<td>" + SummGrid[i].IDNo +"</td>";
+                tableString += "<td>" + SummGrid[i].MemName + "</td>";
+                tableString += "<td>" + SummGrid[i].City + "</td>";
+                tableString += "<td>" + SummGrid[i].MobileNo + "</td>";
+                tableString += "<td>" + SummGrid[i].Mnth1 + "</td>";
+                tableString += "<td>" + SummGrid[i].Mnth2 + "</td>";
+                tableString += "<td>" + SummGrid[i].Mnth3+ "</td>";
+                tableString += "<td>" + SummGrid[i].Mnth4+ "</td>";
+                tableString += "<td>" + SummGrid[i].Mnth5+ "</td>";
+                tableString += "<td>" + SummGrid[i].Mnth6 + "</td>";
+                tableString += "<td>" + SummGrid[i].Status + "</td>";
+                tableString += "</tr>";
+            }
+            tableString += "</tbody>";
+            $("#gridExport").empty();
+            $("#gridExport").append(tableString);
+            tableToExcel('gridExport', UserTypeStr + "_Export");
+        });
+        $("#btnShowReport").on('click', function () {
+            $(".preloader").show();
+            var SessID = $("#Sessn").val();
+            var OfferUID = $("#OfferUID").val();
+            console.log('OfferUID:', OfferUID);
+                $.ajax({
+                    url: '@Url.Action("GetOfferStatus", "Report")',
+                    type: 'POST',
+                    data: { "SessID": SessID, "OfferUID": OfferUID },
+                    dataType: "json",
+                    success: function (objResult) {
+                        SummGrid = [{}];
+                        console.log("objResult", objResult);                   
+                        if (objResult.length > 0) {
+                            SummGrid = SummGrid.splice(1);
+                            for (var i = 0; i < objResult.length; i++) {
+                                SummGrid.push({ "SNo": i + 1, "IDNo": objResult[i].IDNo, "MemName": objResult[i].MemName, "City": objResult[i].City, "MobileNo": objResult[i].MobileNo, "Mnth1": objResult[i].Mnth1, "Mnth2": objResult[i].Mnth2, "Mnth3": objResult[i].Mnth3, "Mnth4": objResult[i].Mnth4, "Mnth5": objResult[i].Mnth5, "Mnth6": objResult[i].Mnth6, "Status": objResult[i].Status });
+                            }
+                        }
+                        fillGrid();
+                       $(".preloader").hide();
+                    },
+                    error: function (xhr, data) {
+                        console.log(xhr);
+                        console.log("Error:", data);
+                    }
+                });
+        });
+    });
+
+
+    function fillGrid() {
+        console.log("SummGrid", SummGrid);
+
+        // SummGrid = SummGrid.splice(1);
+
+        $("#noRecord").hide();
+        //console.log("ProductGrid", ProductGrid);
+        if (grid != null) {
+            grid.destroy();
+            $('#grid').empty();
+
+        }
+
+        grid = $('#grid').grid({
+            dataSource: SummGrid,
+            uiLibrary: 'bootstrap',
+            headerFilter: true,
+            columns: [
+                { field: 'SNo', title: 'S.No.',width:40, sortable: true, hidden: false, filterable: false },
+                { field: 'IDNo', title: 'ID No.', width: 70, sortable: true, hidden: false, filterable: true },
+                { field: 'MemName', width: 130, title: 'Name', sortable: true, hidden: false, filterable: true },
+                 { field: 'City', width: 90, title: 'City', sortable: true, hidden: false, filterable: true },
+                 { field: 'MobileNo', width: 90, title: 'Mobile No.', sortable: true, hidden: false, filterable: true },
+                 { field: 'Mnth1', width: 60, title: mnth1, sortable: true, hidden: false, filterable: true },
+                 { field: 'Mnth2', width: 60, title: mnth2, sortable: true, hidden: false, filterable: true },
+                 { field: 'Mnth3', width:60, title: mnth3, sortable: true, hidden: false, filterable: true },
+                 { field: 'Mnth4', width: 60, title: mnth4, sortable: true, hidden: false, filterable: true },
+                 { field: 'Mnth5', width: 60, title: mnth5, sortable: true, hidden: false, filterable: true },
+                 { field: 'Mnth6', width: 60, title: mnth6, sortable: true, hidden: false, filterable: true },
+                 { field: 'Status', width: 90, title: 'Status', sortable: true, hidden: false, filterable: true },
+            ],
+            pager: { limit: 50, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+        });
+    }
+
+    //function GetSalesDetails() {
+    //}
+</script>
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Offer Detail Report</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <br />
+                    <form id="MonhlySummForm" method="post" name="MonhlySummForm" onsubmit="false" data-parsley-validate class="validateForm form-horizontal form-label-left">
+   <input type="hidden" id="SessID" name="SessID" />
+                        @Html.HiddenFor(m => m.InvoiceType, new { id = "hiddenInvoiceType", name = "hiddenInvoiceType" })
+                        <div class="col-lg-12">
+
+                       
+ <div class="col-lg-4">
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                Select Month
+                                </div>
+                            </div>
+                            <div class="col-lg-7" style="padding-left: 0;">
+                                <div class="form-group">
+                                   
+                                        @Html.DropDownList( "Sessn", ViewBag.OfferSessList as IEnumerable<SelectListItem>, new { tabindex = "0", @class = "form-control", @name = "Sessn", @id = "Sessn"  })
+                                    
+                                </div>
+                            </div>
+                        </div>
+                            <div class="col-lg-4">
+                                <div class="col-lg-5">
+                                    <div class="form-group">
+                                        Select Offer
+                                    </div>
+                                </div>
+                                <div class="col-lg-7" style="padding-left: 0;">
+                                    <div class="form-group">
+                           
+                                           <select class="form-control" id="OfferUID", name="OfferUID">
+                                               @*<option value="0">ALL</option>*@
+                                               <option value="1">Rs. 2100</option>
+                                               <option value="7">Rs. 5100</option>
+                                           </select>
+                                      </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+  <a style="cursor:pointer;color:blue;text-decoration:underline" id="btnShowReport">Show Report</a>
+                                        &nbsp;&nbsp;<img src="~/images/ExcelImage.jpg" id="btnExport" style="height: 25px;cursor:pointer;" />
+                            </div>
+                            </div>
+                        <div class="col-lg-12">
+                            <div class="form-group">
+                                <br /><center><div class="loader" style="display:none"></div></center>
+                                <table class="table bootstrap-datatable" id="grid"></table>
+                                <center><span style="display:none" id="noRecord">No Records Found</span></center>
+                            </div>
+                        </div>
+                        <table id="gridExport" style="display:none"></table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dialogMessage" title="Message">
+
+    </div>
+
+</div>
+
+

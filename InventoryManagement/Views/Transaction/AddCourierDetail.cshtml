@@ -1,0 +1,278 @@
+﻿@model InventoryManagement.Entity.Common.Courier
+@using InventoryManagement.Common
+@using InventoryManagement.Entity.Common
+@{
+    ViewBag.Title = "Add Courier Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+    string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
+}
+
+<script type="text/javascript">
+    var grid,dialog;
+    var DuplicateName = false;
+    var CourierGrid = [];
+
+    $(document).ready(function () {
+        $(".preloader").hide();        
+        GetAllDetails($("#ID").val());
+        $("form[name=form_Courier]").unbind("submit");
+        $("form[name=form_Courier]").bind('submit', function (e) {
+            $("#SaveCourierDetail").attr("disabled", true);
+            if (DuplicateName == false) {
+                var formdata = new FormData($("#form_Courier")[0]);
+                $(".preloader").show();
+                $.ajax({
+                    url: '@Url.Action("SaveCourierAmount", "Transaction")',
+                    type: 'POST',
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function (objResponse) {
+                        $("#SaveCourierDetail").removeAttr("disabled");
+                        if (objResponse != null) {
+                            if (objResponse.ResponseStatus == "OK") {                               
+                                window.location.reload();
+                            }
+                            else {
+                                OpenDialog("dialogMessage", objResponse.ResponseMessage, "false");
+                            }
+                        }
+                        $(".preloader").hide();
+                        return false;
+                    },
+                    error: function (xhr, data) {
+                        $("#SaveCourierDetail").removeAttr("disabled");
+                        $(".preloader").hide();
+                        console.log(xhr);
+                        console.log("Error:", data);
+                    }
+                });
+            }
+            else {
+                $("#SaveCourierForm").removeAttr("disabled");
+                    OpenDialog("dialogMessage", "Duplicate Courier Name!", "false");
+            }
+            return false;
+        });
+    });
+    function GetAllDetails(ID)
+    {
+        $.ajax({
+            url: '@Url.Action("GetCouierDetailList", "Transaction")',
+            type: 'GET',
+            data: {"ID":ID},            
+            success: function (objResult) {
+                if (objResult != null) {
+                    var i = 0;
+                    CourierGrid = [];
+                    for (i = 0; i < objResult.length; i++) {
+                        CourierGrid.push({ "SNo": i + 1, "ID": objResult[i].ID, "Name": objResult[i].Name, "Weight": objResult[i].Weight, "Amount": objResult[i].Amount });
+                    }
+                    if (CourierGrid[0].SNo == null || CourierGrid[0].SNo == "") {
+                        CourierGrid = CourierGrid.splice(1);
+                    }
+                    fillGrid();
+                }
+                $(".preloader").hide();
+                return false;
+            },
+            error: function (xhr, data) {
+                //  return false;
+                $(".preloader").hide();
+                console.log(xhr);
+                console.log("Error:", data);
+            }
+        });
+    }
+    function fillGrid() {
+
+        $("#noRecord").hide();        
+        if (grid != null) {
+            grid.destroy();
+            $('#grid').empty();
+
+        }
+        if (CourierGrid.length == 0) {
+            $("#noRecord").show();
+        }
+        grid = $('#grid').grid({
+            dataSource: CourierGrid,
+            uiLibrary: 'bootstrap',
+            headerFilter: true,
+            columns: [
+                 { field: 'SNo', title: 'S.No.', width: 50, sortable: true, hidden: false, filterable: false },                
+                 { field: 'Name', title: 'Courier Name', width: 50, sortable: true, hidden: false, filterable: false },
+                 { field: 'Weight', title: 'Weight', width: 50, sortable: true, hidden: false, filterable: false },
+                 { field: 'Amount', title: 'Amount', width: 50, sortable: true, hidden: false, filterable: false }                   
+            ],
+            pager: { limit: 50, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+        });
+
+    }
+
+    function OpenDialog(dialogId, Message, isConfirmation) {
+        $("#" + dialogId).empty();
+        $("#" + dialogId).append('<p>' + Message + '</p>');
+        if (isConfirmation == "true") {
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "Yes",
+                    id: "btnYes" + dialogId,
+                    click: function () {
+                        IsYes = true;
+                        $("#" + dialogId).dialog("close");
+
+
+                    }
+                },
+                {
+                    text: "No",
+                    id: "btnNo" + dialogId,
+                    click: function () {
+                        IsYes = false;
+                        $("#" + dialogId).dialog("close");
+                    }
+                }
+                ]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+        else {
+
+
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "OK",
+                    id: "btn" + dialogId,
+                    click: function () {
+                        //var isOpen = $("#dialog").dialog("isOpen");
+                        //if (isOpen == true) {
+                        //    okCallBack();
+                        //}
+
+                        $("#" + dialogId).dialog("close");
+
+
+                    }
+                }]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+
+    }
+</script>
+
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Transaction</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Add Courier Details</h2>
+
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <form id="form_Courier" name="form_Courier" onsubmit="false">
+                        @Html.HiddenFor(m => m.UserId, new { id = "UserId", name = "UserId" })
+                        @Html.HiddenFor(m => m.ID, new { id = "ID", name = "ID" })
+                        <div class="col-lg-12">
+                            <div class="row" style="margin-top:1%">
+                                <label class="col-lg-3">Couier ID :</label>
+                                <div class="col-lg-6">
+                                    <label >@Model.ID</label>
+</div>
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-lg-12">
+                            <div class="row" style="margin-top:1%">
+                                <label class="col-lg-3">Weight : </label>
+                                <div class="col-lg-6">
+
+                                    @Html.TextBoxFor(m => m.Weight, new { id = "Weight", tabindex = "0", name = "Weight", maxlength = "255", @class = "form-control",@type="number" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="row" style="margin-top:1%">
+                                <label class="col-lg-3">Amount : </label>
+                                <div class="col-lg-6">
+
+                                    @Html.TextBoxFor(m => m.Amount, new { id = "Amount", tabindex = "0", name = "Amount", maxlength = "255", @class = "form-control", @type = "number" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12">
+                            <div class="row" style="margin-top:1%">
+                                <label class="col-lg-3">Remark : </label>
+                                <div class="col-lg-6">
+
+                                    @Html.TextBoxFor(m => m.Remark, new { id = "Remark", tabindex = "0", name = "Remark", maxlength = "255", @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <br />
+                        <div class="col-lg-12" style="margin-top:1%">
+                            <div class="col-lg-6 col-md-offset-3">
+
+                                @*<button class="btn btn-primary" type="reset" onclick="reset()">Reset</button>*@
+@if (ViewBag.UserCanAccess == "Edit")
+{
+                                <input type="submit" id="SaveCourierDetail" class="btn btn-success" tabindex="0" value="Save">
+                                <button class="btn btn-primary" type="button" tabindex="0" id="cancelClick">Cancel</button>
+}                  
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="row" style="margin-top:1%">
+                        <br />
+
+                        <br />@*<br /><br /><center><div class="loader" style="display:none"></div></center>*@
+                        <table class="table bootstrap-datatable" id="grid"></table>
+                        <center><span style="display:none" id="noRecord">No Courier Found</span></center>
+
+
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="dialogMessage" title="Message">
+
+    </div>
+
+</div>

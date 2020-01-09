@@ -1,0 +1,445 @@
+﻿@using InventoryManagement.Common
+@using InventoryManagement.Entity.Common
+@{
+    ViewBag.Title = "ProductSummary";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool IsSoldByHo = (Session["LoginUser"] as User).IsSoldByHo;
+    string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+    string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
+
+}
+<style>
+    .ui-widget-header {
+        margin-top: -1% !important;
+        width: 102% !important;
+        margin-left: -1% !important;
+    }
+     .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: scroll !important;
+    }
+    .ui-dialog-titlebar-close {
+        margin-right: 1% !important;
+    }
+
+    .ui-widget-content {
+        background: white !important;
+        border-radius: 15px !important;
+        -webkit-border-radius: 4px !important;
+    }
+    /*.ui-widget-header .ui-icon {
+        background-color: black!important;
+    }*/
+    ui-autocomplete-input {
+        z-index: 100;
+    }
+
+    .input-readonly {
+        background-color: #EBEBE4;
+    }
+</style>
+<script type="text/javascript">
+    var grid, dialog;
+    var IsYes = false;
+    var ProductWiseGrid = [{}];
+    var IsDateFilter = false;
+    var FromDate="", ToDate="";
+    var PreviouslySelectedFromDate = "";
+    var PreviouslySelectedToDate = "";
+    var PreviouslySelectedFromPickerDate = "";
+    var PreviouslySelectedToPickerDate = "";
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    $(document).ready(function () {
+        var IsAdministrator='@IsSoldByHo';
+       
+        $(".preloader").hide();
+    
+        $('#IsDateFilter').on('ifChecked', function () {
+            //console.log("checked");
+            IsDateFilter = true;
+            FromDate = "";
+            ToDate = "";
+            $("#StartDate").val("All");
+            $("#StartDate").prop("readonly", "readonly");
+             $("#EndDate").val("All");
+             $("#EndDate").prop("readonly", "readonly");
+        });
+        $('#IsDateFilter').on('ifUnchecked', function () {
+            //console.log("checked");
+            FromDate = "";
+            ToDate = "";
+            IsDateFilter = false;
+            $("#StartDate").val("");
+            $("#StartDate").prop("readonly", "");
+            $("#EndDate").val("");
+            $("#EndDate").prop("readonly", "");
+        });
+
+        $("#StartDate").datetimepicker({
+
+
+            format: 'DD-MMM-YYYY'
+            ,
+            // todayHighlight:true,
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+
+        }).on('dp.change', function (e) {
+            // console.log(e.date);
+            // fromDate = $('#FromDatePickerWidget').val();
+            var selectedDate = e.date._d;
+            console.log(selectedDate.getMonth() + 1);
+            var lengthOfMonth = ((selectedDate.getMonth() + 1).toString()).length;
+            console.log(lengthOfMonth);
+            var twoDigitMonth = (lengthOfMonth > 1) ? (selectedDate.getMonth() + 1) : '0' + (selectedDate.getMonth() + 1);
+
+            var newFromDate = selectedDate.getDate() + "-" + months[selectedDate.getMonth()] + "-" + selectedDate.getFullYear();
+            FromDate = newFromDate;
+            PreviouslySelectedFromPickerDate = newFromDate;
+            ToDate = PreviouslySelectedToPickerDate;
+        });
+        $("#EndDate").datetimepicker({
+
+
+            format: 'DD-MMM-YYYY'
+            ,
+            // todayHighlight:true,
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+
+        }).on('dp.change', function (e) {
+            // console.log(e.date);
+            // fromDate = $('#FromDatePickerWidget').val();
+            var selectedDate = e.date._d;
+            console.log(selectedDate.getMonth() + 1);
+            var lengthOfMonth = ((selectedDate.getMonth() + 1).toString()).length;
+            console.log(lengthOfMonth);
+            var twoDigitMonth = (lengthOfMonth > 1) ? (selectedDate.getMonth() + 1) : '0' + (selectedDate.getMonth() + 1);
+
+            var newToDate = selectedDate.getDate() + "-" + months[selectedDate.getMonth()] + "-" + selectedDate.getFullYear();
+
+            ToDate = newToDate;
+            PreviouslySelectedToPickerDate = newToDate;
+            FromDate = PreviouslySelectedFromPickerDate;
+        });
+
+        $("#btnExport").on('click', function () {
+            //var tableToExcel = new TableToExcel();
+            // tableToExcel.render("grid");
+            var UserTypeStr = "ProductWiseSalesReport";
+
+            console.log("in export gridExport", ProductWiseGrid);
+            var tableString = "<thead><tr>";         
+            tableString += "<th>Prod. Code</th>";
+            tableString += "<th>Product Name</th>";
+            tableString += "<th>WR To Frch.</th>";
+            tableString += "<th>WR To Assoc.</th>";
+            tableString += "<th>Frch. To Assoc.</th>";
+            tableString += "</tr></thead><tbody>";
+            for (var i = 0; i < ProductWiseGrid.length; i++) {
+                tableString += "<tr>";           
+                tableString += "<td class='formatText'>" + ProductWiseGrid[i].ProdID + "</td>";
+                tableString += "<td>" + ProductWiseGrid[i].ProductName + "</td>";
+                tableString += "<td>" + ProductWiseGrid[i].WrToFr + "</td>";
+                tableString += "<td>" + ProductWiseGrid[i].WrToDist + "</td>";
+                tableString += "<td>" + ProductWiseGrid[i].FrToDist + "</td>";           
+                tableString += "</tr>";
+            }
+            tableString += "</tbody>";
+            $("#gridExport").empty();
+            $("#gridExport").append(tableString);
+            tableToExcel('gridExport', UserTypeStr + "_Export");
+        });
+        $("#btnShowReport").on('click', function () {
+            debugger;
+            $(".preloader").show();
+           
+            var DateError = false;
+            if (FromDate != "" && FromDate != null && ToDate != null && ToDate != null) {
+                //var d1 = new Date(FromDate);
+                //var d2 = new Date(ToDate);
+                var d1 = toDate(FromDate);
+                var d2 = toDate(ToDate);
+                console.log("d1", d1);
+                console.log("d2", d2);
+                if (d1 > d2) {
+
+                    DateError = true;
+                    $(".preloader").hide();
+                    OpenDialog("dialogMessage", "From Date should be less than To Date!", "false");
+                    //$("#StartDate").focus();
+                }
+                else {
+                    DateError = false;
+
+                }
+            }
+            else {
+                DateError = false;
+                if (DateError == false) {
+                    if (IsDateFilter == false) 
+                    {
+                        FromDate = $("#StartDate").val();
+                        ToDate = $("#EndDate").val();                     
+                    }
+                }
+                    if (FromDate == "" || FromDate == null) {
+                        //OpenDialog("dialogMessage", "Please enter from date!", "false");
+                        FromDate = "All";
+                    }
+                    console.log("ToDate", ToDate);
+                    if (ToDate == "" || ToDate == null) {
+                        console.log("ToDate in", ToDate);
+                        ToDate = "All";
+                        // OpenDialog("dialogMessage", "Please enter to date!", "false");
+                    }
+
+            }
+          
+                 if (DateError == false) {
+                     console.log("FromDate", FromDate);
+                     console.log("ToDate", ToDate);
+                     $.ajax({
+                         url: '@Url.Action("GetProductSummary", "Report")',
+                         type: 'POST',
+                         data: { "FromDate": FromDate, "ToDate": ToDate},
+                         async: false,
+                         dataType: "json",
+                         success: function (objResult) {
+                             ProductWiseGrid = [{}];
+                             if (objResult.length > 0) {     
+                                 ProductWiseGrid = ProductWiseGrid.splice(1);
+                                 for (var i = 0; i < objResult.length; i++) {     
+                                     ProductWiseGrid.push({ "SNo": i + 1, "ProdID": objResult[i].ProdID, "ProductName": objResult[i].ProductName, "DP": objResult[i].DP, "WrToFr": objResult[i].WrToFr, "WrToDist": objResult[i].WrToDist, "FrToDist": objResult[i].FrToDist});
+                                 }
+                                
+                             }
+
+                             fillGrid();
+                             //FromDate = $("#StartDate").val();
+                             //ToDate = $("#EndDate").val();
+                             $(".preloader").hide();
+                         },
+                         error: function (xhr, data) {
+                             //  return false;
+                             console.log(xhr);
+                             console.log("Error:", data);
+                         }
+                     });
+                 }
+        });
+
+
+    
+
+    });
+
+    function toDate(dateStr) {
+        var parts = dateStr.split("-");
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+    function OpenDialog(dialogId, Message, isConfirmation) {
+        $("#" + dialogId).empty();
+        $("#" + dialogId).append('<p>' + Message + '</p>');
+        if (isConfirmation == "true") {
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "Yes",
+                    id: "btnYes" + dialogId,
+                    click: function () {
+                        //var isOpen = $("#dialog").dialog("isOpen");
+                        //if (isOpen == true) {
+                        //    okCallBack();
+                        //}
+                        IsYes = true;
+                        $("#" + dialogId).dialog("close");
+
+
+                    }
+                },
+                {
+                    text: "No",
+                    id: "btnNo" + dialogId,
+                    click: function () {
+                        //var isOpen = $("#dialog").dialog("isOpen");
+                        //if (isOpen == true) {
+                        //    okCallBack();
+                        //}
+                        IsYes = false;
+                        $("#" + dialogId).dialog("close");
+                    }
+                }
+                ]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+        else {
+
+
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "OK",
+                    id: "btn" + dialogId,
+                    click: function () {
+                        //var isOpen = $("#dialog").dialog("isOpen");
+                        //if (isOpen == true) {
+                        //    okCallBack();
+                        //}
+
+                        $("#" + dialogId).dialog("close");
+
+
+                    }
+                }]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+
+    }
+   
+    function fillGrid() {
+        console.log("ProductWiseGrid", ProductWiseGrid);
+
+        //ProductWiseGrid = ProductWiseGrid.splice(1);
+
+        $("#noRecord").hide();
+        //console.log("ProductGrid", ProductGrid);
+        if (grid != null) {
+            grid.destroy();
+            $('#grid').empty();
+
+        }
+
+            grid = $('#grid').grid({
+                dataSource: ProductWiseGrid,
+                uiLibrary: 'bootstrap',
+                headerFilter: true,
+                columns: [
+                    { field: 'SNo', title: 'S.No.',width:80, sortable: true, hidden: false, filterable: false },
+                 
+                       { field: 'ProdID', title: 'Prod Code', width: 100, sortable: true, hidden: false, filterable: true },
+                        { field: 'ProductName', title: 'Product Name', width: 150, sortable: true, hidden: false, filterable: true },
+                         { field: 'DP', title: 'DP', width: 80, sortable: true, hidden: false, filterable: true },
+                          { field: 'WrToFr', title: 'WR to Franchise', width: 110, sortable: true, hidden: false, filterable: true },
+                           { field: 'WrToDist', title: 'WR to Associate', width: 110, sortable: true, hidden: false, filterable: true },
+                           { field: 'FrToDist', title: 'Franchise to Assoc.', width: 110, sortable: true, hidden: false, filterable: true },
+                ],
+                pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+            });
+
+
+    }
+
+   
+    //function GetSalesDetails() {
+
+    //}
+</script>
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Sales Report</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Product Wise Summary</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <form id="ProductWiseSalesForm" method="post" name="ProductWiseSalesForm" onsubmit="false" data-parsley-validate class="validateForm form-horizontal form-label-left">
+                       
+                        <div class="col-lg-12">
+                            <div class="col-lg-8">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-6 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            From Date @*<span class="required">*</span>*@
+                                        </label>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBox("StartDate","", new { @id = "StartDate", tabindex = "1", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-6 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            To Date @*<span class="required">*</span>*@
+                                        </label>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBox("EndDate","", new { @id = "EndDate", tabindex = "2", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <div id="IsDateDiv">
+                                        <label>
+                                            <input type="checkbox" id="IsDateFilter" name="IsDateFilter" class="flat" tabindex="3" />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                      
+                        <div class="col-lg-12">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12" style="float:right" >
+                                        <input type="button" id="btnShowReport" name="btnShowReport" value="Show Report"  />
+                                    </div>
+                            </div>
+                           
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+
+                                    <img src="~/images/ExcelImage.jpg" id="btnExport" style="margin-right: 6%;height: 25px;cursor:pointer;float:left" />
+
+                                    <div class="col-lg-3">&nbsp;</div>
+                                </div>
+                                <br /><center><div class="loader" style="display:none"></div></center>
+                                <br />            
+                            </div>
+                            <div class="col-lg-12">
+                                <table class="table bootstrap-datatable" id="grid"></table>
+                                <center><span style="display:none" id="noRecord">No Records Found</span></center>
+                            </div>  
+                            </div>
+                        <table id="gridExport" style="display:none"></table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="dialogMessage" title="Message">
+
+    </div>
+
+</div>

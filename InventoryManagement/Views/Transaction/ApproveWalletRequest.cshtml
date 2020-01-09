@@ -1,0 +1,283 @@
+﻿@model InventoryManagement.Entity.Common.WalletRequest
+@using InventoryManagement.Common
+@using InventoryManagement.Entity.Common
+@{
+    ViewBag.Title = "Approve Wallet Request";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+    string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
+}
+
+<style>
+    .ui-widget-header {
+        margin-top: -1% !important;
+        width: 102% !important;
+        margin-left: -1% !important;
+    }
+
+    .ui-dialog-titlebar-close {
+        margin-right: 1% !important;
+    }
+
+    .ui-widget-content {
+        background: white !important;
+        border-radius: 15px !important;
+        -webkit-border-radius: 4px !important;
+    }
+    /*.ui-widget-header .ui-icon {
+        background-color: black!important;
+    }*/
+    ui-autocomplete-input {
+        z-index: 100;
+    }
+
+    .input-readonly {
+        background-color: #EBEBE4;
+    }
+
+    .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: scroll !important;
+    }
+</style>
+
+<script type="text/javascript">
+    var grid, dialog;
+    var WalletGrid = [{}];
+    var ActionType = "Add";
+    var UserCode = "";
+    var IsApprove = [{ "value": "N", "text": "Pending" },{ "value": "Y", "text": "Approve" }, { "value": "R", "text": "Reject" }];
+    $(document).ready(function () {
+        $(".preloader").hide();
+        GetAllWalletRequest();
+
+        $("form[name=ApproveRequestForm]").unbind("submit");
+        $("form[name=ApproveRequestForm]").bind('submit', function (e) {
+            $("#Approve").prop("readonly", "readonly");
+            if (WalletGrid.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                var ListObjStr = JSON.stringify(WalletGrid);                
+                $("#GridString").val(ListObjStr);
+                formdata = new FormData($(this)[0]);                                               
+                    $.ajax({
+                        url: '@Url.Action("SaveApproveWaletRequest", "Transaction")',
+                        type: 'POST',
+                        data: formdata,
+                        processData: false,
+                        contentType: false,
+                        dataType: "json",
+                        success: function (objResponse) {
+                            $("#Approve").prop("readonly", "");
+                            if (objResponse != null) {
+                                if (objResponse.ResponseStatus == "OK") {
+                                    window.location.href = '@Url.Action("ApproveWalletRequest", "Transaction")';
+                                }
+                                else {
+                                    OpenDialog("dialogMessage", objResponse.ResponseMessage, "false");
+                                }
+                            }
+                        },
+                        error: function (xhr, data) {                           
+                            console.log(xhr);
+                            console.log("Error:", data);
+                        }
+                    });                
+            }
+            else {
+                $("#Approve").prop("readonly", "");
+                OpenDialog("dialogMessage", "There should be atleast one Request to approve!", "false");
+            }
+        });
+    });   
+
+    function GetAllWalletRequest() {
+        $.ajax({
+            url: '/Transaction/GetAllWalletRequest',
+            dataType: 'JSON',
+            method: 'GET',
+            success: function (objResult) {
+                WalletGrid = [{}];
+                if (objResult.length > 0) {
+                    var i = 0;
+                    for (i = 0; i < objResult.length; i++) {
+                        var dateObj = new Date(objResult[i].ReqDate.match(/\d+/)[0] * 1);
+                        var myDate = (dateObj.getDate()) + "/" + (dateObj.getMonth() + 1) + "/" + dateObj.getFullYear();
+
+                        var dateObj1 = new Date(objResult[i].ChqDate.match(/\d+/)[0] * 1);
+                        var myDate1 = (dateObj.getDate()) + "/" + (dateObj.getMonth() + 1) + "/" + dateObj.getFullYear();
+                        var approved = "Pending";
+                        if (objResult[i].IsApproved == "Y")
+                            approved = "Approved";
+                        WalletGrid.push({ "ApproveRemark": objResult[i].ApproveRemark, "IsApproved": objResult[i].IsApproved, "Approved": approved, "SNo": i + 1, "ReqDateStr": objResult[i].ReqDateStr, "ReqBy": objResult[i].ReqBy, "Paymode": objResult[i].Paymode, "ChqNo": objResult[i].ChqNo, "ChqDate": myDate1, "BranchName": objResult[i].BranchName, "ReqByName": objResult[i].ReqBy + ' - ' + objResult[i].ReqByName, "BankName": objResult[i].BankName, "ReqNo": objResult[i].ReqNo, "ReqDate": myDate, "Remarks": objResult[i].Remarks, "ScannedFileName": "/images/WalletReqs/" + objResult[i].ScannedFileName, "Amount": objResult[i].Amount });
+                    }
+                    if (WalletGrid[0].SNo == null || WalletGrid[0].SNo == "") {
+                        WalletGrid = WalletGrid.splice(1);
+                    }
+                    fillGrid();
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function OpenDialog(dialogId, Message, isConfirmation) {
+        $("#" + dialogId).empty();
+        $("#" + dialogId).append('<p>' + Message + '</p>');
+        if (isConfirmation == "true") {
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "Yes",
+                    id: "btnYes" + dialogId,
+                    click: function () {                        
+                        IsYes = true;
+                        $("#" + dialogId).dialog("close");
+                    }
+                },
+                {
+                    text: "No",
+                    id: "btnNo" + dialogId,
+                    click: function () {                        
+                        IsYes = false;
+                        $("#" + dialogId).dialog("close");
+                    }
+                }
+                ]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+        else {
+
+
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "OK",
+                    id: "btn" + dialogId,
+                    click: function () {                       
+                        $("#" + dialogId).dialog("close");
+                    }
+                }]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+
+    }
+    function fillGrid() {
+
+        $("#noRecord").hide();        
+        if (grid != null) {
+            grid.destroy();
+            $('#grid').empty();
+
+        }
+        if (WalletGrid.length == 0) {
+            $("#noRecord").show();
+        }
+            grid = $('#grid').grid({
+                dataSource: WalletGrid,
+                primaryKey: 'ReqNo',
+                uiLibrary: 'bootstrap',                          
+                columns: [                     
+                        { field: 'SNo', title: 'S.No.', width: 35, sortable: true, hidden: false, filterable: false },
+                        { field: 'ReqNo', title: 'ReqNo', width: 45, sortable: true, hidden: false, filterable: true },
+                        { field: 'Amount', title: 'Amount', width: 50, sortable: true, hidden: false, filterable: true },
+                        { field: 'ReqDate', title: 'Req. Date', width: 65, sortable: true, hidden: false, filterable: true },
+                        { field: 'ReqByName', title: 'Request By', width: 150, sortable: true, hidden: false, filterable: true },
+                        { field: 'Paymode', title: 'Paymode', width: 50, sortable: true, hidden: false, filterable: false },
+                        { field: 'ChqNo', title: 'Trans.No.', width: 50, sortable: true, hidden: false, filterable: false },
+                        { field: 'ChqDate', title: 'Trans.Date', width: 70, sortable: true, hidden: false, filterable: false },
+                        { field: 'BankName', title: 'Bank Name', width: 50, sortable: true, hidden: false, filterable: true },
+                        { field: 'BranchName', title: 'Branch Name', width: 50, sortable: true, hidden: false, filterable: false },
+                        { field: 'Remarks', title: 'Remarks', width: 50, sortable: true, hidden: false, filterable: false },
+                        { title: 'Product Image', width: 70, tmpl: '<a target="_blank" style="text-decoration:underline;" href={ScannedFileName} rel="group" class="fbox"><img src={ScannedFileName} style="height:50px;" /></a> ', align: 'center', filterable: false },
+                        { field: 'IsApproved', title: 'IsApproved', width: 10, sortable: true, hidden: true, filterable: false },
+                        { field: 'Approved', title: 'Is Approved', editor: { dataSource: IsApprove, valueField: 'value' }, type: 'dropdown', width: 100, sortable: true, hidden: false, filterable: true },
+                        { field: 'ApproveRemark', title: 'Approve Remark', width: 200, editor: true, hidden: false, filterable: false },
+                ],
+                
+                pager: { limit: 50, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+            });
+
+            grid.on('cellDataChanged', function (e, $cell, column, record, oldValue, newValue) {
+                var objIndex = WalletGrid.findIndex((obj => obj.ReqNo == record.ReqNo));
+                if (column.field == "ApproveRemark") {
+                    WalletGrid[objIndex].ApproveRemark = oldValue;
+                }
+                else 
+                    {
+                    WalletGrid[objIndex].IsApproved = oldValue;
+                }
+
+            });            
+    }
+</script>
+
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Wallet Request</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Approve Wallet Request</h2>
+                    
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <form id="ApproveRequestForm" method="post" name="ApproveRequestForm" onsubmit="false" data-parsley-validate class="validateForm form-horizontal form-label-left">                  
+                    @Html.HiddenFor(m => m.GridString, new { id = "GridString",name= "GridString" })
+                    <div class="x_content">
+                        <br />
+                        <div class="row" style="margin-top:1%">
+          
+                            <table class="table bootstrap-datatable" id="grid"></table>
+                            <center><span style="display:none" id="noRecord">No Request Found</span></center>
+                        </div>
+
+                        
+                        <table id="gridExport" style="display:none"></table>
+
+                    </div>
+                    <div class="row" style="margin-top:1%">
+                        <div class="col-lg-6 col-lg-offset-4">
+@if (ViewBag.UserCanAccess == "Edit")
+{
+                            <button type="submit" id="Approve" class="btn btn-success" tabindex="0">Submit</button>
+                            <button class="btn btn-primary" type="button" id="Cancel" tabindex="0">Cancel</button>
+}
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div id="dialogMessage" title="Message">
+
+    </div>
+
+</div>
+
+
+

@@ -1,0 +1,155 @@
+﻿@{
+    ViewBag.Title = "OfferList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: scroll !important;
+    }
+</style>
+<script type="text/javascript">
+
+    var ProductGrid = [{}];
+    var ProductModel = null;
+    var grid, dialog;
+    $(document).ready(function () {
+        $(".preloader").hide();
+        fillGrid();
+        $("#btnAdd").click(function () {
+            ProductModel = null;
+            var link = '@Url.Action("OfferDynamic", "Transaction",new { ActionName = "Add", OfferCode = "-1"})';
+            link = link.replace("-1", ProductModel);
+            window.location.href = link;
+        });
+
+        function Edit(ev) {
+            window.location.href = "/Transaction/OfferDynamic?ActionName=Edit&OfferCode=" + ev.data.record.OfferID;
+        }
+
+
+        function fillGrid(){
+            var link = '@Url.Action("GetAllOfferOnValueList", "Transaction")';
+            ProductGrid = [{}];
+
+
+            var CanEdit = true;
+            var UserAccess = '@ViewBag.UserCanAccess';
+
+            if (UserAccess == 'Edit') {
+                CanEdit = false;
+            }
+
+            $.ajax({
+                type: 'GET',
+                url: link,
+                success: function (resultData) {
+                    $(".preloader").hide();
+                    if (ProductGrid[0].OfferID == undefined)
+                        ProductGrid = ProductGrid.splice(1);
+                    $("#noRecord").hide();
+                    if (grid != null) {
+                        grid.destroy();
+                        $('#grid').empty();
+
+                    }
+
+
+
+                    if (resultData != null) {
+                        var i = 0;
+                        ProductModel = resultData;
+                        for (i = 0; i < resultData.length; i++) {
+                            var dateObj = new Date(resultData[i].OfferFromDt.match(/\d+/)[0] * 1);
+                            var OfferFromDt = (dateObj.getDate()) + "/" + (dateObj.getMonth() + 1) + "/" + dateObj.getFullYear();
+                            var mfgdateObj = new Date(resultData[i].OfferToDt.match(/\d+/)[0] * 1);
+                            var OfferToDt = (mfgdateObj.getDate()) + "/" + (mfgdateObj.getMonth() + 1) + "/" + mfgdateObj.getFullYear();
+                            ProductGrid.push({
+                                "SNo": (i + 1),
+                                "OfferID": resultData[i].AID,
+                                "OfferFromDt": OfferFromDt,
+                                "OfferToDt": OfferToDt,
+                                "OfferOnValue": resultData[i].OfferOnValue,
+                                "OfferOnBV": resultData[i].OfferOnBV,
+                                "ActiveStatus": resultData[i].ActiveStatus,
+                                "Edit":"Edit"
+                            });
+                        }
+
+                        $("#noRecord").hide();
+                        grid = $('#grid').grid({
+                            dataSource: ProductGrid,
+                            uiLibrary: 'bootstrap',
+                            headerFilter: false,
+                            columns: [
+                                { field: 'SNo', title: 'SNo.', sortable: false, hidden: false,width: 50, cssClass: "noExl", filterable: false },
+                                { field: 'OfferID', title: 'Offer ID', sortable: false, width: 70, hidden: true, cssClass: "noExl", filterable: false },
+                                { field: 'OfferFromDt', title: 'From Date', sortable: false, width: 70, hidden: false, cssClass: "noExl", filterable: false },
+                                { field: 'OfferToDt', title: 'To Date', sortable: false, width: 70, hidden: false, cssClass: "noExl", filterable: false },
+                                { field: 'OfferOnValue', title: 'Offer On Value', sortable: false, width: 70, hidden: false, cssClass: "noExl", filterable: false },
+                                { field: 'OfferOnBV', title: 'Offer On BV', sortable: false, width: 70, hidden: false, cssClass: "noExl", filterable: false },
+                                { field: 'ActiveStatus', title: 'Active Status', sortable: false, width: 70, hidden: false, cssClass: "noExl", filterable: false },
+                                { title: '', field: 'Edit',hidden:CanEdit, width: 34, type: 'icon', width: 70, icon: 'glyphicon-pencil', tooltip: 'Edit', events: { 'click': Edit }, filterable: false }
+
+                            ],
+                            pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+                        });
+
+                    }
+                    else {
+                        $("#noRecord").show();
+                    }
+
+                }
+            });
+        }
+    });
+</script>
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Offer</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Offer on Value or BV</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <div class="col-lg-offset-10 col-lg-2">
+@if (ViewBag.UserCanAccess == "Edit")
+{
+                        <button id="btnAdd" type="button" class="btn btn-default" style="margin-top: 5%;margin-bottom: 5%">Add New Offer</button>
+
+}
+
+                    </div>
+                    <div id="dialogMessage" title="Message">
+
+                    </div>
+                    <div class="col-lg-12">
+                        <table class="table bootstrap-datatable" id="grid"></table>
+                        <center><span style="display:none" id="noRecord">No Records Found</span></center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

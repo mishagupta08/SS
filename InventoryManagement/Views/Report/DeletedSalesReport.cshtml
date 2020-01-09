@@ -1,0 +1,722 @@
+﻿@model InventoryManagement.Entity.Common.SalesReport
+@using InventoryManagement.Common
+@using InventoryManagement.Entity.Common
+@{
+    ViewBag.Title = "SalesReport";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    bool IsSoldByHo = (Session["LoginUser"] as User).IsSoldByHo;
+    string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+    string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
+
+}
+
+<style>
+    .ui-widget-header {
+        margin-top: -1% !important;
+        width: 102% !important;
+        margin-left: -1% !important;
+    }
+     .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: scroll !important;
+    }
+    .ui-dialog-titlebar-close {
+        margin-right: 1% !important;
+    }
+
+    .ui-widget-content {
+        background: white !important;
+        border-radius: 15px !important;
+        -webkit-border-radius: 4px !important;
+    }
+    /*.ui-widget-header .ui-icon {
+        background-color: black!important;
+    }*/
+    ui-autocomplete-input {
+        z-index: 100;
+    }
+
+    .input-readonly {
+        background-color: #EBEBE4;
+    }
+    .dialogProdDetail {
+    width:500px
+    }
+</style>
+<script type="text/javascript">
+    var grid, dialog;
+    var IsYes = false;
+    var BillWiseGrid = [{}];
+    var PreviouslySelectedFromDate = "";
+    var PreviouslySelectedToDate = "";
+    var PreviouslySelectedToPickerDate = "";
+    var PreviouslySelectedFromPickerDate = "";
+    var SalesType = "BillWise";
+    var IsCustomerFilter = false;
+    var IsDateFilter = false;
+    var FromDate = "", ToDate = "";
+    var CustomerId = "";
+    var IsParty = false;
+    var PartyList = [];
+    var FullPartyList;
+    var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    $(document).ready(function () {
+        var IsAdministrator='@IsSoldByHo';
+        if (IsAdministrator=="True") {
+            GetAllParty();
+        }
+        else{
+            $("#PartyCode").val('@CurrentPartyCode');
+        }
+        $(".preloader").hide();
+        $("#hiddenInvoiceType").val("");
+        $("#InvoiceType").change(function () {
+            var SelectedVal = $("#InvoiceType").val();
+            $("#hiddenInvoiceType").val(SelectedVal);
+        });
+        $('#CustCode').focusout(function () {
+            CustomerId = $('#CustCode').val();         
+        });
+     
+        $('#IsCustomerFilter').on('ifChecked', function () {
+            //console.log("checked");
+            IsCustomerFilter = true;
+            $("#CustCode").val("All");
+            $("#CustCode").prop("readonly", "readonly");
+            CustomerId = $('#CustCode').val();
+            // GetSalesDetails($("#StartDate").val(), $("#EndDate").val(), CustomerId, '@CurrentPartyCode', "S");
+
+        });
+        $('#IsCustomerFilter').on('ifUnchecked', function () {
+            //console.log("checked");
+            IsCustomerFilter = false;
+            $("#CustCode").val("");
+            $("#CustCode").prop("readonly", "");
+            CustomerId = "";
+
+        });
+        $('#IsDateFilter').on('ifChecked', function () {
+            //console.log("checked");
+            IsDateFilter = true;
+            $("#StartDate").val("All");
+            $("#StartDate").prop("readonly", "readonly");
+            FromDate = "";
+            ToDate = "";
+            $("#EndDate").val("All");
+            $("#EndDate").prop("readonly", "readonly");
+        });
+        $('#IsDateFilter').on('ifUnchecked', function () {
+            //console.log("checked");
+            IsDateFilter = false;
+            $("#StartDate").val("");
+            $("#StartDate").prop("readonly", "");
+            $("#EndDate").val("");
+            $("#EndDate").prop("readonly", "");
+            FromDate = "";
+            ToDate = "";
+        });
+
+        $("#StartDate").datetimepicker({
+ format: 'DD-MMM-YYYY'
+            ,
+            // todayHighlight:true,
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+
+        }).on('dp.change', function (e) {
+            // console.log(e.date);
+            // fromDate = $('#FromDatePickerWidget').val();
+            var selectedDate = e.date._d;
+            console.log(selectedDate.getMonth()+1);
+            var lengthOfMonth = ((selectedDate.getMonth() + 1).toString()).length;
+            console.log(lengthOfMonth);
+            console.log(selectedDate.getMonth() + 1);
+            var lengthOfMonth = ((selectedDate.getMonth() + 1).toString()).length;
+            console.log(lengthOfMonth);
+            var twoDigitMonth = (lengthOfMonth > 1) ? (selectedDate.getMonth() + 1) : '0' + (selectedDate.getMonth() + 1);
+
+            var newFromDate = selectedDate.getDate() + "-" + months[selectedDate.getMonth()] + "-" + selectedDate.getFullYear();
+            console.log("newDate", newFromDate);
+            FromDate = newFromDate;
+            PreviouslySelectedFromPickerDate = newFromDate;
+            console.log("FromDate", FromDate);
+            ToDate = PreviouslySelectedToPickerDate;
+        });
+        $("#EndDate").datetimepicker({
+     format: 'DD-MMM-YYYY'
+            ,
+            // todayHighlight:true,
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+
+        }).on('dp.change', function (e) {
+            var selectedDate = e.date._d;
+
+            console.log(selectedDate.getMonth() + 1);
+            var lengthOfMonth = ((selectedDate.getMonth() + 1).toString()).length;
+            console.log(lengthOfMonth);
+            var twoDigitMonth = (lengthOfMonth > 1) ? (selectedDate.getMonth() + 1) : '0' + (selectedDate.getMonth() + 1);
+
+            var newToDate = selectedDate.getDate() + "-" + months[selectedDate.getMonth()] + "-" + selectedDate.getFullYear();
+            console.log("newToDate", newToDate);
+            ToDate = newToDate;
+            PreviouslySelectedToPickerDate = newToDate;
+            console.log("ToDate in picker", ToDate);
+            FromDate = PreviouslySelectedFromPickerDate;
+        });
+
+        $("#btnExport").on('click', function () {
+            var UserTypeStr = "BillWiseSalesReport";
+            console.log("in export gridExport", BillWiseGrid);
+            var tableString = "<thead><tr>";
+            tableString += "<th>S.No.</th>";
+            tableString += "<th>Bill No.</th>";
+            tableString += "<th>Bill Date</th>";
+            tableString += "<th>Party Code</th>";
+            tableString += "<th>Party Name</th>";
+            tableString += "<th>Cust. Code</th>";
+            tableString += "<th>Cust. Name</th>";
+            tableString += "<th>Amount</th>";
+            tableString += "<th>Tax Amount</th>";
+            tableString += "<th>Net Amount</th>";
+            tableString += "<th>Dlt.Date</th>";
+            tableString += "<th>Reason</th>";
+            tableString += "<th>Username</th>";
+            tableString += "</tr></thead><tbody>";
+            for (var i = 0; i < BillWiseGrid.length; i++) {
+                tableString += "<tr>";
+                tableString += "<td>" + BillWiseGrid[i].SNo + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].BillNo + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].BillDate + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].PartyCode + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].PartyName + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].Code + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].Name + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].Amount + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].TaxAmount + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].NetAmount + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].DltDate + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].Reason + "</td>";
+                tableString += "<td>" + BillWiseGrid[i].DUsername + "</td>";
+                tableString += "</tr>";
+            }
+
+
+            tableString += "</tbody>";
+            $("#gridExport").empty();
+            $("#gridExport").append(tableString);
+            tableToExcel('gridExport', UserTypeStr + "_Export");
+
+        });
+        $("#btnShowReport").on('click', function () {
+            $(".preloader").show();
+            var PartyCode = $("#PartyCode").val();
+            var FType = $("#FType").val();
+            var OfferUID = $("#OfferUID").val();
+            var DateWise = $("#DateWise").val();
+            var DateError = false;
+            if (FromDate != "" && FromDate != null && ToDate != null && ToDate != "") {                
+                var d1 = toDate(FromDate);
+                var d2 = toDate(ToDate);                
+                if (d1 > d2) {
+                    DateError = true;
+                    $(".preloader").hide();
+                    OpenDialog("dialogMessage", "From Date should be less than ToDate!", "false");                   
+                }
+                else {
+                    DateError = false;                    
+                }
+            }
+            else {
+                DateError = false;
+                console.log("PreviouslySelectedFromDate", PreviouslySelectedFromDate);
+                console.log("PreviouslySelectedToDate", PreviouslySelectedToDate);
+                if (IsDateFilter == false) {
+                }
+                if (FromDate == "" || FromDate == null) {
+                    FromDate = "All";
+                } if (ToDate == "" || ToDate == null) {
+                    ToDate = "All";
+                }
+            }
+            if (CustomerId == "" || CustomerId == null) {
+                CustomerId = "All";
+                //OpenDialog("dialogMessage", "Please enter IdNo!", "false");
+            }
+
+            if (DateError == false) {
+
+                console.log("FromDate", FromDate);
+                console.log("ToDate", ToDate);
+                var InvoiceTypeVal=$("#hiddenInvoiceType").val();
+
+                $.ajax({
+                    url: '@Url.Action("GetDeletedSalesReport", "Report")',
+                    type: 'POST',
+                    data: { "FromDate": FromDate, "ToDate": ToDate, "CustomerId": CustomerId,  "PartyCode": PartyCode, "BType": "S", "InvoiceType": InvoiceTypeVal, "FType": FType, "OfferUID": OfferUID ,"DltDateWise": DateWise},
+                    dataType: "json",
+                    success: function (objResult) {
+                        BillWiseGrid = [{}];
+                        console.log("objResult", objResult);                    
+                        if (objResult.length > 0) {
+                            BillWiseGrid = BillWiseGrid.splice(1);
+                            for (var i = 0; i < objResult.length; i++) {
+                                var TaxAmount = (parseFloat( objResult[i].IGSTAmount) + parseFloat(objResult[i].CGSTAmount) + parseFloat( objResult[i].SGSTAmount)).toFixed(2);
+                                BillWiseGrid.push({ "SNo": i + 1, "BillNo": objResult[i].BillNo, "BillDate": objResult[i].StrBillDate, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Code": objResult[i].CustCode, "Name": objResult[i].CustName, "Amount": objResult[i].Amount, "TaxAmount": TaxAmount, "IGSTAmount": objResult[i].IGSTAmount, "CGSTAmount": objResult[i].CGSTAmount, "SGSTAmount": objResult[i].SGSTAmount, "NetAmount": objResult[i].NetAmount, "DltDate": objResult[i].DltDate, "Reason": objResult[i].Reason, "DUsername": objResult[i].Username, "UID": objResult[i].UID });
+                            }
+                        }
+                        fillGrid();                       
+                        $(".preloader").hide();
+                    },
+                    error: function (xhr, data) {
+                        //  return false;
+                        console.log(xhr);
+                        console.log("Error:", data);
+                    }
+                });
+            }
+        });
+
+        $("#PartyName").autocomplete({
+            source: function (request, response) {
+                var results = $.ui.autocomplete.filter(PartyList, request.term);
+
+                response(results.slice(0, 50));
+                //response(results);
+                //$('html').getNiceScroll().resize();
+                //$('#sidebar').getNiceScroll().resize();
+                //$('.scroll-panel').getNiceScroll().resize();
+                //response(ItemList);
+            },
+            minLength: 1,
+            scroll: true,
+            select: function (event, ui) {
+                //$("#txDestination").val(ui.item.label);
+                //cityID = ui.item.id;
+                console.log("ui.item", ui.item.label);
+                $("#PartyName").val(ui.item.label);
+                SetSpecificCode("Party", ui.item.label);
+                return false;
+            },
+
+        }).focus(function () {
+            $(this).autocomplete("search", "");
+        });
+
+        $('#IsParty').on('ifChecked', function () {
+            //console.log("checked");
+            IsParty = true;
+            //$("#PartyName").val("All");
+            //$("#PartyName").prop("readonly", "readonly");
+            //$("#PartyCode").val(0);
+            $("#PartyName").val('All');
+            $("#PartyName").prop("readonly", "readonly");
+            $("#PartyCode").val('0');
+        });
+
+        $('#IsParty').on('ifUnchecked', function () {
+            //console.log("checked");
+            IsParty = false;
+            //$("#PartyName").val("");
+            //$("#PartyName").prop("readonly", "");
+            //$("#PartyCode").val("");
+            $("#PartyName").val('');
+            $("#PartyName").prop("readonly", "");
+            $("#PartyCode").val('');
+        });
+
+    });
+
+    function GetBillProduct(BillNoToGet,UID) {
+        $.ajax({
+            url: '@Url.Action("GetDltBillProduct", "Report")',
+            type: 'POST',
+            data: { "UID": UID },
+            async: false,
+            dataType: "json",
+            success: function (objResult) {
+                if (objResult != null) {
+                    $("#BillNoToGet").html(BillNoToGet);
+                    $("#BillProductDetails").empty();
+                    var tableStr;
+                    for (var i = 0; i < objResult.length; i++) {
+                        var Amount = (parseFloat(objResult[i].Amount) + parseFloat(objResult[i].CGSTAmount) + parseFloat(objResult[i].SGSTAmount) + parseFloat(objResult[i].TaxAmt)).toFixed(2);
+                        tableStr = tableStr + "<tr><td>" + parseFloat( i+1) + "</td><td>" + objResult[i].ProductCodeStr + "</td><td>" + objResult[i].ProductName + "</td><td>" + objResult[i].DispQty + "</td><td>" + objResult[i].DP + "</td><td>" + Amount + "</td></tr>";
+                    }
+                    $("#BillProductDetails").html(tableStr);
+                }
+            }
+        });
+    }
+
+    function OpenProductDetails() {
+        $("#dialogProdDetail").dialog({
+            modal: true,
+            width: "55%",
+            buttons: [{
+                text: "OK",
+                id: "btndialogProd",
+                click: function () {
+                    $("#dialogProdDetail").dialog("close");
+                }
+            }]
+        });
+        $(".ui-dialog-titlebar-close").empty();
+        $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+    }
+    function ShowProductDetail(e) {
+        console.log("Record",e.data.record);
+        GetBillProduct(e.data.record.BillNo, e.data.record.UID);
+        OpenProductDetails();
+    }
+    function SetSpecificCode(type, label) {
+
+        if (type == "Party") {
+            for (var i = 0; i < FullPartyList.length; i++) {
+                if (FullPartyList[i].PartyName == label) {
+                    $("#PartyCode").val(FullPartyList[i].PartyCode);
+                    break;
+                }
+            }
+        }
+    }
+
+    function GetAllParty() {
+        $.ajax({
+            url: '/Report/GetAllPartyListForReports',
+            dataType: 'JSON',
+            method: 'GET',
+            //data: { 'LedgerName': '' },
+            success: function (data) {
+                console.log("data:", data);
+                //response(data);
+                FullPartyList = data;
+                PartyList = [];
+                if (data != null) {
+                    var i = 0;
+                    for (i = 0; i < data.length; i++) {
+                        //console.log("data[i]", data[i]);
+                        PartyList.push(data[i].PartyName);
+                    }
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function toDate(dateStr) {
+        var parts = dateStr.split("-");
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+    //function toDateFormat(dateStr) {
+    //    var parts = dateStr.split("-");
+    //    return new Date(parts[2], parts[1] - 1, parts[0]);
+    //}
+    function OpenDialog(dialogId, Message, isConfirmation) {
+        $("#" + dialogId).empty();
+        $("#" + dialogId).append('<p>' + Message + '</p>');
+        if (isConfirmation == "true") {
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "Yes",
+                    id: "btnYes" + dialogId,
+                    click: function () {
+                        //var isOpen = $("#dialog").dialog("isOpen");
+                        //if (isOpen == true) {
+                        //    okCallBack();
+                        //}
+                        IsYes = true;
+                        $("#" + dialogId).dialog("close");
+
+
+                    }
+                },
+                {
+                    text: "No",
+                    id: "btnNo" + dialogId,
+                    click: function () {
+                        //var isOpen = $("#dialog").dialog("isOpen");
+                        //if (isOpen == true) {
+                        //    okCallBack();
+                        //}
+                        IsYes = false;
+                        $("#" + dialogId).dialog("close");
+                    }
+                }
+                ]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+        else {
+
+
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "OK",
+                    id: "btn" + dialogId,
+                    click: function () {
+                        //var isOpen = $("#dialog").dialog("isOpen");
+                        //if (isOpen == true) {
+                        //    okCallBack();
+                        //}
+
+                        $("#" + dialogId).dialog("close");
+
+
+                    }
+                }]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+
+    }
+    function fillGrid() {
+        console.log("BillWiseGrid", BillWiseGrid);
+
+        // BillWiseGrid = BillWiseGrid.splice(1);
+
+        $("#noRecord").hide();
+        //console.log("ProductGrid", ProductGrid);
+        if (grid != null) {
+            grid.destroy();
+            $('#grid').empty();
+
+        }
+
+        grid = $('#grid').grid({
+            dataSource: BillWiseGrid,
+            uiLibrary: 'bootstrap',
+            headerFilter: true,
+            columns: [
+                { field: 'SNo', title: 'S.No.',width:80, sortable: true, hidden: false, filterable: false },
+                 { field: 'BillNo', title: 'Bill No', width: 100, sortable: true, hidden: false, filterable: true, tmpl: '<span" style="text-decoration:underline;color:blue" >{BillNo}</span>', events: { 'click': ShowProductDetail }, align: 'center' },
+                  { field: 'BillDate', title: 'Bill Date', width: 100, sortable: true, hidden: false, filterable: true },
+                   { field: 'PartyCode', title: 'Party Code', width: 90, sortable: true, hidden: false, filterable: true },
+                    { field: 'PartyName', title: 'Party Name', width: 150, sortable: true, hidden: false, filterable: true },
+                      { field: 'Code', title: 'Cust. Code', width: 100, sortable: true, hidden: false, filterable: true },
+                       { field: 'Name', title: 'Cust. Name', width: 150, sortable: true, hidden: false, filterable: true },
+                        { field: 'Amount', title: 'Amount', width: 80, sortable: true, hidden: false, filterable: true },
+                         //{ field: 'TaxAmount', title: 'Tax Amount', sortable: true, hidden: false, filterable: true },
+                         { field: 'IGSTAmount', width: 80, title: 'IGST/Tax Amt.', sortable: true, hidden: false, filterable: true },
+                         { field: 'CGSTAmount', width: 80, title: 'CGST Amt.', sortable: true, hidden: false, filterable: true },
+                         { field: 'SGSTAmount', width: 80, title: 'SGST Amt.', sortable: true, hidden: false, filterable: true },
+                          { field: 'NetAmount', width: 80, title: 'Net Amount', sortable: true, hidden: false, filterable: true },
+                            { field: 'UID', width: 80, title: 'UID', sortable: true, hidden: true, filterable: true },
+                           { field: 'DltDate', width: 80, title: 'Dlt. Date', sortable: true, hidden: false, filterable: true },
+                         { field: 'Reason', width: 80, title: 'Dlt.Reason', sortable: true, hidden: false, filterable: true },
+                          { field: 'DUsername', width: 80, title: 'Dlt.Username', sortable: true, hidden: false, filterable: true },
+
+            ],
+            pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+        });
+
+
+    }
+
+    //function GetSalesDetails() {
+
+
+    //}
+</script>
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Deleted Sale Report</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_content">
+                    <br />
+                    <form id="BillWiseSalesForm" method="post" name="BillWiseSalesForm" onsubmit="false" data-parsley-validate class="validateForm form-horizontal form-label-left">
+                       
+                        @Html.HiddenFor(m => m.PartyCode, new { id = "PartyCode", name = "PartyCode" })
+                        @Html.HiddenFor(m => m.InvoiceType, new { id = "hiddenInvoiceType", name = "hiddenInvoiceType" })
+                       
+                        <div class="col-lg-12">
+                            <div class="col-lg-8">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                  
+                                        <div class="control-label col-lg-6 col-md-3 col-sm-3 col-xs-12" style="padding:0 0 0 0" >
+                                            @Html.DropDownList("DateWise",new SelectList(new List<SelectListItem> {
+                                           new SelectListItem {Text="Bill Date",Value="0" },
+                                           new SelectListItem { Text="Deleted Date", Value="1" }
+                                       }, "Value", "Text"), new { @class = "form-control", @id = "DateWise" })
+
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+
+                                            @Html.TextBoxFor(m => m.StartDate, new { name = "StartDate", id = "StartDate", tabindex = "1", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-6 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            To Date @*<span class="required">*</span>*@
+                                        </label>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+
+                                            @Html.TextBoxFor(m => m.EndDate, new { name = "EndDate", id = "EndDate", tabindex = "2", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                                </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <div id="IsProductDiv">
+                                        <label>
+                                            <input type="checkbox" id="IsDateFilter" name="IsDateFilter" class="flat" tabindex="3" />
+
+
+                                        </label>
+
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        <div class="col-lg-12">
+                            <div class="col-lg-8">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        CustomerId No @*<span class="required">*</span>*@
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+
+                                        @Html.TextBoxFor(m => m.CustCode, new { name = "CustCode", id = "CustCode", tabindex = "4", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <div id="IsProductDiv">
+                                        <label>
+                                            <input type="checkbox" id="IsCustomerFilter" name="IsCustomerFilter" class="flat" tabindex="5" />
+ </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if (IsSoldByHo)
+                        {
+                            <div class="col-lg-12">
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Enter Party
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+
+                                            @Html.TextBoxFor(m => m.PartyName, new { name = "PartyName", id = "PartyName", tabindex = "5", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-4">
+                                    <div class="form-group">
+                                        <div id="IsPartyDiv">
+                                            <label>
+                                                <input type="checkbox" id="IsParty" name="IsParty" class="flat" tabindex="6" />
+
+
+                                            </label>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <div class="col-lg-12">
+                           
+                            <div class="form-group">
+                                <div class="col-lg-12" >
+                                    <div class="col-lg-8">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name" style="padding-left:0px;padding-right:0px">
+    Invoice Type
+</label>
+<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="padding-left: 0;">
+
+    @Html.DropDownListFor(m => m.InvoiceType, ViewBag.InvoiceTypes as IEnumerable<SelectListItem>, new { name = "InvoiceType", id = "InvoiceType", tabindex = "5", @class = "form-control col-md-7 col-xs-12" })
+</div>
+                                        <div class="col-lg-3 col-md-3 col-sm-3">
+
+                                            @Html.DropDownListFor(m => m.OfferUID, new SelectList(new List<SelectListItem>{
+                                           new SelectListItem { Text="--All Bills--",Value="99"},
+                                           new SelectListItem { Text="Offer Billing",Value="1"},
+                                           new SelectListItem { Text="Without Offer",Value="0"} }, "Value", "Text"), new { @class = "form-control", @id = "OfferUID" })
+                                        </div> <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" style="padding-left: 0.5%;">
+
+                                                @Html.DropDownListFor(m => m.FType, new SelectList(new List<SelectListItem>{
+                                           new SelectListItem { Text="--Party Type--",Value="A"},
+                                           new SelectListItem { Text="Distributor",Value="M"},
+                                           new SelectListItem { Text="Franchise",Value="D"},
+                                           new SelectListItem { Text = "General Customer", Value = "W" } }, "Value", "Text"), new { @class = "form-control", @id = "FType" })
+                                            </div>
+                                        </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <input type="button" id="btnShowReport" name="btnShowReport" value="Show Report" />
+                                            <img src="~/images/ExcelImage.jpg" id="btnExport" style="margin-right: 60%;height: 25px;cursor:pointer;float:right" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <br /><br /><br /><center><div class="loader" style="display:none"></div></center>
+                                <table class="table bootstrap-datatable" id="grid"></table>
+                                <center><span style="display:none" id="noRecord">No Records Found</span></center>
+
+
+                            </div>
+                        </div>
+
+                        <table id="gridExport" style="display:none"></table>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="dialogMessage" title="Message">
+
+    </div>
+    <div id="dialogProdDetail" title="ProductDetail" style="display:none;padding:0px;">
+        <div class="col-lg-12" style="background-color:lightgrey;border:1px black solid;"><span style="width:100%;"><center>Bill No: <span id="BillNoToGet"></span></center></span></div>
+        <div class="col-lg-12" style="height: 150px;overflow-y: auto;min-height: 150px;">
+
+            <br />
+            <table style="width:100%;" border="1">
+                <thead>
+                    <tr>
+                        <th><span>S.No.</span></th>
+                        <th><span>Prod.ID</span></th>
+                        <th><span>Product Name</span></th>
+                        <th><span>Qty</span></th>
+                        <th><span>DP</span></th>
+                        <th><span>Amount</span></th>
+                    </tr>
+                </thead>
+                <tbody id="BillProductDetails"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+

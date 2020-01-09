@@ -53,6 +53,7 @@
             var inArr = arr[i];
             var secArr = inArr.split(":");
             var myInput = document.createElement("input");
+            myInput.setAttribute("type", "hidden");
             myInput.setAttribute("name", replaceAll(secArr[0].replace("{", ""), "'", ""));
             myInput.setAttribute("value", replaceAll(secArr[1].replace("}", ""), "'", ""));
             myForm.appendChild(myInput);
@@ -146,11 +147,11 @@
         });
         $("form[name=WalletReqForm]").unbind("submit");
         $("form[name=WalletReqForm]").bind('submit', function (e) {
-
             formdata = new FormData($("#WalletReqForm")[0]);
-            postwithCode("_self", "test.aspx", "UniQID:M5atFxiqlc3XGMqzoZBh,regid:415731,amount:657,Mobile:9828669575,shpcharge:57,scmemtype:ExistMember,email:khushbujajoo@gmail.com,coupon:");
+            postwithCode("_self", "testPaytm", "UniQID:M5atFxiqlc3XGMqzoZBh,regid:415731,amount:657,Mobile:9828669575,shpcharge:57,scmemtype:ExistMember,email:khushbujajoo@gmail.com,coupon:");
+            return false;
         });
-
+        
         $('#upload').bind('change', function () {
             if (this.files && this.files[0]) {
                 var reader = new FileReader();

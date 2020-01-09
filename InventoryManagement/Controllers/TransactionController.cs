@@ -16,7 +16,6 @@ using NPOI.SS.UserModel;
 using System.Linq;
 using NPOI.HSSF.UserModel;
 using NPOI.XSSF.UserModel;
-using paytm;
 
 namespace InventoryManagement.Controllers
 {
@@ -29,6 +28,13 @@ namespace InventoryManagement.Controllers
         ProductManager objProductManager = new ProductManager();
         LogManager objLogManager = new LogManager();
         RegistrationManager objRegistrationManager = new RegistrationManager();
+        [HttpPost]
+        public ActionResult testPaytm(PaytmGateway objpay)
+        {
+            Response.Redirect(@"~/Test.aspx?Mobile=" + objpay.Mobile);
+            return new EmptyResult();
+           // return View("Test.aspx?Mobile=" + objpay.Mobile);
+        }
 
         [SessionExpire]
         public ActionResult DistributorBill()

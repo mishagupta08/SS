@@ -31,7 +31,7 @@ namespace InventoryManagement.Controllers
         [HttpPost]
         public ActionResult testPaytm(PaytmGateway objpay)
         {
-            Response.Redirect(@"~/Test.aspx?Mobile=" + objpay.Mobile);
+            Response.Redirect(@"~/Test.aspx?Mobile=" + objpay.Mobile + "&UniQID=" + objpay.UniQID + "&shpcharge=" + objpay.shpcharge + "&ORDER_ID=" + objpay.ORDER_ID + "&regid=" + objpay.regid + "&scmemtype=" + objpay.scmemtype + "&amount=" + objpay.amount + "&coupon=" + objpay.coupon + "&email=" + objpay.email);
             return new EmptyResult();
            // return View("Test.aspx?Mobile=" + objpay.Mobile);
         }

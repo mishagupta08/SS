@@ -107,6 +107,7 @@
     <Compile Include="Common\PartyTargetMaster.cs" />
     <Compile Include="Common\PartyWiseWalletDetails.cs" />
     <Compile Include="Common\PaymentSummary.cs" />
+    <Compile Include="Common\PaytmGateway.cs" />
     <Compile Include="Common\ProductDetails.cs" />
     <Compile Include="Common\ProductSummary.cs" />
     <Compile Include="Common\PurchaseReport.cs" />

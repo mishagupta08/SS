@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PayWithPaytm.aspx.cs" Inherits="InventoryManagement.PayWithPaytm" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="CreditResponse.aspx.cs" Inherits="InventoryManagement.CreditResponse" %>
 
 <!DOCTYPE html>
 
@@ -7,7 +7,7 @@
     <title></title>
 </head>
 <body>
-    <form id="form1" runat="server">    
+    <form id="form1" runat="server">
     <div>
     
     </div>

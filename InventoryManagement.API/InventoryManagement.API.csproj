@@ -219,7 +219,73 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\BankBranch.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ChildProductRegistration.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DailyStockDetail_Result.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\DeletedBillDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedBillMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedChallanDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedChallanMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedCurrentStock.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedCustomerMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedInwardDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedInwardMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedMaxDiscount.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedPartyOrderDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedPartyOrderMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedProductDispatchDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedPurchaseOrderDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedPurchaseOrderMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedReceipt.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedSalesReturnDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedSalesReturnMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedStockJv.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DeletedVoucher.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\D_sessnmaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\FranchiseOfferDetail_Result.cs">
@@ -261,10 +327,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Inv_M_ConfigMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Inv_M_MenuMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Inv_M_SearchTypeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Inv_M_ThemeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Inv_M_UserMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Inv_M_UserPermissionMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Inv_TempUserMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Inv_TempUserPermissionMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\KitOffer.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\MakeKit.cs">
@@ -279,7 +366,31 @@
     <Compile Include="Models\M_BarCodeMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_BatchMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_BillCondition.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_BillTypeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_BlockProductMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_BloodGroupMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_BrandMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_CardIssue.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_CatMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_ChargesMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_CityStateMaster.cs">
@@ -288,7 +399,16 @@
     <Compile Include="Models\M_CompanyMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_CompBankersMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_ConfigMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_CountryMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_CouponSalesDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_CourierDetails.cs">
@@ -297,13 +417,49 @@
     <Compile Include="Models\M_CourierMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_CustomerMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_DeleteTransaction.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_DispatchMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_DispatchTypeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_DistrictMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_DivisionMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_ExtraDiscount.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_FiscalMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_FlashMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_FormGeneration.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_GroupMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_GrpPermissionMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_Initials.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_InsuranceCompMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_InvoiceTypeMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_InwardData.cs">
@@ -315,31 +471,160 @@
     <Compile Include="Models\M_InwardMain.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_IsCardIssue.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_JType.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_KitProductMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_KitUnitMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_LeaderWiseOffer.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_LedgerMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_LogMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_MainMCatMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_MaxDiscount.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_MemberMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_MenuMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_MonthSessnMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_MPayModeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_NewCustomer.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_NewHOVersionInfo.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_NewOfferMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_NewsSeminarMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_OccupationMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_OfferProductType.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_OfferType.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_PackageProductMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_PartyDiscount.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_PartyWiseBillCondition.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_PayModeMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_PKGForCustBilling.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_PlanMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_ProductKitUnitMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_ProductMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_ProfessionMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_QualifyTypeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_ReportType.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_Reward.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_RewardMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_SearchMethodMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_SearchTypeMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_SessnMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_SpecialOfferMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_SpecialProductMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_StateDivMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_StockReportType.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_SubCategory.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_SubCatMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_TaxBaseMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_TaxCatMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_TaxMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_TaxTypeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_ThemeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_UserDataHistory.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_UserGroupMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_UserMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_UserPermissionMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OfferAchvdMem.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OfferResult_Result.cs">
@@ -357,6 +642,18 @@
     <Compile Include="Models\ProductSummary_Result.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\ProdVoucher.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\repurchaseproduct.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\RepurchIncome.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sample_Result.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\StockDetail_Result.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
@@ -369,10 +666,91 @@
     <Compile Include="Models\TargetMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TblPaymentGetWayRequest.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempBankMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempBarCodeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempBatchMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempBillMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempCatMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempChildProductRegistration.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempCityStateMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempCompBankersMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempCourierMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempDispatchMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempDistrictMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempLeaderWiseOffer.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempLedger.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempLedgerMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempNewHOVersionInfo.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempNewOfferMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempPartyWiseBillCondition.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempProductBookingMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempProductMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TempSalesReturnDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TempSalesReturnMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempStateDivMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempSubCatMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempTaxCatMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempTaxMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TempVoucher.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TmpBillDate.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TransMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrnBillData.cs">
@@ -384,6 +762,24 @@
     <Compile Include="Models\TrnBillMain.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TrnCancelOrder.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnCancelOrderDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnChallanDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnChallanMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnFormGeneration.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnLedger.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TrnOrderDeliveryDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
@@ -393,10 +789,37 @@
     <Compile Include="Models\TrnPartyOrderMain.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TrnPaymentConfirmation.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnPaymentHoldDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TrnPayModeDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrnPayModeMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnPickListDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnProductDispatchDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnProductMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnPurchaseOrderDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnPurchaseOrderMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnPurchaseReqDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnPurchaseReqMain.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrnPurchaseReturnDetail.cs">
@@ -405,13 +828,25 @@
     <Compile Include="Models\TrnPurchaseReturnMain.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TrnReceipt.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnReceiptDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TrnSalesReturnDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrnSalesReturnMain.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TrnStockAdjustment.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TrnStockJv.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnUpdateBillDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrnVoucher.cs">
@@ -423,13 +858,43 @@
     <Compile Include="Models\VisionOfferProduct.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\V_AccountStatement.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_AvailProdStockBarcodes.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\V_BillWiseSaleSummary.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_City.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_CurrentStockDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\V_CurrentStockDetailNotForStockist.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\V_CurrentStockDetail_STK.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\V_DeletedSaleSummary.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_District.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_GroupWiseSaleSummary.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_IDWiseBillSummary.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_LedgerBalance.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_MonthWisePartyPurchaseSummary.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\V_MonthWiseSaleSummary.cs">
@@ -438,7 +903,52 @@
     <Compile Include="Models\V_MonthWiseSupplierPurchaseSummary.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\V_OfferProductDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\V_PartyBalance.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_PartyDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_PartyWiseBalance.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_PaymentModeWiseDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_ProductStockPosition.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_ProductStockPosition_STK.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_ProductWiseSale.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_SaleReturnDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_StockPlanning.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_StockPlanningForSTKST.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_StockRecvSummary.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_TopSellingProducts.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_TransportDetail.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_User.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\V_WebBillDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\WalletReport_Result.cs">

@@ -16,6 +16,7 @@ using NPOI.SS.UserModel;
 using System.Linq;
 using NPOI.HSSF.UserModel;
 using NPOI.XSSF.UserModel;
+using InventoryManagement.Models;
 
 namespace InventoryManagement.Controllers
 {
@@ -31,9 +32,14 @@ namespace InventoryManagement.Controllers
         [HttpPost]
         public ActionResult testPaytm(PaytmGateway objpay)
         {
+            objpay.Mobile = (Session["LoginUser"] as User).MobileNo;
+            objpay.email = (Session["LoginUser"] as User).Email;
+            objpay.regid = (Session["LoginUser"] as User).PartyCode;
+            objpay.action = "INSERT";
+            var result = objTransacManager.CreditRequestOnlineInsert(objpay);
             Response.Redirect(@"~/Test.aspx?Mobile=" + objpay.Mobile + "&UniQID=" + objpay.UniQID + "&shpcharge=" + objpay.shpcharge + "&ORDER_ID=" + objpay.ORDER_ID + "&regid=" + objpay.regid + "&scmemtype=" + objpay.scmemtype + "&amount=" + objpay.amount + "&coupon=" + objpay.coupon + "&email=" + objpay.email);
             return new EmptyResult();
-           // return View("Test.aspx?Mobile=" + objpay.Mobile);
+            // return View("Test.aspx?Mobile=" + objpay.Mobile);
         }
 
         [SessionExpire]
@@ -2622,6 +2628,13 @@ namespace InventoryManagement.Controllers
             objBanks = objTransacManager.GetMBanks();
             return Json(objBanks, JsonRequestBehavior.AllowGet);
         }
+        [HttpPost]
+        public ActionResult GenerateRequest(WalletRequest objWallet)
+        {
+            Response.Redirect(@"~/Test.aspx?Amount=" + objWallet.Amount);
+            return new EmptyResult();
+        }
+
         [HttpPost]
         public ActionResult SaveWalletRequest(WalletRequest objWallet, HttpPostedFileBase upload)
         {

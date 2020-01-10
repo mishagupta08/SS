@@ -59,7 +59,8 @@ namespace InventoryManagement.API.Controllers
                 {
                     objResponse = (from result in entity.Inv_M_UserMaster
                                    where result.ActiveStatus == "Y" && result.UserName == model.UserName && result.Passw == model.password
-                                   join ledger in entity.M_LedgerMaster on result.BranchCode equals ledger.PartyCode where ledger.ActiveStatus=="Y"
+                                   join ledger in entity.M_LedgerMaster on result.BranchCode equals ledger.PartyCode
+                                   where ledger.ActiveStatus == "Y"
                                    join groupid in entity.M_GroupMaster on ledger.GroupId equals groupid.GroupId
                                    select new User
                                    {
@@ -73,18 +74,21 @@ namespace InventoryManagement.API.Controllers
                                        FCode = ledger.PartyCode,
                                        StateCode = (int)ledger.StateCode,
                                        IsAdmin = result.IsAdmin,
-                                       ParentPartyCode=ledger.ParentPartyCode
+                                       ParentPartyCode = ledger.ParentPartyCode,
+                                       MobileNo = ledger.MobileNo,
+                                       Email = ledger.E_MailAdd
                                    }
 
                                  ).FirstOrDefault();
-                    if((!objResponse.UserName.Equals(model.UserName) || (!objResponse.Password.Equals(model.password)))){
+                    if ((!objResponse.UserName.Equals(model.UserName) || (!objResponse.Password.Equals(model.password))))
+                    {
                         objResponse = null;
                     }
 
 
                     //dynamic menus
                     objResponse.objMenuList = new List<MenuMasterModel>();
-                    if (objResponse!=null && objResponse.IsAdmin == "N")
+                    if (objResponse != null && objResponse.IsAdmin == "N")
                     {
                         List<decimal> PermittedMenuId = (from r in entity.Web_M_UserPermissionMaster where r.GroupId == objResponse.UserId select r.MenuId).ToList();
                         objResponse.objMenuList = (from r in entity.Web_M_MenuMaster
@@ -97,9 +101,9 @@ namespace InventoryManagement.API.Controllers
                                                        ActiveStatus = r.ActiveStatus,
                                                        Hierarchy = r.Hierar,
                                                        OnSelect = r.OnSelect,
-                                                       Sequence=r.Sequence,
-                                                       ChildSequence=r.ChildSequence
-                                                   }).OrderBy(m=>m.Sequence).ToList();
+                                                       Sequence = r.Sequence,
+                                                       ChildSequence = r.ChildSequence
+                                                   }).OrderBy(m => m.Sequence).ToList();
                     }
                     else
                     {
@@ -137,15 +141,15 @@ namespace InventoryManagement.API.Controllers
                 {
                     objResponse.IsSoldByHo = true;
                 }
-                    if (objResponse.IsSoldByHo)
-                    {
-                        int indexOfOrderCreationMenu = objResponse.objMenuList.FindIndex(m => m.MenuName == "Order Creation");
+                if (objResponse.IsSoldByHo)
+                {
+                    int indexOfOrderCreationMenu = objResponse.objMenuList.FindIndex(m => m.MenuName == "Order Creation");
                     if (indexOfOrderCreationMenu > -1)
                     {
                         objResponse.objMenuList.RemoveAt(indexOfOrderCreationMenu);
                     }
-                    }
-               
+                }
+
                 else
                 {
                     int indexOfOrderCreationMenu = objResponse.objMenuList.FindIndex(m => m.MenuName == "Purchase Reports");
@@ -161,9 +165,9 @@ namespace InventoryManagement.API.Controllers
                         }
                     }
                 }
-                
+
             }
-            
+
             return objResponse;
         }
 
@@ -172,7 +176,7 @@ namespace InventoryManagement.API.Controllers
             ResponseDetail objResponse = new ResponseDetail();
             try
             {
-                using(var entity=new InventoryEntities())
+                using (var entity = new InventoryEntities())
                 {
                     if (model != null)
                     {
@@ -200,7 +204,7 @@ namespace InventoryManagement.API.Controllers
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }

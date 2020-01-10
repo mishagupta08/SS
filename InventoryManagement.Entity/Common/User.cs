@@ -25,5 +25,7 @@ namespace InventoryManagement.Entity.Common
        public string IsActionName { get; set; }
         public string ActiveStatus { get; set; }
         public string Remarks { get; set; }
+        public decimal MobileNo { get; set; }
+        public string Email { get; set; }
     }
 }

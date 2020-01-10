@@ -27,65 +27,233 @@ namespace InventoryManagement.API.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<ChildProductRegistration> ChildProductRegistrations { get; set; }
+        public virtual DbSet<DeletedChallanDetail> DeletedChallanDetails { get; set; }
+        public virtual DbSet<DeletedChallanMain> DeletedChallanMains { get; set; }
+        public virtual DbSet<DeletedCustomerMaster> DeletedCustomerMasters { get; set; }
+        public virtual DbSet<DeletedPartyOrderDetail> DeletedPartyOrderDetails { get; set; }
+        public virtual DbSet<DeletedPartyOrderMain> DeletedPartyOrderMains { get; set; }
+        public virtual DbSet<DeletedProductDispatchDetail> DeletedProductDispatchDetails { get; set; }
+        public virtual DbSet<DeletedPurchaseOrderDetail> DeletedPurchaseOrderDetails { get; set; }
+        public virtual DbSet<DeletedPurchaseOrderMain> DeletedPurchaseOrderMains { get; set; }
+        public virtual DbSet<DeletedSalesReturnDetail> DeletedSalesReturnDetails { get; set; }
+        public virtual DbSet<DeletedSalesReturnMain> DeletedSalesReturnMains { get; set; }
+        public virtual DbSet<Im_CurrentStock> Im_CurrentStock { get; set; }
+        public virtual DbSet<Inv_M_ConfigMaster> Inv_M_ConfigMaster { get; set; }
+        public virtual DbSet<Inv_M_SearchTypeMaster> Inv_M_SearchTypeMaster { get; set; }
         public virtual DbSet<Inv_M_UserMaster> Inv_M_UserMaster { get; set; }
+        public virtual DbSet<Inv_M_UserPermissionMaster> Inv_M_UserPermissionMaster { get; set; }
         public virtual DbSet<M_BankMaster> M_BankMaster { get; set; }
         public virtual DbSet<M_BarCodeMaster> M_BarCodeMaster { get; set; }
+        public virtual DbSet<M_BatchMaster> M_BatchMaster { get; set; }
+        public virtual DbSet<M_BillTypeMaster> M_BillTypeMaster { get; set; }
+        public virtual DbSet<M_BlockProductMaster> M_BlockProductMaster { get; set; }
+        public virtual DbSet<M_BrandMaster> M_BrandMaster { get; set; }
+        public virtual DbSet<M_CardIssue> M_CardIssue { get; set; }
         public virtual DbSet<M_CatMaster> M_CatMaster { get; set; }
-        public virtual DbSet<M_FiscalMaster> M_FiscalMaster { get; set; }
-        public virtual DbSet<M_GroupMaster> M_GroupMaster { get; set; }
-        public virtual DbSet<M_LedgerMaster> M_LedgerMaster { get; set; }
-        public virtual DbSet<M_PayModeMaster> M_PayModeMaster { get; set; }
-        public virtual DbSet<M_TaxMaster> M_TaxMaster { get; set; }
-        public virtual DbSet<TrnStockJv> TrnStockJvs { get; set; }
-        public virtual DbSet<M_NewHOVersionInfo> M_NewHOVersionInfo { get; set; }
-        public virtual DbSet<M_SessnMaster> M_SessnMaster { get; set; }
-        public virtual DbSet<TrnPayModeMaster> TrnPayModeMasters { get; set; }
-        public virtual DbSet<M_SubCatMaster> M_SubCatMaster { get; set; }
         public virtual DbSet<M_CityStateMaster> M_CityStateMaster { get; set; }
-        public virtual DbSet<M_StateDivMaster> M_StateDivMaster { get; set; }
+        public virtual DbSet<M_CompanyMaster> M_CompanyMaster { get; set; }
+        public virtual DbSet<M_CompBankersMaster> M_CompBankersMaster { get; set; }
+        public virtual DbSet<M_CountryMaster> M_CountryMaster { get; set; }
+        public virtual DbSet<M_CouponSalesDetail> M_CouponSalesDetail { get; set; }
+        public virtual DbSet<M_CourierDetails> M_CourierDetails { get; set; }
+        public virtual DbSet<M_CourierMaster> M_CourierMaster { get; set; }
+        public virtual DbSet<M_CustomerMaster> M_CustomerMaster { get; set; }
+        public virtual DbSet<M_DeleteTransaction> M_DeleteTransaction { get; set; }
+        public virtual DbSet<M_DispatchMaster> M_DispatchMaster { get; set; }
+        public virtual DbSet<M_DispatchTypeMaster> M_DispatchTypeMaster { get; set; }
+        public virtual DbSet<M_DistrictMaster> M_DistrictMaster { get; set; }
+        public virtual DbSet<M_DivisionMaster> M_DivisionMaster { get; set; }
+        public virtual DbSet<M_ExtraDiscount> M_ExtraDiscount { get; set; }
+        public virtual DbSet<M_FiscalMaster> M_FiscalMaster { get; set; }
+        public virtual DbSet<M_FormGeneration> M_FormGeneration { get; set; }
+        public virtual DbSet<M_GroupMaster> M_GroupMaster { get; set; }
+        public virtual DbSet<M_InsuranceCompMaster> M_InsuranceCompMaster { get; set; }
         public virtual DbSet<M_InwardData> M_InwardData { get; set; }
         public virtual DbSet<M_InwardMain> M_InwardMain { get; set; }
-        public virtual DbSet<M_InwardDetail> M_InwardDetail { get; set; }
-        public virtual DbSet<V_MonthWiseSaleSummary> V_MonthWiseSaleSummary { get; set; }
-        public virtual DbSet<V_MonthWiseSupplierPurchaseSummary> V_MonthWiseSupplierPurchaseSummary { get; set; }
-        public virtual DbSet<TrnPartyOrderDetail> TrnPartyOrderDetails { get; set; }
-        public virtual DbSet<TrnPartyOrderMain> TrnPartyOrderMains { get; set; }
-        public virtual DbSet<Web_M_MenuMaster> Web_M_MenuMaster { get; set; }
+        public virtual DbSet<M_JType> M_JType { get; set; }
+        public virtual DbSet<M_KitProductMaster> M_KitProductMaster { get; set; }
+        public virtual DbSet<M_KitUnitMaster> M_KitUnitMaster { get; set; }
+        public virtual DbSet<M_LeaderWiseOffer> M_LeaderWiseOffer { get; set; }
+        public virtual DbSet<M_LedgerMaster> M_LedgerMaster { get; set; }
+        public virtual DbSet<M_LogMaster> M_LogMaster { get; set; }
+        public virtual DbSet<M_MainMCatMaster> M_MainMCatMaster { get; set; }
+        public virtual DbSet<M_MenuMaster> M_MenuMaster { get; set; }
+        public virtual DbSet<M_MPayModeMaster> M_MPayModeMaster { get; set; }
+        public virtual DbSet<M_NewsSeminarMaster> M_NewsSeminarMaster { get; set; }
+        public virtual DbSet<M_OccupationMaster> M_OccupationMaster { get; set; }
+        public virtual DbSet<M_OfferType> M_OfferType { get; set; }
+        public virtual DbSet<M_PackageProductMaster> M_PackageProductMaster { get; set; }
+        public virtual DbSet<M_PartyDiscount> M_PartyDiscount { get; set; }
+        public virtual DbSet<M_PayModeMaster> M_PayModeMaster { get; set; }
+        public virtual DbSet<M_PlanMaster> M_PlanMaster { get; set; }
         public virtual DbSet<M_ProductMaster> M_ProductMaster { get; set; }
+        public virtual DbSet<M_QualifyTypeMaster> M_QualifyTypeMaster { get; set; }
+        public virtual DbSet<M_SearchTypeMaster> M_SearchTypeMaster { get; set; }
+        public virtual DbSet<M_SpecialOfferMaster> M_SpecialOfferMaster { get; set; }
+        public virtual DbSet<M_StateDivMaster> M_StateDivMaster { get; set; }
+        public virtual DbSet<M_SubCatMaster> M_SubCatMaster { get; set; }
+        public virtual DbSet<M_TaxBaseMaster> M_TaxBaseMaster { get; set; }
+        public virtual DbSet<M_TaxCatMaster> M_TaxCatMaster { get; set; }
+        public virtual DbSet<M_TaxMaster> M_TaxMaster { get; set; }
+        public virtual DbSet<M_TaxTypeMaster> M_TaxTypeMaster { get; set; }
+        public virtual DbSet<M_ThemeMaster> M_ThemeMaster { get; set; }
+        public virtual DbSet<M_UserGroupMaster> M_UserGroupMaster { get; set; }
+        public virtual DbSet<M_UserMaster> M_UserMaster { get; set; }
+        public virtual DbSet<M_UserPermissionMaster> M_UserPermissionMaster { get; set; }
+        public virtual DbSet<MakeKit> MakeKits { get; set; }
+        public virtual DbSet<OLDBillDetail> OLDBillDetails { get; set; }
+        public virtual DbSet<OLDBillMain> OLDBillMains { get; set; }
+        public virtual DbSet<TargetDetail> TargetDetails { get; set; }
+        public virtual DbSet<TargetMaster> TargetMasters { get; set; }
+        public virtual DbSet<TblPaymentGetWayRequest> TblPaymentGetWayRequests { get; set; }
+        public virtual DbSet<TempBillMain> TempBillMains { get; set; }
+        public virtual DbSet<TempCourierMaster> TempCourierMasters { get; set; }
+        public virtual DbSet<TempLeaderWiseOffer> TempLeaderWiseOffers { get; set; }
+        public virtual DbSet<TempTaxMaster> TempTaxMasters { get; set; }
         public virtual DbSet<TrnBillData> TrnBillDatas { get; set; }
         public virtual DbSet<TrnBillDetail> TrnBillDetails { get; set; }
         public virtual DbSet<TrnBillMain> TrnBillMains { get; set; }
-        public virtual DbSet<M_CompanyMaster> M_CompanyMaster { get; set; }
-        public virtual DbSet<Im_CurrentStock> Im_CurrentStock { get; set; }
+        public virtual DbSet<TrnCancelOrder> TrnCancelOrders { get; set; }
+        public virtual DbSet<TrnCancelOrderDetail> TrnCancelOrderDetails { get; set; }
+        public virtual DbSet<TrnChallanDetail> TrnChallanDetails { get; set; }
+        public virtual DbSet<TrnChallanMain> TrnChallanMains { get; set; }
+        public virtual DbSet<TrnFormGeneration> TrnFormGenerations { get; set; }
+        public virtual DbSet<TrnLedger> TrnLedgers { get; set; }
+        public virtual DbSet<TrnPartyOrderDetail> TrnPartyOrderDetails { get; set; }
+        public virtual DbSet<TrnPartyOrderMain> TrnPartyOrderMains { get; set; }
+        public virtual DbSet<TrnPaymentConfirmation> TrnPaymentConfirmations { get; set; }
+        public virtual DbSet<TrnPaymentHoldDetail> TrnPaymentHoldDetails { get; set; }
         public virtual DbSet<TrnPayModeDetail> TrnPayModeDetails { get; set; }
-        public virtual DbSet<TrnVoucher> TrnVouchers { get; set; }
-        public virtual DbSet<Inv_TempUserMaster> Inv_TempUserMaster { get; set; }
-        public virtual DbSet<TempSalesReturnDetail> TempSalesReturnDetails { get; set; }
-        public virtual DbSet<TempSalesReturnMain> TempSalesReturnMains { get; set; }
-        public virtual DbSet<M_ConfigMaster> M_ConfigMaster { get; set; }
-        public virtual DbSet<TargetDetail> TargetDetails { get; set; }
-        public virtual DbSet<TargetMaster> TargetMasters { get; set; }
-        public virtual DbSet<TrnSalesReturnDetail> TrnSalesReturnDetails { get; set; }
-        public virtual DbSet<TrnSalesReturnMain> TrnSalesReturnMains { get; set; }
+        public virtual DbSet<TrnProductDispatchDetail> TrnProductDispatchDetails { get; set; }
+        public virtual DbSet<TrnProductMain> TrnProductMains { get; set; }
+        public virtual DbSet<TrnPurchaseOrderDetail> TrnPurchaseOrderDetails { get; set; }
+        public virtual DbSet<TrnPurchaseOrderMain> TrnPurchaseOrderMains { get; set; }
         public virtual DbSet<TrnPurchaseReturnDetail> TrnPurchaseReturnDetails { get; set; }
         public virtual DbSet<TrnPurchaseReturnMain> TrnPurchaseReturnMains { get; set; }
-        public virtual DbSet<TrnOrderDeliveryDetail> TrnOrderDeliveryDetails { get; set; }
-        public virtual DbSet<OLDBillDetail> OLDBillDetails { get; set; }
-        public virtual DbSet<OLDBillMain> OLDBillMains { get; set; }
-        public virtual DbSet<MakeKit> MakeKits { get; set; }
-        public virtual DbSet<M_CourierDetails> M_CourierDetails { get; set; }
-        public virtual DbSet<M_CourierMaster> M_CourierMaster { get; set; }
-        public virtual DbSet<WalletReq> WalletReqs { get; set; }
-        public virtual DbSet<M_GrpPermissionMaster> M_GrpPermissionMaster { get; set; }
-        public virtual DbSet<DeletedBillDetail> DeletedBillDetails { get; set; }
-        public virtual DbSet<V_DeletedSaleSummary> V_DeletedSaleSummary { get; set; }
-        public virtual DbSet<VisionOffer> VisionOffers { get; set; }
+        public virtual DbSet<TrnReceipt> TrnReceipts { get; set; }
+        public virtual DbSet<TrnReceiptDetail> TrnReceiptDetails { get; set; }
+        public virtual DbSet<TrnSalesReturnDetail> TrnSalesReturnDetails { get; set; }
+        public virtual DbSet<TrnSalesReturnMain> TrnSalesReturnMains { get; set; }
+        public virtual DbSet<TrnStockAdjustment> TrnStockAdjustments { get; set; }
+        public virtual DbSet<TrnStockJv> TrnStockJvs { get; set; }
+        public virtual DbSet<TrnUpdateBillDetail> TrnUpdateBillDetails { get; set; }
+        public virtual DbSet<TrnVoucher> TrnVouchers { get; set; }
         public virtual DbSet<VisionOfferProduct> VisionOfferProducts { get; set; }
-        public virtual DbSet<V_BillWiseSaleSummary> V_BillWiseSaleSummary { get; set; }
+        public virtual DbSet<VisionOffer> VisionOffers { get; set; }
+        public virtual DbSet<WalletReq> WalletReqs { get; set; }
+        public virtual DbSet<Web_M_MenuMaster> Web_M_MenuMaster { get; set; }
         public virtual DbSet<Web_M_UserPermissionMaster> Web_M_UserPermissionMaster { get; set; }
-        public virtual DbSet<V_PartyBalance> V_PartyBalance { get; set; }
-        public virtual DbSet<M_LogMaster> M_LogMaster { get; set; }
+        public virtual DbSet<BankBranch> BankBranches { get; set; }
+        public virtual DbSet<D_sessnmaster> D_sessnmaster { get; set; }
+        public virtual DbSet<DeletedBillDetail> DeletedBillDetails { get; set; }
+        public virtual DbSet<DeletedBillMain> DeletedBillMains { get; set; }
+        public virtual DbSet<DeletedCurrentStock> DeletedCurrentStocks { get; set; }
+        public virtual DbSet<DeletedInwardDetail> DeletedInwardDetails { get; set; }
+        public virtual DbSet<DeletedInwardMain> DeletedInwardMains { get; set; }
+        public virtual DbSet<DeletedMaxDiscount> DeletedMaxDiscounts { get; set; }
+        public virtual DbSet<DeletedReceipt> DeletedReceipts { get; set; }
+        public virtual DbSet<DeletedStockJv> DeletedStockJvs { get; set; }
+        public virtual DbSet<DeletedVoucher> DeletedVouchers { get; set; }
+        public virtual DbSet<Inv_M_MenuMaster> Inv_M_MenuMaster { get; set; }
+        public virtual DbSet<Inv_M_ThemeMaster> Inv_M_ThemeMaster { get; set; }
+        public virtual DbSet<Inv_TempUserMaster> Inv_TempUserMaster { get; set; }
+        public virtual DbSet<Inv_TempUserPermissionMaster> Inv_TempUserPermissionMaster { get; set; }
+        public virtual DbSet<KitOffer> KitOffers { get; set; }
+        public virtual DbSet<M_BillCondition> M_BillCondition { get; set; }
+        public virtual DbSet<M_BloodGroupMaster> M_BloodGroupMaster { get; set; }
+        public virtual DbSet<M_ChargesMaster> M_ChargesMaster { get; set; }
+        public virtual DbSet<M_ConfigMaster> M_ConfigMaster { get; set; }
+        public virtual DbSet<M_FlashMaster> M_FlashMaster { get; set; }
+        public virtual DbSet<M_GrpPermissionMaster> M_GrpPermissionMaster { get; set; }
+        public virtual DbSet<M_Initials> M_Initials { get; set; }
+        public virtual DbSet<M_InvoiceTypeMaster> M_InvoiceTypeMaster { get; set; }
+        public virtual DbSet<M_InwardDetail> M_InwardDetail { get; set; }
+        public virtual DbSet<M_IsCardIssue> M_IsCardIssue { get; set; }
+        public virtual DbSet<M_MaxDiscount> M_MaxDiscount { get; set; }
+        public virtual DbSet<M_MemberMaster> M_MemberMaster { get; set; }
+        public virtual DbSet<M_MonthSessnMaster> M_MonthSessnMaster { get; set; }
+        public virtual DbSet<M_NewCustomer> M_NewCustomer { get; set; }
+        public virtual DbSet<M_NewHOVersionInfo> M_NewHOVersionInfo { get; set; }
+        public virtual DbSet<M_NewOfferMaster> M_NewOfferMaster { get; set; }
+        public virtual DbSet<M_OfferProductType> M_OfferProductType { get; set; }
+        public virtual DbSet<M_PartyWiseBillCondition> M_PartyWiseBillCondition { get; set; }
+        public virtual DbSet<M_PKGForCustBilling> M_PKGForCustBilling { get; set; }
+        public virtual DbSet<M_ProductKitUnitMaster> M_ProductKitUnitMaster { get; set; }
+        public virtual DbSet<M_ProfessionMaster> M_ProfessionMaster { get; set; }
+        public virtual DbSet<M_ReportType> M_ReportType { get; set; }
+        public virtual DbSet<M_Reward> M_Reward { get; set; }
+        public virtual DbSet<M_RewardMaster> M_RewardMaster { get; set; }
+        public virtual DbSet<M_SearchMethodMaster> M_SearchMethodMaster { get; set; }
+        public virtual DbSet<M_SessnMaster> M_SessnMaster { get; set; }
+        public virtual DbSet<M_SpecialProductMaster> M_SpecialProductMaster { get; set; }
+        public virtual DbSet<M_StockReportType> M_StockReportType { get; set; }
+        public virtual DbSet<M_SubCategory> M_SubCategory { get; set; }
+        public virtual DbSet<M_UserDataHistory> M_UserDataHistory { get; set; }
+        public virtual DbSet<OfferAchvdMem> OfferAchvdMems { get; set; }
+        public virtual DbSet<ProdVoucher> ProdVouchers { get; set; }
+        public virtual DbSet<repurchaseproduct> repurchaseproducts { get; set; }
+        public virtual DbSet<RepurchIncome> RepurchIncomes { get; set; }
+        public virtual DbSet<TempBankMaster> TempBankMasters { get; set; }
+        public virtual DbSet<TempBarCodeMaster> TempBarCodeMasters { get; set; }
+        public virtual DbSet<TempBatchMaster> TempBatchMasters { get; set; }
+        public virtual DbSet<TempCatMaster> TempCatMasters { get; set; }
+        public virtual DbSet<TempChildProductRegistration> TempChildProductRegistrations { get; set; }
+        public virtual DbSet<TempCityStateMaster> TempCityStateMasters { get; set; }
+        public virtual DbSet<TempCompBankersMaster> TempCompBankersMasters { get; set; }
+        public virtual DbSet<TempDispatchMaster> TempDispatchMasters { get; set; }
+        public virtual DbSet<TempDistrictMaster> TempDistrictMasters { get; set; }
+        public virtual DbSet<TempLedger> TempLedgers { get; set; }
+        public virtual DbSet<TempLedgerMaster> TempLedgerMasters { get; set; }
+        public virtual DbSet<TempNewHOVersionInfo> TempNewHOVersionInfoes { get; set; }
+        public virtual DbSet<TempNewOfferMaster> TempNewOfferMasters { get; set; }
+        public virtual DbSet<TempPartyWiseBillCondition> TempPartyWiseBillConditions { get; set; }
+        public virtual DbSet<TempProductBookingMaster> TempProductBookingMasters { get; set; }
+        public virtual DbSet<TempProductMaster> TempProductMasters { get; set; }
+        public virtual DbSet<TempSalesReturnDetail> TempSalesReturnDetails { get; set; }
+        public virtual DbSet<TempSalesReturnMain> TempSalesReturnMains { get; set; }
+        public virtual DbSet<TempStateDivMaster> TempStateDivMasters { get; set; }
+        public virtual DbSet<TempSubCatMaster> TempSubCatMasters { get; set; }
+        public virtual DbSet<TempTaxCatMaster> TempTaxCatMasters { get; set; }
+        public virtual DbSet<TempVoucher> TempVouchers { get; set; }
+        public virtual DbSet<TmpBillDate> TmpBillDates { get; set; }
+        public virtual DbSet<TransMaster> TransMasters { get; set; }
+        public virtual DbSet<TrnOrderDeliveryDetail> TrnOrderDeliveryDetails { get; set; }
+        public virtual DbSet<TrnPayModeMaster> TrnPayModeMasters { get; set; }
+        public virtual DbSet<TrnPickListDetail> TrnPickListDetails { get; set; }
+        public virtual DbSet<TrnPurchaseReqDetail> TrnPurchaseReqDetails { get; set; }
+        public virtual DbSet<TrnPurchaseReqMain> TrnPurchaseReqMains { get; set; }
+        public virtual DbSet<V_AccountStatement> V_AccountStatement { get; set; }
+        public virtual DbSet<V_AvailProdStockBarcodes> V_AvailProdStockBarcodes { get; set; }
+        public virtual DbSet<V_BillWiseSaleSummary> V_BillWiseSaleSummary { get; set; }
+        public virtual DbSet<V_City> V_City { get; set; }
+        public virtual DbSet<V_CurrentStockDetail> V_CurrentStockDetail { get; set; }
+        public virtual DbSet<V_CurrentStockDetail_STK> V_CurrentStockDetail_STK { get; set; }
         public virtual DbSet<V_CurrentStockDetailNotForStockist> V_CurrentStockDetailNotForStockist { get; set; }
+        public virtual DbSet<V_DeletedSaleSummary> V_DeletedSaleSummary { get; set; }
+        public virtual DbSet<V_District> V_District { get; set; }
+        public virtual DbSet<V_GroupWiseSaleSummary> V_GroupWiseSaleSummary { get; set; }
+        public virtual DbSet<V_IDWiseBillSummary> V_IDWiseBillSummary { get; set; }
+        public virtual DbSet<V_LedgerBalance> V_LedgerBalance { get; set; }
+        public virtual DbSet<V_MonthWisePartyPurchaseSummary> V_MonthWisePartyPurchaseSummary { get; set; }
+        public virtual DbSet<V_MonthWiseSaleSummary> V_MonthWiseSaleSummary { get; set; }
+        public virtual DbSet<V_MonthWiseSupplierPurchaseSummary> V_MonthWiseSupplierPurchaseSummary { get; set; }
+        public virtual DbSet<V_OfferProductDetail> V_OfferProductDetail { get; set; }
+        public virtual DbSet<V_PartyBalance> V_PartyBalance { get; set; }
+        public virtual DbSet<V_PartyDetail> V_PartyDetail { get; set; }
+        public virtual DbSet<V_PartyWiseBalance> V_PartyWiseBalance { get; set; }
+        public virtual DbSet<V_PaymentModeWiseDetail> V_PaymentModeWiseDetail { get; set; }
+        public virtual DbSet<V_ProductStockPosition> V_ProductStockPosition { get; set; }
+        public virtual DbSet<V_ProductStockPosition_STK> V_ProductStockPosition_STK { get; set; }
+        public virtual DbSet<V_ProductWiseSale> V_ProductWiseSale { get; set; }
+        public virtual DbSet<V_SaleReturnDetail> V_SaleReturnDetail { get; set; }
+        public virtual DbSet<V_StockPlanning> V_StockPlanning { get; set; }
+        public virtual DbSet<V_StockPlanningForSTKST> V_StockPlanningForSTKST { get; set; }
+        public virtual DbSet<V_StockRecvSummary> V_StockRecvSummary { get; set; }
+        public virtual DbSet<V_TopSellingProducts> V_TopSellingProducts { get; set; }
+        public virtual DbSet<V_TransportDetail> V_TransportDetail { get; set; }
+        public virtual DbSet<V_User> V_User { get; set; }
+        public virtual DbSet<V_WebBillDetail> V_WebBillDetail { get; set; }
     
         [DbFunction("InventoryEntities", "MonthWiseSummary")]
         public virtual IQueryable<MonthWiseSummary_Result> MonthWiseSummary(string partyCode, string rptType, string prodType)
@@ -177,6 +345,355 @@ namespace InventoryManagement.API.Models
         public virtual ObjectResult<WRDashboardSummary_Result1> WRDashboardSummary()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<WRDashboardSummary_Result1>("WRDashboardSummary");
+        }
+    
+        public virtual ObjectResult<Nullable<int>> CreditRequestOnlineInsert_Sp(string action, Nullable<int> regid, Nullable<decimal> reqAmt, string mop, string refno, Nullable<System.DateTime> invdate, string invbank, string invbranch, string depbank, string depbranch, string depcity, Nullable<System.DateTime> depdate, string depslip, string remarks, string oRDER_ID, string paymentStatus, string billStatus, string tXNID, string recode, string pgtype)
+        {
+            var actionParameter = action != null ?
+                new ObjectParameter("action", action) :
+                new ObjectParameter("action", typeof(string));
+    
+            var regidParameter = regid.HasValue ?
+                new ObjectParameter("regid", regid) :
+                new ObjectParameter("regid", typeof(int));
+    
+            var reqAmtParameter = reqAmt.HasValue ?
+                new ObjectParameter("reqAmt", reqAmt) :
+                new ObjectParameter("reqAmt", typeof(decimal));
+    
+            var mopParameter = mop != null ?
+                new ObjectParameter("mop", mop) :
+                new ObjectParameter("mop", typeof(string));
+    
+            var refnoParameter = refno != null ?
+                new ObjectParameter("Refno", refno) :
+                new ObjectParameter("Refno", typeof(string));
+    
+            var invdateParameter = invdate.HasValue ?
+                new ObjectParameter("invdate", invdate) :
+                new ObjectParameter("invdate", typeof(System.DateTime));
+    
+            var invbankParameter = invbank != null ?
+                new ObjectParameter("invbank", invbank) :
+                new ObjectParameter("invbank", typeof(string));
+    
+            var invbranchParameter = invbranch != null ?
+                new ObjectParameter("invbranch", invbranch) :
+                new ObjectParameter("invbranch", typeof(string));
+    
+            var depbankParameter = depbank != null ?
+                new ObjectParameter("depbank", depbank) :
+                new ObjectParameter("depbank", typeof(string));
+    
+            var depbranchParameter = depbranch != null ?
+                new ObjectParameter("depbranch", depbranch) :
+                new ObjectParameter("depbranch", typeof(string));
+    
+            var depcityParameter = depcity != null ?
+                new ObjectParameter("depcity", depcity) :
+                new ObjectParameter("depcity", typeof(string));
+    
+            var depdateParameter = depdate.HasValue ?
+                new ObjectParameter("depdate", depdate) :
+                new ObjectParameter("depdate", typeof(System.DateTime));
+    
+            var depslipParameter = depslip != null ?
+                new ObjectParameter("depslip", depslip) :
+                new ObjectParameter("depslip", typeof(string));
+    
+            var remarksParameter = remarks != null ?
+                new ObjectParameter("remarks", remarks) :
+                new ObjectParameter("remarks", typeof(string));
+    
+            var oRDER_IDParameter = oRDER_ID != null ?
+                new ObjectParameter("ORDER_ID", oRDER_ID) :
+                new ObjectParameter("ORDER_ID", typeof(string));
+    
+            var paymentStatusParameter = paymentStatus != null ?
+                new ObjectParameter("PaymentStatus", paymentStatus) :
+                new ObjectParameter("PaymentStatus", typeof(string));
+    
+            var billStatusParameter = billStatus != null ?
+                new ObjectParameter("BillStatus", billStatus) :
+                new ObjectParameter("BillStatus", typeof(string));
+    
+            var tXNIDParameter = tXNID != null ?
+                new ObjectParameter("TXNID", tXNID) :
+                new ObjectParameter("TXNID", typeof(string));
+    
+            var recodeParameter = recode != null ?
+                new ObjectParameter("Recode", recode) :
+                new ObjectParameter("Recode", typeof(string));
+    
+            var pgtypeParameter = pgtype != null ?
+                new ObjectParameter("pgtype", pgtype) :
+                new ObjectParameter("pgtype", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("CreditRequestOnlineInsert_Sp", actionParameter, regidParameter, reqAmtParameter, mopParameter, refnoParameter, invdateParameter, invbankParameter, invbranchParameter, depbankParameter, depbranchParameter, depcityParameter, depdateParameter, depslipParameter, remarksParameter, oRDER_IDParameter, paymentStatusParameter, billStatusParameter, tXNIDParameter, recodeParameter, pgtypeParameter);
+        }
+    
+        [DbFunction("InventoryEntities", "DailyStockDetail")]
+        public virtual IQueryable<DailyStockDetail_Result> DailyStockDetail(Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate, string prodID)
+        {
+            var fromDateParameter = fromDate.HasValue ?
+                new ObjectParameter("FromDate", fromDate) :
+                new ObjectParameter("FromDate", typeof(System.DateTime));
+    
+            var toDateParameter = toDate.HasValue ?
+                new ObjectParameter("ToDate", toDate) :
+                new ObjectParameter("ToDate", typeof(System.DateTime));
+    
+            var prodIDParameter = prodID != null ?
+                new ObjectParameter("ProdID", prodID) :
+                new ObjectParameter("ProdID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<DailyStockDetail_Result>("[InventoryEntities].[DailyStockDetail](@FromDate, @ToDate, @ProdID)", fromDateParameter, toDateParameter, prodIDParameter);
+        }
+    
+        public virtual int DELETEPARTYORDER(string orderNo, string dReason, Nullable<decimal> dUserId, string dStatus, string prodId, Nullable<int> dFSessId)
+        {
+            var orderNoParameter = orderNo != null ?
+                new ObjectParameter("OrderNo", orderNo) :
+                new ObjectParameter("OrderNo", typeof(string));
+    
+            var dReasonParameter = dReason != null ?
+                new ObjectParameter("DReason", dReason) :
+                new ObjectParameter("DReason", typeof(string));
+    
+            var dUserIdParameter = dUserId.HasValue ?
+                new ObjectParameter("DUserId", dUserId) :
+                new ObjectParameter("DUserId", typeof(decimal));
+    
+            var dStatusParameter = dStatus != null ?
+                new ObjectParameter("DStatus", dStatus) :
+                new ObjectParameter("DStatus", typeof(string));
+    
+            var prodIdParameter = prodId != null ?
+                new ObjectParameter("ProdId", prodId) :
+                new ObjectParameter("ProdId", typeof(string));
+    
+            var dFSessIdParameter = dFSessId.HasValue ?
+                new ObjectParameter("DFSessId", dFSessId) :
+                new ObjectParameter("DFSessId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DELETEPARTYORDER", orderNoParameter, dReasonParameter, dUserIdParameter, dStatusParameter, prodIdParameter, dFSessIdParameter);
+        }
+    
+        public virtual int DispatchOrder(Nullable<decimal> orderNo, string soldBy, Nullable<decimal> courierID, string courierName, string docketNo, string delvPlace)
+        {
+            var orderNoParameter = orderNo.HasValue ?
+                new ObjectParameter("OrderNo", orderNo) :
+                new ObjectParameter("OrderNo", typeof(decimal));
+    
+            var soldByParameter = soldBy != null ?
+                new ObjectParameter("SoldBy", soldBy) :
+                new ObjectParameter("SoldBy", typeof(string));
+    
+            var courierIDParameter = courierID.HasValue ?
+                new ObjectParameter("CourierID", courierID) :
+                new ObjectParameter("CourierID", typeof(decimal));
+    
+            var courierNameParameter = courierName != null ?
+                new ObjectParameter("CourierName", courierName) :
+                new ObjectParameter("CourierName", typeof(string));
+    
+            var docketNoParameter = docketNo != null ?
+                new ObjectParameter("DocketNo", docketNo) :
+                new ObjectParameter("DocketNo", typeof(string));
+    
+            var delvPlaceParameter = delvPlace != null ?
+                new ObjectParameter("DelvPlace", delvPlace) :
+                new ObjectParameter("DelvPlace", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("DispatchOrder", orderNoParameter, soldByParameter, courierIDParameter, courierNameParameter, docketNoParameter, delvPlaceParameter);
+        }
+    
+        public virtual int InsertProduct(Nullable<decimal> kitID)
+        {
+            var kitIDParameter = kitID.HasValue ?
+                new ObjectParameter("KitID", kitID) :
+                new ObjectParameter("KitID", typeof(decimal));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("InsertProduct", kitIDParameter);
+        }
+    
+        public virtual int MonthlySummary(string partyCode, string rptType, string prodType, string mnth, Nullable<int> mm, Nullable<int> yyyy)
+        {
+            var partyCodeParameter = partyCode != null ?
+                new ObjectParameter("PartyCode", partyCode) :
+                new ObjectParameter("PartyCode", typeof(string));
+    
+            var rptTypeParameter = rptType != null ?
+                new ObjectParameter("RptType", rptType) :
+                new ObjectParameter("RptType", typeof(string));
+    
+            var prodTypeParameter = prodType != null ?
+                new ObjectParameter("ProdType", prodType) :
+                new ObjectParameter("ProdType", typeof(string));
+    
+            var mnthParameter = mnth != null ?
+                new ObjectParameter("mnth", mnth) :
+                new ObjectParameter("mnth", typeof(string));
+    
+            var mmParameter = mm.HasValue ?
+                new ObjectParameter("mm", mm) :
+                new ObjectParameter("mm", typeof(int));
+    
+            var yyyyParameter = yyyy.HasValue ?
+                new ObjectParameter("yyyy", yyyy) :
+                new ObjectParameter("yyyy", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("MonthlySummary", partyCodeParameter, rptTypeParameter, prodTypeParameter, mnthParameter, mmParameter, yyyyParameter);
+        }
+    
+        public virtual int OrderKitProducts(string orderNo)
+        {
+            var orderNoParameter = orderNo != null ?
+                new ObjectParameter("OrderNo", orderNo) :
+                new ObjectParameter("OrderNo", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("OrderKitProducts", orderNoParameter);
+        }
+    
+        public virtual int Proc_Inv_Repurch(string billNo)
+        {
+            var billNoParameter = billNo != null ?
+                new ObjectParameter("BillNo", billNo) :
+                new ObjectParameter("BillNo", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("Proc_Inv_Repurch", billNoParameter);
+        }
+    
+        public virtual int REJECTORDER(Nullable<decimal> orderNo, string dReason, Nullable<decimal> dUserId, string deleteOrder)
+        {
+            var orderNoParameter = orderNo.HasValue ?
+                new ObjectParameter("OrderNo", orderNo) :
+                new ObjectParameter("OrderNo", typeof(decimal));
+    
+            var dReasonParameter = dReason != null ?
+                new ObjectParameter("DReason", dReason) :
+                new ObjectParameter("DReason", typeof(string));
+    
+            var dUserIdParameter = dUserId.HasValue ?
+                new ObjectParameter("DUserId", dUserId) :
+                new ObjectParameter("DUserId", typeof(decimal));
+    
+            var deleteOrderParameter = deleteOrder != null ?
+                new ObjectParameter("DeleteOrder", deleteOrder) :
+                new ObjectParameter("DeleteOrder", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("REJECTORDER", orderNoParameter, dReasonParameter, dUserIdParameter, deleteOrderParameter);
+        }
+    
+        public virtual int ROLLBACK_PI(string billNo, string dReason, Nullable<decimal> dUserId, Nullable<int> dFSessId)
+        {
+            var billNoParameter = billNo != null ?
+                new ObjectParameter("BillNo", billNo) :
+                new ObjectParameter("BillNo", typeof(string));
+    
+            var dReasonParameter = dReason != null ?
+                new ObjectParameter("DReason", dReason) :
+                new ObjectParameter("DReason", typeof(string));
+    
+            var dUserIdParameter = dUserId.HasValue ?
+                new ObjectParameter("DUserId", dUserId) :
+                new ObjectParameter("DUserId", typeof(decimal));
+    
+            var dFSessIdParameter = dFSessId.HasValue ?
+                new ObjectParameter("DFSessId", dFSessId) :
+                new ObjectParameter("DFSessId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ROLLBACK_PI", billNoParameter, dReasonParameter, dUserIdParameter, dFSessIdParameter);
+        }
+    
+        public virtual int ROLLBACKBILL(string billNo, string dReason, Nullable<decimal> dUserId, Nullable<int> dFSessId)
+        {
+            var billNoParameter = billNo != null ?
+                new ObjectParameter("BillNo", billNo) :
+                new ObjectParameter("BillNo", typeof(string));
+    
+            var dReasonParameter = dReason != null ?
+                new ObjectParameter("DReason", dReason) :
+                new ObjectParameter("DReason", typeof(string));
+    
+            var dUserIdParameter = dUserId.HasValue ?
+                new ObjectParameter("DUserId", dUserId) :
+                new ObjectParameter("DUserId", typeof(decimal));
+    
+            var dFSessIdParameter = dFSessId.HasValue ?
+                new ObjectParameter("DFSessId", dFSessId) :
+                new ObjectParameter("DFSessId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ROLLBACKBILL", billNoParameter, dReasonParameter, dUserIdParameter, dFSessIdParameter);
+        }
+    
+        public virtual int ROLLBACKCHALLAN(string billNo, string dReason, Nullable<decimal> dUserId, Nullable<int> dFSessId)
+        {
+            var billNoParameter = billNo != null ?
+                new ObjectParameter("BillNo", billNo) :
+                new ObjectParameter("BillNo", typeof(string));
+    
+            var dReasonParameter = dReason != null ?
+                new ObjectParameter("DReason", dReason) :
+                new ObjectParameter("DReason", typeof(string));
+    
+            var dUserIdParameter = dUserId.HasValue ?
+                new ObjectParameter("DUserId", dUserId) :
+                new ObjectParameter("DUserId", typeof(decimal));
+    
+            var dFSessIdParameter = dFSessId.HasValue ?
+                new ObjectParameter("DFSessId", dFSessId) :
+                new ObjectParameter("DFSessId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ROLLBACKCHALLAN", billNoParameter, dReasonParameter, dUserIdParameter, dFSessIdParameter);
+        }
+    
+        public virtual int ROLLBACKSALERETURN(string sReturnNo, string dReason, Nullable<decimal> dUserId, Nullable<int> dFSessId)
+        {
+            var sReturnNoParameter = sReturnNo != null ?
+                new ObjectParameter("SReturnNo", sReturnNo) :
+                new ObjectParameter("SReturnNo", typeof(string));
+    
+            var dReasonParameter = dReason != null ?
+                new ObjectParameter("DReason", dReason) :
+                new ObjectParameter("DReason", typeof(string));
+    
+            var dUserIdParameter = dUserId.HasValue ?
+                new ObjectParameter("DUserId", dUserId) :
+                new ObjectParameter("DUserId", typeof(decimal));
+    
+            var dFSessIdParameter = dFSessId.HasValue ?
+                new ObjectParameter("DFSessId", dFSessId) :
+                new ObjectParameter("DFSessId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("ROLLBACKSALERETURN", sReturnNoParameter, dReasonParameter, dUserIdParameter, dFSessIdParameter);
+        }
+    
+        [DbFunction("InventoryEntities", "Sample")]
+        public virtual IQueryable<Sample_Result> Sample(Nullable<int> sampleValue)
+        {
+            var sampleValueParameter = sampleValue.HasValue ?
+                new ObjectParameter("SampleValue", sampleValue) :
+                new ObjectParameter("SampleValue", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<Sample_Result>("[InventoryEntities].[Sample](@SampleValue)", sampleValueParameter);
+        }
+    
+        public virtual int sp_ChangeBillDate(Nullable<System.DateTime> newBillDate, string userBillNo, Nullable<int> userID)
+        {
+            var newBillDateParameter = newBillDate.HasValue ?
+                new ObjectParameter("NewBillDate", newBillDate) :
+                new ObjectParameter("NewBillDate", typeof(System.DateTime));
+    
+            var userBillNoParameter = userBillNo != null ?
+                new ObjectParameter("UserBillNo", userBillNo) :
+                new ObjectParameter("UserBillNo", typeof(string));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ChangeBillDate", newBillDateParameter, userBillNoParameter, userIDParameter);
         }
     }
 }

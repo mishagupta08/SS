@@ -224,6 +224,10 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\RazorViewToString.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SCAPPResponse.aspx.cs">
+      <DependentUpon>SCAPPResponse.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="Test.aspx.cs">
       <DependentUpon>Test.aspx</DependentUpon>
@@ -1206,6 +1210,7 @@
     <Content Include="images\logo.png" />
     <Content Include="images\rupee.png" />
     <Content Include="images\WalletReqs\AddCategory.png" />
+    <Content Include="SCAPPResponse.aspx" />
     <Content Include="Scripts\bootstrap-datetimepicker.js" />
     <Content Include="Scripts\bootstrap-datetimepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -1618,6 +1623,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\InventoryManagement.API\InventoryManagement.API.csproj">
+      <Project>{C4577E34-4A34-4954-AB00-23E4A5539606}</Project>
+      <Name>InventoryManagement.API</Name>
+    </ProjectReference>
     <ProjectReference Include="..\InventoryManagement.Business\InventoryManagement.Business.csproj">
       <Project>{f951daa1-5d11-4305-a65c-03be650f32ce}</Project>
       <Name>InventoryManagement.Business</Name>

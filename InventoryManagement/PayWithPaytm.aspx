@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Test.aspx.cs" Inherits="InventoryManagement.Test" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="PayWithPaytm.aspx.cs" Inherits="InventoryManagement.PayWithPaytm" %>
 
 <!DOCTYPE html>
 

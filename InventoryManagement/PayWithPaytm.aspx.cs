@@ -9,7 +9,7 @@ using System.Web.UI.WebControls;
 
 namespace InventoryManagement
 {
-    public partial class Test : System.Web.UI.Page
+    public partial class PayWithPaytm : System.Web.UI.Page
     {
         protected void Page_Load(object sender, EventArgs e)
         {

@@ -229,12 +229,12 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Startup.cs" />
-    <Compile Include="Test.aspx.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
+    <Compile Include="PayWithPaytm.aspx.cs">
+      <DependentUpon>PayWithPaytm.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Test.aspx.designer.cs">
-      <DependentUpon>Test.aspx</DependentUpon>
+    <Compile Include="PayWithPaytm.aspx.designer.cs">
+      <DependentUpon>PayWithPaytm.aspx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -1516,7 +1516,7 @@
     <Content Include="Scripts\SalesReturnReport.js" />
     <Content Include="Scripts\TableToExcel.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Test.aspx" />
+    <Content Include="PayWithPaytm.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

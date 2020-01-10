@@ -30,14 +30,14 @@ namespace InventoryManagement.Controllers
         LogManager objLogManager = new LogManager();
         RegistrationManager objRegistrationManager = new RegistrationManager();
         [HttpPost]
-        public ActionResult testPaytm(PaytmGateway objpay)
+        public ActionResult payPaytm(PaytmGateway objpay)
         {
             objpay.Mobile = (Session["LoginUser"] as User).MobileNo;
             objpay.email = (Session["LoginUser"] as User).Email;
             objpay.regid = (Session["LoginUser"] as User).PartyCode;
             objpay.action = "INSERT";
             var result = objTransacManager.CreditRequestOnlineInsert(objpay);
-            Response.Redirect(@"~/Test.aspx?Mobile=" + objpay.Mobile + "&UniQID=" + objpay.UniQID + "&shpcharge=" + objpay.shpcharge + "&ORDER_ID=" + objpay.ORDER_ID + "&regid=" + objpay.regid + "&scmemtype=" + objpay.scmemtype + "&amount=" + objpay.amount + "&coupon=" + objpay.coupon + "&email=" + objpay.email);
+            Response.Redirect(@"~/PayWithPaytm.aspx?Mobile=" + objpay.Mobile + "&UniQID=" + objpay.UniQID + "&shpcharge=" + objpay.shpcharge + "&ORDER_ID=" + objpay.ORDER_ID + "&regid=" + objpay.regid + "&scmemtype=" + objpay.scmemtype + "&amount=" + objpay.amount + "&coupon=" + objpay.coupon + "&email=" + objpay.email);
             return new EmptyResult();
             // return View("Test.aspx?Mobile=" + objpay.Mobile);
         }

@@ -42,6 +42,15 @@
     function replaceAll(txt, replace, withThis) {
         return txt.replace(new RegExp(replace, 'g'), withThis);
     }
+    function Uniqid() {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+        for (var i = 0; i < 20; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
     function postwithCode(tar, to, p) {
         debugger;
         var myForm = document.createElement("form");
@@ -148,7 +157,12 @@
         $("form[name=WalletReqForm]").unbind("submit");
         $("form[name=WalletReqForm]").bind('submit', function (e) {
             formdata = new FormData($("#WalletReqForm")[0]);
-            postwithCode("_self", "testPaytm", "UniQID:M5atFxiqlc3XGMqzoZBh,regid:415731,amount:657,Mobile:9828669575,shpcharge:57,scmemtype:ExistMember,email:khushbujajoo@gmail.com,coupon:");
+            var valAmount = $('#Amount').val();
+            var valMobileNo = 0;
+            var valEmail = '';
+            var unqId = Uniqid();
+            var patmparams = 'UniQID:' + unqId + ',amount:' + (valAmount) + ',Mobile:' + valMobileNo + ',email:' + valEmail + '';
+            postwithCode('_self', 'payPaytm', patmparams);
             return false;
         });
         
@@ -228,10 +242,10 @@
         var sizeInMb = parseInt(parseInt(parseInt(SizeOfImage) / 1024) / 1024);
         var ErrorFlag=false;
         var Amount = $("#Amount").val();
-        if (sizeInMb > 4) {
-            OpenDialog("dialogMessage", "Image size should be less than 4 MB.", "false");
-            ErrorFlag = true;
-        }
+        //if (sizeInMb > 4) {
+        //    OpenDialog("dialogMessage", "Image size should be less than 4 MB.", "false");
+        //    ErrorFlag = true;
+        //}
         if (Amount <= 0) {
             OpenDialog("dialogMessage", "Please enter valid Amount.", "false");
             ErrorFlag = true;
@@ -241,7 +255,7 @@
         if (ErrorFlag == false) {
             $("#btnSave").attr("disabled", true);
             $.ajax({
-                url: '@Url.Action("SaveWalletRequest", "Transaction")',
+                url: '@Url.Action("GenerateRequest", "Transaction")',
                 type: 'POST',
                 data: formdata,
                 processData: false,
@@ -450,7 +464,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-12" id="dvBranch1">
+                        @*<div class="col-lg-12" id="dvBranch1">
                             <div class="col-lg-8">
                                 <div class="form-group">
                                     <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12">
@@ -461,7 +475,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>*@
                        
 
                         <div class="col-lg-12">
@@ -485,7 +499,7 @@
                                     <div class="col-lg-6">&nbsp;</div>
                                     <div class="col-lg-4">
 
-                                        <input type="submit" id="btnSave" name="btnSave" data-type="save" value="Save" class="btn btn-success" />
+                                        <input type="submit" id="btnSave" name="btnSave" data-type="save" value="Pay" class="btn btn-success" />
                                         <input type="button" id="btnCancel" name="btnCancel" data-type="Cancel" class="cancel btn btn-success" value="Cancel" />
 
                                     </div>

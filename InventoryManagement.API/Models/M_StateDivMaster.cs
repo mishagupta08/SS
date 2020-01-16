@@ -24,5 +24,6 @@ namespace InventoryManagement.API.Models
         public string UserCode { get; set; }
         public decimal UserId { get; set; }
         public decimal WStateCode { get; set; }
+        public string RowStatus { get; set; }
     }
 }

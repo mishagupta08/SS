@@ -3452,7 +3452,7 @@ namespace InventoryManagement.API.Controllers
                 //    }
                 //}
 
-                bool IsSuccess = await Task.Run(() => Program.SendSMS( message, MobileNo));
+                bool IsSuccess = await Task.Run(() => Program.SendSMS(message, MobileNo));
                 if (IsSuccess)
                 {
                     objResponse.ResponseStatus = "OK";
@@ -6718,6 +6718,119 @@ namespace InventoryManagement.API.Controllers
             {
             }
             return objResp;
+        }
+        public string CreditRequestOnlineInsert(PaytmGateway payment)
+        {
+            string objResp = "";
+            try
+            {
+                TblPaymentGetWayRequest objWReq = new TblPaymentGetWayRequest();
+                TrnVoucher objTrnVoucher = new TrnVoucher();
+                int reqNo = 0;
+                decimal VoucherId = 0;
+                decimal VoucherNo = 0;
+                using (var entity = new InventoryEntities())
+                {
+                    if (payment.action == "INSERT")
+                    {
+
+                        reqNo = (from result in entity.TblPaymentGetWayRequests select result.ID).DefaultIfEmpty(1000).Max();
+                        reqNo = reqNo + 1;
+                        objWReq.ID = reqNo;
+                        objWReq.invdate = DateTime.Now.Date;
+                        objWReq.reqAmt = Convert.ToDecimal(payment.amount);
+                        objWReq.IdNo = payment.regid;// != null ? objWallet.BankID :0; 
+                        objWReq.mop = "ONLINE";
+                        objWReq.Refno = payment.UniQID;
+                        objWReq.ORDER_ID = payment.UniQID;
+                        objWReq.CreatedDate = DateTime.Now.Date;
+                        entity.TblPaymentGetWayRequests.Add(objWReq);
+                        entity.SaveChanges();
+                        objResp = "OK";
+                    }
+
+                    else
+                    {
+                        TblPaymentGetWayRequest objPaymentRequest = new TblPaymentGetWayRequest();
+                        objPaymentRequest = (from r in entity.TblPaymentGetWayRequests
+                                             where r.ORDER_ID == payment.ORDER_ID
+                                             select r
+                                   ).FirstOrDefault();
+                        if (objPaymentRequest != null)
+                        {
+                            objPaymentRequest.TXNID = payment.TxnId;
+                            objPaymentRequest.mop = payment.PaymentStatus;
+                            int i = entity.SaveChanges();
+                            if (i > 0)
+                            {
+                                objResp = "Updated";
+                            }
+                            VoucherId = (from result in entity.TrnVouchers select result.VoucherId).DefaultIfEmpty(1000).Max();
+                            VoucherNo = (from result in entity.TrnVouchers select result.VoucherNo).DefaultIfEmpty(1000).Max();
+                            VoucherId = VoucherId + 1;
+                            VoucherNo = VoucherNo + 1;
+                            objWReq.ID = reqNo;
+                            objTrnVoucher.FSessId = 1;
+                            objTrnVoucher.VoucherNo = VoucherNo;
+                            objTrnVoucher.VoucherDate = DateTime.Now;
+                            objTrnVoucher.DepoCode = "WR";
+                            objTrnVoucher.DrTo = "";
+                            objTrnVoucher.CrTo = payment.regid;
+                            objTrnVoucher.Amount = Convert.ToDecimal(payment.amount);
+                            objTrnVoucher.Narration = "Wallet credited against Req No. "+ VoucherNo +".";
+                            objTrnVoucher.RefNo = "WReq/" + VoucherNo + "."; ;
+                            objTrnVoucher.BType = "O";
+                            objTrnVoucher.AccDocNo = 0;
+                            objTrnVoucher.AccDocNo = 0;
+                            objTrnVoucher.AccDocType = "Wallet Request Approved.";
+                            objTrnVoucher.AccDocDate = DateTime.Now;
+                            objTrnVoucher.AccRemark = "";
+                            objTrnVoucher.AccParentKey = "";
+                            objTrnVoucher.AccCompany = "";
+                            objTrnVoucher.AccTransKey = "";
+                            objTrnVoucher.ActiveStatus = "Y";
+                            objTrnVoucher.RecTimeStamp = DateTime.Now;
+                            objTrnVoucher.UserName = "";
+                            objTrnVoucher.UserId = 0;
+                            objTrnVoucher.SessID = 1;
+                            objTrnVoucher.Version = "";
+                            objTrnVoucher.PayMode = "ONLINE";
+                            objTrnVoucher.BankCode = 0;
+                            objTrnVoucher.BankName = "";
+                            objTrnVoucher.ChqNo = "";
+                            objTrnVoucher.ChqDate = DateTime.Now;
+                            objTrnVoucher.VType = "R";
+                            entity.TrnVouchers.Add(objTrnVoucher);
+                            entity.SaveChanges();
+                            objResp = "OK";
+                        }
+                    }
+                }
+            }
+            catch (DbEntityValidationException e)
+            {
+            }
+            return objResp;
+        }
+        public List<TblPaymentGetWayRequest> GetCreditRequest(string orderId)
+        {
+            List<TblPaymentGetWayRequest> objResponse = new List<TblPaymentGetWayRequest>();
+            try
+            {
+                using (var entity = new InventoryEntities())
+                {
+                    objResponse = (from result in entity.TblPaymentGetWayRequests
+                                   where result.ORDER_ID == orderId
+                                   select result).ToList();
+
+                                  
+                }
+            }
+            catch (Exception ex)
+            {
+                objResponse = null;
+            }
+            return objResponse;
         }
         public string SaveWalletRequest(WalletRequest objWallet)
         {

@@ -1,4 +1,5 @@
 ﻿using InventoryManagement.API.Controllers;
+using InventoryManagement.API.Models;
 using InventoryManagement.DataAccess.Contract;
 using InventoryManagement.Entity.Common;
 using System;
@@ -350,6 +351,14 @@ namespace InventoryManagement.DataAccess
         public ResponseDetail SaveBuyThisGetThatOffer(Offer ObjOffer)
         {
             return objTransacAPI.SaveBuyThisGetThatOffer(ObjOffer);
+        }
+        public string CreditRequestOnlineInsert(PaytmGateway payment)
+        {
+            return objTransacAPI.CreditRequestOnlineInsert(payment);
+        }
+        public List<TblPaymentGetWayRequest> GetCreditRequest(string orderId)
+        {
+            return objTransacAPI.GetCreditRequest(orderId);
         }
     }        
 }

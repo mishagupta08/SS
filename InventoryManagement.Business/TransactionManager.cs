@@ -1,4 +1,5 @@
-﻿using InventoryManagement.Business.Contract;
+﻿using InventoryManagement.API.Models;
+using InventoryManagement.Business.Contract;
 using InventoryManagement.DataAccess;
 using InventoryManagement.Entity.Common;
 using System;
@@ -362,6 +363,14 @@ namespace InventoryManagement.Business
         public List<PartyModel> GetPartyBalance()
         {
             return (objTransacRepo.GetPartyBalance());
+        }
+        public string CreditRequestOnlineInsert(PaytmGateway payment)
+        {
+            return (objTransacRepo.CreditRequestOnlineInsert(payment));
+        }
+        public List<TblPaymentGetWayRequest> GetCreditRequest(string orderId)
+        {
+            return objTransacRepo.GetCreditRequest(orderId);
         }
     }
 }

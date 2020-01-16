@@ -79,8 +79,8 @@ namespace InventoryManagement.API.Models
         public decimal CGSTAmt { get; set; }
         public decimal SGST { get; set; }
         public decimal SGSTAmt { get; set; }
+        public string UID { get; set; }
         public decimal DUserId { get; set; }
         public Nullable<System.DateTime> DRecTimeStamp { get; set; }
-        public string UID { get; set; }
     }
 }

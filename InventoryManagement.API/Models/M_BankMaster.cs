@@ -26,5 +26,9 @@ namespace InventoryManagement.API.Models
         public string UserCode { get; set; }
         public decimal UserId { get; set; }
         public string Version { get; set; }
+        public string RowStatus { get; set; }
+        public string IPAdrs { get; set; }
+        public string MACAdrs { get; set; }
+        public string BranchName { get; set; }
     }
 }

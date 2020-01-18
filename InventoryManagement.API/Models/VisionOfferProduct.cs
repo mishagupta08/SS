@@ -26,5 +26,11 @@ namespace InventoryManagement.API.Models
         public System.DateTime RectimeStamp { get; set; }
         public string IsBuyProduct { get; set; }
         public string IsBVApplied { get; set; }
+        public string OnMRP { get; set; }
+        public string scheme { get; set; }
+        public Nullable<decimal> discount { get; set; }
+        public Nullable<decimal> discountPer { get; set; }
+        public Nullable<decimal> ForRupee { get; set; }
+        public Nullable<bool> IncludeInOffer { get; set; }
     }
 }

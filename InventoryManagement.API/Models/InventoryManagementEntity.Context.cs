@@ -139,8 +139,6 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<TrnStockJv> TrnStockJvs { get; set; }
         public virtual DbSet<TrnUpdateBillDetail> TrnUpdateBillDetails { get; set; }
         public virtual DbSet<TrnVoucher> TrnVouchers { get; set; }
-        public virtual DbSet<VisionOfferProduct> VisionOfferProducts { get; set; }
-        public virtual DbSet<VisionOffer> VisionOffers { get; set; }
         public virtual DbSet<WalletReq> WalletReqs { get; set; }
         public virtual DbSet<Web_M_MenuMaster> Web_M_MenuMaster { get; set; }
         public virtual DbSet<Web_M_UserPermissionMaster> Web_M_UserPermissionMaster { get; set; }
@@ -254,6 +252,8 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<V_TransportDetail> V_TransportDetail { get; set; }
         public virtual DbSet<V_User> V_User { get; set; }
         public virtual DbSet<V_WebBillDetail> V_WebBillDetail { get; set; }
+        public virtual DbSet<VisionOfferProduct> VisionOfferProducts { get; set; }
+        public virtual DbSet<VisionOffer> VisionOffers { get; set; }
     
         [DbFunction("InventoryEntities", "MonthWiseSummary")]
         public virtual IQueryable<MonthWiseSummary_Result> MonthWiseSummary(string partyCode, string rptType, string prodType)

@@ -93,6 +93,7 @@
     <Compile Include="DashboardRepository.cs" />
     <Compile Include="LoginRepository.cs" />
     <Compile Include="LogRepository.cs" />
+    <Compile Include="OfferRepository.cs" />
     <Compile Include="ProductRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationRepository.cs" />

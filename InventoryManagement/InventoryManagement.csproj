@@ -211,6 +211,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoiceController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Controllers\OfferController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\RegistrationController.cs" />
     <Compile Include="Controllers\ReportController.cs" />
@@ -1613,6 +1614,8 @@
     <Content Include="Views\Transaction\AddWallet.cshtml" />
     <Content Include="Views\Report\LogReport.cshtml" />
     <Content Include="Views\Transaction\BuythisGetthatOfferMaster.cshtml" />
+    <Content Include="Views\Offer\OfferMaster.cshtml" />
+    <Content Include="Views\Offer\Offers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -211,6 +211,7 @@
     <Compile Include="Controllers\DashboardAPIController.cs" />
     <Compile Include="Controllers\LogAPIController.cs" />
     <Compile Include="Controllers\LoginAPIController.cs" />
+    <Compile Include="Controllers\OfferAPIController.cs" />
     <Compile Include="Controllers\ProductAPIController.cs" />
     <Compile Include="Controllers\RegistrationAPIController.cs" />
     <Compile Include="Controllers\ReportAPIController.cs" />
@@ -321,11 +322,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>InventoryManagementEntity.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\InventoryManagementEntity1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Inv_M_ConfigMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
@@ -992,7 +988,7 @@
     <Content Include="Models\InventoryManagementEntity.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>InventoryManagementEntity.edmx</DependentUpon>
-      <LastGenOutput>InventoryManagementEntity1.cs</LastGenOutput>
+      <LastGenOutput>InventoryManagementEntity.cs</LastGenOutput>
     </Content>
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />

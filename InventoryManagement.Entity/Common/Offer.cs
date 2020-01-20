@@ -10,7 +10,8 @@ namespace InventoryManagement.Entity.Common
         public DateTime OfferToDt { get; set; }
         public string OfferFromDtStr { get; set; }
         public string OfferToDtStr { get; set; }
-        
+        public int? OfferStartDay { get; set; }
+        public int? OfferEndDay { get; set; }
         public string OfferDatePart { get; set; }
         public decimal OfferOnValue { get; set; }
         public string OfferExceptSubCat { get; set; }
@@ -19,6 +20,7 @@ namespace InventoryManagement.Entity.Common
         public decimal? OfferOnBV { get; set; }
         public string ConfFreeProdIDs { get; set; }
         public string ConfFreeProdQtys { get; set; }
+        public string checkBillWith { get; set; }
         public string OfferBillType { get; set; }
         public string IdDateStr { get; set; }
         public Nullable<System.DateTime> IdDate { get; set; }
@@ -36,6 +38,19 @@ namespace InventoryManagement.Entity.Common
         public List<OfferProduct> ParentProductList { get; set; }       
         public decimal? TotalOfferBv { get; set; }
         public decimal? TotalOfferBvper { get; set; }
+        public string OfferType { get; set; }
+        public string OfferName { get; set; }
+        //new addition
+        public string Remark { get; set; }
+        public string ExtraPVApplicable { get; set; }
+        public decimal? PVValue { get; set; }
+        public decimal? PVPer { get; set; }
+        public string CombineWithOffer { get; set; }
+        public string CheckFirstBillWith { get; set; }
+        public bool CombineOffer { get; set; }
+        public decimal? CBAmount { get; set; }
+        public int OfferFrequncy { get; set; }
+        public int CustBillNo { get; set; }
     }
 
     public class OfferProduct
@@ -49,6 +64,21 @@ namespace InventoryManagement.Entity.Common
         public decimal? PVPer { get; set; }
         public bool IsParent { get; set; }
         public string IsBvApplied { get; set; }
+        public string IsBuyProduct { get; set; }
+
+        //new addition
+        public decimal? Discount { get; set; }
+        public decimal? DiscountPer { get; set; }
+        public string OnMRP { get; set; }
+        public string Scheme { get; set; }
+        public decimal? Rupee { get; set; }
+        public bool IncludeInOffer { get; set; }
+
+        public decimal freeQty{ get; set; }
+        public decimal PV { get; set; }
+        public decimal Rate { get; set; }
+        public decimal Amount { get; set; }
+        public string ProductType { get; set; }
     }
 
 }

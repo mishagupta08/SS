@@ -36,5 +36,16 @@ namespace InventoryManagement.API.Models
         public string FreeProdQtys { get; set; }
         public Nullable<int> IdDays { get; set; }
         public int OfferId { get; set; }
+        public Nullable<int> OfferStartDay { get; set; }
+        public Nullable<int> OfferEndDay { get; set; }
+        public string OfferName { get; set; }
+        public string IsPVApplicable { get; set; }
+        public Nullable<decimal> ExtraPV { get; set; }
+        public string Remarks { get; set; }
+        public string CombineWithOffer { get; set; }
+        public string CheckFirstBillWith { get; set; }
+        public Nullable<bool> CombineOffer { get; set; }
+        public Nullable<decimal> CBAmount { get; set; }
+        public Nullable<int> OfferFrequency { get; set; }
     }
 }

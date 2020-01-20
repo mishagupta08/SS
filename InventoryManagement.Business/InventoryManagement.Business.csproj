@@ -88,6 +88,7 @@
     <Compile Include="DashboardManager.cs" />
     <Compile Include="LoginManager.cs" />
     <Compile Include="LogManager.cs" />
+    <Compile Include="OfferManager.cs" />
     <Compile Include="ProductManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RegistrationManager.cs" />

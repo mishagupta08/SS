@@ -1,0 +1,1382 @@
+﻿@model InventoryManagement.Entity.Common.Offer
+@using InventoryManagement.Entity.Common
+@{
+    ViewBag.Title = "Create Offer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+    string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
+    string BVCaption = System.Configuration.ConfigurationManager.AppSettings["BVCaption"];
+}
+
+<style>
+    .ui-widget-header {
+        margin-top: -1% !important;
+        width: 102% !important;
+        margin-left: -1% !important;
+    }
+
+    .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: auto !important;
+    }
+
+    .ui-dialog-titlebar-close {
+        margin-right: 1% !important;
+    }
+
+    .ui-widget-content {
+        background: white !important;
+        border-radius: 15px !important;
+        -webkit-border-radius: 4px !important;
+    }
+
+    ui-autocomplete-input {
+        z-index: 2147483647;
+    }
+
+
+    .input-readonly {
+        background-color: #EBEBE4;
+    }
+
+    label.error {
+        display:none!important;
+    }
+</style>
+
+
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Offer</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Create Offer</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <form id="CreateOfferForm" method="post" name="CreateOfferForm" onsubmit="return false" class=" form-horizontal form-label-left">
+                        @Html.HiddenFor(m => m.ProductString, new { name = "ProductString", id = "ProductString" })
+                        @Html.HiddenFor(m => m.AID, new { name = "AID", id = "AID" })
+                        @Html.HiddenFor(m => m.ActionName, new { name = "ActionName", id = "ActionName" })
+                        @Html.HiddenFor(m => m.ParentProductString, new { name = "ParentProductString", id = "ParentProductString" })
+                        @Html.HiddenFor(m => m.CombineWithOffer, new { name = "CombineWithOffer", id = "CombineWithOffer" })
+                        
+                        <div class="col-lg-12">                            
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Offer Name:
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                    @if (Model.ActionName.ToLower() == "edit")
+                                    {
+                                        @Html.TextBoxFor(m => m.OfferName, new { placeholder = "Add Offer Name", name = "OfferName", id = "OfferName", tabindex = "1",@readonly="readonly", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                    }
+                                    else
+                                    {
+                                        @Html.TextBoxFor(m => m.OfferName, new { placeholder = "Add Offer Name", name = "OfferName", id = "OfferName", tabindex = "1", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                    }
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Offer Type:
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.DropDownListFor(m => m.OfferType, new SelectList(ViewBag.OfferTypeOptions, "Value", "Text"),"--Select--",  new { name = "OfferType", id = "OfferType", tabindex = "2", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-12" style="display:none">
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Date type:
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.DropDownListFor(m => m.OfferDatePart, new SelectList(ViewBag.ForDateType, "Value", "Text"),  new { name = "ForDateType", id = "ForDateType", tabindex = "3",  @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6" id="OfferDayDiv" style="display:none;">
+
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        
+                                    </label>
+                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.DropDownListFor(m => m.OfferStartDay, new SelectList(ViewBag.Days, "Value", "Text"),"--Start Day--", new { name = "OfferStartDay", id = "OfferStartDay", tabindex = "4",  @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+
+                                    <div class="col-lg-1" style="padding-left: 0.5%;">
+                                        &nbsp;
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.DropDownListFor(m => m.OfferEndDay, new SelectList(ViewBag.Days, "Value", "Text"), "--End Day--", new { name = "OfferEndDay", id = "OfferEndDay", tabindex = "5",  @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                            <div class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Start Date:
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBoxFor(m => m.OfferFromDtStr, new { name = "StartDate", id = "StartDate", tabindex = "6", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            End Date:
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBoxFor(m => m.OfferToDtStr, new { name = "EndDate", id = "EndDate", tabindex = "7", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <div class="col-lg-12" style="display:none;">
+                            <div class="col-lg-6" id="ContinueForMonth" style="display:none;">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Continue For Months :
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.TextBoxFor(m => m.ForMonth, new { placeholder = "", type = "number", name = "ForMonth", id = "ForMonth", tabindex = "8", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-lg-12" id="OfferValueRow" style="display:none;">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Offer On Amount :
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBoxFor(m => m.OfferOnValue, new { placeholder = "Offer valid for minimum Bill Amount.", type = "number", name = "OfferOnValue", id = "OfferOnValue", tabindex = "9",  @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Offer On @BVCaption:
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBoxFor(m => m.OfferOnBV, new { placeholder = "Offer valid for minimum" + BVCaption + ".", type = "number", name = "OfferOnBV", id = "OfferOnBV", tabindex = "10",  @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-12" style="display:none;">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            IS Extra @BVCaption Applicable :
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            <label class="col-lg-3">@Html.RadioButtonFor(m => m.ExtraPVApplicable, "Y", new { tabindex = "11" }) Yes</label>
+                                            <label class="col-lg-3">@Html.RadioButtonFor(m => m.ExtraPVApplicable, "N", new { tabindex = "12" }) No</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6" id="ExtraPvDiv" style="display:none;">
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Extra @BVCaption Value
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBoxFor(m => m.PVValue, new { name = "PVValue", id = "PVValue", tabindex = "13", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+
+
+                            <div class="col-lg-12" style="display:none;">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Offer Bill type :
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.DropDownListFor(m => m.OfferBillType, new SelectList(ViewBag.ForBillType, "Value", "Text"),  new { name = "ForBillType", id = "ForBillType", tabindex = "14", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            ID Status
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.DropDownListFor(m => m.IdStaus, new SelectList(ViewBag.idStatus, "Value", "Text"),  new { name = "IdStatus", id = "IdStatus", tabindex = "15", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-12" style="display:none;">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Check bill With :
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.DropDownListFor(m => m.CheckFirstBillWith, new SelectList(new List<SelectListItem>{new SelectListItem { Text="OverAll",Value="A"},
+                                       new SelectListItem { Text="Month", Value="M"} }, "Value", "Text"), new { @class = "form-control", @id = "CheckFirstBillWith" })
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-12" style="display:none;">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            IS Offer For New Id :
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.DropDownListFor(m => m.ForNewIds, new SelectList(ViewBag.DropDownOptions, "Value", "Text"), new { name = "ForNewIds", id = "ForNewIds", tabindex = "17", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-lg-6" id="iddatediv" style="display:none;">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Check new ID with Date:
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBoxFor(m => m.IdDate, new { name = "IdDate", id = "IdDate", tabindex = "18", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12" style="display:none;">
+                                <div class="col-lg-6" id="CombineOfferDiv" style="display:none;">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                          Combine with Offers:
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                           <select multiple="multiple" id="CombineOfferList" name="CombineOfferList" class="form-control">
+                                            @{
+                                                var SelectedCombineOffer = "";
+                                                foreach (var obj in ViewBag.CombineOfferListOptions as List<SelectListItem>)
+                                                {
+                                                    if (obj.Selected)
+                                                    {
+                                                        SelectedCombineOffer += obj.Text + ",";
+                                                        <option value="@obj.Value">@obj.Text</option>
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="@obj.Value">@obj.Text</option>
+                                                    }
+
+                                                }
+                                            }
+                                        </select>
+                                            <br/>
+                                            <label style="font-size: smaller;" id="SelectedCombineOffers" class="control-label col-lg-12 col-md-12 col-sm-12 col-xs-12" for="category-name">
+                                                @SelectedCombineOffer
+                                            </label>
+                                            <br />
+                                        </div>
+                                    </div>
+                                    
+                                    <br/>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Cashback Amount:
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.TextBoxFor(m => m.CBAmount, new { name = "CBAmount", id = "CBAmount", tabindex = "20", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        <div class="col-lg-12">
+                            <div class="col-lg-6" style="display:none;">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Offer Frequency:
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                         @Html.TextBoxFor(m => m.OfferFrequncy, new { name = "OfferFrequncy", id = "OfferFrequncy", tabindex = "21", type = "number", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="form-group">
+                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                        Remark:
+                                    </label>
+                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                        @Html.TextBoxFor(m => m.Remark, new { name = "Remark", id = "Remark", tabindex = "22", @class = "form-control col-md-7 col-xs-12" })
+                                    </div>
+                                </div>
+                            </div>
+                            
+                                                      
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Active Status:
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            @Html.DropDownListFor(m => m.ActiveStatus, new SelectList(ViewBag.ActiveOptions, "Value", "Text"), "--Select--", new { name = "ActiveStatus", id = "ActiveStatus", tabindex = "23", @required = "required", @class = "form-control col-md-7 col-xs-12" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-12 showforonvalue hideforbtgt hideforextrapv" style="display:none;">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">
+                                            Include/Exculde buy products from offer:
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            <label class="col-lg-3"><input type="radio" value="Include" name="IEProducts">Include</label>
+                                            <label class="col-lg-3"><input type="radio" value="Exculde" name="IEProducts" checked="checked">Exclude</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-12">
+                                <div class="col-lg-2 form-group" id="BuyProduct" style="display:none;">
+                                    <input type="button" id="AddBuyProduct" title="If user buy these products offer will be applicable." name="AddBuyProduct" data-type="AddBuyProduct" class="cancel btn btn-success" value="Add Buy Product" tabindex="23" />
+                                </div>
+                                <div class="col-lg-2 form-group">
+                                    <input type="button" id="AddProduct" title="If all conditions satisfy than these prodcts will be avilable with different schemes." name="AddProduct" data-type="AddProduct" class="cancel btn btn-success" value="Add Offer Product" tabindex="24" />
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <br /><br />
+                                    <center>
+                                        <div class="loader" style="display:none"></div>
+                                    </center>
+
+                                    <center><span style="display:none" id="noRecord">No Records Found</span></center>
+                                    <br />
+                                    <table class="table bootstrap-datatable" id="BuyProductgrid" style="display:none;"></table>
+                                    <br /><br />
+                                    <table class="table bootstrap-datatable" id="FreeProductgrid"></table>
+                                </div>
+                            </div>
+
+
+                            <div class="col-lg-12">
+
+                                <div class="form-group">
+
+                                    <div class="col-lg-12">
+
+                                        <div class="col-lg-4">
+                                            @if (ViewBag.UserCanAccess == "Edit")
+                                            {
+                                                <input type="submit" id="btnSave" name="btnSave" data - type="save" value="Save" class="getReport btn btn-success" />
+                                                <input type="button" id="btnCancel" name="btnCancel" data-type="Cancel" class="cancel btn btn-success" value="Cancel" />
+                                            }
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+
+</form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id = "dialogMessage" title="Message">
+
+    </div>
+
+    <div id = "AddProductdialog" title="Add Product" style="display:none">
+        <div class="col-lg-12" style="background-color:lightgrey;border:1px black solid;">
+            <span style = "width:100%;" ><center> Add Offer Product Details: </center></span>
+        </div>
+        <br />
+        <div class="row" style="margin-top:1%">
+            <div class="col-lg-12 form-group">
+
+                <label class="col-lg-3">
+                    Product Code:
+                </label>
+                <div class="col-lg-9">
+                    <input type = "text" id="ProductCode" class="form-control" readonly="readonly" />
+                </div>
+            </div>
+
+            <div class="col-lg-12 form-group">
+                <label class="col-lg-3">
+                    Product Name:
+                </label>
+                <div class="col-lg-9">
+                    <input type = "text" id="ProductName" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-lg-12 form-group">
+
+                <label class="col-lg-3">
+                    Free Quantity:
+                </label>
+                <div class="col-lg-9">
+                    <input type = "number" id="FreeQuantity" class="FreeQuantity form-control" />
+                </div>
+
+            </div>
+
+            <div class="col-lg-12 form-group">
+                <label class="col-lg-3">
+                    Product Scheme:
+                </label>
+                <div class="col-lg-9">
+                    <select name = "Scheme" id="Scheme" class="form-control">
+                        <option value = "F" > For Free</option> ype
+                            @*<option value="D">On Discount</option>
+                        <option value = "R" > At Rs.</option>*@
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-lg-12 form-group" id="ConfirmDiv" style="display:none;">
+                <label class="col-lg-3">
+                    Is Confirm:
+                </label>
+                <div class="col-lg-9">
+                    <select name = "IsConfirm" id="IsConfirm" class="IsConfirm form-control">
+                        <option value = "" > --Select-- </ option >
+                        <option selected value="Y">Yes</option>
+                        <option value = "N" > No </ option >
+                    </select >
+                </div >
+            </div >
+
+            <div class="col-lg-12 form-group" id="DiscountDiv" style="display:none;">
+                <label class="col-lg-3">
+                     Amount:
+                </label>
+                <div class="col-lg-3">
+                    <input type = "number" class="form-control" name="Discount" id="Discount" value="0" />
+                </div>
+
+                <label class="col-lg-3">
+                    OR Percentage:
+                </label>
+                <div class="col-lg-3">
+                    <input type = "number" class="form-control" name="DiscountPer" id="DiscountPer" value="0" />
+                </div>
+            </div>
+
+            <div class="col-lg-12 form-group" id="RupeeDiv" style="display:none;">
+                <label class="col-lg-3">
+                    At Rs.:
+                </label>
+                <div class="col-lg-3">
+                    <input type = "number" class="form-control" name="ForRupee" id="ForRupee" value="0" />
+                </div>
+            </div>
+
+            </div>
+        <div class="col-lg-12 form-group">
+            <label class="col-lg-6">
+
+            </label>
+            <div class="col-lg-6" id="freeerrormsg" style="color:red;">
+
+            </div>
+
+        </div>
+            <div class="row" style="margin-top:1%">
+                <div class="col-lg-6 col-lg-offset-3">
+
+                    @*<button class="btn btn-primary" type="reset" onclick="reset()">Reset</button>*@
+                    <button type="button" id="YesBtn" class="btn btn-success" tabindex="0">Yes</button>
+                    <button class="btn btn-primary" type="button" id="NoBtn" tabindex="0">No</button>
+                </div>
+            </div>
+        </div>
+
+    <div id="AddBuyProductdialog" title="Add Buy Product" style="display:none">
+        <div class="col-lg-12" style="background-color:lightgrey;border:1px black solid;">
+            <span style="width:100%;"><center>Add Offer Buy Product Details: </center></span>
+        </div>
+        <br />
+        <div class="row" style="margin-top:1%">
+            <div class="col-lg-12 form-group">
+
+                <label class="col-lg-6">
+                    Product Code:
+                </label>
+                <div class="col-lg-6">
+                    <input type="text" id="BuyProductCode" class="form-control" readonly="readonly" />
+                </div>
+            </div>
+
+            <div class="col-lg-12 form-group">
+                <label class="col-lg-6">
+                    Product Name:
+                </label>
+                <div class="col-lg-6">
+                    <input type="text" id="BuyProductName" class="form-control" />
+                </div>
+            </div>
+
+            <div class="col-lg-12 form-group hideforonvalue showforbtgt">
+
+                <label class="col-lg-6">
+                    Quantity:
+                </label>
+                <div class="col-lg-6">
+                    <input type="number" id="BuyQuantity" class="BuyQuantity form-control" />
+                </div>
+
+            </div>
+            <div class="col-lg-12 form-group hideforonvalue hideforbtgt">
+                <label class="col-lg-6">
+                    On MRP:
+                </label>
+                <label class="col-lg-3"><input type="radio" value="Y" name="OnMRP">Yes</label>
+                <label class="col-lg-3"><input type="radio" value="N" checked="checked" name="OnMRP">No</label>
+            </div> 
+            <div class="col-lg-12 form-group showforonvalue hideforbtgt">
+                <label class="col-lg-6">
+                    Include/Exculde:
+                </label>
+                <label class="col-lg-3"><input type="radio" value="Include" disabled="disabled" name="IEProduct">Include</label>
+                <label class="col-lg-3"><input type="radio" value="Exculde" disabled="disabled" name="IEProduct">Exclude</label>
+            </div> 
+        </div>
+        <div class="col-lg-12 form-group">
+            <label class="col-lg-6">
+
+            </label>
+            <div class="col-lg-6" id="buyerrormsg" style="color:red;">
+
+            </div>
+
+        </div>
+        <div class="row" style="margin-top:1%">
+            <div class="col-lg-6 col-lg-offset-3">
+
+                @*<button class="btn btn-primary" type="reset" onclick="reset()">Reset</button>*@
+                <button type="button" id="BuyYesBtn" class="btn btn-success" tabindex="0">Yes</button>
+                <button class="btn btn-primary" type="button" id="BuyNoBtn" tabindex="0">No</button>
+            </div>
+        </div>
+    </div>
+    </div>
+
+
+    <script>
+        var ItemList = [], FullProductList = [], FreeProductArray = [], BuyProductArray=[];
+    var grid, FreeProductgrid, dialog;
+
+    $(document).ready(function () {
+        $(".preloader").hide();
+        var action = $("#ActionName").val();
+
+        if (action.toLowerCase() == "edit") {
+           getfreeProductList();                     
+           DateTypeChange($("#ForDateType").val());
+           OfferTypeChange($("#OfferType").val());
+           NewIDChange($("#ForNewIds").val());
+           ExtraPVChange($('input:radio[name="ExtraPVApplicable"]').val());
+           var sc = $('#CombineOfferList option:selected').toArray().map(item => item.text).join();
+           $('#SelectedCombineOffers').html(sc);
+        }
+        else {
+            fillFreeProductGrid();
+            fillBuyProductGrid();
+        }
+
+        getAllProductNames();
+        $("#ProductName").autocomplete({
+            source: function (request, response) {
+                var results = $.ui.autocomplete.filter(ItemList, request.term);
+                response(results.slice(0, 50));
+            },
+            minLength: 1,
+            scroll: true,
+            select: function (event, ui) {
+                $("#ProductName").val(ui.item.label);
+                SetSpecificCode(ui.item.label,"ProductCode");
+                return false;
+            },
+            appendTo: $("#AddProductdialog"),
+        }).focus(function () {
+            $(this).autocomplete("search", "");
+        });
+
+        $("#BuyProductName").autocomplete({
+            source: function (request, response) {
+                var results = $.ui.autocomplete.filter(ItemList, request.term);
+                response(results.slice(0, 50));
+            },
+            minLength: 1,
+            scroll: true,
+            select: function (event, ui) {
+                $("#BuyProductName").val(ui.item.label);
+                SetSpecificCode(ui.item.label, "BuyProductCode");
+                return false;
+            },
+            appendTo: $("#AddBuyProductdialog"),
+        }).focus(function () {
+            $(this).autocomplete("search", "");
+        });
+
+        $("#ForNewIds").change(function () {
+            NewIDChange($(this).val());
+        });
+        
+        $("#Scheme").change(function () {
+            SchemeChange($(this).val());
+        });
+                
+        $("#Discount").focusout(function () {
+            var val = $(this).val();
+            if (val != 0 && val != undefined && val != null) {
+                $("#DiscountPer").val(0);
+            }
+        });
+
+        $("#DiscountPer").focusout(function () {
+            var val = $(this).val();
+            if (val != 0 && val != undefined && val != null) {
+                $("#Discount").val(0);
+            }
+        });
+
+
+        $("#ForDateType").change(function () {
+            DateTypeChange($(this).val());
+        });             
+
+        $('input:radio[name="ExtraPVApplicable"]').change(function () {            
+            ExtraPVChange($(this).val());
+        });
+
+        var dateToday = new Date();
+        $("#StartDate").datetimepicker({
+            format: 'DD-MM-YYYY',
+            widgetPositioning: {
+                horizontal: 'auto',
+
+                vertical: 'bottom'
+            }
+
+        });
+
+        $("#EndDate").datetimepicker({
+            format: 'DD-MM-YYYY',
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+
+        });
+
+        $("#IdDate").datetimepicker({
+            format: 'DD-MM-YYYY',
+            widgetPositioning: {
+                horizontal: 'auto',
+                vertical: 'bottom'
+            }
+
+        });
+        $("#OfferName").focusout(function ()
+        {checkDuplicateOfferName();
+        }
+        );
+
+        $("#btnReset").click(function () {
+            resetform();
+        });
+
+        $("#AddProduct").click(function () {
+            $("#AddProductdialog").dialog({
+                modal: true,
+                width: "60%"
+            });
+        });
+
+        $("#NoBtn").click(function () {
+            $("#AddProductdialog").dialog('close');
+        });
+
+        $("#YesBtn").click(function () {
+            var objIndex = 0;
+            var code = $("#ProductCode").val();
+            var Name = $("#ProductName").val();
+            var FreeQty = $("#FreeQuantity").val();
+            var scheme = $("#Scheme").val();
+            var IsConfirm = $("#IsConfirm").val();
+            var dis = $("#Discount").val();
+            var disPer = $("#DiscountPer").val();
+            var rupee = $("#ForRupee").val();
+            $("#freeerrormsg").html("");
+
+            if (Name == null || Name == undefined || Name == "") {
+                $("#freeerrormsg").html("Please select a product.");
+                return false;
+            }
+             if (FreeQty == null || FreeQty == undefined || FreeQty == "" || FreeQty == "0") {
+                 $("#freeerrormsg").html("Please enter valid quantity.");
+                 return false;
+             }
+             
+             if (scheme == null || scheme == undefined || scheme == "") {
+                 $("#freeerrormsg").html("Please select product scheme.");
+                 return false;
+             }
+             else
+             {
+                 if (scheme == 'D') {
+                     if ((dis == null || dis == undefined || dis == "" || dis == "0")) {
+                         if ((disPer == null || disPer == undefined || disPer == "" || disPer == "0")) {
+                             $("#freeerrormsg").html("Please enter Discount Amount or Discount Percentage.");
+                             return false;
+                         }
+                     }
+                 }
+                 else if (scheme == 'R') {
+                     if (rupee == null || rupee == undefined || rupee == "" || rupee == "0") {
+                         $("#freeerrormsg").html("Please enter rupees for product.");
+                         return false;
+                     }
+                 }
+                 else {
+                     if (IsConfirm == null || IsConfirm == undefined || IsConfirm == "") {
+                         $("#freeerrormsg").html("Please select product is confirm or not.");
+                         return false;
+                     }
+                 }
+                 
+             }
+
+             var product = { "ProdCode": code, "ProductName": Name, "FreeQty": FreeQty, "Scheme": scheme, "Confirm": IsConfirm, "Discount": dis, "DiscountPer": disPer, "Rupee": rupee, "IsBuyProduct": false, "OnMRP": "N", };
+
+                if (FreeProductArray.length > 0) {
+                    objIndex = FreeProductArray.findIndex((obj => obj.ProdCode == code));
+                    if (objIndex === -1) {
+                        FreeProductArray.push(product);
+                    }
+                    else {
+                        FreeProductArray[objIndex] = product;
+                    }
+                }
+                else {
+                    FreeProductArray.push(product);
+                }
+
+                fillFreeProductGrid();
+                ClearProductdetails();
+                $("#AddProductdialog").dialog('close');
+                $("#btnSave").prop('disabled', false);
+            
+        });
+
+        $("#BuyNoBtn").click(function () {
+            ClearBuyProductdetails();
+            $("#AddBuyProductdialog").dialog('close');
+        });
+
+        $("#BuyYesBtn").click(function () {
+            var objIndex = 0;
+            var code = $("#BuyProductCode").val();
+            var Name = $("#BuyProductName").val();
+            var BuyQuantity = $("#BuyQuantity").val();
+            var IEProduct = $('input[name="IEProduct"]:checked').val();
+            var OnMRP = $('input:radio[name="OnMRP"]:checked').val();
+            var type = $("#OfferType").val();
+            $("#buyerrormsg").html("");
+
+            if (type == "OfferOnValue")
+            {
+                BuyQuantity = 0;
+                OnMRP = 'N';
+            }
+
+            if (Name == null || Name == undefined || Name == "" || Name == "0") {
+                $("#buyerrormsg").html("Please select a product.");
+            }
+            else if (type == "BuythisGetthat" && (BuyQuantity == null || BuyQuantity == undefined || BuyQuantity == "" || BuyQuantity == "0")) {
+                $("#buyerrormsg").html("Please enter valid quantity.");
+            }
+            else if (type == "BuythisGetthat" && (OnMRP == null || OnMRP == undefined || OnMRP == ""))
+            {
+                $("#buyerrormsg").html("Please select product on MRP or not.");
+            }
+            else if (type == "OfferOnValue" && (IEProduct == null || IEProduct == undefined || IEProduct == "")) {                
+                $("#buyerrormsg").html("Please select product to include or not");
+            }
+            else {
+                var product = { "ProdCode": code, "ProductName": Name, "FreeQty": BuyQuantity,"OnMRP":OnMRP, "IsBuyProduct": true,"IEProduct":IEProduct };
+
+                if (BuyProductArray.length > 0) {
+                    objIndex = BuyProductArray.findIndex((obj => obj.ProdCode == code));
+                    if (objIndex === -1) {
+                        BuyProductArray.push(product);
+                    }
+                    else {
+                        BuyProductArray[objIndex] = product;
+                    }
+                }
+                else {
+                    BuyProductArray.push(product);
+                }
+
+                fillBuyProductGrid();
+                ClearBuyProductdetails();
+                $("#AddBuyProductdialog").dialog('close');
+                $("#btnSave").prop('disabled', false);
+            }
+        });
+
+        $("#AddBuyProduct").click(function () {
+            ClearBuyProductdetails();
+            var openpopup = true;
+            var offertype =$("#OfferType").val();
+            var IE = $('input[name="IEProducts"]:checked').val();
+            
+            if (offertype.toLowerCase() == "offeronvalue" && (IE =="" || IE == null || IE== undefined)) {
+                openpopup = false;
+            }
+           
+            if (openpopup) {
+                $('input[name="IEProduct"][value="' + IE + '"]').prop('checked', true);
+                $("#AddBuyProductdialog").dialog({
+                    modal: true,
+                    width: "60%"
+                });
+            }
+            else {
+               
+                OpenDialog("dialogMessage", "Please select buy product include or exculde first.");
+            }
+        });
+
+        $("#CombineOfferList").change(function () {
+            var SelectedUsers = $("#CombineOfferList").val();
+            var sc = $('#CombineOfferList option:selected').toArray().map(item => item.text).join();           
+            $('#SelectedCombineOffers').html(sc);
+            $("#CombineWithOffer").val(SelectedUsers);
+        });
+
+        $("form[name=CreateOfferForm]").unbind("submit");
+        $("form[name=CreateOfferForm]").bind('submit', function (e) {
+            if ($(this).valid()) {
+                var validateField = true;
+                $('#btnSave').attr('disabled', true);
+
+                var FromDate = $("#StartDate").val();
+                var ToDate = $("#EndDate").val();
+
+                if (FromDate != "" && FromDate != null && ToDate != null && ToDate != "") {
+                    var d1 = toDate(FromDate);
+                    var d2 = toDate(ToDate);
+                    if (d1 > d2) {
+                        validateField = false;
+                        $(".preloader").hide();
+                        OpenDialog("dialogMessage", "Start Date should be less than End Date!", "false");
+                    }
+                }
+                var OfferName=$("#OfferName").val();
+                if (OfferName.trim() == "")
+                {
+                    validateField = false;
+                    $(".preloader").hide();
+                    OpenDialog("dialogMessage", "Enter Offer Name", "false");
+                }
+                if (validateField) {
+                    if ($("#ForDateType").val() == "D") {
+                        var start = $("#OfferStartDay").val();
+                        var end = $("#OfferEndDay").val();
+                        if (start != "" && start != null && start != undefined && end != "" && end != null && end != undefined) {
+                            start = parseInt(start);
+                            end = parseInt(end);
+                            if (start > end) {
+                                OpenDialog("dialogMessage", "Start Day should be less than end.", "false");
+                                validateField = false;
+                                $('#btnSave').attr('disabled', false);
+                                $(".preloader").hide();
+                            }
+                        }
+                    }
+                }
+
+                if (validateField) {
+                    if ($("#OfferType").val() == "BuythisGetthat" && BuyProductArray.length <= 0) {
+                        OpenDialog("dialogMessage", "Please add Buy products.", "false");
+                        $('#btnSave').attr('disabled', false);
+                        validateField = false;
+                        $(".preloader").hide();
+                    }
+
+                    var fCBAmount = 0;
+                    var cb = $("#CBAmount").val();
+                    if (cb != null && cb != "" && cb != undefined) {
+                        fCBAmount = parseFloat(cb);
+                    }
+
+                    if (fCBAmount==0 && FreeProductArray.length == 0) {
+                        OpenDialog("dialogMessage", "Please add offer product.", "false");
+                        $('#btnSave').attr('disabled', false);
+                        validateField = false;
+                        $(".preloader").hide();
+                    }
+                }
+
+                if (validateField == true) {
+                    
+                    var ProductArraystring = JSON.stringify(BuyProductArray);
+                    $("#ParentProductString").val(ProductArraystring);
+
+                    var FreeProductArraystring = JSON.stringify(FreeProductArray);
+                    $("#ProductString").val(FreeProductArraystring);
+
+                    var formdata = new FormData($(this)[0]);
+
+                $.ajax({
+                    url: '/Offer/SaveOffer',
+                    type: 'POST',
+                    data: formdata,
+                    processData: false,
+                    contentType: false,
+                    dataType: "json",
+                    success: function (objResponse) {
+                        $(".preloader").hide();
+                        if (objResponse != null) {
+                            if (objResponse.ResponseStatus == "OK") {
+                                OpenDialog("dialogMessage", "Saved Successfully", "false");
+                                window.location.href = "Offers";
+                            }
+                            else {
+                                OpenDialog("dialogMessage", objResponse.ResponseMessage, "false");
+                            }
+                        }
+                        $('#btnSave').attr('disabled', false);
+                    },
+                    error: function (xhr, data) {
+                        $('#btnSave').attr('disabled', false);
+                        $(".preloader").hide();
+                        console.log(xhr);
+                        console.log("Error:", data);
+                    }
+                });
+
+                 }
+            }
+            return false;
+        });
+
+        $("#OfferType").change(function () {
+            OfferTypeChange($(this).val());
+        });
+
+        $('input[type=radio][name=IEProducts]').change(function () {
+            BuyProductArray = [];
+            fillBuyProductGrid();
+        });               
+    });
+
+    function ExtraPVChange(Type)
+    {
+        if (Type == 'Y') {
+            $("#ExtraPvDiv").show();
+        } else {
+            $("#ExtraPvDiv").hide();
+        }
+    }
+
+    function NewIDChange(Type)
+    {
+        if (Type == 'Y') {
+            $("#iddatediv").show();
+        }
+        else {
+            $("#iddatediv").hide();
+        }
+    }
+
+    function SchemeChange(Type)
+    {
+        $("#DiscountDiv").hide();
+        $("#RupeeDiv").hide();
+        $("#ConfirmDiv").hide();
+        if (Type == 'D') {
+            $("#DiscountDiv").show();
+        }
+        else if (Type == 'R') {
+            $("#RupeeDiv").show();
+        }
+        else if (Type == 'F') {
+            $("#ConfirmDiv").show();
+        }
+    }
+
+    function checkDuplicateOfferName()
+    {
+        $(".preloader").show();
+        var offerName = $("#OfferName").val();
+        var offerID = $("#AID").val();
+        $.ajax({
+            url: '/Offer/CheckOfferName',
+            dataType: 'JSON',
+            method: 'POST',
+            async:false,
+            data: { 'offername': offerName, 'offerid': offerID },
+            success: function (data) {
+                if (data.ResponseStatus!="OK")
+                {
+                    OpenDialog("dialogMessage", data.ResponseMessage, "false");
+                    $("#OfferName").val('');
+                    $("#OfferName").focus();
+                }
+                $(".preloader").hide();
+
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+
+    }
+    
+    function DateTypeChange(Type) {
+        if (Type == "D") {
+            $("#OfferDayDiv").show();
+        }
+        else {
+            $("#OfferDayDiv").hide();
+            $("#OfferStartDay").val('1');
+            $("#OfferEndDay").val('31');
+        }
+    }
+
+    function OfferTypeChange(Type) {        
+        $("#BuyProduct").hide();
+        $("#BuyProductgrid").hide();
+        $("#OfferValueRow").show();
+        $("#OfferOnValue").attr("required", "required");
+        $("#OfferOnBV").attr("required", "required");
+        $("#PVValue").removeAttr("required");
+        $("#ContinueForMonth").hide();
+        $("#CombineOfferDiv").hide();
+        $(".hideforonvalue").hide();
+        $(".hideforbtgt").hide();
+        $(".hideforextrapv").hide();
+        if (Type.toLowerCase() == "buythisgetthat") {
+            $("#OfferValueRow").hide();
+            $("#OfferOnValue").removeAttr("required");
+            $("#OfferOnBV").removeAttr("required");
+            $("#BuyProduct").show();
+            $("#BuyProductgrid").show();
+            $(".showforbtgt").show();
+           
+        }
+        else if (Type.toLowerCase() == "extrapv") {
+            $('input:radio[name="ExtraPVApplicable"]').val("Y");
+            $('input:radio[name="ExtraPVApplicable"]').change();
+            $("#PVValue").attr("required", "required");
+        }
+        else {
+
+            $(".showforonvalue").show();
+            $("#BuyProduct").show();
+            $("#BuyProductgrid").show();
+            $("#ContinueForMonth").show();
+            $("#CombineOfferDiv").show();
+        }
+    }
+
+    function ClearBuyProductdetails() {
+        $("#BuyProductName").val("");
+        $("#BuyProductCode").val("");
+        $("#BuyQuantity").val("");
+    }
+
+    function toDate(dateStr) {
+        var parts = dateStr.split("-");
+        return new Date(parts[2], parts[1] - 1, parts[0]);
+    }
+
+    function getAllProductNames() {
+        $.ajax({
+            url: '/Transaction/GetProductList',
+            dataType: 'JSON',
+            method: 'GET',
+            success: function (data) {
+                ItemList = [];
+                if (data != null) {
+                    FullProductList = data;
+                    ItemList = data.map(a => a.ProductName);
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function getfreeProductList() {
+        var AID = $("#AID").val();
+        $(".preloader").show();
+        $.ajax({
+            url: '/Offer/GetOfferProductsList',
+            dataType: 'JSON',
+            method: 'GET',
+            data: { "id": AID },
+            success: function (data) {
+                var ProductArray = [];
+
+                for (var i = 0; i < data.length; i++) {
+                    ProductArray.push({ "Discount": data[i].Discount, "DiscountPer": data[i].DiscountPer, "Rupee": data[i].Rupee, "Scheme": data[i].Scheme, "Confirm": data[i].Confirm, "ProdCode": data[i].ProductCode, "ProductName": data[i].ProductName, "FreeQty": data[i].Qty, "IsBuyProduct": data[i].IsBuyProduct, "BVApplied": data[i].IsBvApplied, "OnMRP": data[i].OnMRP, "IEProduct": data[i].IncludeInOffer ? "Include" : "Exculde" });
+                }
+
+                FreeProductArray = $.grep(ProductArray, function (element, index) {
+                    return element.IsBuyProduct == "N";
+                });
+                fillFreeProductGrid();
+
+                BuyProductArray = $.grep(ProductArray, function (element, index) {
+                    return element.IsBuyProduct == "Y";
+                });
+                fillBuyProductGrid();
+
+                if (BuyProductArray.length > 0)
+                {
+                    var Includeproduct = $.grep(BuyProductArray, function (element, index) {
+                        return element.IEProduct == "Include";
+                    });
+
+                    if (Includeproduct.length > 0) {
+                        $('input[name="IEProducts"][value="Include"]').prop('checked', true);
+                    }
+                    else {
+                        $('input[name="IEProducts"][value="Exclude"]').prop('checked', true);
+                    }
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function SetSpecificCode(label,id) {
+        var objIndex = FullProductList.findIndex((obj => obj.ProductName == label));
+        if (objIndex != -1) {
+            $("#" + id).val(parseFloat(FullProductList[objIndex].ProductCode));
+        }
+    }
+
+    function Delete(ev) {
+        FreeProductArray = $.grep(FreeProductArray, function (e) {
+            return e.ProdCode != ev.data.record.ProdCode;
+        });
+        fillFreeProductGrid();
+    }
+
+    function fillFreeProductGrid() {
+
+        $("#noRecord").hide();
+        if (FreeProductgrid != null) {
+            FreeProductgrid.destroy();
+            $('#FreeProductgrid').empty();
+        }
+
+        FreeProductgrid = $('#FreeProductgrid').grid({
+            dataSource: FreeProductArray,
+            uiLibrary: 'bootstrap',
+            headerFilter: false,
+            columns: [
+                { field: 'ProdCode', title: 'Product Code', width: 100, sortable: true, hidden: false, filterable: false },
+                { field: 'ProductName', title: 'Product Name', width: 100, sortable: true, hidden: false, filterable: true },                
+                { field: 'FreeQty', title: 'FreeQty', width: 120, sortable: true, hidden: false, filterable: true },
+                { field: 'Scheme', title: 'Scheme', width: 120, sortable: true, hidden: false, filterable: true, renderer: function (value, record) { if (value == "F") { return "For Free"; } else if (value == "D") { return "On Discount" } else { return "For Rupee" } } },
+                { field: 'Confirm', title: 'Is Confirm', width: 120, sortable: true, hidden: true, filterable: true, renderer: function (value, record) { if (value == "Y") { return "Confirm"; } else if (value == "N") { return "Optional" } else { ""} } },
+                { field: 'Discount', title: 'Discount', width: 120, sortable: true, hidden: true, filterable: true },
+                { field: 'DiscountPer', title: 'DiscountPer', width: 120, sortable: true, hidden: true, filterable: true },
+                { field: 'Rupee', title: 'Rupee', width: 120, sortable: true, hidden: true, filterable: true },
+                { field: 'IsBuyProduct', title: 'Buy Product', width: 120, sortable: true, hidden: true, filterable: true },
+                { title: '', field: 'Delete', width: 34, type: 'icon', width: 70, icon: 'glyphicon-remove', tooltip: 'Edit', events: { 'click': Delete }, filterable: false }
+            ],
+            pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+        });
+    }
+
+    function fillBuyProductGrid() {
+        $("#noRecord").hide();
+        $(".preloader").hide();
+        var type = $("#OfferType").val();
+        
+
+        if (grid != null) {
+            grid.destroy();
+            $('#grid').empty();
+        }
+
+        if (type == "BuythisGetthat") {
+            grid = $('#BuyProductgrid').grid({
+                dataSource: BuyProductArray,
+                uiLibrary: 'bootstrap',
+                headerFilter: false,
+                columns: [
+                    { field: 'ProdCode', title: 'Product Code', width: 100, sortable: true, hidden: false, filterable: false },
+                    { field: 'ProductName', title: 'Product Name', width: 100, sortable: true, hidden: false, filterable: true },
+                    { field: 'FreeQty', title: 'Buy Qty', width: 120, sortable: true, hidden: false, filterable: true },
+                    { field: 'OnMRP', title: 'On MRP', width: 80, sortable: true, hidden: true, filterable: true },
+                    { field: 'IsBuyProduct', title: 'Buy Product', width: 120, sortable: true, hidden: true, filterable: true },
+                    { title: '', field: 'Delete', width: 34, type: 'icon', width: 70, icon: 'glyphicon-remove', tooltip: 'Edit', events: { 'click': DeleteBuyProduct }, filterable: false }
+                ],
+                pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+            });
+        }
+        else {
+            grid = $('#BuyProductgrid').grid({
+                dataSource: BuyProductArray,
+                uiLibrary: 'bootstrap',
+                headerFilter: false,
+                columns: [
+                    { field: 'ProdCode', title: 'Product Code', width: 100, sortable: true, hidden: false, filterable: false },
+                    { field: 'ProductName', title: 'Product Name', width: 100, sortable: true, hidden: false, filterable: true },
+                    { field: 'IsBuyProduct', title: 'Buy Product', width: 120, sortable: true, hidden: true, filterable: true },
+                    { field: 'IEProduct', title: 'Include/Exclude', width: 120, sortable: true, hidden: false, filterable: true },
+                    { title: '', field: 'Delete', width: 34, type: 'icon', width: 70, icon: 'glyphicon-remove', tooltip: 'Edit', events: { 'click': DeleteBuyProduct }, filterable: false }
+                ],
+                pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+            });
+        }
+
+        if (BuyProductArray.length > 0) {
+            $('#BuyProductgrid').show();
+            $('#BuyProduct').show();            
+        }
+    }
+
+    function DeleteBuyProduct(ev) {
+        BuyProductArray = $.grep(BuyProductArray, function (e) {
+            return e.ProdCode != ev.data.record.ProdCode;
+        });
+        fillBuyProductGrid();
+    }
+
+    function OpenDialog(dialogId, Message, isConfirmation) {
+        $("#" + dialogId).empty();
+        $("#" + dialogId).append('<p>' + Message + '</p>');
+        if (isConfirmation == "true") {
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "Yes",
+                    id: "btnYes" + dialogId,
+                    click: function () {
+                        IsYes = true;
+                        $("#" + dialogId).dialog("close");
+                    }
+                },
+                {
+                    text: "No",
+                    id: "btnNo" + dialogId,
+                    click: function () {
+                        IsYes = false;
+                        $("#" + dialogId).dialog("close");
+                    }
+                }
+                ]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+        else {
+
+
+            $("#" + dialogId).dialog({
+                modal: true,
+                buttons: [{
+                    text: "OK",
+                    id: "btn" + dialogId,
+                    click: function () {
+                        $("#" + dialogId).dialog("close");
+                    }
+                }]
+            });
+            $(".ui-dialog-titlebar-close").empty();
+            $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+        }
+
+    }
+    function ClearProductdetails() {
+        $("#ProductName").val("");
+        $("#ProductCode").val("");        
+        $("#FreeQuantity").val("0");       
+        $("#Scheme").val("F");
+        $("#IsConfirm").val("Y");
+        $("#Discount").val("0");
+        $("#DiscountPer").val("0");
+        $("#ForRupee").val("0");
+        $("#freeerrormsg").html("");
+        SchemeChange("F");
+    }
+    </script>
+

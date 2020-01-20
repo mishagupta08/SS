@@ -3392,31 +3392,23 @@ namespace InventoryManagement.Controllers
         }
 
         [SessionExpire]
-        public ActionResult BuythisGetthatOffer(string ActionName, string OfferCode)
-        {
-            List<SelectListItem> Activeoption = new List<SelectListItem>();
-            Activeoption.Add(new SelectListItem() { Text = "Active", Value = "Y" });
-            Activeoption.Add(new SelectListItem() { Text = "Deactive", Value = "N" });
-            ViewBag.ActiveOptions = Activeoption;
-            Offer objoffer = new Offer();
+       public ActionResult BuythisGetthatOffer(string ActionName, string OfferCode)
+       {
+           List<SelectListItem> Activeoption = new List<SelectListItem>();
+           Activeoption.Add(new SelectListItem() { Text = "Active", Value = "Y" });
+           Activeoption.Add(new SelectListItem() { Text = "Deactive", Value = "N" });
+           ViewBag.ActiveOptions = Activeoption;
+           Offer objoffer = new Offer();
 
 
-            if (!string.IsNullOrEmpty(OfferCode))
-            {
-                int code = int.Parse(OfferCode);
-                objoffer = objTransacManager.getOfferDetail(code);
-               
-            }
-            objoffer.ActionName = ActionName;
-            var AccessTo = new UserController().UserCanAccess((Session["LoginUser"] as User).UserId, "BuythisGetthatOfferMaster");
-            if (!string.IsNullOrEmpty(AccessTo))
-            {
-                ViewBag.UserCanAccess = AccessTo;
-                return View(objoffer);
-            }
-            else
-                return RedirectToAction("Dashboard", "Home");
-        }
+           if (!string.IsNullOrEmpty(OfferCode))
+           {
+               int code = int.Parse(OfferCode);
+               objoffer = objTransacManager.getOfferDetail(code);
+             
+           }
+           return View(objoffer);
+       }
 
         [SessionExpire]
         public ActionResult BuythisGetthatOfferMaster()

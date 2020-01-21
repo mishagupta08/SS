@@ -803,6 +803,7 @@ namespace InventoryManagement.API.Controllers
 
                         string query = "select b.MemDate as Doj,c.Mobile as Mobl,a.RegID FormNo,a.IdNo,a.FName+' '+ a.LName as Name,b.ClientActiveStatus as ActiveStatus,b.ClientActivateDate UpgradeDate,'N' as IsBlock,'' as RefId,'' as RefName,'' PanNo " +
 " FROM MemberProfiles a LEFT JOIN Memberlogic b ON a.RegID = b.RegID LEFT JOIN MemberAddress c ON a.RegID = c.RegID WHERE a.IdNo = @IdNo";
+
                         SqlCommand cmd = new SqlCommand();
                         cmd.CommandText = query;
                         cmd.Parameters.AddWithValue("@IdNo", IdNo);

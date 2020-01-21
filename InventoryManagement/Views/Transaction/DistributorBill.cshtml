@@ -101,6 +101,9 @@
     var KitDescriptionList;
     var ProductGrid = [{ "AvailStock": "", "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "BatchNo": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "FreeQty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "","ProductTye":"","Weight": 0, "WeightVal": 0 }];
     var SelectedInvoiceTypeFalse = false;
+    var OfferArray = [];
+    var BuyProductArray = [];
+    var Freedata = [];
     $(document).keydown(function (event) {
         if (event.shiftKey && event.keyCode == 78) {
             console.log("Hey! Shift+n event captured!");
@@ -110,9 +113,9 @@
     });
 
     $(document).ready(function () {
-
         $(".preloader").hide();
         getAllProductNames();
+        getOfferList();
         fillGrid();
         changeValues();
         $("#IdNo").focus();
@@ -143,7 +146,7 @@
             $("#SaveDistributorForm").focus();
             return false;
         });
-      
+
         function OpenPayModePopup() {
             position = $('#PaymodePopup').position();
             $('body').append('<div class="overlay"></div>')
@@ -1082,7 +1085,7 @@
                         OpenDialog("dialogMessage", "Record Does Not Exists", "false");
 
                     }
-
+                    getOfferList();
                     ResetDetails();
                 },
                 error: function (xhr, data) {
@@ -1093,6 +1096,8 @@
             });
 
         }
+
+
 
         function GetAllParty() {
             $.ajax({
@@ -1684,6 +1689,13 @@
             SaveBill();
         });
 
+        $("#OfferList").change(function () {
+            OfferError = "";
+            ResetDetails();
+            var OID = $(this).val();
+            GetBuythisGetthatProducts(OID);
+        });
+
         $("#ResendOTP").click(function () {
             //$("#dialogOTP").dialog("close");
             OTPValue = "";
@@ -1799,109 +1811,123 @@
 
         });
 
-        function CheckOffer() {
-        //var totalPay = $("#NetPayable").val();
-        //if (totalPay >= 2100) {
-        //    var d = new Date();
-        //    var date = d.getDate();
-        //    if (date >= 1 && date <= 11) {
-        //        $("#offerId").val(1);
-        //        $("#dialogOffer").dialog({
-        //            modal: true,
-        //            width: "55%"
-        //        });
-        //    }
-        //    else {
-        //        SaveBill();
-        //    }
-        //}
-        //else {
-            $.ajax({
-                url: '@Url.Action("CheckForOffer", "Transaction")',
-                type: 'POST',
-                data: formdata,
-                processData: false,
-                contentType: false,
-                dataType: "json",
-                success: function (objResponse) {
-                    if (objResponse.ResponseStatus == "Success")
-                    {
-                        console.log("Offer is..");
-                        if (objResponse.ResponseMessage != "NoOffer") {
-                            var offerdetail = objResponse.ResponseMessage.split("δ");
-                            $("#offerId").val(offerdetail[1]);
-                            $("#offeronVal").text(offerdetail[6]);
-                            if  (offerdetail[4]!="")
-                            {
+       function CheckOffer() {
+            $(".preloader").show();
+            var OfferID = $("#OfferList").val();
+            var OType = $('option:selected', $("#OfferList")).attr("data-ot");
+            var nooffer = true;
+            if (OfferID != null && OfferID != "" && OfferID != undefined && OfferID != "0" && OType != "NO") {
+                nooffer = false;
+                var OfferType = selectedOfferDetail.OfferType;
+                var OfferBv = parseFloat(selectedOfferDetail.OfferOnBV);
+                var OfferAmount = parseFloat(selectedOfferDetail.OfferOnValue);
+                var NetpayableValue = parseFloat($("#NetPayable").val());
+                var totalBV = parseFloat($("#TotalBV").val());
 
-                                var confPlist = offerdetail[4].split(",");
-                                var confPQtylist = offerdetail[5].split(",");
-                                console.log(confPlist);
-                                for (var i = 0; i < confPlist.length; i++) {
-                                    console.log(confPlist[i]);
-                                    var confProd = confPlist[i].split("~");
-                                    GetProductInfo("P", confProd[0], true, confPQtylist[i]);
-
-                                // GetProductInfo(isProductSearch, data, offerProduct, offerQty)
-                                DoCalculation(true);
-                                $("#AddRecordInGrid").click();
-                                if (ProductGrid.length > 0) {
-                                    var ListObjStr = JSON.stringify(ProductGrid);
-                                    $("#ListObjHidden").val(ListObjStr);
-                                    formdata = new FormData($("#distributorForm")[0]);
-                                    console.log("done..");
-                                }
-                                }
-                                $("#ProductName").val('')
-                                $("#ProductName").focus();
-                        }
-
-                            var plist = offerdetail[2].split(",");
-                            var freeqty = offerdetail[3].split(",");
-                            if (plist.length == 1)
-                            {
-                                var FreeProd = offerdetail[2].split("~");
-                                GetProductInfo("P", FreeProd[0], true, offerdetail[3]);
-                                DoCalculation(true);
-                                $("#AddRecordInGrid").click();
-                                if (ProductGrid.length > 0) {
-                                    var ListObjStr = JSON.stringify(ProductGrid);
-                                    $("#ListObjHidden").val(ListObjStr);
-                                    formdata = new FormData($("#distributorForm")[0]);
-                                    console.log("done");
-                                }
-                                SaveBill();
-                            }
-                            else
-                            {
-                                for (var i = 0; i < plist.length; i++) {
-                                    var plistitem = plist[i].split("~");
-                                    $("#products").append("<label class='col-lg-6'><input type='radio' data-qty='" + freeqty[i] + "' class='freeproduct' name='freeproduct' value='" + plistitem[0] + "'>" + plistitem[0] + "</label>");
-                                }
-                                $("#dialogOffer").dialog({
-                                    modal: true,
-                                    width: "55%"
-                                });
-                            }
-
-                        }
-                        else {
-                            SaveBill();
-                        }
-                    }
-                    else
-                    {
-                        SaveBill();
-                    }
-                },
-                error: function (xhr, data) {
-                    console.log(xhr);
-                    console.log("Error:", data);
+                
+                $(".preloader").show();
+                if ((IsWalletEntry == true || IsMainWalletEntry == true) && OTPEntered == false) {
+                    SendOTP();
                 }
-            });
-        //}
-        }
+                else {
+                    $(".preloader").show();
+                    SaveBill();
+                }
+            }
+            
+            if (nooffer) {
+                $(".preloader").hide();
+                $("#NoOfferDialog").dialog({
+                    modal: true,
+                    width: "50%"
+                });
+            }
+       }
 
+
+       function AddBtGTProducts(quantity, offerid) {
+           quantity = 0;
+           var offset = 0;
+           var IsOfferApplicable = true;
+
+           var OfferId = $("#OfferList").val();
+           
+           if (BuyProductArray != null && BuyProductArray.length >= 0) {
+
+               var offset = 0;
+               for (var i = 0; i < BuyProductArray.length; i++) {
+                   var BProduct = $.grep(ProductGrid, function (e) {
+                       return e.Code == BuyProductArray.ProductCode;
+                   });
+                       if (parseInt(ProductGrid[i].Qty) < parseInt(BuyProductArray[i].Qty)) {
+                           IsOfferApplicable = false;                           
+                           break;
+                       }
+                       else {
+                           var calfree = parseInt(ProductGrid[i].Qty) / parseInt(BuyProductArray[i].Qty);
+                           if (offset == 0 || offset > calfree) {
+                               offset = calfree;
+                           }
+                       }                   
+               }
+
+
+               if (IsOfferApplicable && Freedata != null && Freedata.length > 0) {
+                   for (var i = 0; i < Freedata.length; i++) {
+                       GetProductInfo("P", Freedata[i].ProductName, true, Freedata[i].Qty);
+                       var freeQty = parseInt(Freedata[i].Qty) * parseInt(offset);
+                       $("#Quantity").val(freeQty);
+                       DoCalculationforBTGT();
+                       $("#AddRecordInGrid").click();
+                   }
+               }
+           }
+       }
+       
+       function DoCalculationforBTGT() {
+           //  var ProductGrid = [{ "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "" }];
+           if (ProductArray != null && ProductArray != undefined) {
+               var Quantity = parseFloat(($("#Quantity").val() != "" || $("#Quantity").val() != null) ? $("#Quantity").val() : 0);
+               var dpValue;
+               var CommissionLessDp;
+
+
+               dpValue = BuyProduct.Rate;
+               var DiscPer = ProductArray.DiscPer;
+               var DiscAmt = ProductArray.DiscAmt;
+
+               ProductArray.Rate = dpValue * 100 / (100 + parseFloat(ProductArray.TaxPer));
+               ProductArray.Amount = dpValue * Quantity * 100 / (100 + (parseFloat(ProductArray.TaxPer)));
+
+               ProductArray.TaxAmt = (dpValue * Quantity) - ProductArray.Amount;
+
+               var temp = (ProductArray.TaxAmt.toFixed(2)).toString();
+               var lastNum = parseInt(temp[temp.length - 1]);
+               if ((parseInt(lastNum) % 2) != 0) {
+                   $("#OldTaxAmount").val(parseFloat(ProductArray.TaxAmt));
+                   ProductArray.Amount = parseFloat(ProductArray.Amount) + 0.01;
+                   ProductArray.TaxAmt = parseFloat(ProductArray.TaxAmt) - 0.01;
+               }
+
+               ProductArray.RPValue = ProductArray.RP * Quantity;
+               ProductArray.CVValue = ProductArray.CV * Quantity;
+
+               ProductArray.PVValue = ProductArray.PV * Quantity;
+               ProductArray.WeightVal = ProductArray.Weight * Quantity;
+               ProductArray.Qty = Quantity;
+               ProductArray.DiscAmt = BuyProduct.Discount * Quantity;
+               ProductArray.TotalAmt = (dpValue * Quantity);
+               ProductArray.ProductTye = BuyProduct.ProductType;
+               ProductArray.BV = BuyProduct.PV;
+               ProductArray.BVValue = BuyProduct.PV * Quantity;
+               
+               $("#DiscAmt").val((ProductArray.DiscAmt).toFixed(2));
+               $("#TaxAmt").val((ProductArray.TaxAmt).toFixed(2));
+               $("#Amount").val((ProductArray.Amount).toFixed(2));
+               $("#TotalAmount").val((ProductArray.TotalAmt).toFixed(2));
+
+           }
+       }
         function SaveBill(){
 
             console.log("form data = > " + formdata);
@@ -1982,6 +2008,70 @@
         var win = window.open(url, '_blank');
         //win.focus();
      }
+        function getOfferList() {
+            var Formno = $("#FormNo").val();
+            var Doj = $("#Doj").val();
+            var UpgradeDate = $("#UpgradeDate").val();
+            var IsFirstBill = $("#IsFirstBillOffer").val();
+            var ActiveStatus = $("#IsActive").val();
+            $.ajax({
+                url: '@Url.Action("GetValidOfferList", "Offer")',
+                type: 'GET',
+                async: false,
+                data: { "Doj": Doj, "UpgradeDate": UpgradeDate, "IsFirstBill": IsFirstBill, "ActiveStatus": ActiveStatus, "FormNo": Formno },
+                dataType: "json",
+                success: function (objResult) {
+                    if (objResult.length > 0) {
+                        var minbv = $("#MinRepurch").val();
+                        $("#OfferList").html("<option data-ot='NO' value='0'>--Choose Offer--</option>");
+                        $("#OfferList").append("<option data-ot='NO' value='0'>No Offer Bill</option>");
+                        //$("#OfferList").append("<option data-ot='BTGT' value='0'>Choose Buy This Get That Offer</option>");
+                        //$("#OfferCheckdiv").html("");
+                        for (var i = 0; i < objResult.length; i++) {
+                            //if (objResult[i].OfferType.toLowerCase() != "buythisgetthat") {
+                                $("#OfferList").append("<option data-ot='OFFER' value=" + objResult[i].AID + ">" + objResult[i].OfferName + " </option>");
+                            //}
+                            //else {
+                            //    var divId = "btgtcheck_" + objResult[i].AID;
+                            //    var textID = "btgttext_" + objResult[i].AID;
+                            //    $("#OfferCheckdiv").append("<div id =  '" + divId + "' class='col-lg-12 checkdiv' data_ID='" + objResult[i].AID + "' style='display:none;'><div class='col-lg-6'><label><input data-offerid= '" + objResult[i].AID + "' name='btgtcheck' class='BtgtOption btgtcheck' type='checkbox' value='" + objResult[i].AID + "' />" + objResult[i].OfferName + "</label></div><div class='col-lg-2'><input readonly='readonly' data_OfferID='" + objResult[i].AID + "' name='btgttext' class='btgttext' maxlength='2' max='99' value='0' type='number' id='" + textID + "'/></div><div class='col-lg-4'></div></div>");
+                            //}
+                        }
+                    }
+                    else {
+                        $("#OfferList").html("<option value='0'>--No Offer Found--</option>");
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+
+        }
+
+
+        function GetBuythisGetthatProducts(OfferId) {            
+            $.ajax({
+                url: '/Offer/getProductsForOffer',
+                dataType: 'JSON',
+                method: 'GET',
+                data: { "OfferID": OfferId },
+                async: false,
+                success: function (data) {
+                    if (data != null && data.length >= 0) {
+                        Freedata = $.grep(data, function (element, index) {
+                            return element.ProductType == "F" ;
+                        });
+
+                        BuyProductArray = $.grep(data, function (element, index) {
+                            return element.ProductType == "P";
+                        });
+
+                        OfferArray = data;
+                    }
+                }
+            });
+        }
 </script>
 
 <div class="row">
@@ -2062,8 +2152,13 @@
                                     </select>*@
                                 </div>
                             </div>
-                            <div class="col-lg-4">
-                                &nbsp;
+                            <div class="col-lg-4" id="OfferDropDown">
+                                <label class="control-label col-lg-4" for="category-name">
+                                    Choose Offer
+                                </label>
+                                <div class="col-lg-8">
+                                    @Html.DropDownListFor(m => m.offerId, ViewBag.OfferList as IEnumerable<SelectListItem>, new { tabindex = "0", @class = "form-control", @name = "OfferList", @id = "OfferList" })
+                                </div>
                             </div>
                             <div class="col-lg-4">
                                 &nbsp;
@@ -2097,31 +2192,13 @@
                                 &nbsp;
                             </div>
                         </div>
-                        @*<div class="row RowMargin">
-                            <div class="col-lg-4 col-sm-4">
 
-                                <label class="control-label col-lg-4" for="category-name">
-                                    Ref. Id No.
-                                </label>
-                                <div class="col-lg-8">
-                                    @Html.TextBoxFor(m => m.objCustomer.ReferenceIdNo, new { name = "ReferenceIdNo", id = "ReferenceIdNo", @readonly = "readonly", @class = "form-control" })
-                                </div>
+                        <div class="row RowMargin" id="OfferCheck" style="display:none;">
+                            <div class="ln_solid" style="margin-top:18px"></div>
+                            <div class="col-lg-12" id="OfferCheckdiv">
 
                             </div>
-                            <div class="col-lg-4">
-
-                                <label class="control-label col-lg-4" for="category-name">
-                                    Referral Name 
-                                </label>
-                                <div class="col-lg-8">
-                                    @Html.TextBoxFor(m => m.objCustomer.ReferenceName, new { name = "ReferenceName", id = "ReferenceName", @readonly = "readonly", @class = "input-readonly form-control col-lg-7 col-xs-7" })
-                                </div>
-
-                            </div>
-                            <div class="col-lg-4">
-                                &nbsp;
-                            </div>
-                        </div>*@
+                        </div>
 
                         <div class="row RowMargin">
 

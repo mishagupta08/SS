@@ -91,6 +91,12 @@ namespace InventoryManagement.Controllers
                     KidIsListObj.Add(new SelectListItem { Text = obj.KitName, Value = obj.KitId.ToString() });
                 }
                 ViewBag.objKitList = KidIsListObj;
+
+                List<SelectListItem> Offer = new List<SelectListItem>();
+                Offer.Add(new SelectListItem { Text = "Choose Offer", Value = "0" });
+                ViewBag.OfferList = Offer;
+
+
                 objDistributorModel.objCustomer.KitId = 0;
                 List<StateModel> objStateMdl = new List<StateModel>();
                 objStateMdl = objRegistrationManager.GetStateList();

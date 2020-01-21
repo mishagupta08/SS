@@ -1457,6 +1457,7 @@
     <Content Include="Content\gijgo\fonts\gijgo-material.ttf" />
     <Content Include="Content\gijgo\fonts\gijgo-material.woff" />
     <None Include="Properties\PublishProfiles\Padmini.pubxml" />
+    <None Include="Properties\PublishProfiles\SarsoPublish.pubxml" />
     <None Include="Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="Scripts\CreateOffer.js" />
     <Content Include="Scripts\gijgo\combined\gijgo.js" />

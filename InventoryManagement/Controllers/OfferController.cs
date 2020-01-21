@@ -21,7 +21,7 @@ namespace InventoryManagement.Controllers
         [SessionExpire]
         public ActionResult Offers()
         {
-            var AccessTo = new UserController().UserCanAccess((Session["LoginUser"] as User).UserId, "UserMasterList");
+            var AccessTo = new UserController().UserCanAccess((Session["LoginUser"] as User).UserId, "Offers");
             if (!string.IsNullOrEmpty(AccessTo))
             {
                 ViewBag.UserCanAccess = AccessTo;
@@ -248,7 +248,7 @@ namespace InventoryManagement.Controllers
             ViewBag.CombineOfferListOptions = CombineOfferList;
 
 
-            var AccessTo = new UserController().UserCanAccess((Session["LoginUser"] as User).UserId, "UserMasterList");
+            var AccessTo = new UserController().UserCanAccess((Session["LoginUser"] as User).UserId, "Offers");
             if (!string.IsNullOrEmpty(AccessTo))
             {
                 ViewBag.UserCanAccess = AccessTo;

@@ -384,16 +384,17 @@ namespace InventoryManagement.API.Controllers
            
                 if (SC.State == System.Data.ConnectionState.Closed) SC.Open();
                 string Condition = "";
-                using (SqlDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        Condition = reader["Condition"].ToString();
-                    }
-                }
-                qry = "select offerid,OfferName,isnull(CombineWithOffer,'') as Combinewithoffer,ForNewIds,OfferType,OfferBillType,offeronValue,OfferOnBV as OfferONPV from VRINv..VisionOffers " +
+                //using (SqlDataReader reader = cmd.ExecuteReader())
+                //{
+                //    while (reader.Read())
+                //    {
+                //        Condition = reader["Condition"].ToString();
+                //    }
+                //}
+                string dbInv = System.Configuration.ConfigurationManager.AppSettings["INVDatabase"];
+                qry = "select offerid,OfferName,isnull(CombineWithOffer,'') as Combinewithoffer,ForNewIds,OfferType,OfferBillType,offeronValue,OfferOnBV as OfferONPV from "+dbInv+"..VisionOffers " +
                 " where ActiveStatus='Y'  " + Condition + "  ";
-               cmd = new SqlCommand();
+                cmd = new SqlCommand();
                 cmd.CommandText = qry;
                 cmd.Connection = SC;
                 if (SC.State == System.Data.ConnectionState.Closed) SC.Open();      

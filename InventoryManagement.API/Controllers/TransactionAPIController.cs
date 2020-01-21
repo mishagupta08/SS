@@ -801,8 +801,9 @@ namespace InventoryManagement.API.Controllers
                         string AppConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SarsoServices"].ConnectionString;
                         SqlConnection SC = new SqlConnection(AppConnectionString);
 
-                        string query = "select b.MemDate as Doj,c.Mobile as Mobl,a.Idno as FormNo,a.FName+' '+ a.LName as Name,b.ClientActiveStatus as ActiveStatus,b.ClientActivateDate UpgradeDate,'N' as IsBlock,'' as RefId,'' as RefName,'' PanNo " +
-" FROM MemberProfiles a LEFT JOIN Memberlogic b ON a.RegID = b.RegID LEFT JOIN MemberAddress c ON a.RegID = c.RegID WHERE a.Idno = @IdNo";
+                        string query = "select b.MemDate as Doj,c.Mobile as Mobl,a.RegID FormNo,a.IdNo,a.FName+' '+ a.LName as Name,b.ClientActiveStatus as ActiveStatus,b.ClientActivateDate UpgradeDate,'N' as IsBlock,'' as RefId,'' as RefName,'' PanNo " +
+" FROM MemberProfiles a LEFT JOIN Memberlogic b ON a.RegID = b.RegID LEFT JOIN MemberAddress c ON a.RegID = c.RegID WHERE a.IdNo = @IdNo";
+
                         SqlCommand cmd = new SqlCommand();
                         cmd.CommandText = query;
                         cmd.Parameters.AddWithValue("@IdNo", IdNo);
@@ -814,7 +815,7 @@ namespace InventoryManagement.API.Controllers
                             if (reader.Read())
                             {
 
-                                objCustomerDetail.IdNo = reader["FormNo"] != null ? reader["FormNo"].ToString() : "";
+                                objCustomerDetail.IdNo = reader["IdNo"] != null ? reader["IdNo"].ToString() : "";
                                 objCustomerDetail.ReferenceIdNo = reader["RefId"] != null ? reader["RefId"].ToString() : "";
                                 objCustomerDetail.ReferenceName = reader["RefName"] != null ? reader["RefName"].ToString() : "";
                                 objCustomerDetail.Name = reader["Name"] != null ? reader["Name"].ToString() : "";

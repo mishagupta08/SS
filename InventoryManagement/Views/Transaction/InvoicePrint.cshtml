@@ -295,7 +295,7 @@
                             <th scope="col" align="left" class="addAllPadding AllBorder">Price</th>
                             @if (Model.objListProduct[0].OrderType != "T")
                             {
-                                <th scope="col" align="left" class="addAllPadding AllBorder">B.V.</th>
+                                <th scope="col" align="left" class="addAllPadding AllBorder">@BVCaption</th>
                                 colcount = colcount + 1;
                             }
 
@@ -631,7 +631,7 @@
                         <tr class="NoBorder"><td colspan=@colcount class="NoBorder">&nbsp;</td></tr>
                         @if (Model.objListProduct[0].OrderType == "T")
                         {
-                            <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Tota BV: @Model.objProduct.TotalBV</b></td></tr>}
+                            <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Tota @BVCaption: @Model.objProduct.TotalBV</b></td></tr>}
                     <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Rupee @Model.objProduct.TotalAmountString</b></td></tr>
                 </table>
             </td>

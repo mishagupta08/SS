@@ -144,6 +144,7 @@ namespace InventoryManagement.Entity.Common
         public decimal WeightVal { get; set; }
         public decimal? FundPointValue { get; set; }
         public decimal Quantity { get; set; }
+        public decimal FreeQty { get; set; }
         public decimal StockAvailable { get; set; }
         public decimal? DP { get; set; }
         public decimal? DiscPer { get; set; }

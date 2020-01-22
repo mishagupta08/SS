@@ -801,7 +801,7 @@ namespace InventoryManagement.API.Controllers
                         string AppConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SarsoServices"].ConnectionString;
                         SqlConnection SC = new SqlConnection(AppConnectionString);
 
-                        string query = "select b.MemDate as Doj,c.Mobile as Mobl,a.RegID FormNo,a.IdNo,a.FName+' '+ a.LName as Name,b.ClientActiveStatus as ActiveStatus,b.ClientActivateDate UpgradeDate,'N' as IsBlock,'' as RefId,'' as RefName,'' PanNo " +
+                        string query = "select b.MemDate as Doj,c.Mobile as Mobl,a.RegID as FormNo,a.IdNo,a.FName+' '+ a.LName as Name,b.ClientActiveStatus as ActiveStatus,b.ClientActivateDate UpgradeDate,'N' as IsBlock,'' as RefId,'' as RefName,'' PanNo " +
 " FROM MemberProfiles a LEFT JOIN Memberlogic b ON a.RegID = b.RegID LEFT JOIN MemberAddress c ON a.RegID = c.RegID WHERE a.IdNo = @IdNo";
 
                         SqlCommand cmd = new SqlCommand();
@@ -1176,7 +1176,7 @@ namespace InventoryManagement.API.Controllers
 
 
 
-                                        int i = cmd.ExecuteNonQuery();
+                                        int i = 1;//cmd.ExecuteNonQuery();
 
                                         objTrans.Commit();
                                         SC.Close();
@@ -1326,7 +1326,7 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.ProductId = obj.ProdCode.ToString();
                                 objDTBillData.ProductName = obj.ProductName;
                                 objDTBillData.Qty = obj.Quantity;
-
+                                objDTBillData.FreeQty = obj.FreeQty;
                                 objDTBillData.Rate = obj.Rate ?? 0;
                                 objDTBillData.IsKitBV = "N";
                                 objDTBillData.DSeries = "";

@@ -307,6 +307,10 @@ namespace InventoryManagement.Controllers
                             {
                                 objTemp.Quantity = (decimal)app.Value;
                             }
+                            else if (app.Key == "FreeQty")
+                            {
+                                objTemp.FreeQty = (decimal)app.Value;
+                            }
                             else if (app.Key == "PV")
                             {
                                 objTemp.PV = (decimal)app.Value;

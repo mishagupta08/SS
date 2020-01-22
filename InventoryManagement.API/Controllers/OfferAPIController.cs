@@ -393,7 +393,7 @@ namespace InventoryManagement.API.Controllers
                 //}
                 string dbInv = System.Configuration.ConfigurationManager.AppSettings["INVDatabase"];
                 qry = "select offerid,OfferName,isnull(CombineWithOffer,'') as Combinewithoffer,ForNewIds,OfferType,OfferBillType,offeronValue,OfferOnBV as OfferONPV from "+dbInv+"..VisionOffers " +
-                " where ActiveStatus='Y'  " + Condition + "  ";
+                " where ActiveStatus='Y' AND (OfferFromDt<=Getdate() AND OfferToDt>=Getdate())";
                 cmd = new SqlCommand();
                 cmd.CommandText = qry;
                 cmd.Connection = SC;
@@ -643,7 +643,7 @@ namespace InventoryManagement.API.Controllers
                 SqlCommand cmd = new SqlCommand();
                 if (!string.IsNullOrEmpty(offerID))
                 {
-                    Sql = "Exec GetFreeProducts '" + offerID + "'";
+                    Sql = "Select * from VisionOfferProducts where OfferId =  '" + offerID + "'";
                     cmd.CommandText = Sql;
                     cmd.Connection = SC;
                     SC.Close();
@@ -657,14 +657,14 @@ namespace InventoryManagement.API.Controllers
                             tempobj.ProductCode = reader["ProdID"] != null ? reader["ProdID"].ToString() : "";
                             tempobj.ProductName = reader["ProdName"] != null ? reader["ProdName"].ToString() : "";
                             tempobj.Qty = reader["Qty"] != null ? Convert.ToDecimal(reader["Qty"]) : 0;
-                            tempobj.Confirm = reader["IsConfirm"] != null ? reader["IsConfirm"].ToString() : "";
-                            tempobj.Discount = reader["Discount"] != null ? Convert.ToDecimal(reader["Discount"]): 0;
-                            tempobj.Rate = reader["Rate"] != null ? Convert.ToDecimal(reader["Rate"]) : 0;
-                            tempobj.PV = reader["BV"] != null ? Convert.ToDecimal(reader["BV"].ToString()):0;
-                            tempobj.PVValue = reader["BVValue"] != null ? Convert.ToDecimal(reader["BVValue"]):0;
-                            tempobj.freeQty = reader["FreeQty"] != null ? Convert.ToDecimal(reader["FreeQty"]) : 0;
-                            tempobj.ProductType = reader["ProdType"] != null ? reader["ProdType"].ToString() : "";
-                            tempobj.Amount = reader["Amount"] != null ? Convert.ToDecimal( reader["Amount"].ToString()) : 0;                                                
+                            tempobj.Confirm = "";
+                            tempobj.Discount =  0;
+                            tempobj.Rate =  0;
+                            tempobj.PV = 0;
+                            tempobj.PVValue = 0;
+                            tempobj.freeQty =  0;
+                            tempobj.ProductType = ((reader["IsBuyProduct"] != null ? Convert.ToString(reader["IsBuyProduct"]) : "") == "Y") ? "P" : "F";
+                            tempobj.Amount =  0;                                                
                             prodModel.Add(tempobj);
                         }
                     }

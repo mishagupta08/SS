@@ -146,7 +146,7 @@ namespace InventoryManagement.DataAccess
         {
             return (objTransacAPI.GetOldBillProducts(billNo));
         }
-        public ResponseDetail DeleteBills(string BillNo, decimal FsessId, decimal UserId, string Reason)
+        public ResponseDetail DeleteBills(string BillNo, string FsessId, decimal UserId, string Reason)
         {
             return (objTransacAPI.DeleteBills(BillNo, FsessId, UserId, Reason));
         }

@@ -34,7 +34,7 @@ namespace InventoryManagement.DataAccess.Contract
         ResponseDetail RejectOrder(string OrderNo, string RejectReason, decimal RejectedByUserId);
         List<ProductModel> GetOrderProduct(string OrderNo, string CurrentPartyCode);
         ResponseDetail SaveDispatchOrderdetails(List<DisptachOrderModel> objModel);
-        ResponseDetail DeleteBills(string BillNo, decimal FsessId, decimal UserId, string Reason);
+        ResponseDetail DeleteBills(string BillNo, string FsessId, decimal UserId, string Reason);
     }
 
    

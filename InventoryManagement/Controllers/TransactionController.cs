@@ -1363,8 +1363,8 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Dashboard", "Home");
         }
 
-
-        public ActionResult DeleteBill(string BillNo, decimal FsessId, string Reason)
+        [HttpGet]
+        public ActionResult DeleteBill(string BillNo, string FsessId, string Reason)
         {
             ResponseDetail objResponse = new ResponseDetail();
             List<SalesReport> objBillList = new List<SalesReport>();

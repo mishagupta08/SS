@@ -291,8 +291,9 @@
                             <th scope="col" align="left" class="addAllPadding AllBorder">HSN Code</th>
                             <th scope="col" align="left" class="addAllPadding AllBorder">Qty</th>
                             @*<th scope="col" align="left" class="addAllPadding AllBorder">Unit</th>*@
-                            <th scope="col" align="left" class="addAllPadding AllBorder">Total Dis</th>
+                            
                             <th scope="col" align="left" class="addAllPadding AllBorder">Price</th>
+                            <th scope="col" align="left" class="addAllPadding AllBorder">Total Dis</th>
                             @if (Model.objListProduct[0].OrderType != "T")
                             {
                                 <th scope="col" align="left" class="addAllPadding AllBorder">@BVCaption</th>
@@ -362,14 +363,15 @@
                            }
                     </td>
                     @*<td class="addAllPadding rightBorderOnly">Pcs.</td>*@
-                    <td class="addAllPadding rightBorderOnly" align="right">
-                        @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                        {@obj.DiscAmt}
-                </td>
+                   
                 <td class="addAllPadding rightBorderOnly" align="right">
                     @if (!(obj.OrderType == "T" && obj.Rate == 0))
                     {@obj.Rate}
             </td>
+                                 <td class="addAllPadding rightBorderOnly" align="right">
+                                     @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                     {@obj.DiscAmt}
+                                 </td>
             @if (Model.objListProduct[0].OrderType != "T")
             {
             <td class="addAllPadding rightBorderOnly" align="right">

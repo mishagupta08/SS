@@ -393,7 +393,7 @@ namespace InventoryManagement.API.Controllers
                 //}
                 string dbInv = System.Configuration.ConfigurationManager.AppSettings["INVDatabase"];
                 qry = "select offerid,OfferName,isnull(CombineWithOffer,'') as Combinewithoffer,ForNewIds,OfferType,OfferBillType,offeronValue,OfferOnBV as OfferONPV from "+dbInv+"..VisionOffers " +
-                " where ActiveStatus='Y' AND (OfferFromDt<=Getdate() AND OfferToDt>=Getdate())";
+                " where ActiveStatus='Y' AND (Cast(OfferFromDt as Date)<=Cast(Getdate() as Date) AND Cast(OfferToDt as Date)>=Cast(Getdate() as Date))";
                 cmd = new SqlCommand();
                 cmd.CommandText = qry;
                 cmd.Connection = SC;

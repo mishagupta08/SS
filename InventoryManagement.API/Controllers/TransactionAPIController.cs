@@ -1760,6 +1760,7 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.ProductId = obj.ProdCode.ToString();
                                 objDTBillData.ProductName = obj.ProductName;
                                 objDTBillData.Qty = obj.Quantity;
+                                objDTBillData.FreeQty = obj.FreeQty;
                                 objDTBillData.Rate = obj.Rate ?? 0;
                                 objDTBillData.IsKitBV = "N";
                                 objDTBillData.DSeries = "";
@@ -1968,9 +1969,6 @@ namespace InventoryManagement.API.Controllers
                     {
                         // saving process of customer bill
                         DateTime BillDate = DateTime.Now.Date;
-
-
-
 
                         //saving data in table
                         // decimal? SessId=(from result in entity)
@@ -5130,7 +5128,7 @@ namespace InventoryManagement.API.Controllers
             }
             return KidIDs;
         }
-        public ResponseDetail DeleteBills(string BillNo, decimal FsessId, decimal UserId, string Reason)
+        public ResponseDetail DeleteBills(string BillNo, string FsessId, decimal UserId, string Reason)
         {
             ResponseDetail objResponse = new ResponseDetail();
             objResponse.ResponseMessage = "Something went wrong!";
@@ -5143,8 +5141,16 @@ namespace InventoryManagement.API.Controllers
                 string InvConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["InventoryServices"].ConnectionString;
                 SqlConnection SC = new SqlConnection(InvConnectionString);
 
-                string sqlQry = "Exec ROLLBACKBILL '" + BillNo + "','" + Reason + "'," + UserId + "," + FsessId + ";";
-
+                string sqlQry = "";
+                var billNoArray = BillNo.Split(',');
+                var FsessIdArray = FsessId.Split(',');
+                for (var j = 0; j < billNoArray.Length; j++)
+                {
+                    if (!string.IsNullOrEmpty(billNoArray[j]))
+                    {
+                        sqlQry += "Exec ROLLBACKBILL '" + billNoArray[j] + "','" + Reason + "'," + UserId + "," + FsessIdArray[j] + ";";
+                    }
+                }
 
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandText = sqlQry;

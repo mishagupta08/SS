@@ -145,7 +145,7 @@ namespace InventoryManagement.Business
         {
             return (objTransacRepo.SaveOrderReturn(objPartyDispatchOrder));
         }
-        public ResponseDetail DeleteBills(string BillNo, decimal FsessId, decimal UserId, string Reason)
+        public ResponseDetail DeleteBills(string BillNo, string FsessId, decimal UserId, string Reason)
         {
             return (objTransacRepo.DeleteBills(BillNo, FsessId, UserId, Reason));
         }

@@ -1856,9 +1856,7 @@
 
            var OfferId = $("#OfferList").val();
            
-           if (BuyProductArray != null && BuyProductArray.length >= 0) {
-
-               
+           if (BuyProductArray != null && BuyProductArray.length >= 0) {               
                for (var i = 0; i < BuyProductArray.length; i++) {
                    var index = ProductGrid.map(function (o) { return o.Code; }).indexOf(BuyProductArray[i].ProductCode);
                    if (index != -1) {
@@ -1883,11 +1881,20 @@
                    if (Freedata.length == 1 && BuyProductArray.length == 1) {
                        if (Freedata[0].ProductCode == BuyProductArray[0].ProductCode) {
                            var index = ProductGrid.map(function (o) { return o.Code; }).indexOf(BuyProductArray[0].ProductCode);
-                           var freeQty = (parseInt(Freedata[0].Qty) * parseInt(offset)) ;                           
-                           GetProductInfo("P", Freedata[0].ProductName, true, ProductGrid[index].Qty);
-                           $("#Quantity").val(freeQty);
-                           DoCalculationforBTGT(freeQty,0,'P');
+                           var freeQty = (parseInt(Freedata[0].Qty) * parseInt(offset)) ;                                                      
+                           var finalQty = freeQty + parseInt(ProductGrid[index].Qty);
+                           GetProductInfo("P", Freedata[0].ProductName, true, finalQty);
+                           $("#Quantity").val(finalQty);
+
+                           DoCalculationforBTGT(freeQty,finalQty,ProductArray.DP, 'P');
+                           ProductArray.FreeQty = freeQty;
+                           
+                           ProductGrid = $.grep(ProductGrid, function (e) {
+                               return e.Code != Freedata[0].ProductCode;
+                           });
+                          
                            $("#AddRecordInGrid").click();
+                          
                            CalculateTotals();
                        }
                        else {
@@ -1895,7 +1902,8 @@
                                var freeQty = parseInt(Freedata[i].Qty) * parseInt(offset);
                                GetProductInfo("P", Freedata[i].ProductName, true, freeQty);
                                $("#Quantity").val(freeQty);
-                               DoCalculationforBTGT(freeQty, 0, 'F');
+                               DoCalculationforBTGT(freeQty,freeQty, 0, 'F');
+                               ProductArray.FreeQty = freeQty;
                                $("#AddRecordInGrid").click();
                                CalculateTotals();
                            }                          
@@ -1906,7 +1914,8 @@
                            var freeQty = parseInt(Freedata[i].Qty) * parseInt(offset);
                            GetProductInfo("P", Freedata[i].ProductName, true, freeQty);
                            $("#Quantity").val(freeQty);
-                           DoCalculationforBTGT(freeQty, 0, 'F');
+                           DoCalculationforBTGT(freeQty,freeQty, 0, 'F');
+                           ProductArray.FreeQty = freeQty;
                            $("#AddRecordInGrid").click();
                            CalculateTotals();
                        }
@@ -1921,7 +1930,7 @@
            }
        }
        
-       function DoCalculationforBTGT(finalqty,DP,PType) {
+       function DoCalculationforBTGT(freeQty,finalqty,DP,PType) {
            //  var ProductGrid = [{ "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "" }];
            if (ProductArray != null && ProductArray != undefined) {
                var Quantity = finalqty;
@@ -1929,9 +1938,17 @@
                var CommissionLessDp;
 
                ProductArray.Qty = finalqty;
-               ProductArray.FreeQty = finalqty;
+               if (PType == "P") {
+                   dpValue = DP;
+                   var QtyWithoutFree = finalqty - freeQty;
+                   var tdp = dpValue * QtyWithoutFree;
+                   ProductArray.DP = tdp / Quantity;                  
+                   dpValue = tdp / Quantity;
+               }
+               else {
+                   dpValue = DP;
+               }
 
-               dpValue = DP;
                var DiscPer = ProductArray.DiscPer;
                var DiscAmt = ProductArray.DiscAmt;
 

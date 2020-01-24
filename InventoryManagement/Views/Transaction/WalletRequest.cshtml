@@ -75,7 +75,7 @@
     var formdata;
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var PaymodeArray = [{ "PID": "", "Paymode": "", "TransNoLbl": "", "TransDateLbl": "", "IsBankDtl": "", "IsBranchDtl": "", "BankType": "" }]
-    var BankArray = [{ "BankCode":"0", "BankName": "", "BankType":"", "IsPayTmType":"" }];
+    var BankArray = [{ "BankCode": "0", "BankName": "", "BankType": "", "IsPayTmType": "" }];
     var SizeOfImage;
     $(document).ready(function () {
         $(".preloader").hide();
@@ -88,7 +88,7 @@
             $("#hdnPaymode").val(Pymode);
             var PyId = $("#Paymode").find("option:selected").val();
             $("#hdnPID").val(PyId);
-           
+
             for (var i = 0; i < PaymodeArray.length; i++) {
                 if (PaymodeArray[i].PID == PyId) {
                     $('#dvTransNo').hide();
@@ -98,16 +98,16 @@
                     $('#BankID').prop('required', false);
                     $('#BranchName').prop('required', false);
                     $("#ReqBy").val(reqBy);
-                    var bankType=PaymodeArray[i].BankType;
+                    var bankType = PaymodeArray[i].BankType;
                     fillBankList(bankType);
                     if (PaymodeArray[i].TransNoLbl != "") {
-                        $('#dvTransNo').show();                        
+                        $('#dvTransNo').show();
                         $("#ChqNo").prop('required', true);
                         $("#lblTransNo").text(PaymodeArray[i].TransNoLbl)
                     }
                     if (PaymodeArray[i].TransDateLbl != "") {
                         $('#dvTransDate').show();
-                        $("#ChqDate").prop('required', true);                        
+                        $("#ChqDate").prop('required', true);
                         $("#lblTransDate").text(PaymodeArray[i].TransDateLbl)
                     }
                     if (PaymodeArray[i].IsBankDtl == "Y") {
@@ -117,18 +117,16 @@
                     else {
                         $('#dvBank').hide();
                         $('#BankID').prop('required', false);
-                    }                       
-                    if (PaymodeArray[i].IsBranchDtl == "Y")
-                    {
+                    }
+                    if (PaymodeArray[i].IsBranchDtl == "Y") {
                         $('#dvBranch').show();
                         $('#BranchName').prop('required', true);
                     }
-                    else
-                    {
+                    else {
                         $('#dvBranch').hide();
                         $('#BranchName').prop('required', false);
                     }
-                 break;
+                    break;
                 }
             }
         });
@@ -141,31 +139,37 @@
         });
         $("#ChqDate").datetimepicker({
             format: 'DD-MMM-YYYY'
-        ,            
+        ,
             widgetPositioning: {
                 horizontal: 'auto',
                 vertical: 'bottom'
             }
-        }).on('dp.change', function (e) {           
-            var selectedDate = e.date._d;            
-            var lengthOfMonth = ((selectedDate.getMonth() + 1).toString()).length;            
+        }).on('dp.change', function (e) {
+            var selectedDate = e.date._d;
+            var lengthOfMonth = ((selectedDate.getMonth() + 1).toString()).length;
             var twoDigitMonth = (lengthOfMonth > 1) ? (selectedDate.getMonth() + 1) : '0' + (selectedDate.getMonth() + 1);
-            var newFromDate = selectedDate.getDate() + "-" + months[selectedDate.getMonth()] + "-" + selectedDate.getFullYear();            
-            FromDate = newFromDate;                
+            var newFromDate = selectedDate.getDate() + "-" + months[selectedDate.getMonth()] + "-" + selectedDate.getFullYear();
+            FromDate = newFromDate;
             ToDate = newFromDate;
         });
         $("form[name=WalletReqForm]").unbind("submit");
         $("form[name=WalletReqForm]").bind('submit', function (e) {
             formdata = new FormData($("#WalletReqForm")[0]);
-            var valAmount = $('#Amount').val();
-            var valMobileNo = 0;
-            var valEmail = '';
-            var unqId = Uniqid();
-            var patmparams = 'UniQID:' + unqId + ',amount:' + (valAmount) + ',Mobile:' + valMobileNo + ',email:' + valEmail + '';
-            postwithCode('_self', 'payPaytm', patmparams);
-            return false;
+            var Pymode = $("#Paymode").find("option:selected").text();
+            if (Pymode == "PayTM") {
+                var valAmount = $('#Amount').val();
+                var valMobileNo = 0;
+                var valEmail = '';
+                var unqId = Uniqid();
+                var patmparams = 'UniQID:' + unqId + ',amount:' + (valAmount) + ',Mobile:' + valMobileNo + ',email:' + valEmail + '';
+                postwithCode('_self', 'payPaytm', patmparams);
+                return false;
+            }
+            else {
+                SaveBill();
+            }
         });
-        
+
         $('#upload').bind('change', function () {
             if (this.files && this.files[0]) {
                 var reader = new FileReader();
@@ -181,32 +185,31 @@
         });
     });
 
-    function GetPaymodes()
-    {
+    function GetPaymodes() {
         PaymodeArray = [{}];
         $.ajax({
             url: '@Url.Action("GetMPaymodes", "Transaction")',
             type: 'POST',
             datatype: "json",
             success: function (objResult) {
-                console.log("Resp:",objResult);
-                if (objResult!=null) {
-                $("#Paymode").empty();                
-                console.log("Response: ", objResult);
-                //var s = objResult.split("~");
-                //var paymodes = s[0].split(",");
-                //var pids = s[1].split(",");
-               // $("#Paymode").append(" <select name='Paymode' id='Paymode' tabindex='4' required='required' class='form-control col-md-7 col-xs-12'>");
-                for (var i = 0; i < objResult.length; i++) {
-                    PaymodeArray.push({ "PID": objResult[i].PID, "Paymode": objResult[i].Paymode, "TransNoLbl": objResult[i].TransNoLbl, "TransDateLbl": objResult[i].TransDateLbl, "IsBankDtl": objResult[i].IsBankDtl, "IsBranchDtl": objResult[i].IsBranchDtl, "BankType": objResult[i].BankType });
-                    $("#Paymode").append("<option value='" + objResult[i]["PID"].toString() + "' title='" + objResult[i]["Paymode"] + "'>" + objResult[i]["Paymode"] + "</option>");
-                }
-                 
+                console.log("Resp:", objResult);
+                if (objResult != null) {
+                    $("#Paymode").empty();
+                    console.log("Response: ", objResult);
+                    //var s = objResult.split("~");
+                    //var paymodes = s[0].split(",");
+                    //var pids = s[1].split(",");
+                    // $("#Paymode").append(" <select name='Paymode' id='Paymode' tabindex='4' required='required' class='form-control col-md-7 col-xs-12'>");
+                    for (var i = 0; i < objResult.length; i++) {
+                        PaymodeArray.push({ "PID": objResult[i].PID, "Paymode": objResult[i].Paymode, "TransNoLbl": objResult[i].TransNoLbl, "TransDateLbl": objResult[i].TransDateLbl, "IsBankDtl": objResult[i].IsBankDtl, "IsBranchDtl": objResult[i].IsBranchDtl, "BankType": objResult[i].BankType });
+                        $("#Paymode").append("<option value='" + objResult[i]["PID"].toString() + "' title='" + objResult[i]["Paymode"] + "'>" + objResult[i]["Paymode"] + "</option>");
+                    }
+
                 }
                 //else
                 //    alert("Error!!");
-                }
-            });
+            }
+        });
     }
 
     function GetBanks() {
@@ -230,17 +233,16 @@
             }
         });
     }
-    function fillBankList(BankType)
-    {
+    function fillBankList(BankType) {
         $("#BankID").empty();
         for (var i = 1; i < BankArray.length; i++) {
-            if ((BankType == "N" && BankArray[i].IsPayTmType != "N" && BankArray[i].BankType=="C") || (BankType == "C" && BankType == BankArray[i].BankType) || BankType == "")
-            $("#BankID").append("<option value='" + BankArray[i]["BankCode"] + "' title='" + BankArray[i]["BankName"] + "'>" + BankArray[i]["BankName"] + "</option>");
+            if ((BankType == "N" && BankArray[i].IsPayTmType != "N" && BankArray[i].BankType == "C") || (BankType == "C" && BankType == BankArray[i].BankType) || BankType == "")
+                $("#BankID").append("<option value='" + BankArray[i]["BankCode"] + "' title='" + BankArray[i]["BankName"] + "'>" + BankArray[i]["BankName"] + "</option>");
         }
     }
     function SaveBill() {
         var sizeInMb = parseInt(parseInt(parseInt(SizeOfImage) / 1024) / 1024);
-        var ErrorFlag=false;
+        var ErrorFlag = false;
         var Amount = $("#Amount").val();
         //if (sizeInMb > 4) {
         //    OpenDialog("dialogMessage", "Image size should be less than 4 MB.", "false");
@@ -250,12 +252,12 @@
             OpenDialog("dialogMessage", "Please enter valid Amount.", "false");
             ErrorFlag = true;
         }
-        
+
         console.log("form data = > " + formdata);
         if (ErrorFlag == false) {
             $("#btnSave").attr("disabled", true);
             $.ajax({
-                url: '@Url.Action("GenerateRequest", "Transaction")',
+                url: '@Url.Action("SaveWalletRequest", "Transaction")',
                 type: 'POST',
                 data: formdata,
                 processData: false,
@@ -267,10 +269,10 @@
                     $("#btnSave").removeAttr("disabled");
                     if (objResponse != null) {
                         if (objResponse.ResponseStatus == "OK") {
-                           // console.log("BillNo", BillNo);
+                            // console.log("BillNo", BillNo);
                             //  openBill(BillNo, SoldBy);
                             ResetControls();
-                            //   window.location.href = 
+                            //   window.location.href =
                             OpenDialog("dialogMessage", "Wallet Request sent successfully!.", "false");
                         }
                         else {
@@ -281,16 +283,15 @@
                 error: function (xhr) {
                     //  return false;
                     console.log(xhr);
-                    console.log("Save Error:" );
+                    console.log("Save Error:");
                 }
             });
         }
         $("#btnSave").attr("disabled", false);
     }
 
-    function ResetControls()
-    {
-      
+    function ResetControls() {
+
         $("#Amount").val('0');
         $("#ChqNo").val('');
         $("#ChqDate").val('');
@@ -386,13 +387,13 @@
                                         Amount
                                     </label>
                                     <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
-                                        @Html.TextBoxFor(m => m.Amount, new { id = "Amount", @class = "form-control col-md-7 col-xs-12", @required = "required", @type= "number", name = "Amount" })
+                                        @Html.TextBoxFor(m => m.Amount, new { id = "Amount", @class = "form-control col-md-7 col-xs-12", @required = "required", @type = "number", name = "Amount" })
                                         @*<select name="kitId" id="kitId" tabindex="3" required="required" class="form-control col-md-7 col-xs-12">
-                                @foreach (var record in Model.kitlist)
-                                {
-                                    <option value="@record.kitId" data-productId="@record.productId">@record.kitName</option>
-                                }
-                            </select>*@
+                                                @foreach (var record in Model.kitlist)
+                                                {
+                                                    <option value="@record.kitId" data-productId="@record.productId">@record.kitName</option>
+                                                }
+                                            </select>*@
                                     </div>
                                 </div>
                             </div>
@@ -443,8 +444,8 @@
                                         Bank Name
                                     </label>
                                     @*<div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
-                                        @Html.DropDownListFor(m => m.BankID, ViewBag.BankNames as IEnumerable<SelectListItem>, new { tabindex = "8", @class = "form-control", @name = "BankID", @id = "BankID" })
-                                    </div>*@
+                                            @Html.DropDownListFor(m => m.BankID, ViewBag.BankNames as IEnumerable<SelectListItem>, new { tabindex = "8", @class = "form-control", @name = "BankID", @id = "BankID" })
+                                        </div>*@
                                     <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
                                         <select name="BankID" id="BankID" tabindex="4" required="required" class="form-control col-md-7 col-xs-12"></select>
                                     </div>
@@ -465,18 +466,18 @@
                             </div>
                         </div>
                         @*<div class="col-lg-12" id="dvBranch1">
-                            <div class="col-lg-8">
-                                <div class="form-group">
-                                    <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12">
-                                        Choose Image
-                                    </label>
-                                    <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
-                                        <input type="file" id="upload" name="upload"/>
+                                <div class="col-lg-8">
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12">
+                                            Choose Image
+                                        </label>
+                                        <div class="col-lg-9 col-md-6 col-sm-6 col-xs-12" style="padding-left: 0.5%;">
+                                            <input type="file" id="upload" name="upload"/>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>*@
-                       
+                            </div>*@
+
 
                         <div class="col-lg-12">
                             <div class="col-lg-8">

@@ -74,7 +74,7 @@
     var FromDate = "";
     var formdata;
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var PaymodeArray = [{ "PID": "", "Paymode": "", "TransNoLbl": "", "TransDateLbl": "", "IsBankDtl": "", "IsBranchDtl": "", "BankType": "" }]
+    var PaymodeArray = [{ "PID": "", "Paymode": "", "TransNoLbl": "", "TransDateLbl": "", "IsBankDtl": "", "IsBranchDtl": "", "BankType": "", "Remark": "" }]
     var BankArray = [{ "BankCode": "0", "BankName": "", "BankType": "", "IsPayTmType": "" }];
     var SizeOfImage;
     $(document).ready(function () {
@@ -84,6 +84,7 @@
         var reqBy = '@CurrentPartyCode';
         $("#ReqBy").val(reqBy);
         $("#Paymode").on('change', function () {
+            debugger;
             var Pymode = $("#Paymode").find("option:selected").text();
             $("#hdnPaymode").val(Pymode);
             var PyId = $("#Paymode").find("option:selected").val();
@@ -122,9 +123,16 @@
                         $('#dvBranch').show();
                         $('#BranchName').prop('required', true);
                     }
-                    else {
+                    else
+                    {
                         $('#dvBranch').hide();
                         $('#BranchName').prop('required', false);
+                    }
+                    if (PaymodeArray[i].PID == 10) {
+                        $('#dvRemark').hide();
+                    }
+                    else {
+                        $('#dvRemark').show();
                     }
                     break;
                 }
@@ -165,7 +173,8 @@
                 postwithCode('_self', 'payPaytm', patmparams);
                 return false;
             }
-            else {
+            else
+            {
                 SaveBill();
             }
         });
@@ -479,7 +488,7 @@
                             </div>*@
 
 
-                        <div class="col-lg-12">
+                        <div class="col-lg-12" id="dvRemark">
                             <div class="col-lg-8">
                                 <div class="form-group">
                                     <label class="control-label col-lg-3 col-md-3 col-sm-3 col-xs-12" for="category-name">

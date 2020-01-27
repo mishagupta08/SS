@@ -94,7 +94,11 @@ namespace InventoryManagement
                             resp = objTransacManager.CreditRequestOnlineInsert(payment);
                             if (resp == "OK")
                             {
-                                // lblError.Text = "Payment successfuly done !";
+                                lblerrormsg.Text = "Payment is successfuly done ! your transaction id is " + lbl_TXNID + " click <a href = http://franchise.sarsobiz.net/Report/WalletReport>here</a>" + " to check your wallet balance.";
+                            }
+                            else
+                            {
+                                lblerrormsg.Text = "some error occored please contact to administrator.";
                             }
                         }
                         else
@@ -104,8 +108,12 @@ namespace InventoryManagement
                     }
                     else
                     {
-
+                        lblerrormsg.Text = "some error occored please contact to administrator.";
                     }
+                }
+                else
+                {
+                    lblerrormsg.Text = "some error occored please contact to administrator.";
                 }
             }
             //}

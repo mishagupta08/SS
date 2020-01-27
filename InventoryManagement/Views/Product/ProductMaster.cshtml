@@ -29,6 +29,7 @@
 
     }
 </style>
+<script src="~/ckeditor/ckeditor/ckeditor.js"></script>
 <script type="text/javascript">
     var ErrorFlag = true;
     var SizeOfImage;
@@ -37,7 +38,7 @@
         $(".preloader").hide();
         GetListOfSubCategories();
         var fullDate = new Date();
-
+        CKEDITOR.replace("ProductDescription");
         //console.log(fullDate);
         //Thu May 19 2011 17:25:38 GMT+1000 {}
 
@@ -415,19 +416,7 @@
                                             &nbsp;
                                             </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="product-name">
-                                            Description
-                                        </label>
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                            @Html.TextAreaFor(m => m.ProductDescription, new { tabindex = "5", name = "ProductDescription", id = "ProductDescription", @class = "form-control col-md-7 col-xs-12" })
-
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                            &nbsp;
-                                        </div>
-                                    </div>
+                                    
                                     <div class="form-group">
                                         <div class="col-lg-6">
                                             <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
@@ -501,7 +490,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-lg-6">
+                                        @*<div class="col-lg-6">
                                             <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                                 @CVCaption
                                             </label>
@@ -510,19 +499,19 @@
                                                 @Html.TextBoxFor(m => m.CV, new { tabindex = "12", name = "CV", id = "CV", @class = "form-control col-md-7 col-xs-12" })
 
                                             </div>
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                                 Disc. %
                                             </label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
                                                 @Html.TextBoxFor(m => m.DiscountPer, new { name = "DiscountPer", id = "DiscountPer", @class = "form-control col-md-7 col-xs-12" })
 
-                                            </div>*@
+                                            </div>
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                                 &nbsp;
                                             </div>
-                                        </div>
-                                        <div class="col-lg-6">
+                                        </div>*@
+                                        @*<div class="col-lg-6">
                                             <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                                 Disc. %
                                             </label>
@@ -531,18 +520,18 @@
                                                 @Html.TextBoxFor(m => m.DiscountPer, new { tabindex = "13", name = "DiscountPer", id = "DiscountPer", @class = "form-control col-md-7 col-xs-12" })
 
                                             </div>
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                                 Disc. Rs.
                                             </label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
                                                 @Html.TextBoxFor(m => m.DiscountInRs, new { name = "DiscountInRs", id = "DiscountInRs", @class = "form-control col-md-7 col-xs-12" })
 
-                                            </div>*@
+                                            </div>
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                                 &nbsp;
                                             </div>
-                                        </div>
+                                        </div>*@
                                     </div>
                                     <div class="form-group">
 
@@ -563,6 +552,21 @@
                                             &nbsp;
                                         </div>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="product-name">
+                                            Description
+                                        </label>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                            @Html.TextAreaFor(m => m.ProductDescription, new { tabindex = "5", name = "ProductDescription", id = "ProductDescription", @class = "form-control col-md-7 col-xs-12" })
+
+                                        </div>
+                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <div class="col-lg-6">
                                             <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
@@ -591,7 +595,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    @*<div class="form-group">
                                         <div class="col-lg-6">
                                             <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
                                                 Special Offer
@@ -618,7 +622,7 @@
                                                 &nbsp;
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>*@
                                     <div class="form-group">
                                         <div class="col-lg-6">
                                             <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
@@ -633,7 +637,7 @@
                                                 &nbsp;
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
+                                        @*<div class="col-lg-6">
                                             <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                                 Message Status
                                             </label>
@@ -645,9 +649,9 @@
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                                 &nbsp;
                                             </div>
-                                        </div>
+                                        </div>*@
                                     </div>
-                                    <div class="form-group">
+                                    @*<div class="form-group">
 
                                         <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                             Message
@@ -660,7 +664,7 @@
                                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                             &nbsp;
                                         </div>
-                                    </div>
+                                    </div>*@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
@@ -691,14 +695,14 @@
                                                 @Html.TextBoxFor(m => m.ProductBarcodeDetails.DP, new { name = "DP", id = "DP", @class = "form-control col-md-7 col-xs-12" })
 
                                             </div>*@
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                                 @PVCaption
                                             </label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
                                                 @Html.TextBoxFor(m => m.PV, new { tabindex = "10", name = "PV", id = "PV", @class = "form-control col-md-7 col-xs-12" })
 
-                                            </div>
+                                            </div>*@
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                                 &nbsp;
                                             </div>
@@ -712,20 +716,20 @@
                                                 @Html.TextBoxFor(m => m.CV, new { name = "CV", id = "CV", @class = "form-control col-md-7 col-xs-12" })
 
                                             </div>*@
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                                 @RPCaption
                                             </label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 @Html.TextBoxFor(m => m.RP, new { tabindex = "11", name = "RP", id = "RP", @class = "form-control col-md-7 col-xs-12" })
-                                            </div>
+                                            </div>*@
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                                 &nbsp;
                                             </div>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                        @*<div class="col-lg-6">
+                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                                 Disc. Rs.
                                             </label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -733,18 +737,18 @@
                                                 @Html.TextBoxFor(m => m.DiscountInRs, new { tabindex = "13", name = "DiscountInRs", id = "DiscountInRs", @class = "form-control col-md-7 col-xs-12" })
 
                                             </div>
-                                            @*<label class="control-label col-md-4 col-sm-4 col-xs-12" for="mfgDate">
+                                            <label class="control-label col-md-4 col-sm-4 col-xs-12" for="mfgDate">
                                                 Cmmsn
                                             </label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
                                                 @Html.TextBoxFor(m => m.ProductCommission, new { name = "ProductCommission", id = "ProductCommission", @class = "form-control col-md-7 col-xs-12" })
 
-                                            </div>*@
+                                            </div>
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                                 &nbsp;
                                             </div>
-                                        </div>
+                                        </div>*@
                                         <div class="col-lg-6">
                                             @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
         P.V.

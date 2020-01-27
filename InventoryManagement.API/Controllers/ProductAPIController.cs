@@ -529,14 +529,14 @@ namespace InventoryManagement.API.Controllers
                         objDTProduct.ProdId = model.ProductCode.ToString();
                         objDTProduct.PV = model.PV;
                         objDTProduct.RP = model.RP;
-                        objDTProduct.SpclOffer = model.SpecialOffer;
-                        objDTProduct.HotSell = model.HotSell;
+                        objDTProduct.SpclOffer = !string.IsNullOrEmpty(model.SpecialOffer) ? model.SpecialOffer : "";
+                        objDTProduct.HotSell = !string.IsNullOrEmpty(model.HotSell) ? model.HotSell : "";
                         objDTProduct.ImagePath = string.IsNullOrEmpty(model.ProductImagePath) ? "" : model.ProductImagePath;
                         objDTProduct.IsImage = string.IsNullOrEmpty(model.ProductImagePath) ? "N" : "Y";
                         objDTProduct.ActiveStatus = model.IsActive ? "Y" : "N";
                         objDTProduct.OnWebSite = model.OnWebsite;
                         objDTProduct.MsgText = string.IsNullOrEmpty(model.Message)?"":model.Message;
-                        objDTProduct.MsgStatus = model.MessageStatus;
+                        objDTProduct.MsgStatus = !string.IsNullOrEmpty(model.MessageStatus) ? model.MessageStatus : "";
                         // objDTProduct.MinQty = model.MinQty;
                         objDTProduct.IMEINo = model.MinQty.ToString();
                         objDTProduct.ProdCommssn = model.ProductCommission;
@@ -929,14 +929,14 @@ namespace InventoryManagement.API.Controllers
                             objDTProduct.ProdId = model.ProductCode.ToString();
                             objDTProduct.PV = model.PV;
                             objDTProduct.RP = model.RP;
-                            objDTProduct.SpclOffer = model.SpecialOffer;
-                            objDTProduct.HotSell = model.HotSell;
+                            objDTProduct.SpclOffer = string.IsNullOrEmpty(model.SpecialOffer) ? "" : model.SpecialOffer;
+                            objDTProduct.HotSell = string.IsNullOrEmpty(model.HotSell) ? "" : model.HotSell;
                             objDTProduct.ImagePath = string.IsNullOrEmpty(model.ProductImagePath) ? "" : model.ProductImagePath;
                             objDTProduct.IsImage = string.IsNullOrEmpty(model.ProductImagePath) ? "N" : "Y";
                             objDTProduct.ActiveStatus = model.IsActive ? "Y" : "N";
                             objDTProduct.OnWebSite = model.OnWebsite;
                             objDTProduct.MsgText = string.IsNullOrEmpty(model.Message) ? "" : model.Message;
-                            objDTProduct.MsgStatus = model.MessageStatus;
+                            objDTProduct.MsgStatus = string.IsNullOrEmpty(model.MessageStatus) ? "" : model.MessageStatus;
                             objDTProduct.Weight = model.Weight;
                            objDTProduct.IMEINo = model.MinQty.ToString();
                             objDTProduct.ProdCommssn = model.ProductCommission;
@@ -1149,8 +1149,10 @@ namespace InventoryManagement.API.Controllers
                                         //}
                                         //}
                                     }
-                                    //}
-                                }
+                            //}
+                            objResponse.ResponseStatus = "OK";
+                            objResponse.ResponseMessage = "Updated Successfully!";
+                        }
                             }
 
                         }
@@ -1160,7 +1162,8 @@ namespace InventoryManagement.API.Controllers
 
             catch (Exception ex)
             {
-
+                objResponse.ResponseStatus = "FAILED";
+                objResponse.ResponseMessage = "Something went wrong.";
             }
             return objResponse;
         }

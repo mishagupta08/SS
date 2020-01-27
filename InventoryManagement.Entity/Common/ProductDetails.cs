@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace InventoryManagement.Entity.Common
 {
@@ -18,6 +19,7 @@ namespace InventoryManagement.Entity.Common
         public string ProductCodeStr { get; set; }
         public string UserDefinedCode { get; set; }
         public string ProductName { get; set; }
+        [AllowHtml]
         public string ProductDescription { get; set; }
         public int CategoryId { get; set; }
         public int SubCatgeoryId { get; set; }

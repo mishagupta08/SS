@@ -154,9 +154,9 @@ namespace InventoryManagement.Business
             return (objTransacRepo.GetSalesReturnNumber(Loggedinparty));
         }
         
-        public List<PartyBill> GetBillList(string partyType, string Fcode)
+        public List<PartyBill> GetBillList(string partyType, string Fcode,string LoginPartyCode)
         {
-            return (objTransacRepo.GetBillList(partyType, Fcode));
+            return (objTransacRepo.GetBillList(partyType, Fcode, LoginPartyCode));
         }
        public List<PartyBill> GetListOfSupplierBills(string supplier)
         {

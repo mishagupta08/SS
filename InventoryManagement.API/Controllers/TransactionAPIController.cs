@@ -5321,6 +5321,7 @@ namespace InventoryManagement.API.Controllers
                             TrnSalesReturnDetail objDTBillData = new TrnSalesReturnDetail();
                             if (product.ReturnQty > 0)
                             {
+                                objDTBillData.Reason = objSalesReturnOrder.reason; 
                                 objDTBillData.SReturnNo = UserReturnNo;
                                 objDTBillData.SRNo = part2;
                                 objDTBillData.ReturnBy = objSalesReturnOrder.partyCode;
@@ -5438,7 +5439,7 @@ namespace InventoryManagement.API.Controllers
             return objResponse;
         }
 
-        public List<PartyBill> GetBillList(string partyType, string Fcode)
+        public List<PartyBill> GetBillList(string partyType, string Fcode,string LoginPartyCode)
         {
             List<PartyBill> billList = null;
             try
@@ -5493,6 +5494,11 @@ namespace InventoryManagement.API.Controllers
                                         BillDate = r.BillDate
 
                                     }).ToList().OrderByDescending(o => o.BillDate).ToList();
+                    }
+
+                    if (LoginPartyCode != "WR")
+                    {
+                        billList = billList.Where(r => r.SoldBy == LoginPartyCode).ToList();
                     }
                 }
             }

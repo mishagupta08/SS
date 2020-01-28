@@ -1421,7 +1421,8 @@ namespace InventoryManagement.Controllers
             List<PartyBill> objResponse = new List<PartyBill>();
             try
             {
-                objResponse = objTransacManager.GetBillList(partyType, party);
+                string LoginPartyCode = (Session["LoginUser"] as User).PartyCode;
+                objResponse = objTransacManager.GetBillList(partyType, party, LoginPartyCode);
             }
             catch (Exception ex)
             {

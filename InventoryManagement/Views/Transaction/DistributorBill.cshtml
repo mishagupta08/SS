@@ -1860,7 +1860,7 @@
                for (var i = 0; i < BuyProductArray.length; i++) {
                    var index = ProductGrid.map(function (o) { return o.Code; }).indexOf(BuyProductArray[i].ProductCode);
                    if (index != -1) {
-                       if (parseInt(ProductGrid[i].Qty) < parseInt(ProductGrid[index].Qty)) {
+                       if (parseInt(ProductGrid[index].Qty) < parseInt(BuyProductArray[i].Qty)) {
                            IsOfferApplicable = false;
                            break;
                        }
@@ -1878,57 +1878,72 @@
                }
 
                if (IsOfferApplicable && Freedata != null && Freedata.length > 0) {
-                   if (Freedata.length == 1 && BuyProductArray.length == 1) {
-                       if (Freedata[0].ProductCode == BuyProductArray[0].ProductCode) {
-                           var index = ProductGrid.map(function (o) { return o.Code; }).indexOf(BuyProductArray[0].ProductCode);
-                           var freeQty = (parseInt(Freedata[0].Qty) * parseInt(offset)) ;                                                      
-                           var finalQty = freeQty + parseInt(ProductGrid[index].Qty);
-                           GetProductInfo("P", Freedata[0].ProductName, true, finalQty);
-                           $("#Quantity").val(finalQty);
 
-                           DoCalculationforBTGT(freeQty,finalQty,ProductArray.DP, 'P');
-                           ProductArray.FreeQty = freeQty;
-                           
-                           ProductGrid = $.grep(ProductGrid, function (e) {
-                               return e.Code != Freedata[0].ProductCode;
-                           });
-                          
-                           $("#AddRecordInGrid").click();
-                          
-                           CalculateTotals();
-                       }
-                       else {
-                           for (var i = 0; i < Freedata.length; i++) {
-                               var freeQty = parseInt(Freedata[i].Qty) * parseInt(offset);
-                               GetProductInfo("P", Freedata[i].ProductName, true, freeQty);
-                               $("#Quantity").val(freeQty);
-                               DoCalculationforBTGT(freeQty,freeQty, 0, 'F');
+                   var StockError = false;
+                   for (var i = 0; i < Freedata.length; i++) {
+
+                       var index = ProductGrid.map(function (o) { return o.Code; }).indexOf(Freedata[i].ProductCode);
+                       if (index != -1) {
+                           var freeQty = (parseInt(Freedata[i].Qty) * parseInt(offset));
+                           var finalQty = freeQty + parseInt(ProductGrid[index].Qty);
+                           GetProductInfo("P", Freedata[i].ProductName, true, finalQty);
+                           if (parseInt(ProductArray.AvailStock) >= parseInt(finalQty)) {
+                               $("#Quantity").val(finalQty);
+                               DoCalculationforBTGT(freeQty, finalQty, ProductArray.DP, 'P');
                                ProductArray.FreeQty = freeQty;
-                               $("#AddRecordInGrid").click();
-                               CalculateTotals();
-                           }                          
+                               ProductGrid = $.grep(ProductGrid, function (e) {
+                                   return e.Code != Freedata[i].ProductCode;
+                               });
+                           }
+                           else {
+                               StockError = true;
+                               StockErrorProduct = Freedata[i].ProductName;
+                               break;
+                           }
                        }
-                   }
-                   else {
-                       for (var i = 0; i < Freedata.length; i++) {
+
+                       else {
+
                            var freeQty = parseInt(Freedata[i].Qty) * parseInt(offset);
                            GetProductInfo("P", Freedata[i].ProductName, true, freeQty);
-                           $("#Quantity").val(freeQty);
-                           DoCalculationforBTGT(freeQty,freeQty, 0, 'F');
-                           ProductArray.FreeQty = freeQty;
-                           $("#AddRecordInGrid").click();
-                           CalculateTotals();
+                           if (parseInt(ProductArray.AvailStock) >= parseInt(finalQty)) {
+                               $("#Quantity").val(freeQty);
+                               DoCalculationforBTGT(freeQty, freeQty, 0, 'F');
+                               ProductArray.FreeQty = freeQty;
+                           }
+                           else {
+                               StockError = true;
+                               StockErrorProduct = Freedata[i].ProductName;
+                               break;
+                           }
                        }
-
+                       $("#AddRecordInGrid").click();
+                       CalculateTotals();
+                   }
+                   if (StockError == true) {
+                       $(".preloader").hide();
+                       $("#SaveDistributorForm").attr("disabled", false);
+                       OpenDialog("dialogMessage", "Free Product " + StockErrorProduct + " stock is not sufficient.", "false");
+                   }
+                   else {
+                       SaveBill();
                    }
 
+               }
+               else if (IsOfferApplicable == false) {
+                   $(".preloader").hide();
+                   $("#SaveDistributorForm").attr("disabled", false);
+                   OpenDialog("dialogMessage", "Offer can't be applied as selected products does not meet the requirments.", "false");
+               }
+               else {
                    SaveBill();
+               }
                }
                else {
                    SaveBill();
                }
            }
-       }
+       
        
        function DoCalculationforBTGT(freeQty,finalqty,DP,PType) {
            //  var ProductGrid = [{ "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "" }];

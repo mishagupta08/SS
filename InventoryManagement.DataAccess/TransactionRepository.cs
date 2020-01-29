@@ -184,9 +184,9 @@ namespace InventoryManagement.DataAccess
         {
             return (objTransacAPI.GetSalesReturnNumber(Loggedinparty));
         }
-        public List<PartyBill> GetBillList(string partyType, string Fcode)
+        public List<PartyBill> GetBillList(string partyType, string Fcode,string LoginPartyCode)
         {
-            return (objTransacAPI.GetBillList(partyType, Fcode));
+            return (objTransacAPI.GetBillList(partyType, Fcode, LoginPartyCode));
         }
 
         public List<PartyBill> GetListOfSupplierBills(string supplier)
@@ -359,6 +359,10 @@ namespace InventoryManagement.DataAccess
         public List<TblPaymentGetWayRequest> GetCreditRequest(string orderId)
         {
             return objTransacAPI.GetCreditRequest(orderId);
+        }
+        public ResponseDetail GetFWalletBalance(string LoginPartyCode)
+        {
+            return objTransacAPI.GetFWalletBalance(LoginPartyCode);
         }
     }        
 }

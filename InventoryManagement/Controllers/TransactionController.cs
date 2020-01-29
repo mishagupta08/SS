@@ -1421,7 +1421,8 @@ namespace InventoryManagement.Controllers
             List<PartyBill> objResponse = new List<PartyBill>();
             try
             {
-                objResponse = objTransacManager.GetBillList(partyType, party);
+                string LoginPartyCode = (Session["LoginUser"] as User).PartyCode;
+                objResponse = objTransacManager.GetBillList(partyType, party, LoginPartyCode);
             }
             catch (Exception ex)
             {
@@ -3523,6 +3524,12 @@ namespace InventoryManagement.Controllers
         public ActionResult getOfferBuyproducts(int id)
         {
             return Json(objTransacManager.getExtraPVfreeproducts(id, true), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetFWalletBalance(string partyCode)
+        {
+            return Json(objTransacManager.GetFWalletBalance(partyCode), JsonRequestBehavior.AllowGet);
         }
     }
 }

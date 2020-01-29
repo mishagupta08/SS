@@ -54,5 +54,6 @@ namespace InventoryManagement.API.Models
         public decimal SGSTAmt { get; set; }
         public decimal CGST { get; set; }
         public decimal SGST { get; set; }
+        public string Reason { get; set; }
     }
 }

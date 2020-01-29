@@ -124,7 +124,6 @@
         <EntityTypeShape EntityType="InventoryModel.TrnPurchaseReturnMain" Width="1.5" PointX="0.75" PointY="20.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.TrnReceipt" Width="1.5" PointX="20.75" PointY="2.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.TrnReceiptDetail" Width="1.5" PointX="2.75" PointY="20.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="InventoryModel.TrnSalesReturnDetail" Width="1.5" PointX="20.75" PointY="4.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.TrnSalesReturnMain" Width="1.5" PointX="4.75" PointY="20.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.TrnStockAdjustment" Width="1.5" PointX="20.75" PointY="6.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.TrnStockJv" Width="1.5" PointX="6.75" PointY="20.75" IsExpanded="false" />
@@ -247,6 +246,7 @@
         <EntityTypeShape EntityType="InventoryModel.VisionOffer" Width="1.5" PointX="28.75" PointY="28.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.TrnBillData" Width="1.5" PointX="11.993440311399027" PointY="31.855071887306437" />
         <EntityTypeShape EntityType="InventoryModel.TrnBillDetail" Width="1.5" PointX="0.38735191914595291" PointY="5.4836618478799526" IsExpanded="false" />
+        <EntityTypeShape EntityType="InventoryModel.TrnSalesReturnDetail" Width="1.5" PointX="8.2598794290143438" PointY="15.962164647859598" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

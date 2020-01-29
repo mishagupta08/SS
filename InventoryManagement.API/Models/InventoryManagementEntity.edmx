@@ -6,7 +6,7 @@
     <edmx:StorageModels>
     <Schema Namespace="InventoryModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.BankBranch' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.BankBranch' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="BankBranch">
           <Key>
             <PropertyRef Name="BranchId" />
@@ -54,7 +54,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.BankBranch' does not have a pri
           <Property Name="IsSallable" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.D_sessnmaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.D_sessnmaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="D_sessnmaster">
           <Key>
             <PropertyRef Name="SessID" />
@@ -66,7 +66,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.D_sessnmaster' does not have a 
           <Property Name="OnWebSite" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedBillDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedBillDetails' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedBillDetails">
           <Key>
             <PropertyRef Name="BillId" />
@@ -129,6 +129,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedBillDetails' does not ha
             <PropertyRef Name="SGST" />
             <PropertyRef Name="SGSTAmt" />
             <PropertyRef Name="UID" />
+            <PropertyRef Name="FreeQty" />
             <PropertyRef Name="DUserId" />
           </Key>
           <Property Name="BillId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
@@ -197,11 +198,12 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedBillDetails' does not ha
           <Property Name="SGST" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="UID" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="FreeQty" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="DRecTimeStamp" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedBillMain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedBillMain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedBillMain">
           <Key>
             <PropertyRef Name="BillId" />
@@ -483,7 +485,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedBillMain' does not have 
           <Property Name="DRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedCurrentStock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedCurrentStock' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedCurrentStock">
           <Key>
             <PropertyRef Name="StockId" />
@@ -569,7 +571,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedCurrentStock' does not h
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedInwardDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedInwardDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedInwardDetail">
           <Key>
             <PropertyRef Name="DID" />
@@ -677,7 +679,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedInwardDetail' does not h
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedInwardMain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedInwardMain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedInwardMain">
           <Key>
             <PropertyRef Name="DID" />
@@ -811,7 +813,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedInwardMain' does not hav
           <Property Name="DReason" Type="varchar" MaxLength="500" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedMaxDiscount' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedMaxDiscount' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedMaxDiscount">
           <Key>
             <PropertyRef Name="ProdId" />
@@ -1146,7 +1148,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedMaxDiscount' does not ha
           <Property Name="DRTS" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedReceipt' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedReceipt' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedReceipt">
           <Key>
             <PropertyRef Name="RId" />
@@ -1338,7 +1340,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedReceipt' does not have a
           <Property Name="EntryBy" Type="varchar" MaxLength="30" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedStockJv' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedStockJv' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedStockJv">
           <Key>
             <PropertyRef Name="OId" />
@@ -1394,7 +1396,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedStockJv' does not have a
           <Property Name="DRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.DeletedVoucher' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.DeletedVoucher' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="DeletedVoucher">
           <Key>
             <PropertyRef Name="VoucherId" />
@@ -1516,7 +1518,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.DeletedVoucher' does not have a
           <Property Name="CrLimitPer" Type="numeric" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.Inv_M_MenuMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.Inv_M_MenuMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Inv_M_MenuMaster">
           <Key>
             <PropertyRef Name="AId" />
@@ -1562,7 +1564,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.Inv_M_MenuMaster' does not have
           <Property Name="ClmType" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.Inv_M_ThemeMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.Inv_M_ThemeMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Inv_M_ThemeMaster">
           <Key>
             <PropertyRef Name="AID" />
@@ -1624,7 +1626,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.Inv_M_ThemeMaster' does not hav
           <Property Name="UserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.Inv_TempUserMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.Inv_TempUserMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Inv_TempUserMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -1678,7 +1680,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.Inv_TempUserMaster' does not ha
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.Inv_TempUserPermissionMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.Inv_TempUserPermissionMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Inv_TempUserPermissionMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -1700,7 +1702,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.Inv_TempUserPermissionMaster' d
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.KitOffer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.KitOffer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="KitOffer">
           <Key>
             <PropertyRef Name="AID" />
@@ -1813,7 +1815,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.KitOffer' does not have a prima
           <Property Name="Val2" Type="numeric" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_BillCondition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_BillCondition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_BillCondition">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -1849,7 +1851,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_BillCondition' does not have 
           <Property Name="BlockedFor" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_BloodGroupMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_BloodGroupMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_BloodGroupMaster">
           <Key>
             <PropertyRef Name="AId" />
@@ -1914,7 +1916,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_BloodGroupMaster' does not ha
           <Property Name="WebSequence" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_ChargesMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_ChargesMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_ChargesMaster">
           <Key>
             <PropertyRef Name="TypeID" />
@@ -2002,7 +2004,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_ChargesMaster' does not have 
           <Property Name="LastModified" Type="varchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_ConfigMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_ConfigMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_ConfigMaster">
           <Key>
             <PropertyRef Name="IsGetExtreme" />
@@ -2223,7 +2225,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_ConfigMaster' does not have a
           <Property Name="StartPIFrom" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_FlashMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_FlashMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_FlashMaster">
           <Key>
             <PropertyRef Name="ID" />
@@ -2298,7 +2300,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_FlashMaster' does not have a 
           <Property Name="SetCrLimit" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_GrpPermissionMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_GrpPermissionMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_GrpPermissionMaster">
           <Key>
             <PropertyRef Name="AID" />
@@ -2310,7 +2312,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_GrpPermissionMaster' does not
           <Property Name="MenuID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_Initials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_Initials' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_Initials">
           <Key>
             <PropertyRef Name="RefType" />
@@ -2335,7 +2337,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_Initials' does not have a pri
           <Property Name="BVPer" Type="numeric" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_InvoiceTypeMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_InvoiceTypeMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_InvoiceTypeMaster">
           <Key>
             <PropertyRef Name="AId" />
@@ -2457,7 +2459,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_InvoiceTypeMaster' does not h
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_InwardDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_InwardDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_InwardDetail">
           <Key>
             <PropertyRef Name="IdNo" />
@@ -2627,7 +2629,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_InwardDetail' does not have a
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_IsCardIssue' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_IsCardIssue' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_IsCardIssue">
           <Key>
             <PropertyRef Name="CardId" />
@@ -2797,7 +2799,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_IsCardIssue' does not have a 
           <Property Name="WebSequence" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_MaxDiscount' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_MaxDiscount' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_MaxDiscount">
           <Key>
             <PropertyRef Name="ProdId" />
@@ -2822,7 +2824,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_MaxDiscount' does not have a 
           <Property Name="IsAllow" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_MemberMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_MemberMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_MemberMaster">
           <Key>
             <PropertyRef Name="MID" />
@@ -3091,7 +3093,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_MemberMaster' does not have a
           <Property Name="ActiveStatus" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_MonthSessnMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_MonthSessnMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_MonthSessnMaster">
           <Key>
             <PropertyRef Name="SessID" />
@@ -3126,7 +3128,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_MonthSessnMaster' does not ha
           <Property Name="IsTransNo" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_NewCustomer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_NewCustomer' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_NewCustomer">
           <Key>
             <PropertyRef Name="ID" />
@@ -3174,7 +3176,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_NewCustomer' does not have a 
           <Property Name="HostIP" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_NewHOVersionInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_NewHOVersionInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_NewHOVersionInfo">
           <Key>
             <PropertyRef Name="AId" />
@@ -3194,7 +3196,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_NewHOVersionInfo' does not ha
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_NewOfferMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_NewOfferMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_NewOfferMaster">
           <Key>
             <PropertyRef Name="AId" />
@@ -3267,7 +3269,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_NewOfferMaster' does not have
           <Property Name="UserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_OfferProductType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_OfferProductType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_OfferProductType">
           <Key>
             <PropertyRef Name="OPId" />
@@ -3317,7 +3319,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_OfferProductType' does not ha
           <Property Name="Remarks" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_PartyWiseBillCondition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_PartyWiseBillCondition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_PartyWiseBillCondition">
           <Key>
             <PropertyRef Name="PartyId" />
@@ -3344,7 +3346,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_PartyWiseBillCondition' does 
           <Property Name="IsShow" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_PKGForCustBilling' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_PKGForCustBilling' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_PKGForCustBilling">
           <Key>
             <PropertyRef Name="AId" />
@@ -3381,7 +3383,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_PKGForCustBilling' does not h
           <Property Name="UserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_ProductKitUnitMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_ProductKitUnitMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_ProductKitUnitMaster">
           <Key>
             <PropertyRef Name="Uid" />
@@ -3510,7 +3512,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_ProductKitUnitMaster' does no
           <Property Name="HSNCode" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_ProfessionMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_ProfessionMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_ProfessionMaster">
           <Key>
             <PropertyRef Name="PID" />
@@ -3536,7 +3538,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_ProfessionMaster' does not ha
           <Property Name="RectimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_ReportType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_ReportType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_ReportType">
           <Key>
             <PropertyRef Name="ReportId" />
@@ -3548,7 +3550,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_ReportType' does not have a p
           <Property Name="Status" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_Reward' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_Reward' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_Reward">
           <Key>
             <PropertyRef Name="SessId" />
@@ -3566,7 +3568,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_Reward' does not have a prima
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_RewardMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_RewardMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_RewardMaster">
           <Key>
             <PropertyRef Name="RId" />
@@ -3595,7 +3597,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_RewardMaster' does not have a
           <Property Name="ImgPath" Type="varchar" MaxLength="500" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_SearchMethodMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_SearchMethodMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_SearchMethodMaster">
           <Key>
             <PropertyRef Name="MId" />
@@ -3626,7 +3628,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_SearchMethodMaster' does not 
           <Property Name="ShowAsHdr" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_SessnMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_SessnMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_SessnMaster">
           <Key>
             <PropertyRef Name="SessID" />
@@ -3677,7 +3679,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_SessnMaster' does not have a 
           <Property Name="OfferState" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_SpecialProductMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_SpecialProductMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_SpecialProductMaster">
           <Key>
             <PropertyRef Name="AId" />
@@ -3717,7 +3719,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_SpecialProductMaster' does no
           <Property Name="RowStatus" Type="char" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_StockReportType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_StockReportType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_StockReportType">
           <Key>
             <PropertyRef Name="ReportId" />
@@ -3737,7 +3739,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_StockReportType' does not hav
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_SubCategory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_SubCategory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_SubCategory">
           <Key>
             <PropertyRef Name="SCID" />
@@ -3845,7 +3847,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_SubCategory' does not have a 
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.M_UserDataHistory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.M_UserDataHistory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_UserDataHistory">
           <Key>
             <PropertyRef Name="AId" />
@@ -3926,7 +3928,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.M_UserDataHistory' does not hav
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.OfferAchvdMem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.OfferAchvdMem' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="OfferAchvdMem">
           <Key>
             <PropertyRef Name="AID" />
@@ -3979,7 +3981,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.OfferAchvdMem' does not have a 
           <Property Name="SoldBy" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.ProdVoucher' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.ProdVoucher' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="ProdVoucher">
           <Key>
             <PropertyRef Name="VoucherId" />
@@ -4012,7 +4014,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.ProdVoucher' does not have a pr
           <Property Name="LastDate" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.repurchaseproducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.repurchaseproducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="repurchaseproducts">
           <Key>
             <PropertyRef Name="RpPid" />
@@ -4057,7 +4059,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.repurchaseproducts' does not ha
           <Property Name="Garment" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.RepurchIncome' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.RepurchIncome' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="RepurchIncome">
           <Key>
             <PropertyRef Name="RId" />
@@ -4159,7 +4161,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.RepurchIncome' does not have a 
           <Property Name="UpdateDate" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempBankMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempBankMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempBankMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -4195,7 +4197,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempBankMaster' does not have a
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempBarCodeMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempBarCodeMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempBarCodeMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -4261,7 +4263,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempBarCodeMaster' does not hav
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempBatchMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempBatchMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempBatchMaster">
           <Key>
             <PropertyRef Name="BId" />
@@ -4338,7 +4340,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempBatchMaster' does not have 
           <Property Name="TotalAmount" Type="numeric" Precision="18" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempCatMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempCatMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempCatMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -4378,7 +4380,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempCatMaster' does not have a 
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempChildProductRegistration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempChildProductRegistration' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempChildProductRegistration">
           <Key>
             <PropertyRef Name="TId" />
@@ -4449,7 +4451,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempChildProductRegistration' d
           <Property Name="TRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempCityStateMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempCityStateMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempCityStateMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -4487,7 +4489,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempCityStateMaster' does not h
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempCompBankersMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempCompBankersMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempCompBankersMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -4536,7 +4538,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempCompBankersMaster' does not
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempDispatchMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempDispatchMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempDispatchMaster">
           <Key>
             <PropertyRef Name="AID" />
@@ -4570,7 +4572,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempDispatchMaster' does not ha
           <Property Name="MRecTimeStamp" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempDistrictMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempDistrictMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempDistrictMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -4618,7 +4620,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempDistrictMaster' does not ha
           <Property Name="DRTS" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempLedger' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempLedger' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempLedger">
           <Key>
             <PropertyRef Name="AID" />
@@ -4662,7 +4664,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempLedger' does not have a pri
           <Property Name="MUserID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempLedgerMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempLedgerMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempLedgerMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -4762,7 +4764,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempLedgerMaster' does not have
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempNewHOVersionInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempNewHOVersionInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempNewHOVersionInfo">
           <Key>
             <PropertyRef Name="TId" />
@@ -4786,7 +4788,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempNewHOVersionInfo' does not 
           <Property Name="URecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempNewOfferMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempNewOfferMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempNewOfferMaster">
           <Key>
             <PropertyRef Name="AId" />
@@ -4832,7 +4834,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempNewOfferMaster' does not ha
           <Property Name="MUserID" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempPartyWiseBillCondition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempPartyWiseBillCondition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempPartyWiseBillCondition">
           <Key>
             <PropertyRef Name="PartyId" />
@@ -4846,7 +4848,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempPartyWiseBillCondition' doe
           <Property Name="Amount" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempProductBookingMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempProductBookingMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempProductBookingMaster">
           <Key>
             <PropertyRef Name="AId" />
@@ -4872,7 +4874,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempProductBookingMaster' does 
           <Property Name="OtherRate" Type="numeric" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempProductMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempProductMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempProductMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -5039,7 +5041,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempProductMaster' does not hav
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempSalesReturnDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempSalesReturnDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempSalesReturnDetail">
           <Key>
             <PropertyRef Name="SNo" />
@@ -5123,7 +5125,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempSalesReturnDetail' does not
           <Property Name="MUserID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempSalesReturnMain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempSalesReturnMain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempSalesReturnMain">
           <Key>
             <PropertyRef Name="SNo" />
@@ -5194,7 +5196,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempSalesReturnMain' does not h
           <Property Name="MUserID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempStateDivMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempStateDivMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempStateDivMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -5223,7 +5225,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempStateDivMaster' does not ha
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempSubCatMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempSubCatMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempSubCatMaster">
           <Key>
             <PropertyRef Name="TId" />
@@ -5260,7 +5262,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempSubCatMaster' does not have
           <Property Name="MRecTimStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempTaxCatMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempTaxCatMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempTaxCatMaster">
           <Key>
             <PropertyRef Name="AId" />
@@ -5315,7 +5317,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempTaxCatMaster' does not have
           <Property Name="MRecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TempVoucher' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TempVoucher' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TempVoucher">
           <Key>
             <PropertyRef Name="VoucherId" />
@@ -5345,7 +5347,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TempVoucher' does not have a pr
           <Property Name="Remarks" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TmpBillDate' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TmpBillDate' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TmpBillDate">
           <Key>
             <PropertyRef Name="AID" />
@@ -5361,7 +5363,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TmpBillDate' does not have a pr
           <Property Name="UserID" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TransMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TransMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TransMaster">
           <Key>
             <PropertyRef Name="AID" />
@@ -5538,7 +5540,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TransMaster' does not have a pr
           <Property Name="CGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGST" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="FreeQty" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="FreeQty" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <EntityType Name="TrnBillDetails">
           <Key>
@@ -5610,7 +5612,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TransMaster' does not have a pr
           <Property Name="SGST" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="UID" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="FreeQty" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="FreeQty" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <EntityType Name="TrnBillMain">
           <Key>
@@ -5945,7 +5947,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TransMaster' does not have a pr
           <Property Name="Reason" Type="varchar" MaxLength="500" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TrnOrderDeliveryDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TrnOrderDeliveryDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TrnOrderDeliveryDetail">
           <Key>
             <PropertyRef Name="AId" />
@@ -6186,7 +6188,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TrnOrderDeliveryDetail' does no
           <Property Name="IFSCode" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TrnPayModeMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TrnPayModeMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TrnPayModeMaster">
           <Key>
             <PropertyRef Name="ID" />
@@ -6201,7 +6203,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TrnPayModeMaster' does not have
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TrnPickListDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TrnPickListDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TrnPickListDetail">
           <Key>
             <PropertyRef Name="AId" />
@@ -6493,7 +6495,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TrnPickListDetail' does not hav
           <Property Name="UID" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TrnPurchaseReqDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TrnPurchaseReqDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TrnPurchaseReqDetail">
           <Key>
             <PropertyRef Name="AId" />
@@ -6539,7 +6541,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TrnPurchaseReqDetail' does not 
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.TrnPurchaseReqMain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.TrnPurchaseReqMain' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="TrnPurchaseReqMain">
           <Key>
             <PropertyRef Name="AId" />
@@ -6810,6 +6812,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TrnPurchaseReqMain' does not ha
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="CGST" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGST" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Reason" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="TrnSalesReturnMain">
           <Key>
@@ -7057,7 +7060,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.TrnPurchaseReqMain' does not ha
           <Property Name="IsEdit" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#AccountStatement' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#AccountStatement' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#AccountStatement">
           <Key>
             <PropertyRef Name="VoucherDate" />
@@ -7078,7 +7081,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#AccountStatement' does not ha
           <Property Name="Balance" Type="numeric" Precision="18" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#AvailProdStockBarcodes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#AvailProdStockBarcodes' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#AvailProdStockBarcodes">
           <Key>
             <PropertyRef Name="ProdID" />
@@ -7092,7 +7095,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#AvailProdStockBarcodes' does 
           <Property Name="Qty" Type="numeric" Precision="38" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#BillWiseSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#BillWiseSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#BillWiseSaleSummary">
           <Key>
             <PropertyRef Name="FSessId" />
@@ -7172,7 +7175,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#BillWiseSaleSummary' does not
           <Property Name="DispatchStatus" Type="varchar" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#City' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#City' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#City">
           <Key>
             <PropertyRef Name="DistrictCode" />
@@ -7190,7 +7193,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#City' does not have a primary
           <Property Name="ActiveStatus" Type="varchar" MaxLength="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#CurrentStockDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#CurrentStockDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#CurrentStockDetail">
           <Key>
             <PropertyRef Name="PartyCode" />
@@ -7232,7 +7235,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#CurrentStockDetail' does not 
           <Property Name="MRPStockValue" Type="numeric" Precision="18" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#CurrentStockDetail_STK' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#CurrentStockDetail_STK' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#CurrentStockDetail_STK">
           <Key>
             <PropertyRef Name="PartyCode" />
@@ -7269,7 +7272,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#CurrentStockDetail_STK' does 
           <Property Name="MRPStockValue" Type="numeric" Precision="18" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#CurrentStockDetailNotForStockist' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#CurrentStockDetailNotForStockist' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#CurrentStockDetailNotForStockist">
           <Key>
             <PropertyRef Name="PartyCode" />
@@ -7321,7 +7324,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#CurrentStockDetailNotForStock
           <Property Name="MRPStockValue" Type="numeric" Precision="18" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#DeletedSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#DeletedSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#DeletedSaleSummary">
           <Key>
             <PropertyRef Name="FSessId" />
@@ -7397,7 +7400,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#DeletedSaleSummary' does not 
           <Property Name="Username" Type="varchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#District' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#District' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#District">
           <Key>
             <PropertyRef Name="StateCode" />
@@ -7414,7 +7417,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#District' does not have a pri
           <Property Name="ActiveStatus" Type="varchar" MaxLength="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#GroupWiseSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#GroupWiseSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#GroupWiseSaleSummary">
           <Key>
             <PropertyRef Name="PartyCode" />
@@ -7434,7 +7437,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#GroupWiseSaleSummary' does no
           <Property Name="Branch" Type="numeric" Precision="38" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#IDWiseBillSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#IDWiseBillSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#IDWiseBillSummary">
           <Key>
             <PropertyRef Name="BillNo" />
@@ -7464,7 +7467,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#IDWiseBillSummary' does not h
           <Property Name="BillType" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#LedgerBalance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#LedgerBalance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#LedgerBalance">
           <Key>
             <PropertyRef Name="SessId" />
@@ -7477,7 +7480,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#LedgerBalance' does not have 
           <Property Name="Balance" Type="numeric" Precision="38" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#MonthWisePartyPurchaseSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#MonthWisePartyPurchaseSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#MonthWisePartyPurchaseSummary">
           <Key>
             <PropertyRef Name="SupplierCode" />
@@ -7541,7 +7544,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#MonthWisePartyPurchaseSummary
           <Property Name="TotalSale" Type="numeric" Precision="38" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#MonthWiseSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#MonthWiseSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#MonthWiseSaleSummary">
           <Key>
             <PropertyRef Name="JanQty" />
@@ -7602,7 +7605,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#MonthWiseSaleSummary' does no
           <Property Name="TotalSale" Type="numeric" Precision="38" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#MonthWiseSupplierPurchaseSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#MonthWiseSupplierPurchaseSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#MonthWiseSupplierPurchaseSummary">
           <Key>
             <PropertyRef Name="SupplierCode" />
@@ -7666,7 +7669,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#MonthWiseSupplierPurchaseSumm
           <Property Name="TotalSale" Type="numeric" Precision="38" Scale="2" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#OfferProductDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#OfferProductDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#OfferProductDetail">
           <Key>
             <PropertyRef Name="ParentProdId" />
@@ -7702,7 +7705,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#OfferProductDetail' does not 
           <Property Name="Remarks" Type="varchar" MaxLength="150" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#PartyBalance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#PartyBalance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#PartyBalance">
           <Key>
             <PropertyRef Name="PartyCode" />
@@ -7725,7 +7728,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#PartyBalance' does not have a
           <Property Name="Balance" Type="numeric" Precision="38" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#PartyDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#PartyDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#PartyDetail">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -7801,7 +7804,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#PartyDetail' does not have a 
           <Property Name="Status" Type="varchar" MaxLength="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#PartyWiseBalance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#PartyWiseBalance' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#PartyWiseBalance">
           <Key>
             <PropertyRef Name="PartyCode" />
@@ -7814,7 +7817,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#PartyWiseBalance' does not ha
           <Property Name="Balance" Type="numeric" Precision="38" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#PaymentModeWiseDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#PaymentModeWiseDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#PaymentModeWiseDetail">
           <Key>
             <PropertyRef Name="FSessId" />
@@ -7852,7 +7855,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#PaymentModeWiseDetail' does n
           <Property Name="Pay_Prefix" Type="varchar" MaxLength="52" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#ProductStockPosition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#ProductStockPosition' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#ProductStockPosition">
           <Key>
             <PropertyRef Name="ProdId" />
@@ -7905,7 +7908,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#ProductStockPosition' does no
           <Property Name="CFQty" Type="numeric" Precision="38" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#ProductStockPosition_STK' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#ProductStockPosition_STK' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#ProductStockPosition_STK">
           <Key>
             <PropertyRef Name="ProdId" />
@@ -7954,7 +7957,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#ProductStockPosition_STK' doe
           <Property Name="CFQty" Type="numeric" Precision="38" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#ProductWiseSale' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#ProductWiseSale' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#ProductWiseSale">
           <Key>
             <PropertyRef Name="FSessId" />
@@ -8006,7 +8009,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#ProductWiseSale' does not hav
           <Property Name="ProductType" Type="varchar" MaxLength="9" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#SaleReturnDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#SaleReturnDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#SaleReturnDetail">
           <Key>
             <PropertyRef Name="FSessId" />
@@ -8095,7 +8098,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#SaleReturnDetail' does not ha
           <Property Name="Remarks" Type="varchar" MaxLength="1500" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#StockPlanning' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#StockPlanning' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#StockPlanning">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -8126,7 +8129,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#StockPlanning' does not have 
           <Property Name="StockHoldValue" Type="numeric" Precision="18" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#StockPlanningForSTKST' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#StockPlanningForSTKST' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#StockPlanningForSTKST">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -8161,7 +8164,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#StockPlanningForSTKST' does n
           <Property Name="StockHoldValue" Type="numeric" Precision="18" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#StockRecvSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#StockRecvSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#StockRecvSummary">
           <Key>
             <PropertyRef Name="FSessId" />
@@ -8200,7 +8203,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#StockRecvSummary' does not ha
           <Property Name="FType" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#TopSellingProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#TopSellingProducts' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#TopSellingProducts">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -8229,7 +8232,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#TopSellingProducts' does not 
           <Property Name="TotalQty" Type="numeric" Precision="38" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#TransportDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#TransportDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#TransportDetail">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -8305,7 +8308,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#TransportDetail' does not hav
           <Property Name="Status" Type="varchar" MaxLength="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#User' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#User' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#User">
           <Key>
             <PropertyRef Name="Blank" />
@@ -8327,7 +8330,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#User' does not have a primary
           <Property Name="ActiveStatus" Type="varchar" MaxLength="8" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#WebBillDetail">
           <Key>
             <PropertyRef Name="BillNo" />
@@ -8937,6 +8940,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
     [DeletedBillDetails].[SGST] AS [SGST], 
     [DeletedBillDetails].[SGSTAmt] AS [SGSTAmt], 
     [DeletedBillDetails].[UID] AS [UID], 
+    [DeletedBillDetails].[FreeQty] AS [FreeQty], 
     [DeletedBillDetails].[DUserId] AS [DUserId], 
     [DeletedBillDetails].[DRecTimeStamp] AS [DRecTimeStamp]
     FROM [dbo].[DeletedBillDetails] AS [DeletedBillDetails]</DefiningQuery>
@@ -11822,7 +11826,6 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
           <EntitySet Name="TrnPurchaseReturnMains" EntityType="InventoryModel.TrnPurchaseReturnMain" />
           <EntitySet Name="TrnReceipts" EntityType="InventoryModel.TrnReceipt" />
           <EntitySet Name="TrnReceiptDetails" EntityType="InventoryModel.TrnReceiptDetail" />
-          <EntitySet Name="TrnSalesReturnDetails" EntityType="InventoryModel.TrnSalesReturnDetail" />
           <EntitySet Name="TrnSalesReturnMains" EntityType="InventoryModel.TrnSalesReturnMain" />
           <EntitySet Name="TrnStockAdjustments" EntityType="InventoryModel.TrnStockAdjustment" />
           <EntitySet Name="TrnStockJvs" EntityType="InventoryModel.TrnStockJv" />
@@ -11945,6 +11948,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
           <EntitySet Name="VisionOffers" EntityType="InventoryModel.VisionOffer" />
           <EntitySet Name="TrnBillDatas" EntityType="InventoryModel.TrnBillData" />
           <EntitySet Name="TrnBillDetails" EntityType="InventoryModel.TrnBillDetail" />
+          <EntitySet Name="TrnSalesReturnDetails" EntityType="InventoryModel.TrnSalesReturnDetail" />
         </EntityContainer>
         <ComplexType Name="MonthWiseSummary_Result">
           <Property Type="String" Name="Mnth" Nullable="false" MaxLength="10" />
@@ -15216,51 +15220,6 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
           <Property Name="BillFor" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Imported" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
-        <EntityType Name="TrnSalesReturnDetail">
-          <Key>
-            <PropertyRef Name="SrId" />
-          </Key>
-          <Property Name="SrId" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="SReturnNo" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="SRNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="ReturnBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ReturnTo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Ftype" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="ReturnDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ProdId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BatchNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ReturnQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AcceptQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="RemainingQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TaxType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Tax" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TaxAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="UserID" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="Version" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BV" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="BVValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="RP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="RPValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="IsKit" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="ProdType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="MRP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ROn" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="OfferUId" Type="Int32" Nullable="false" />
-          <Property Name="FSessId" Type="Int32" Nullable="false" />
-          <Property Name="EntryBy" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-        </EntityType>
         <EntityType Name="TrnSalesReturnMain">
           <Key>
             <PropertyRef Name="SRId" />
@@ -15528,6 +15487,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
             <PropertyRef Name="SGSTAmt" />
             <PropertyRef Name="UID" />
             <PropertyRef Name="DUserId" />
+            <PropertyRef Name="FreeQty" />
           </Key>
           <Property Name="BillId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="FSessId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
@@ -15597,6 +15557,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
           <Property Name="UID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="DUserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="DRecTimeStamp" Type="DateTime" Precision="3" />
+          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="DeletedBillMain">
           <Key>
@@ -20354,7 +20315,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
           <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="TrnBillDetail">
           <Key>
@@ -20426,7 +20387,53 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
           <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="UID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+        </EntityType>
+        <EntityType Name="TrnSalesReturnDetail">
+          <Key>
+            <PropertyRef Name="SrId" />
+          </Key>
+          <Property Name="SrId" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SReturnNo" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="SRNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ReturnBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ReturnTo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Ftype" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ReturnDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ProdId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BatchNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReturnQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AcceptQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RemainingQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Rate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TaxType" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Tax" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TaxAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="UserID" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="Version" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BV" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BVValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RPValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="IsKit" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ProdType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="MRP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ROn" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="OfferUId" Type="Int32" Nullable="false" />
+          <Property Name="FSessId" Type="Int32" Nullable="false" />
+          <Property Name="EntryBy" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Reason" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -23741,52 +23748,6 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="TrnSalesReturnDetails">
-            <EntityTypeMapping TypeName="InventoryModel.TrnSalesReturnDetail">
-              <MappingFragment StoreEntitySet="TrnSalesReturnDetail">
-                <ScalarProperty Name="SGST" ColumnName="SGST" />
-                <ScalarProperty Name="CGST" ColumnName="CGST" />
-                <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
-                <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
-                <ScalarProperty Name="EntryBy" ColumnName="EntryBy" />
-                <ScalarProperty Name="FSessId" ColumnName="FSessId" />
-                <ScalarProperty Name="OfferUId" ColumnName="OfferUId" />
-                <ScalarProperty Name="ROn" ColumnName="ROn" />
-                <ScalarProperty Name="DP" ColumnName="DP" />
-                <ScalarProperty Name="MRP" ColumnName="MRP" />
-                <ScalarProperty Name="ProdType" ColumnName="ProdType" />
-                <ScalarProperty Name="IsKit" ColumnName="IsKit" />
-                <ScalarProperty Name="RPValue" ColumnName="RPValue" />
-                <ScalarProperty Name="RP" ColumnName="RP" />
-                <ScalarProperty Name="BVValue" ColumnName="BVValue" />
-                <ScalarProperty Name="BV" ColumnName="BV" />
-                <ScalarProperty Name="Version" ColumnName="Version" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="RecTimeStamp" ColumnName="RecTimeStamp" />
-                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="Tax" ColumnName="Tax" />
-                <ScalarProperty Name="TaxType" ColumnName="TaxType" />
-                <ScalarProperty Name="Rate" ColumnName="Rate" />
-                <ScalarProperty Name="RemainingQty" ColumnName="RemainingQty" />
-                <ScalarProperty Name="AcceptQty" ColumnName="AcceptQty" />
-                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
-                <ScalarProperty Name="ReturnQty" ColumnName="ReturnQty" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="BatchNo" ColumnName="BatchNo" />
-                <ScalarProperty Name="ProdId" ColumnName="ProdId" />
-                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
-                <ScalarProperty Name="Ftype" ColumnName="Ftype" />
-                <ScalarProperty Name="ReturnTo" ColumnName="ReturnTo" />
-                <ScalarProperty Name="ReturnBy" ColumnName="ReturnBy" />
-                <ScalarProperty Name="SRNo" ColumnName="SRNo" />
-                <ScalarProperty Name="SReturnNo" ColumnName="SReturnNo" />
-                <ScalarProperty Name="SrId" ColumnName="SrId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="TrnSalesReturnMains">
             <EntityTypeMapping TypeName="InventoryModel.TrnSalesReturnMain">
               <MappingFragment StoreEntitySet="TrnSalesReturnMain">
@@ -23999,6 +23960,7 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
           <EntitySetMapping Name="DeletedBillDetails">
             <EntityTypeMapping TypeName="InventoryModel.DeletedBillDetail">
               <MappingFragment StoreEntitySet="DeletedBillDetails">
+                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
                 <ScalarProperty Name="DRecTimeStamp" ColumnName="DRecTimeStamp" />
                 <ScalarProperty Name="DUserId" ColumnName="DUserId" />
                 <ScalarProperty Name="UID" ColumnName="UID" />
@@ -27228,6 +27190,53 @@ warning 6002: The table/view 'SrsInv16012020.dbo.V#WebBillDetail' does not have 
                 <ScalarProperty Name="SessId" ColumnName="SessId" />
                 <ScalarProperty Name="FSessId" ColumnName="FSessId" />
                 <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrnSalesReturnDetails">
+            <EntityTypeMapping TypeName="InventoryModel.TrnSalesReturnDetail">
+              <MappingFragment StoreEntitySet="TrnSalesReturnDetail">
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="SGST" ColumnName="SGST" />
+                <ScalarProperty Name="CGST" ColumnName="CGST" />
+                <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
+                <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
+                <ScalarProperty Name="EntryBy" ColumnName="EntryBy" />
+                <ScalarProperty Name="FSessId" ColumnName="FSessId" />
+                <ScalarProperty Name="OfferUId" ColumnName="OfferUId" />
+                <ScalarProperty Name="ROn" ColumnName="ROn" />
+                <ScalarProperty Name="DP" ColumnName="DP" />
+                <ScalarProperty Name="MRP" ColumnName="MRP" />
+                <ScalarProperty Name="ProdType" ColumnName="ProdType" />
+                <ScalarProperty Name="IsKit" ColumnName="IsKit" />
+                <ScalarProperty Name="RPValue" ColumnName="RPValue" />
+                <ScalarProperty Name="RP" ColumnName="RP" />
+                <ScalarProperty Name="BVValue" ColumnName="BVValue" />
+                <ScalarProperty Name="BV" ColumnName="BV" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="RecTimeStamp" ColumnName="RecTimeStamp" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="TaxType" ColumnName="TaxType" />
+                <ScalarProperty Name="Rate" ColumnName="Rate" />
+                <ScalarProperty Name="RemainingQty" ColumnName="RemainingQty" />
+                <ScalarProperty Name="AcceptQty" ColumnName="AcceptQty" />
+                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
+                <ScalarProperty Name="ReturnQty" ColumnName="ReturnQty" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="BatchNo" ColumnName="BatchNo" />
+                <ScalarProperty Name="ProdId" ColumnName="ProdId" />
+                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
+                <ScalarProperty Name="Ftype" ColumnName="Ftype" />
+                <ScalarProperty Name="ReturnTo" ColumnName="ReturnTo" />
+                <ScalarProperty Name="ReturnBy" ColumnName="ReturnBy" />
+                <ScalarProperty Name="SRNo" ColumnName="SRNo" />
+                <ScalarProperty Name="SReturnNo" ColumnName="SReturnNo" />
+                <ScalarProperty Name="SrId" ColumnName="SrId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

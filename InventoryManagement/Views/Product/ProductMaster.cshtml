@@ -38,7 +38,11 @@
         $(".preloader").hide();
         GetListOfSubCategories();
         var fullDate = new Date();
-        CKEDITOR.replace("ProductDescription");
+       
+        CKEDITOR.replace('ProductDescription', {
+            width: '100%',
+            height: 100
+        });
         //console.log(fullDate);
         //Thu May 19 2011 17:25:38 GMT+1000 {}
 
@@ -417,122 +421,8 @@
                                             </div>
                                     </div>
                                     
-                                    <div class="form-group">
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                Purchase Rate
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.ProductBarcodeDetails.PurchaseRate, new { tabindex = "6", name = "PurchaseRate", id = "PurchaseRate", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                MRP
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.ProductBarcodeDetails.MRP, new { tabindex = "7", name = "MRP", id = "MRP", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-6">
-                                            @*<label class="control-label col-lg-4 col-md-3 col-sm-3 col-xs-12" for="purchaseRate">
-                                                B.V.
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.BV, new { name = "BV", id = "BV", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>*@
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
-                                                D.P.
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.ProductBarcodeDetails.DP, new { tabindex = "8", name = "DP", id = "DP", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-3 col-sm-3 col-xs-12" for="purchaseRate">
-                                                @BVCaption
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.BV, new { tabindex = "9", name = "BV", id = "BV", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                R.P.
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.RP, new { name = "RP", id = "RP", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>*@
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        @*<div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                @CVCaption
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.CV, new { tabindex = "12", name = "CV", id = "CV", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                Disc. %
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.DiscountPer, new { name = "DiscountPer", id = "DiscountPer", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>*@
-                                        @*<div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                Disc. %
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.DiscountPer, new { tabindex = "13", name = "DiscountPer", id = "DiscountPer", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                Disc. Rs.
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.DiscountInRs, new { name = "DiscountInRs", id = "DiscountInRs", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>*@
-                                    </div>
+                               
+                               
                                     <div class="form-group">
 
                                         <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
@@ -553,13 +443,14 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="product-name">
-                                            Description
+                                    <div  class="form-group">
+                                        <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
+                                            Barcode
                                         </label>
                                         <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
-                                            @Html.TextAreaFor(m => m.ProductDescription, new { tabindex = "5", name = "ProductDescription", id = "ProductDescription", @class = "form-control col-md-7 col-xs-12" })
+
+                                            @Html.TextBoxFor(m => m.ProductBarcodeDetails.Barcode, new { tabindex = "16", name = "Barcode", id = "Barcode", @class = "form-control col-md-7 col-xs-12", @readonly = "readonly" })
 
                                         </div>
                                         <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
@@ -567,105 +458,152 @@
                                         </div>
                                     </div>
 
-                                    <div class="form-group">
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
-                                                Mfg. Date
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    <div class="form-group">&nbsp;</div>
 
-                                                @Html.TextBoxFor(m => m.ProductBarcodeDetails.MfgDateStr, new { tabindex = "18", name = "MfgDatePickerWidget", id = "MfgDatePickerWidget", @class = "form-control col-md-7 col-xs-12" })
 
+                                        <div class="form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                                    Purchase Rate
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                                    @Html.TextBoxFor(m => m.ProductBarcodeDetails.PurchaseRate, new { tabindex = "6", name = "PurchaseRate", id = "PurchaseRate", @class = "form-control col-md-7 col-xs-12" })
+
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                                    MRP
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                                    @Html.TextBoxFor(m => m.ProductBarcodeDetails.MRP, new { tabindex = "7", name = "MRP", id = "MRP", @class = "form-control col-md-7 col-xs-12" })
+
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-6">
+
+                                                <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
+                                                    D.P.
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                                    @Html.TextBoxFor(m => m.ProductBarcodeDetails.DP, new { tabindex = "8", name = "DP", id = "DP", @class = "form-control col-md-7 col-xs-12" })
+
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label col-lg-4 col-md-3 col-sm-3 col-xs-12" for="purchaseRate">
+                                                    @BVCaption
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                                    @Html.TextBoxFor(m => m.BV, new { tabindex = "9", name = "BV", id = "BV", @class = "form-control col-md-7 col-xs-12" })
+
+                                                </div>
+
+                                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
+                                                    On Website
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                                    @Html.DropDownListFor(m => m.OnWebsite, listItems as IEnumerable<SelectListItem>, new { tabindex = "22", name = "OnWebsite", id = "OnWebsite", @class = "form-control col-md-7 col-xs-12" })
+
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+
+                                            <div class="col-lg-6">
+                                                <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                                    IsExpirable
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                                    @Html.DropDownListFor(m => m.ProductBarcodeDetails.IsExpirable, listItems as IEnumerable<SelectListItem>, new { tabindex = "17", name = "IsExpirable", id = "IsExpirable", @class = "form-control col-md-7 col-xs-12" })
+
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-lg-6">
+                                                <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
+                                                    Mfg. Date
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                                    @Html.TextBoxFor(m => m.ProductBarcodeDetails.MfgDateStr, new { tabindex = "18", name = "MfgDatePickerWidget", id = "MfgDatePickerWidget", @class = "form-control col-md-7 col-xs-12" })
+
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
+                                                    Exp. Date
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+
+                                                    @Html.TextBoxFor(m => m.ProductBarcodeDetails.ExpDateStr, new { tabindex = "19", name = "ExpDatePickerWidget", id = "ExpDatePickerWidget", @class = "form-control col-md-7 col-xs-12", @readonly = "readonly" })
+
+                                                </div>
+                                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
+                                                    &nbsp;
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+
+                                            <div class="col-lg-6">
+                                                <label class="control-label col-md-4 col-sm-4 col-xs-12" for="mfgDate">
+                                                    Weight
+                                                </label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    @Html.TextBoxFor(m => m.Weight, new { tabindex = "14", name = "Weight", id = "Weight", @class = "form-control col-md-7 col-xs-12" })
+                                                    (gms.)
+                                                </div>
+
+                                            </div>
+                                            <div class="col-lg-6">
+                                                &nbsp;
                                             </div>
                                             <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
                                                 &nbsp;
                                             </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                Exp. Date
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
-                                                @Html.TextBoxFor(m => m.ProductBarcodeDetails.ExpDateStr, new { tabindex = "19", name = "ExpDatePickerWidget", id = "ExpDatePickerWidget", @class = "form-control col-md-7 col-xs-12",@readonly="readonly" })
 
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
+
+
+
+
                                     </div>
-                                    @*<div class="form-group">
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
-                                                Special Offer
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.DropDownListFor(m => m.SpecialOffer, listItems as IEnumerable<SelectListItem>, new { tabindex = "20", name = "SpecialOffer", id = "SpecialOffer", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                Hot Sell
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.DropDownListFor(m => m.HotSell, listItems as IEnumerable<SelectListItem>, new { tabindex = "21", name = "HotSell", id = "HotSell", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                    </div>*@
-                                    <div class="form-group">
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
-                                                On Website
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.DropDownListFor(m => m.OnWebsite, listItems as IEnumerable<SelectListItem>, new { tabindex = "22", name = "OnWebsite", id = "OnWebsite", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                        @*<div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                Message Status
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.DropDownListFor(m => m.MessageStatus, listItems as IEnumerable<SelectListItem>, new { tabindex = "23", name = "MessageStatus", id = "MessageStatus", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>*@
-                                    </div>
-                                    @*<div class="form-group">
-
-                                        <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                            Message
-                                        </label>
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                            @Html.TextAreaFor(m => m.Message, new { tabindex = "24", name = "Message", id = "Message", @class = "form-control col-md-7 col-xs-12" })
-
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                            &nbsp;
-                                        </div>
-                                    </div>*@
-                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                        &nbsp;
@@ -685,130 +623,20 @@
                                         <input type="file" id="upload" name="upload" style="visibility: hidden; width: 1px; height: 1px" />
                                         <a href="" onclick="document.getElementById('upload').click();return false" id="UpdateImage" style="margin-left: 26%;">Update Image<span style="color:red">&nbsp;(Image Size Limit:4MB)</span></a>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-6">
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
-                                                D.P.
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                 
+                                    <div class="form-group" style="padding-right: 40px;">
+                                        <label class="control-label col-lg-2 col-md-2 col-sm-3 col-xs-12" for="product-name">
+                                            Description
+                                        </label>
+                                        <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12">
 
-                                                @Html.TextBoxFor(m => m.ProductBarcodeDetails.DP, new { name = "DP", id = "DP", @class = "form-control col-md-7 col-xs-12" })
+                                            @Html.TextAreaFor(m => m.ProductDescription, new { tabindex = "5", name = "ProductDescription", id = "ProductDescription",@row="1", @class = "form-control col-md-7 col-xs-12" })
 
-                                            </div>*@
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                @PVCaption
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.PV, new { tabindex = "10", name = "PV", id = "PV", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>*@
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
                                         </div>
-                                        <div class="col-lg-6">
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                C.V.
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.CV, new { name = "CV", id = "CV", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>*@
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                @RPCaption
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                @Html.TextBoxFor(m => m.RP, new { tabindex = "11", name = "RP", id = "RP", @class = "form-control col-md-7 col-xs-12" })
-                                            </div>*@
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
+                                       
                                     </div>
-                                    <div class="form-group">
-                                        @*<div class="col-lg-6">
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                Disc. Rs.
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    
 
-                                                @Html.TextBoxFor(m => m.DiscountInRs, new { tabindex = "13", name = "DiscountInRs", id = "DiscountInRs", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <label class="control-label col-md-4 col-sm-4 col-xs-12" for="mfgDate">
-                                                Cmmsn
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.TextBoxFor(m => m.ProductCommission, new { name = "ProductCommission", id = "ProductCommission", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>*@
-                                        <div class="col-lg-6">
-                                            @*<label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-        P.V.
-    </label>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-        @Html.TextBoxFor(m => m.PV, new { name = "PV", id = "PV", @class = "form-control col-md-7 col-xs-12" })
-
-    </div>
-    <label class="control-label col-md-4 col-sm-4 col-xs-12" for="mfgDate">
-        Cmmsn
-    </label>
-    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-        @Html.TextBoxFor(m => m.ProductCommission, new { tabindex = "14", name = "ProductCommission", id = "ProductCommission", @class = "form-control col-md-7 col-xs-12" })
-
-    </div>*@
-                                            <label class="control-label col-md-4 col-sm-4 col-xs-12" for="mfgDate">
-                                                Weight
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                @Html.TextBoxFor(m => m.Weight, new { tabindex = "14", name = "Weight", id = "Weight", @class = "form-control col-md-7 col-xs-12" })
-                                                (gms.)
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
-                                                Barcode
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                
-                                               
-                                                @Html.TextBoxFor(m => m.ProductBarcodeDetails.Barcode, new { tabindex = "16", name = "Barcode", id = "Barcode", @class = "form-control col-md-7 col-xs-12", @readonly = "readonly" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
-                                                IsExpirable
-                                            </label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-
-                                                @Html.DropDownListFor(m => m.ProductBarcodeDetails.IsExpirable, listItems as IEnumerable<SelectListItem>, new { tabindex = "17", name = "IsExpirable", id = "IsExpirable", @class = "form-control col-md-7 col-xs-12" })
-
-                                            </div>
-                                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12">
-                                                &nbsp;
-                                            </div>
-                                        </div>
-
-                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">

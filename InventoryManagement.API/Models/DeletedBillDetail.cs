@@ -82,5 +82,6 @@ namespace InventoryManagement.API.Models
         public string UID { get; set; }
         public decimal DUserId { get; set; }
         public Nullable<System.DateTime> DRecTimeStamp { get; set; }
+        public decimal FreeQty { get; set; }
     }
 }

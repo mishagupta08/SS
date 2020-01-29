@@ -6784,8 +6784,8 @@ namespace InventoryManagement.API.Controllers
                             objTrnVoucher.DrTo = "";
                             objTrnVoucher.CrTo = payment.regid;
                             objTrnVoucher.Amount = Convert.ToDecimal(payment.amount);
-                            objTrnVoucher.Narration = "Wallet credited against Req No. "+ VoucherNo +".";
-                            objTrnVoucher.RefNo = "WReq/" + VoucherNo + "."; ;
+                            objTrnVoucher.Narration = "Wallet credited against Req No. "+ payment.TxnId +".";
+                            objTrnVoucher.RefNo = "WReq/" + payment.TxnId + "."; ;
                             objTrnVoucher.BType = "O";
                             objTrnVoucher.AccDocNo = 0;
                             objTrnVoucher.AccDocNo = 0;

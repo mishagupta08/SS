@@ -84,7 +84,7 @@ namespace InventoryManagement
                         payment.ORDER_ID = lbl_ORDERID;
                         payment.PaymentStatus = lbl_PAYMENTMODE;
                         payment.BillStatus = lbl_PAYMENTMODE;
-                        payment.TxnId = lbl_TXNID;
+                        payment.TxnId = lbl_BANKTXNID;
                         tblPayment = objTransacManager.GetCreditRequest(lbl_ORDERID);
                         payment.regid = tblPayment[0].IdNo;
                         payment.amount = lbl_TXNAMOUNT;
@@ -94,7 +94,7 @@ namespace InventoryManagement
                             resp = objTransacManager.CreditRequestOnlineInsert(payment);
                             if (resp == "OK")
                             {
-                                lblerrormsg.Text = "Payment is successfuly done ! your transaction id is " + lbl_TXNID + " click <a href = http://franchise.sarsobiz.net/Report/WalletReport>here</a>" + " to check your wallet balance.";
+                                lblerrormsg.Text = "Payment is successfuly done ! your transaction id is " + lbl_BANKTXNID + " click <a href = http://franchise.sarsobiz.net/Report/WalletReport>here</a>" + " to check your wallet balance.";
                             }
                             else
                             {

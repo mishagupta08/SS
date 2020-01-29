@@ -360,5 +360,9 @@ namespace InventoryManagement.DataAccess
         {
             return objTransacAPI.GetCreditRequest(orderId);
         }
+        public ResponseDetail GetFWalletBalance(string LoginPartyCode)
+        {
+            return objTransacAPI.GetFWalletBalance(LoginPartyCode);
+        }
     }        
 }

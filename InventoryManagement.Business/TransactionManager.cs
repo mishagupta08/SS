@@ -372,5 +372,9 @@ namespace InventoryManagement.Business
         {
             return objTransacRepo.GetCreditRequest(orderId);
         }
+        public ResponseDetail GetFWalletBalance(string LoginPartyCode)
+        {
+            return objTransacRepo.GetFWalletBalance(LoginPartyCode);
+        }
     }
 }

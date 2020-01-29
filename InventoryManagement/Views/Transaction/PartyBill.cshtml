@@ -1688,6 +1688,7 @@
             var userpcode = $("#UserPartyCode").val();
             GetPartyInfo(userpcode);
         });
+
         $("#PartyName").autocomplete({
             source: function (request, response) {
                 var results = $.ui.autocomplete.filter(PartyList, request.term);
@@ -1708,6 +1709,7 @@
                 $("#PartyName").val(ui.item.label);
                 $("#Remarks").focus();
                 SetSpecificCode("Party", ui.item.label);
+                
                 return false;
             },
 
@@ -1718,7 +1720,6 @@
     });
 
     function SetSpecificCode(type, label) {
-
         if (type == "Party") {
             for (var i = 0; i < FullPartyList.length; i++) {
                 if (FullPartyList[i].PartyName == label && FullPartyList[i].GroupId!=5) {
@@ -1728,9 +1729,27 @@
                     break;
                 }
             }
+
+            GetFWalletBalance($("#PartyCode").val());
         }
     }
 
+    function GetFWalletBalance(partyCode)
+    {
+        $.ajax({
+            url: '/Transaction/GetFWalletBalance',
+            dataType: 'JSON',
+            method: 'GET',
+            data: { 'partyCode': partyCode },
+            success: function (data) {
+                if (data.ResponseStatus == "OK")
+                {
+                    var amount = parseFloat(data.ResponseMessage);
+                    $("#AvailBal").val(amount);
+                }
+            }
+        });
+    }
 
     function GetPartyInfo( label) {
             for (var i = 0; i < FullPartyList.length; i++) {
@@ -2207,7 +2226,7 @@
                                         &nbsp;
                                     </td>
                                 </tr>
-                                @*<tr>
+                                <tr>
                                     <td>
 
                                         <div class="row RowMargin">
@@ -2260,7 +2279,7 @@
                                     <td>
                                         &nbsp;
                                     </td>
-                                </tr>*@
+                                </tr>
                                 @*<tr>
                                         <td>
 

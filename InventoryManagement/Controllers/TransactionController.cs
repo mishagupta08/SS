@@ -3525,6 +3525,12 @@ namespace InventoryManagement.Controllers
         {
             return Json(objTransacManager.getExtraPVfreeproducts(id, true), JsonRequestBehavior.AllowGet);
         }
+
+        [HttpGet]
+        public ActionResult GetFWalletBalance(string partyCode)
+        {
+            return Json(objTransacManager.GetFWalletBalance(partyCode), JsonRequestBehavior.AllowGet);
+        }
     }
 }
 

@@ -1014,6 +1014,9 @@ namespace InventoryManagement.API.Controllers
             return objProductNames;
         }
 
+
+
+
         public ResponseDetail SaveDistributorBill(DistributorBillModel objModel)
         {
             ResponseDetail objResponse = new ResponseDetail();
@@ -1086,10 +1089,9 @@ namespace InventoryManagement.API.Controllers
                     version = (from result in entity.M_NewHOVersionInfo select result.VersionNo).FirstOrDefault();
 
 
-
                     if (string.IsNullOrEmpty(objModel.BillType))
                     {
-                        query = "Select * FROM [GetBalance]('" + objModel.objCustomer.FormNo + "','S')";
+                        query = "Select * FROM [GetBalance]('" + objModel.objCustomer.FormNo + "','')";
                         cmd = new SqlCommand();
                         cmd.CommandText = query;
                         //cmd.Parameters.AddWithValue("@IdNo", IdNo);
@@ -1161,25 +1163,37 @@ namespace InventoryManagement.API.Controllers
                                 {
                                     if (WalletBalance >= objModel.objProduct.PayDetails.AmountByWallet)
                                     {
+
                                         SC.Close();
                                         SC.Open();
                                         objTrans = SC.BeginTransaction();
-                                        /*query = "INSERT INTO EWallet(VoucherNo,VoucherDate,DrTo,Crto,Amount,Narration,Refno,AcType,VType,SessID,WSEssID) " +
-                                        "Select CASE WHEN Max(VoucherNo) is NULL THEN 1 ELSE Max(VoucherNo)+1 END ,Cast(Convert(varchar,Getdate(),106) as Datetime),'" + objModel.objCustomer.FormNo + "','0','" + objModel.objProduct.PayDetails.AmountByWallet + "','Product purchased Against " + UserBillNo + ".','" + billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo + "','M','D','" + SessId + "','" + SessId + "' FROM TrnVoucher";*/
-
                                         query = "Insert EWallet (RegID,InAmt,OutAmt,Dated,Descr,Remarks,TypeOfInc,Thru,PayNo,SessID,RefID)" +
                                         "Select '" + objModel.objCustomer.FormNo + "',0,'" + objModel.objProduct.PayDetails.AmountByWallet + "',Getdate(),'Product purchased Against " + UserBillNo + ".','Invoice','DistInvoice','" + objModel.objCustomer.UserDetails.PartyCode + "','" + SessId + "','','" + billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo + "';";
                                         cmd = new SqlCommand();
                                         cmd.CommandText = query;
                                         cmd.Connection = SC;
+                                        cmd.Transaction = objTrans;                                        
+                                        int ii = cmd.ExecuteNonQuery();
+                                        objTrans.Commit();
+                                        SC.Close();
+
+                                        SC1.Close();
+                                        SC1.Open();
+                                        objTrans = SC1.BeginTransaction();
+                                        query = " INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,Crto,Amount,Narration,Refno,VType,BType,AccDocType,SessID,FSessID) " +
+                                        " Select ISNULL(Max(VoucherNo),0)+1, Cast(Convert(varchar,Getdate(),106) as Datetime),'" + objModel.objCustomer.FormNo + "','" + objModel.objCustomer.UserDetails.PartyCode + "','" + objModel.objProduct.PayDetails.AmountByWallet + "','Wallet credited against bill " + UserBillNo + ".','" + billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo + "','R','O','Distributor Bill.','" + SessId + "','" + FsessId + "' FROM  TrnVoucher;";
+
+                                        cmd = new SqlCommand();
+                                        cmd.CommandText = query;
+                                        cmd.Connection = SC1;
                                         cmd.Transaction = objTrans;
 
 
 
-                                        int i = 1;//cmd.ExecuteNonQuery();
+                                        int i = cmd.ExecuteNonQuery();
 
                                         objTrans.Commit();
-                                        SC.Close();
+                                        SC1.Close();
                                         if (i != 0)
                                         {
                                             EnumPayModes.PayModes enumVar = EnumPayModes.PayModes.Wallet;
@@ -1620,13 +1634,13 @@ namespace InventoryManagement.API.Controllers
                                 if (objModel.objProduct.PayDetails.IsW)
                                 {
 
-
-                                    if (WalletBalance >= objModel.objProduct.PayDetails.AmountByWallet)
+                                    var objectWallet = GetFWalletBalance(objModel.objCustomer.PartyCode);
+                                    if (Convert.ToDecimal(objectWallet.ResponseMessage) >= objModel.objProduct.PayDetails.AmountByWallet)
                                     {
 
-                                        SC.Close();
-                                        SC.Open();
-                                        objTrans = SC.BeginTransaction();
+                                        SC1.Close();
+                                        SC1.Open();
+                                        objTrans = SC1.BeginTransaction();
                                         //query = "INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,Crto,Amount,Narration,Refno,AcType,VType,SessID,WSEssID) " +
                                         //               "Select CASE WHEN Max(VoucherNo) is NULL THEN 1 ELSE Max(VoucherNo)+1 END ,Cast(Convert(varchar,Getdate(),106) as Datetime),'" + objModel.objCustomer.FormNo + "','0','" + objModel.objProduct.PayDetails.AmountByWallet + "','Product purchased Against " + UserBillNo + ".','" + billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo + "','R','D','" + SessId + "','" + SessId + "' FROM TrnVoucher";
                                         query = ";INSERT INTO TrnVoucher(VoucherNo,VoucherDate,DrTo,Crto,Amount,Narration,Refno,VType,BType,AccDocType,SessID,FSessID) " +
@@ -7942,6 +7956,43 @@ namespace InventoryManagement.API.Controllers
                 objResponse.ResponseStatus = "FAILED";
             }
             return objResponse;
+        }
+
+        public ResponseDetail GetFWalletBalance(string LoginPartyCode)
+        {
+            ResponseDetail objresponse = new ResponseDetail();
+            decimal FWalletBalance = 0;
+            try
+            {
+                string InvConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["InventoryServices"].ConnectionString;
+                string db = System.Configuration.ConfigurationManager.AppSettings["Database"];
+                string dbInv = System.Configuration.ConfigurationManager.AppSettings["INVDatabase"];
+                SqlConnection SC = new SqlConnection(InvConnectionString);
+                SqlCommand cmd = new SqlCommand();
+
+                string query = "Select SUM(CrAmt) - Sum(DrAmt) as Balance  FROM(Select SUM(Amount)CrAmt, 0 as DrAmt FROM " + dbInv + "..TrnVoucher WHERE Vtype = 'R' AND  CrTo = '" + LoginPartyCode + "' UNION ALL Select 0, SUM(Amount) DrAmt FROM " + dbInv + "..TrnVoucher WHERE Vtype = 'R' AND  DrTo = '" + LoginPartyCode + "')as a";
+                cmd.CommandText = query;
+                //cmd.Parameters.AddWithValue("@IdNo", IdNo);
+                cmd.Connection = SC;
+                SC.Close();
+                SC.Open();
+
+                using (SqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        FWalletBalance = decimal.Parse(reader["Balance"].ToString());
+                    }
+                }
+                objresponse.ResponseStatus = "OK";
+                objresponse.ResponseMessage = FWalletBalance.ToString();
+            }
+            catch (Exception ex)
+            {
+                objresponse.ResponseStatus = "FAILED";
+                objresponse.ResponseMessage = "0";
+            }
+            return objresponse;
         }
 
 

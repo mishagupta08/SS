@@ -364,5 +364,9 @@ namespace InventoryManagement.DataAccess
         {
             return objTransacAPI.GetFWalletBalance(LoginPartyCode);
         }
-    }        
+        public List<ProdAttributes> GetProductAttibutes(string ProdId)
+        {
+            return objTransacAPI.GetProductAttibutes(ProdId);
+        }
+        }        
 }

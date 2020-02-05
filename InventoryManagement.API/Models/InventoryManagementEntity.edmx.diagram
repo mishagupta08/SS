@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6e03417a89da46cebeda9110b63f6fd5" Name="Diagram1" ZoomLevel="75">
+      <Diagram DiagramId="6e03417a89da46cebeda9110b63f6fd5" Name="Diagram1" ZoomLevel="17">
         <EntitySetMapping Name="V_PartyBalance">
             <EntityTypeMapping TypeName="InventoryModel.V_PartyBalance">
               <MappingFragment StoreEntitySet="V#PartyBalance">
@@ -244,9 +244,12 @@
         <EntityTypeShape EntityType="InventoryModel.V_WebBillDetail" Width="1.5" PointX="28.75" PointY="26.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.VisionOfferProduct" Width="1.5" PointX="26.75" PointY="28.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.VisionOffer" Width="1.5" PointX="28.75" PointY="28.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="InventoryModel.TrnBillData" Width="1.5" PointX="11.993440311399027" PointY="31.855071887306437" />
-        <EntityTypeShape EntityType="InventoryModel.TrnBillDetail" Width="1.5" PointX="0.38735191914595291" PointY="5.4836618478799526" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.TrnSalesReturnDetail" Width="1.5" PointX="8.2598794290143438" PointY="15.962164647859598" />
+        <EntityTypeShape EntityType="InventoryModel.itemcode" Width="1.5" PointX="10.279169947970271" PointY="16.92817802025386" />
+        <EntityTypeShape EntityType="InventoryModel.Prod_attributes" Width="1.5" PointX="6.1239880761709014" PointY="0.33585734681033408" />
+        <EntityTypeShape EntityType="InventoryModel.Prod_attributes_fields" Width="1.5" PointX="1.6285746123774789" PointY="25.005390611014047" />
+        <EntityTypeShape EntityType="InventoryModel.TrnBillData" Width="1.5" PointX="6.0674683330894768" PointY="24.256698589891521" />
+        <EntityTypeShape EntityType="InventoryModel.TrnBillDetail" Width="1.5" PointX="2.779702402083065" PointY="9.7483827964162373" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

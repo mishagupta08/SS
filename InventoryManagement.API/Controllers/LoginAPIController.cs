@@ -57,6 +57,7 @@ namespace InventoryManagement.API.Controllers
             {
                 using (var entity = new InventoryEntities())
                 {
+                    
                     objResponse = (from result in entity.Inv_M_UserMaster
                                    where result.ActiveStatus == "Y" && result.UserName == model.UserName && result.Passw == model.password
                                    join ledger in entity.M_LedgerMaster on result.BranchCode equals ledger.PartyCode

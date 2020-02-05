@@ -347,6 +347,9 @@
     <Compile Include="Models\Inv_TempUserPermissionMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\itemcode.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\KitOffer.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
@@ -639,6 +642,12 @@
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProdVoucher.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Prod_attributes.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Prod_attributes_fields.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\repurchaseproduct.cs">

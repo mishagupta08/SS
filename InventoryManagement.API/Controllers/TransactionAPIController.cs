@@ -672,7 +672,7 @@ namespace InventoryManagement.API.Controllers
                         {
                             IsPendingOrder = false;
                         }
-
+                        
                         foreach (var obj in TempResult)
                         {
                             ProductModel TempObj = new ProductModel();
@@ -729,10 +729,37 @@ namespace InventoryManagement.API.Controllers
                                 //{
                                 //    TempObj.TaxPer = 0;
                                 //}
+                               
+                                
+                            List<ProdItemCodes> objItemCodes = (from r in entity.itemcodes
+                                                                where r.PCode == obj.ProductCodeStr
+                                                                select new ProdItemCodes {
+                                                                    PCode = r.PCode,
+                                                                   ItemCode1 = r.ItemCode1,
+                                                                   Attrib1 = r.Attrib1,
+                                                                   Attrib2 = r.Attrib2,
+                                                                   Attrib3 = r.Attrib3,
+                                                                   Attrib4 = r.Attrib4,
+                                                                    Attrib5 = r.Attrib5,
+                                                                    Attrib6 = r.Attrib6,
+                                                                    Attrib7 = r.Attrib7,
+                                                                    Attrib8 = r.Attrib8,
+                                                                    Attrib9 = r.Attrib9,
+                                                                    Attrib10 = r.Attrib10,
+                                                                    stockAvailable = 0
+                                                               }).ToList();
+
+                                foreach (var code in objItemCodes)
+                                {
+                                    code.stockAvailable = (from stockAvail in entity.Im_CurrentStock
+                                                              where  stockAvail.ItemCode==code.ItemCode1 &&  stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode) 
+                                                              select stockAvail.Qty
+                                                     ).DefaultIfEmpty(0).Sum();
+                                }
+
+                                TempObj.itemCodes = objItemCodes;
                                 objProductModel.Add(TempObj);
                             }
-
-
                         }
                         if (objProductModel.Count > 0)
                         {
@@ -1265,6 +1292,7 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.CType = "M";
                                 objDTBillData.SoldBy = objModel.objCustomer.UserDetails.PartyCode;
                                 SoldByCode = objDTBillData.SoldBy;
+                                objDTBillData.itemcode = obj.itemCode;
                                 objDTBillData.BillBy = objDTBillData.SoldBy;
                                 objDTBillData.BillNo = billPrefix + "/" + objDTBillData.BillBy + "/" + maxSbillNo;
                                 objDTBillData.FType = "M";
@@ -7969,7 +7997,7 @@ namespace InventoryManagement.API.Controllers
                 string dbInv = System.Configuration.ConfigurationManager.AppSettings["INVDatabase"];
                 SqlConnection SC = new SqlConnection(InvConnectionString);
                 SqlCommand cmd = new SqlCommand();
-
+                
                 string query = "Select SUM(CrAmt) - Sum(DrAmt) as Balance  FROM(Select SUM(Amount)CrAmt, 0 as DrAmt FROM " + dbInv + "..TrnVoucher WHERE Vtype = 'R' AND  CrTo = '" + LoginPartyCode + "' UNION ALL Select 0, SUM(Amount) DrAmt FROM " + dbInv + "..TrnVoucher WHERE Vtype = 'R' AND  DrTo = '" + LoginPartyCode + "')as a";
                 cmd.CommandText = query;
                 //cmd.Parameters.AddWithValue("@IdNo", IdNo);
@@ -7993,6 +8021,43 @@ namespace InventoryManagement.API.Controllers
                 objresponse.ResponseMessage = "0";
             }
             return objresponse;
+        }
+
+        public List<ProdAttributes> GetProductAttibutes(string ProdId)
+        {
+            List<ProdAttributes> objprodAttr = new List<ProdAttributes>();
+            try
+            {
+                using (var entities = new InventoryEntities())
+                {
+                    objprodAttr = (from r in entities.Prod_attributes
+                                   where r.Pcode == ProdId
+                                   select new ProdAttributes {
+                                       Pcode = r.Pcode,
+                                       Attribute_Name = r.Attribute_Name,
+                                       PrdAttrId = r.PrdAttrId
+                                   }).ToList();
+
+                    foreach (var attr in objprodAttr)
+                    {
+                        attr.fields = new List<ProdAttributeFields>();
+                        attr.fields = (from r in entities.Prod_attributes_fields
+                                       where r.Attribute_Name == attr.Attribute_Name && r.pcode == ProdId
+                                       select new ProdAttributeFields
+                                       {
+                                           pcode = r.pcode,
+                                           Attribute_Name = r.Attribute_Name,
+                                           Slno = r.Slno,
+                                           Field = r.Field
+                                       }).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                
+            }
+            return objprodAttr;
         }
 
 

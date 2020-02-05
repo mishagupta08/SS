@@ -104,6 +104,8 @@ namespace InventoryManagement.Entity.Common
     }
     public class ProductModel
     {
+        public List<ProdItemCodes> itemCodes { get; set; }
+        public string itemCode { get; set; }
         public string buyerTin { get; set; }
         public decimal CourierId { get; set; }
         public decimal CourierCharges { get; set; }

@@ -279,7 +279,12 @@ namespace InventoryManagement.Controllers
                         {
                             // var appName = app.Key;
                             //    var ProductGrid = [{"AvailStock":"", "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "","BatchNo":"", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": ""}];
-                            if (app.Key == "Code")
+                            
+                            if (app.Key == "itemCode")
+                            {
+                                objTemp.itemCode = (string)app.Value;
+                            }
+                            else if (app.Key == "Code")
                             {
                                 objTemp.ProdCode = (int)app.Value;
                             }
@@ -3530,6 +3535,12 @@ namespace InventoryManagement.Controllers
         public ActionResult GetFWalletBalance(string partyCode)
         {
             return Json(objTransacManager.GetFWalletBalance(partyCode), JsonRequestBehavior.AllowGet);
+        }
+
+        [HttpGet]
+        public ActionResult GetProductAttibutes(string ProdId)
+        {
+            return Json(objTransacManager.GetProductAttibutes(ProdId), JsonRequestBehavior.AllowGet);
         }
     }
 }

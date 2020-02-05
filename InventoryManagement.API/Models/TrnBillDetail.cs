@@ -81,5 +81,6 @@ namespace InventoryManagement.API.Models
         public decimal SGSTAmt { get; set; }
         public string UID { get; set; }
         public decimal FreeQty { get; set; }
+        public string itemcode { get; set; }
     }
 }

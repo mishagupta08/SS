@@ -376,5 +376,9 @@ namespace InventoryManagement.Business
         {
             return objTransacRepo.GetFWalletBalance(LoginPartyCode);
         }
+        public List<ProdAttributes> GetProductAttibutes(string ProdId)
+        {
+            return objTransacRepo.GetProductAttibutes(ProdId);
+        }
     }
 }

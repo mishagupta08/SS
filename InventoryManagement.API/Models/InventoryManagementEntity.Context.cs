@@ -251,9 +251,12 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<V_WebBillDetail> V_WebBillDetail { get; set; }
         public virtual DbSet<VisionOfferProduct> VisionOfferProducts { get; set; }
         public virtual DbSet<VisionOffer> VisionOffers { get; set; }
+        public virtual DbSet<TrnSalesReturnDetail> TrnSalesReturnDetails { get; set; }
+        public virtual DbSet<itemcode> itemcodes { get; set; }
+        public virtual DbSet<Prod_attributes> Prod_attributes { get; set; }
+        public virtual DbSet<Prod_attributes_fields> Prod_attributes_fields { get; set; }
         public virtual DbSet<TrnBillData> TrnBillDatas { get; set; }
         public virtual DbSet<TrnBillDetail> TrnBillDetails { get; set; }
-        public virtual DbSet<TrnSalesReturnDetail> TrnSalesReturnDetails { get; set; }
     
         [DbFunction("InventoryEntities", "MonthWiseSummary")]
         public virtual IQueryable<MonthWiseSummary_Result> MonthWiseSummary(string partyCode, string rptType, string prodType)

@@ -134,6 +134,7 @@
     <Compile Include="Common\UserPermissionMasterModel.cs" />
     <Compile Include="Common\Wallet.cs" />
     <Compile Include="Common\WalletRequest.cs" />
+    <Compile Include="Common\ProdAttributes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <PropertyGroup>

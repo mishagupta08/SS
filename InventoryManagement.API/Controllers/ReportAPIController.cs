@@ -311,6 +311,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                              PartyCode = r.FCode,
                                              PartyName = r.PartyName,
                                              ProductCode = r.ProdID,
+                                             ItemCode=r.ItemCode,
                                              ProductName = r.ProductName,
                                              OpStock =r.OpStock,
                                              InStock =r.InStock,
@@ -321,8 +322,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                              StockOutValue = r.StockOutValue ?? 0,
                                              ClsStockValue = r.ClsStockValue ?? 0
                                          }
-
-                                               ).ToList();
+                                       ).ToList();
 
                     
                    if (ProdCode != 0)
@@ -370,6 +370,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                             PartyCode = reader["PartyCode"].ToString(),
                             PartyName = reader["PartyName"].ToString(),
                             ProductCode = reader["ProdID"].ToString(),
+                            ItemCode = reader["ItemCode"].ToString(),
                             ProductName = reader["ProductName"].ToString(),
                             StockDateStr = reader["StockDateStr"].ToString(),
                             OpStock = Convert.ToDecimal(reader["OpStock"].ToString()),

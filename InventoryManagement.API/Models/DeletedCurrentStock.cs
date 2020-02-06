@@ -42,5 +42,6 @@ namespace InventoryManagement.API.Models
         public decimal DUserId { get; set; }
         public string DReason { get; set; }
         public Nullable<System.DateTime> DRecTimeStamp { get; set; }
+        public string ItemCode { get; set; }
     }
 }

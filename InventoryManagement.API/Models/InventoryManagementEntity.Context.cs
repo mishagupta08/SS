@@ -304,19 +304,6 @@ namespace InventoryManagement.API.Models
             return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<OfferResult_Result1>("[InventoryEntities].[OfferResult](@SessID, @OfferUID)", sessIDParameter, offerUIDParameter);
         }
     
-        public virtual ObjectResult<StockDetail_Result1> StockDetail(Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate)
-        {
-            var fromDateParameter = fromDate.HasValue ?
-                new ObjectParameter("FromDate", fromDate) :
-                new ObjectParameter("FromDate", typeof(System.DateTime));
-    
-            var toDateParameter = toDate.HasValue ?
-                new ObjectParameter("ToDate", toDate) :
-                new ObjectParameter("ToDate", typeof(System.DateTime));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StockDetail_Result1>("StockDetail", fromDateParameter, toDateParameter);
-        }
-    
         public virtual ObjectResult<FranchiseOfferDetail_Result2> FranchiseOfferDetail(string partyCode)
         {
             var partyCodeParameter = partyCode != null ?
@@ -433,24 +420,6 @@ namespace InventoryManagement.API.Models
                 new ObjectParameter("pgtype", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("CreditRequestOnlineInsert_Sp", actionParameter, regidParameter, reqAmtParameter, mopParameter, refnoParameter, invdateParameter, invbankParameter, invbranchParameter, depbankParameter, depbranchParameter, depcityParameter, depdateParameter, depslipParameter, remarksParameter, oRDER_IDParameter, paymentStatusParameter, billStatusParameter, tXNIDParameter, recodeParameter, pgtypeParameter);
-        }
-    
-        [DbFunction("InventoryEntities", "DailyStockDetail")]
-        public virtual IQueryable<DailyStockDetail_Result> DailyStockDetail(Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate, string prodID)
-        {
-            var fromDateParameter = fromDate.HasValue ?
-                new ObjectParameter("FromDate", fromDate) :
-                new ObjectParameter("FromDate", typeof(System.DateTime));
-    
-            var toDateParameter = toDate.HasValue ?
-                new ObjectParameter("ToDate", toDate) :
-                new ObjectParameter("ToDate", typeof(System.DateTime));
-    
-            var prodIDParameter = prodID != null ?
-                new ObjectParameter("ProdID", prodID) :
-                new ObjectParameter("ProdID", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<DailyStockDetail_Result>("[InventoryEntities].[DailyStockDetail](@FromDate, @ToDate, @ProdID)", fromDateParameter, toDateParameter, prodIDParameter);
         }
     
         public virtual int DELETEPARTYORDER(string orderNo, string dReason, Nullable<decimal> dUserId, string dStatus, string prodId, Nullable<int> dFSessId)
@@ -697,6 +666,37 @@ namespace InventoryManagement.API.Models
                 new ObjectParameter("UserID", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_ChangeBillDate", newBillDateParameter, userBillNoParameter, userIDParameter);
+        }
+    
+        [DbFunction("InventoryEntities", "DailyStockDetail")]
+        public virtual IQueryable<DailyStockDetail_Result> DailyStockDetail(Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate, string prodID)
+        {
+            var fromDateParameter = fromDate.HasValue ?
+                new ObjectParameter("FromDate", fromDate) :
+                new ObjectParameter("FromDate", typeof(System.DateTime));
+    
+            var toDateParameter = toDate.HasValue ?
+                new ObjectParameter("ToDate", toDate) :
+                new ObjectParameter("ToDate", typeof(System.DateTime));
+    
+            var prodIDParameter = prodID != null ?
+                new ObjectParameter("ProdID", prodID) :
+                new ObjectParameter("ProdID", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<DailyStockDetail_Result>("[InventoryEntities].[DailyStockDetail](@FromDate, @ToDate, @ProdID)", fromDateParameter, toDateParameter, prodIDParameter);
+        }
+    
+        public virtual ObjectResult<StockDetail_Result> StockDetail(Nullable<System.DateTime> fromDate, Nullable<System.DateTime> toDate)
+        {
+            var fromDateParameter = fromDate.HasValue ?
+                new ObjectParameter("FromDate", fromDate) :
+                new ObjectParameter("FromDate", typeof(System.DateTime));
+    
+            var toDateParameter = toDate.HasValue ?
+                new ObjectParameter("ToDate", toDate) :
+                new ObjectParameter("ToDate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<StockDetail_Result>("StockDetail", fromDateParameter, toDateParameter);
         }
     }
 }

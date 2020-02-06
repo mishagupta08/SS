@@ -16,6 +16,7 @@ namespace InventoryManagement.API.Models
         public string PartyCode { get; set; }
         public string PartyName { get; set; }
         public string ProdID { get; set; }
+        public string ItemCode { get; set; }
         public string ProductName { get; set; }
         public System.DateTime StockDate { get; set; }
         public string StockDateStr { get; set; }

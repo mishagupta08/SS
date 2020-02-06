@@ -719,9 +719,8 @@
                 var Flag = true;
                 var i;
                 for (i = 0; i < ProductGrid.length; i++) {
-                    if (ProductGrid[i].Code == ProductArray.ProdCode) {
+                    if (ProductGrid[i].itemCode == itemCode) {
                         Flag = false;
-
                         break;
                     }
                 }
@@ -3018,7 +3017,7 @@
                                 var selectID = "Attrib" + i;
                                 <div class="col-lg-12" id="@divId" style="display:none;">
                                     <label class="col-lg-4" id=@labelID></label>
-                                     <select id="@selectID">
+                                     <select id="@selectID" >
                                          <option value="">--Select--</option>
                                      </select>
                                 </div>

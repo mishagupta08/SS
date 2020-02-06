@@ -315,7 +315,8 @@
                 tableString += "<th>S.No.</th>";
                 tableString += "<th>Party Code</th>";
                 tableString += "<th>Party Name</th>";
-                tableString += "<th>Product Code</th>";
+            //tableString += "<th>Product Code</th>";
+                tableString += "<th>Item Code</th>";
                 tableString += "<th>Product Name</th>";
                 tableString += "<th>Stock Date</th>";
                 tableString += "<th>Op.Stock</th>";
@@ -332,7 +333,8 @@
                     tableString += "<td>"+StockGrid[i].SNo+"</td>";
                     tableString += "<td>"+StockGrid[i].PartyCode+"</td>";
                     tableString += "<td>" + StockGrid[i].PartyName + "</td>";
-                    tableString += "<td class=formatText>" + StockGrid[i].ProductCode + "</td>";
+                    //tableString += "<td class=formatText>" + StockGrid[i].ProductCode + "</td>";
+                    tableString += "<td class=formatText>" + StockGrid[i].ItemCode + "</td>";
                     tableString += "<td>" + StockGrid[i].ProductName + "</td>";
                     tableString += "<td>" + StockGrid[i].StockDate + "</td>";
                     tableString += "<td>" + StockGrid[i].OpStock + "</td>";
@@ -519,7 +521,7 @@
                     { field: 'SNo', title: 'S.No.',width:50, sortable: true, hidden: false, filterable: false },
                      { field: 'PartyCode', width:60, title: 'Code', sortable: true, hidden: false, filterable: true },
                       { field: 'PartyName', width: 150, title: 'Party Name', sortable: true, hidden: false, filterable: true },                     
-                        { field: 'ProductCode', width: 80, title: 'Prod.Code', sortable: true, hidden: false, filterable: true },
+                        { field: 'ItemCode', width: 80, title: 'Item Code', sortable: true, hidden: false, filterable: true },
                          { field: 'ProductName', width: 150, title: 'Product Name', sortable: true, hidden: false, filterable: true },
                          { field: 'StockDate', width: 90, title: 'Date', sortable: true, hidden: false, filterable: true },
                          { field: 'OpStock', width: 70, title: 'Op.Stock', sortable: true, hidden: false, filterable: true },
@@ -557,7 +559,7 @@
                         for (var i = 0; i < objResult.length; i++) {
                             totalDpVal = totalDpVal + parseFloat(objResult[i].InStockValue);
                             totalMrpVal = totalMrpVal + parseFloat(objResult[i].StockOutValue);
-                            StockGrid.push({ "SNo": i + 1, "StockDate": objResult[i].StockDateStr, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "ProductCode": objResult[i].ProductCode, "ProductName": objResult[i].ProductName, "OpStock": objResult[i].OpStock, "InStock": objResult[i].InStock, "StockOut": objResult[i].StockOut, "ClsStock": objResult[i].ClsStock, "OpStockValue": objResult[i].OpStockValue, "InStockValue": objResult[i].InStockValue, "StockOutValue": objResult[i].StockOutValue, "ClsStockValue": objResult[i].ClsStockValue });
+                            StockGrid.push({ "ItemCode": objResult[i].ItemCode, "SNo": i + 1, "StockDate": objResult[i].StockDateStr, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "ProductCode": objResult[i].ProductCode, "ProductName": objResult[i].ProductName, "OpStock": objResult[i].OpStock, "InStock": objResult[i].InStock, "StockOut": objResult[i].StockOut, "ClsStock": objResult[i].ClsStock, "OpStockValue": objResult[i].OpStockValue, "InStockValue": objResult[i].InStockValue, "StockOutValue": objResult[i].StockOutValue, "ClsStockValue": objResult[i].ClsStockValue });
                         }
                         tableStockGrid = StockGrid;
                         $("#opval").text(totalDpVal);

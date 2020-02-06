@@ -16,6 +16,7 @@ namespace InventoryManagement.API.Models
         public string FCode { get; set; }
         public string PartyName { get; set; }
         public string ProdID { get; set; }
+        public string ItemCode { get; set; }
         public string ProductName { get; set; }
         public decimal DP { get; set; }
         public decimal OpStock { get; set; }

@@ -199,6 +199,7 @@ warning 6002: The table/view 'SrsInv.dbo.DeletedBillDetails' does not have a pri
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="UID" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="FreeQty" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="itemcode" Type="nvarchar" MaxLength="150" />
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="DRecTimeStamp" Type="datetime" />
         </EntityType>
@@ -540,6 +541,7 @@ warning 6002: The table/view 'SrsInv.dbo.DeletedCurrentStock' does not have a pr
           <Property Name="DispQty" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="BillType" Type="char" MaxLength="10" Nullable="false" />
           <Property Name="ProdType" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="1000" />
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="DReason" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="DRecTimeStamp" Type="datetime" />
@@ -7329,7 +7331,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#CurrentStockDetailNotForStockist' doe
             <PropertyRef Name="PartyName" />
             <PropertyRef Name="CatId" />
             <PropertyRef Name="CatName" />
-            <PropertyRef Name="ProdId" />
             <PropertyRef Name="BatchCode" />
             <PropertyRef Name="Barcode" />
             <PropertyRef Name="PurchaseRate" />
@@ -7344,13 +7345,14 @@ warning 6002: The table/view 'SrsInv.dbo.V#CurrentStockDetailNotForStockist' doe
             <PropertyRef Name="NSProdQty" />
             <PropertyRef Name="FreeProdQty" />
             <PropertyRef Name="TotalQty" />
+            <PropertyRef Name="ProdId" />
             <PropertyRef Name="ProductName" />
           </Key>
           <Property Name="PartyCode" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="PartyName" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="CatId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="CatName" Type="varchar" MaxLength="25" Nullable="false" />
-          <Property Name="ProdId" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ProdId" Type="nvarchar" MaxLength="1500" Nullable="false" />
           <Property Name="ProductName" Type="varchar(max)" Nullable="false" />
           <Property Name="BatchCode" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Barcode" Type="varchar" MaxLength="50" Nullable="false" />
@@ -7372,6 +7374,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#CurrentStockDetailNotForStockist' doe
           <Property Name="StockValue" Type="numeric" Precision="18" Scale="2" />
           <Property Name="DPStockValue" Type="numeric" Precision="18" Scale="2" />
           <Property Name="MRPStockValue" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="itemcode" Type="nvarchar" MaxLength="1500" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.V#DeletedSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -8458,6 +8461,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
                 <Property Name="PartyCode" Type="varchar" MaxLength="20" Nullable="false" />
                 <Property Name="PartyName" Type="varchar" MaxLength="100" Nullable="false" />
                 <Property Name="ProdID" Type="varchar" MaxLength="10" Nullable="false" />
+                <Property Name="ItemCode" Type="nvarchar" MaxLength="1000" />
                 <Property Name="ProductName" Type="varchar" MaxLength="100" Nullable="false" />
                 <Property Name="StockDate" Type="datetime" Nullable="false" />
                 <Property Name="StockDateStr" Type="varchar" MaxLength="20" Nullable="false" />
@@ -8992,6 +8996,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [DeletedBillDetails].[SGSTAmt] AS [SGSTAmt], 
     [DeletedBillDetails].[UID] AS [UID], 
     [DeletedBillDetails].[FreeQty] AS [FreeQty], 
+    [DeletedBillDetails].[itemcode] AS [itemcode], 
     [DeletedBillDetails].[DUserId] AS [DUserId], 
     [DeletedBillDetails].[DRecTimeStamp] AS [DRecTimeStamp]
     FROM [dbo].[DeletedBillDetails] AS [DeletedBillDetails]</DefiningQuery>
@@ -9141,6 +9146,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [DeletedCurrentStock].[DispQty] AS [DispQty], 
     [DeletedCurrentStock].[BillType] AS [BillType], 
     [DeletedCurrentStock].[ProdType] AS [ProdType], 
+    [DeletedCurrentStock].[ItemCode] AS [ItemCode], 
     [DeletedCurrentStock].[DUserId] AS [DUserId], 
     [DeletedCurrentStock].[DReason] AS [DReason], 
     [DeletedCurrentStock].[DRecTimeStamp] AS [DRecTimeStamp]
@@ -11053,7 +11059,8 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [V#CurrentStockDetailNotForStockist].[RPValue] AS [RPValue], 
     [V#CurrentStockDetailNotForStockist].[StockValue] AS [StockValue], 
     [V#CurrentStockDetailNotForStockist].[DPStockValue] AS [DPStockValue], 
-    [V#CurrentStockDetailNotForStockist].[MRPStockValue] AS [MRPStockValue]
+    [V#CurrentStockDetailNotForStockist].[MRPStockValue] AS [MRPStockValue], 
+    [V#CurrentStockDetailNotForStockist].[itemcode] AS [itemcode]
     FROM [dbo].[V#CurrentStockDetailNotForStockist] AS [V#CurrentStockDetailNotForStockist]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V#DeletedSaleSummary" EntityType="Self.V#DeletedSaleSummary" store:Type="Views" store:Schema="dbo">
@@ -11677,10 +11684,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
             <Parameter Name="SessID" Mode="In" Type="Int32" />
             <Parameter Name="OfferUID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="StockDetail" ReturnType="Collection(InventoryModel.StockDetail_Result1)">
-            <Parameter Name="FromDate" Mode="In" Type="DateTime" />
-            <Parameter Name="ToDate" Mode="In" Type="DateTime" />
-          </FunctionImport>
           <FunctionImport Name="FranchiseOfferDetail" ReturnType="Collection(InventoryModel.FranchiseOfferDetail_Result2)">
           <Parameter Name="PartyCode" Mode="In" Type="String" />
           </FunctionImport>
@@ -11712,11 +11715,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
             <Parameter Name="TXNID" Mode="In" Type="String" />
             <Parameter Name="Recode" Mode="In" Type="String" />
             <Parameter Name="pgtype" Mode="In" Type="String" />
-          </FunctionImport>
-          <FunctionImport Name="DailyStockDetail" IsComposable="true" ReturnType="Collection(InventoryModel.DailyStockDetail_Result)">
-            <Parameter Name="FromDate" Mode="In" Type="DateTime" />
-            <Parameter Name="ToDate" Mode="In" Type="DateTime" />
-            <Parameter Name="ProdID" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="DELETEPARTYORDER">
             <Parameter Name="OrderNo" Mode="In" Type="String" />
@@ -12019,6 +12017,15 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="Prod_attributes_fields" EntityType="InventoryModel.Prod_attributes_fields" />
           <EntitySet Name="TrnBillDatas" EntityType="InventoryModel.TrnBillData" />
           <EntitySet Name="TrnBillDetails" EntityType="InventoryModel.TrnBillDetail" />
+          <FunctionImport Name="DailyStockDetail" IsComposable="true" ReturnType="Collection(InventoryModel.DailyStockDetail_Result)">
+            <Parameter Name="FromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="ToDate" Mode="In" Type="DateTime" />
+            <Parameter Name="ProdID" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="StockDetail" ReturnType="Collection(InventoryModel.StockDetail_Result)">
+            <Parameter Name="FromDate" Mode="In" Type="DateTime" />
+            <Parameter Name="ToDate" Mode="In" Type="DateTime" />
+          </FunctionImport>
         </EntityContainer>
         <ComplexType Name="MonthWiseSummary_Result">
           <Property Type="String" Name="Mnth" Nullable="false" MaxLength="10" />
@@ -12067,21 +12074,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Type="String" Name="Mnth5" Nullable="false" MaxLength="10" />
           <Property Type="String" Name="Mnth6" Nullable="false" MaxLength="10" />
           <Property Type="String" Name="Status" Nullable="false" MaxLength="100" />
-        </ComplexType>
-        <ComplexType Name="StockDetail_Result">
-          <Property Type="String" Name="FCode" Nullable="false" MaxLength="80" />
-          <Property Type="String" Name="PartyName" Nullable="false" MaxLength="150" />
-          <Property Type="String" Name="ProdID" Nullable="false" MaxLength="50" />
-          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
-          <Property Type="Decimal" Name="DP" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="OpStock" Nullable="false" Precision="38" Scale="2" />
-          <Property Type="Decimal" Name="InStock" Nullable="false" Precision="38" Scale="2" />
-          <Property Type="Decimal" Name="StockOut" Nullable="false" Precision="38" Scale="2" />
-          <Property Type="Decimal" Name="ClsStock" Nullable="false" Precision="38" Scale="2" />
-          <Property Type="Decimal" Name="OpStockValue" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="InStockValue" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="StockOutValue" Nullable="true" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="ClsStockValue" Nullable="true" Precision="18" Scale="2" />
         </ComplexType>
         <ComplexType Name="StockDetail_Result1">
           <Property Type="String" Name="FCode" Nullable="false" MaxLength="80" />
@@ -12181,24 +12173,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Type="Decimal" Name="MonthSaletoDr" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="MonthFrSale" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="MonthDrSale" Nullable="true" Precision="18" Scale="2" />
-        </ComplexType>
-        <ComplexType Name="DailyStockDetail_Result">
-          <Property Type="String" Name="PartyCode" Nullable="false" MaxLength="20" />
-          <Property Type="String" Name="PartyName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="ProdID" Nullable="false" MaxLength="10" />
-          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="100" />
-          <Property Type="DateTime" Name="StockDate" Nullable="false" Precision="23" />
-          <Property Type="String" Name="StockDateStr" Nullable="false" MaxLength="20" />
-          <Property Type="Decimal" Name="OpStock" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="InStock" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="StockOut" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="ClsStock" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="MRP" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="DP" Nullable="false" Precision="18" Scale="2" />
-          <Property Type="Decimal" Name="OpStockValue" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="InStockValue" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="StockOutValue" Nullable="false" Precision="18" Scale="0" />
-          <Property Type="Decimal" Name="ClsStockValue" Nullable="false" Precision="18" Scale="0" />
         </ComplexType>
         <ComplexType Name="Sample_Result">
           <Property Type="Decimal" Name="MID" Nullable="false" Precision="18" Scale="0" />
@@ -15629,6 +15603,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="DUserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="DRecTimeStamp" Type="DateTime" Precision="3" />
           <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="itemcode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="DeletedBillMain">
           <Key>
@@ -15902,6 +15877,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="DUserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="DReason" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="DRecTimeStamp" Type="DateTime" Precision="3" />
+          <Property Name="ItemCode" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="DeletedInwardDetail">
           <Key>
@@ -19135,7 +19111,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="PartyName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="CatId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="CatName" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
-          <Property Name="ProdId" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ProdId" Type="String" Nullable="false" MaxLength="1500" FixedLength="false" Unicode="true" />
           <Property Name="ProductName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="BatchCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Barcode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
@@ -19157,6 +19133,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="StockValue" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="DPStockValue" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="MRPStockValue" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="itemcode" Type="String" MaxLength="1500" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="V_DeletedSaleSummary">
           <Key>
@@ -20551,6 +20528,41 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="itemcode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
         </EntityType>
+        <ComplexType Name="DailyStockDetail_Result">
+          <Property Type="String" Name="PartyCode" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="PartyName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ProdID" Nullable="false" MaxLength="10" />
+          <Property Type="String" Name="ItemCode" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="StockDate" Nullable="false" Precision="23" />
+          <Property Type="String" Name="StockDateStr" Nullable="false" MaxLength="20" />
+          <Property Type="Decimal" Name="OpStock" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="InStock" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="StockOut" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="ClsStock" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="MRP" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="DP" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="OpStockValue" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="InStockValue" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="StockOutValue" Nullable="false" Precision="18" Scale="0" />
+          <Property Type="Decimal" Name="ClsStockValue" Nullable="false" Precision="18" Scale="0" />
+        </ComplexType>
+        <ComplexType Name="StockDetail_Result">
+          <Property Type="String" Name="FCode" Nullable="false" MaxLength="80" />
+          <Property Type="String" Name="PartyName" Nullable="false" MaxLength="150" />
+          <Property Type="String" Name="ProdID" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="ItemCode" Nullable="true" MaxLength="1000" />
+          <Property Type="String" Name="ProductName" Nullable="false" MaxLength="255" />
+          <Property Type="Decimal" Name="DP" Nullable="false" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="OpStock" Nullable="false" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="InStock" Nullable="false" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="StockOut" Nullable="false" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="ClsStock" Nullable="false" Precision="38" Scale="2" />
+          <Property Type="Decimal" Name="OpStockValue" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="InStockValue" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="StockOutValue" Nullable="true" Precision="18" Scale="2" />
+          <Property Type="Decimal" Name="ClsStockValue" Nullable="true" Precision="18" Scale="2" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -20594,25 +20606,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
                 <ScalarProperty Name="Mnth5" ColumnName="Mnth5" />
                 <ScalarProperty Name="Mnth6" ColumnName="Mnth6" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="StockDetail" FunctionName="InventoryModel.Store.StockDetail">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="InventoryModel.StockDetail_Result1">
-                <ScalarProperty Name="FCode" ColumnName="FCode" />
-                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
-                <ScalarProperty Name="ProdID" ColumnName="ProdID" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="DP" ColumnName="DP" />
-                <ScalarProperty Name="OpStock" ColumnName="OpStock" />
-                <ScalarProperty Name="InStock" ColumnName="InStock" />
-                <ScalarProperty Name="StockOut" ColumnName="StockOut" />
-                <ScalarProperty Name="ClsStock" ColumnName="ClsStock" />
-                <ScalarProperty Name="OpStockValue" ColumnName="OpStockValue" />
-                <ScalarProperty Name="InStockValue" ColumnName="InStockValue" />
-                <ScalarProperty Name="StockOutValue" ColumnName="StockOutValue" />
-                <ScalarProperty Name="ClsStockValue" ColumnName="ClsStockValue" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -20675,28 +20668,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="CreditRequestOnlineInsert_Sp" FunctionName="InventoryModel.Store.CreditRequestOnlineInsert_Sp" />
-          <FunctionImportMapping FunctionImportName="DailyStockDetail" FunctionName="InventoryModel.Store.DailyStockDetail">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="InventoryModel.DailyStockDetail_Result">
-                <ScalarProperty Name="PartyCode" ColumnName="PartyCode" />
-                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
-                <ScalarProperty Name="ProdID" ColumnName="ProdID" />
-                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
-                <ScalarProperty Name="StockDate" ColumnName="StockDate" />
-                <ScalarProperty Name="StockDateStr" ColumnName="StockDateStr" />
-                <ScalarProperty Name="OpStock" ColumnName="OpStock" />
-                <ScalarProperty Name="InStock" ColumnName="InStock" />
-                <ScalarProperty Name="StockOut" ColumnName="StockOut" />
-                <ScalarProperty Name="ClsStock" ColumnName="ClsStock" />
-                <ScalarProperty Name="MRP" ColumnName="MRP" />
-                <ScalarProperty Name="DP" ColumnName="DP" />
-                <ScalarProperty Name="OpStockValue" ColumnName="OpStockValue" />
-                <ScalarProperty Name="InStockValue" ColumnName="InStockValue" />
-                <ScalarProperty Name="StockOutValue" ColumnName="StockOutValue" />
-                <ScalarProperty Name="ClsStockValue" ColumnName="ClsStockValue" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="DELETEPARTYORDER" FunctionName="InventoryModel.Store.DELETEPARTYORDER" />
           <FunctionImportMapping FunctionImportName="DispatchOrder" FunctionName="InventoryModel.Store.DispatchOrder" />
           <FunctionImportMapping FunctionImportName="InsertProduct" FunctionName="InventoryModel.Store.InsertProduct" />
@@ -24077,6 +24048,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="DeletedBillDetails">
             <EntityTypeMapping TypeName="InventoryModel.DeletedBillDetail">
               <MappingFragment StoreEntitySet="DeletedBillDetails">
+                <ScalarProperty Name="itemcode" ColumnName="itemcode" />
                 <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
                 <ScalarProperty Name="DRecTimeStamp" ColumnName="DRecTimeStamp" />
                 <ScalarProperty Name="DUserId" ColumnName="DUserId" />
@@ -24272,6 +24244,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="DeletedCurrentStocks">
             <EntityTypeMapping TypeName="InventoryModel.DeletedCurrentStock">
               <MappingFragment StoreEntitySet="DeletedCurrentStock">
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="DRecTimeStamp" ColumnName="DRecTimeStamp" />
                 <ScalarProperty Name="DReason" ColumnName="DReason" />
                 <ScalarProperty Name="DUserId" ColumnName="DUserId" />
@@ -26330,6 +26303,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="V_CurrentStockDetailNotForStockist">
             <EntityTypeMapping TypeName="InventoryModel.V_CurrentStockDetailNotForStockist">
               <MappingFragment StoreEntitySet="V#CurrentStockDetailNotForStockist">
+                <ScalarProperty Name="itemcode" ColumnName="itemcode" />
                 <ScalarProperty Name="MRPStockValue" ColumnName="MRPStockValue" />
                 <ScalarProperty Name="DPStockValue" ColumnName="DPStockValue" />
                 <ScalarProperty Name="StockValue" ColumnName="StockValue" />
@@ -27403,6 +27377,49 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="DailyStockDetail" FunctionName="InventoryModel.Store.DailyStockDetail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="InventoryModel.DailyStockDetail_Result">
+                <ScalarProperty Name="PartyCode" ColumnName="PartyCode" />
+                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
+                <ScalarProperty Name="ProdID" ColumnName="ProdID" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="StockDate" ColumnName="StockDate" />
+                <ScalarProperty Name="StockDateStr" ColumnName="StockDateStr" />
+                <ScalarProperty Name="OpStock" ColumnName="OpStock" />
+                <ScalarProperty Name="InStock" ColumnName="InStock" />
+                <ScalarProperty Name="StockOut" ColumnName="StockOut" />
+                <ScalarProperty Name="ClsStock" ColumnName="ClsStock" />
+                <ScalarProperty Name="MRP" ColumnName="MRP" />
+                <ScalarProperty Name="DP" ColumnName="DP" />
+                <ScalarProperty Name="OpStockValue" ColumnName="OpStockValue" />
+                <ScalarProperty Name="InStockValue" ColumnName="InStockValue" />
+                <ScalarProperty Name="StockOutValue" ColumnName="StockOutValue" />
+                <ScalarProperty Name="ClsStockValue" ColumnName="ClsStockValue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="StockDetail" FunctionName="InventoryModel.Store.StockDetail">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="InventoryModel.StockDetail_Result">
+                <ScalarProperty Name="FCode" ColumnName="FCode" />
+                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
+                <ScalarProperty Name="ProdID" ColumnName="ProdID" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="DP" ColumnName="DP" />
+                <ScalarProperty Name="OpStock" ColumnName="OpStock" />
+                <ScalarProperty Name="InStock" ColumnName="InStock" />
+                <ScalarProperty Name="StockOut" ColumnName="StockOut" />
+                <ScalarProperty Name="ClsStock" ColumnName="ClsStock" />
+                <ScalarProperty Name="OpStockValue" ColumnName="OpStockValue" />
+                <ScalarProperty Name="InStockValue" ColumnName="InStockValue" />
+                <ScalarProperty Name="StockOutValue" ColumnName="StockOutValue" />
+                <ScalarProperty Name="ClsStockValue" ColumnName="ClsStockValue" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

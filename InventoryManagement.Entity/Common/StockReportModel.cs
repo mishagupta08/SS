@@ -14,6 +14,7 @@ namespace InventoryManagement.Entity.Common
         public string CategoryCode { get; set; }
         public decimal CatCode { get; set; }
         public string ProductCode { get; set; }
+        public string ItemCode { get; set; }
         public string ProductName { get; set; }
         public string RateOrDP { get; set; }
         public string MRP { get; set; }

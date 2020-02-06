@@ -40,5 +40,6 @@ namespace InventoryManagement.API.Models
         public Nullable<decimal> StockValue { get; set; }
         public Nullable<decimal> DPStockValue { get; set; }
         public Nullable<decimal> MRPStockValue { get; set; }
+        public string itemcode { get; set; }
     }
 }

@@ -715,7 +715,7 @@
             @*var IsAddDuplicateRecord = '@Model.objConfigDetails.C_AddDuplicateProd';*@
             var IsReplaceRecord = false;
             debugger;
-            if ((ProductArray != null && parseFloat($("#AvailBal").val()) != null) && (tqty > 0) && (tqty <= parseFloat($("#AvailBal").val()) && parseFloat($("#AvailBal").val()) != 0)) {
+            if ((ProductArray != null && parseFloat($("#StockAvailable").val()) != null) && (tqty > 0) && (tqty <= parseFloat($("#StockAvailable").val()) && parseFloat($("#StockAvailable").val()) != 0)) {
                 var Flag = true;
                 var i;
                 for (i = 0; i < ProductGrid.length; i++) {
@@ -833,11 +833,11 @@
 
                 
 
-                if (parseFloat($("#AvailBal").val()) == null || parseFloat($("#AvailBal").val()) == null || parseFloat($("#AvailBal").val()) == 0) {
+                if (parseFloat($("#StockAvailable").val()) == null || parseFloat($("#StockAvailable").val()) == null || parseFloat($("#StockAvailable").val()) == 0) {
                     OpenDialog("dialogMessage", "InSufficient Stock!", "false");
                     $("#" + ToFocuselemement).focus();
                 }
-                else if (tqty > parseFloat($("#AvailBal").val())) {
+                else if (tqty > parseFloat($("#StockAvailable").val())) {
                     OpenDialog("dialogMessage", "Adjust Quantity. Entered Quantity + Free Quantity should be less than available stock", "false");
                     $("#Quantity").focus();
                 }

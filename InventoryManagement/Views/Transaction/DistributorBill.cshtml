@@ -932,6 +932,7 @@
 
             $("#DP").val(0);
             $("#Quantity").val(0);
+            $("#itemCode").val(0);
             $("#StockAvailable").val(0);
             $("#DiscPer").val(0);
             $("#DiscAmt").val(0);
@@ -1309,7 +1310,9 @@
                 dataType: 'JSON',
                 method: 'GET',
                 data: { 'ProdId': ProductCode },
-                success: function (data) {                    
+                success: function (data) {
+                    ProdAttributeList = [];
+                    ProdAttributeFieldList = [];
                     if (data != null && data.length>0) {
                         
 
@@ -1318,12 +1321,12 @@
                                 return e.Pcode != ProductCode;
                             });
                         }
-                        ProdAttributeList = [];
+                        
                         for (var i = 0; i < data.length; i++) {
 
                             ProdAttributeList.push({ "Pcode": data[i].Pcode, "Attribute_Name": data[i].Attribute_Name });
                             
-                            ProdAttributeFieldList = [];
+                            
                             if (ProdAttributeFieldList != null && ProdAttributeFieldList.length > 0) {
                                 ProdAttributeFieldList = $.grep(ProdAttributeFieldList, function (e) {
                                     return e.Pcode != data[i].Pcode && e.Attribute_Name != data[i].Attribute_Name;

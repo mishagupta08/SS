@@ -1392,16 +1392,16 @@
                 var attr9 = $("#Attrib9").val();
                 var attr10 = $("#Attrib10").val();
                 var selectedItem = $.grep(ItemCodes, function (e) {
-                    return e.Attrib1 == attr1
-                        && e.Attrib2 == attr2
-                        && e.Attrib3 == attr3
-                        && e.Attrib4 == attr4
-                        && e.Attrib5 == attr5
-                        && e.Attrib6 == attr6
-                        && e.Attrib7 == attr7
-                        && e.Attrib8 == attr8
-                        && e.Attrib9 == attr9
-                        && e.Attrib10 == attr10                           
+                    return e.Attrib1!=null?e.Attrib1 == attr1:true
+                        && e.Attrib2!=null?e.Attrib2 == attr2:true
+                        && e.Attrib3!=null?e.Attrib3 == attr3:true
+                        && e.Attrib4!=null?e.Attrib4 == attr4:true
+                        && e.Attrib5!=null?e.Attrib5 == attr5:true
+                        && e.Attrib6!=null?e.Attrib6 == attr6:true
+                        && e.Attrib7!=null?e.Attrib7 == attr7:true
+                        && e.Attrib8!=null?e.Attrib8 == attr8:true
+                        && e.Attrib9!=null?e.Attrib9 == attr9:true
+                        && e.Attrib10 != null ? e.Attrib10 == attr10 : true
                 });
                 $("#itemCode").val(selectedItem[0].ItemCode1);
                 $("#StockAvailable").val(selectedItem[0].stockAvailable);

@@ -2424,6 +2424,7 @@ namespace InventoryManagement.API.Controllers
                                                           {
                                                               IdNo = r.FCode,
                                                               Mobileno = r.ReceiverMNo,
+                                                              itemCode = t.itemcode,
                                                               PartyName = r.PartyName,
                                                               ProductCodeStr = t.ProductId,
                                                               ProductName = t.ProductName,

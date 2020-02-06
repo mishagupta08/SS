@@ -1,0 +1,90 @@
+ALTER TRIGGER [dbo].Inv_Repurch  
+   ON  dbo.TrnBillMain    --05:59 PM 2019-08-10
+   With Encryption 
+   AFTER INSERT    
+   AS      
+  DECLARE @LegNo INT
+  DECLARE @FormNo INT
+  DECLARE @NetPayable as Numeric(18,2)
+  DECLARE @BVValue as Numeric(18,2)
+  DECLARE @PVValue as Numeric(18,2)
+  DECLARE @KitAmount as Numeric(18,2)
+  DECLARE @KitID as Numeric(18,0)
+  DECLARE @OrdType as varchar(10)
+  DECLARE @FCode as varchar(20)
+  Declare @BillNo as varchar(20)
+  DECLARE @AStatus as char(1)
+  Declare @OrderNo as varchar(32)
+ BEGIN   
+  BEGIN TRANSACTION   
+   BEGIN TRY  
+   SET @KitID=0
+Declare @BillType varchar(10)
+     SELECT @FormNo=FormNo,@OrdType=OrderType,@FCode=FCode,@NetPayable=NetPayable,@OrderNo=CASE WHEN ISNUMERIC(OrderNo)=1 THEN OrderNo ELSE '0' END,@KitID=LocID,@BillType=BillType,@PVValue=PVValue,@BVValue=BVValue,@BillNo=BillNo,@KitAmount=NetPayable FROM INSERTED
+ 	
+declare @DSessID as numeric      
+Select @DSessID=IsNull(Max(SessID),0) From PhpRoyal..D_SessnMaster --- Daily Session
+  
+declare @SessID as numeric      
+Select @SessID=IsNull(Max(SessID),0) from PhpRoyal..M_SessnMaster --- MonthlySessnMaster      
+      
+declare @MSessID as numeric      
+Select @MSessID=IsNull(Max(SessID),0) from PhpRoyal..M_MonthSessnMaster  --- MstSessnMaster  
+Select @AStatus=ActiveStatus From PhpRoyal..M_MemberMaster where FormNo = @FormNo;
+  
+--Declare @BillCnt as numeric(18,0)
+--Select @BillCnt =Count(*) FROM TrnBillmain WHERE FCode=@FCode
+--Select Top 1 SP,* FROM PhpRoyal..M_MemberMaster
+
+if (@BillType='B')--if (@BillCnt=1 AND @AStatus='N')
+BEGIN
+
+Select Top 1 @KitID=KitID FROM PhpRoyal..M_KitMaster WHERE JoinAmount<=@NetPayable AND MacAdrs='O' ORDER BY JoinAmount DESC
+  if @KitID>1
+   BEGIN
+   SET @BillType='B'
+  Select @BVValue=BV,@KitAmount=KitAmount,@PVValue= PV From PhpRoyal..M_KitMaster WHERE KitID=@KitID --Added on 28Nov17
+    insert into PhpRoyal..pretopup_memDtl (IdNo,FormNo,KitId,CarDNo,RefFormNo,tType)                           
+ Select IDNo,FormNo,KitId,CardNo,RefFormNo,'D' From PhpRoyal..M_membermaster where Formno = @FormNo;                          
+                           
+ Insert Into PhpRoyal..TempMemberMaster                           
+ Select *,'ID Upgrade From Admin Panel',GetDate(),'T' From PhpRoyal..M_MemberMaster Where FormNo= @FormNo;                  
+     
+ update PhpRoyal..m_MemberMaster set kitid = @KitID,ActiveStatus = 'Y',BV=m.BV + @BVValue,PV=m.PV + @PVValue,Rp=m.Rp+a.Rp,Sp=m.Sp+a.SP,BillNo = @BillNo,
+ UpgrdSessid=@SessID,IsTopUp='Y',UpgradeDate = cast(getdate() as date) ,UpgrddSessID=@DSessID
+ from  PhpRoyal..m_MemberMaster m,PhpRoyal..M_KitMaster a                         
+ where m.formno = @FormNo AND a.KitID=@KitID;     --Rp=Rp+@RP,Sp=Sp+@Sp start from 05Apr17 
+         
+ --Select @PVValue= PV FROM PhpRoyal..M_MemberMAster WHERE Formno=@FormNo
+           
+ Insert into PhpRoyal..posttopup_memDtl (IdNo,FormNo,KitId,CarDNo,UpgradeDt,tType,sessid,DsessId,BillNo)                          
+ Select IDNo,FormNo,@KitID ,0,UpgradeDate,'D',@SessID,@DSessID,@BillNo from PhpRoyal..m_membermaster where FormNo = @FormNo;                          
+            
+   END
+END
+--ELSE
+IF NOT EXISTS(Select BillNo from PhpRoyal..RepurchIncome WHERE (BillNo='Order '+ @OrderNo  AND FormNo=@FormNo) OR (BillNo=@BillNo  AND FormNo=@FormNo) )
+BEGIN
+	delete from PhpRoyal..RepurchIncome where BillNo in (Select BillNo from Inserted where FormNo>0 And IsReceive='R' ) and Imported='N'
+	
+	Insert into PhpRoyal..RepurchIncome(SessId,FormNo,BillNo,BillDate,RepurchIncome,Imported,BillType,SoldBy,Msessid,KitID,DSessID,PVValue)    --DSessID Added on 27Feb17
+	Select @SessID,FormNo,BillNo,BillDate,@BVValue as RepurchIncome,'N' as Imported,@BillType,SoldBy,@MSessID,@KitID,Convert(varchar,BillDate,112),@PVValue From Inserted where FormNo>0 And IsReceive='R' 
+END	
+     COMMIT TRANSACTION   
+  END TRY  
+    
+    
+BEGIN CATCH  
+ROLLBACK TRANSACTION   
+  
+DECLARE @errmsg NVARCHAR(4000)  
+DECLARE @errseverity INT  
+DECLARE @errstate INT  
+  
+SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()  
+RAISERROR(@errmsg, @errseverity, @errstate)  
+  
+END CATCH  
+END 
+GO
+-------------------------------

@@ -1,0 +1,73 @@
+
+ALTER Procedure OrderKitProducts (@OrderNo  varchar(50))
+as 
+BEGIN
+Declare @Qty As Numeric(18,0) 
+Declare @ProductID As varchar(20)
+--Declare @OrderNo as varchar(50)
+Declare @KitID as int
+Declare SCur Cursor For
+ Select a.OrderNo,b.ProdID,a.Qty,b.BrandCode From TrnPartyOrderDetail a,M_ProductMaster b WHERE a.ProductCode=b.ProdID
+ AND b.BrandCode>0 AND OrderNo=@OrderNo ORDER By a.OrderID
+
+Open SCur
+Fetch Next From Scur Into @OrderNo,@ProductID,@Qty,@KitID
+
+While @@FETCH_STATUS<>-1
+Begin
+--Declare 
+UPDATE TrnPartyOrderDetail SET Rate=0,Amount=0,TaxAmount=0,OfferUId=@KitID WHERE OrderNo=@OrderNo AND ProductCode=@ProductID
+INSERT TrnPartyOrderDetail(FSessId,OrderNo,SOrderNo,OrderBy,ProductCode,  ProductName,Qty,RemQty,
+Rate,Tax,Amount,TaxAmount,CardStatus,TaxType,OrderTo,Weight,
+MRP,Carton,MonoCarton,NetWeight,DP,DiscPer,UserId,Version,IsKit,ProdType,Discount,BatchNo,Barcode,OfferUId)
+Select M.FSessID,M.OrderNO,M.SOrderNo,M.OrderBy,a.ProdID,b.ProductName,a.Qty*M.Qty,a.Qty*M.Qty,
+(a.MRP-(a.DiscAmt/a.Qty))*100/(100+c.VATTax) as DP,c.VATTax,(a.MRP-(a.DiscAmt/a.Qty))*a.Qty*M.Qty*100/(100+c.VATTax),(a.MRP-(a.DiscAmt/a.Qty))*a.Qty*M.Qty*c.VATTax/(100+c.VATTax),'Y',M.TaxType,M.OrderTo, M.Weight,
+a.MRP,M.Carton,M.MonoCarton,M.NetWeight,a.MRP-(a.DiscAmt/a.Qty),0,M.UserID,M.Version,'Y','F',M.Qty *a.DiscAmt,d.BatchNo,d.Barcode,@KitID 
+FROM VisionRoots..M_KitProductDetail a,M_ProductMaster b,M_TaxMaster c,V#AvailProdStockBarcodes d ,TrnPartyOrderDetail M
+WHERE a.ProdID=d.ProdID AND a.ProdID=c.ProdCode AND a.ProdID=b.Prodid AND a.KitID =@KitID  AND a.RowStatus='Y' AND M.OrderNo=@OrderNo AND M.ProductCode=@ProductID
+
+Fetch Next From Scur Into @OrderNo,@ProductID,@Qty,@KitID
+End
+Close SCur
+Deallocate SCur
+
+UPDATE TrnPartyOrderMain SET TotalOrdQty=b.Qty,TotalAmount=b.TotalAmount,TotalTaxAmt=b.TotalTaxAmt 
+FROM TrnPartyOrderMain a,(Select SUM(Qty) Qty,SUM(Amount) TotalAmount,SUM(TaxAmount) TotalTaxAmt FROM TrnPartyOrderDetail WHERE OrderNo=@OrderNo ) b
+WHERE a.OrderNo=@OrderNo
+END
+----------------------------------------------------
+Create Procedure OrderKitProducts (@OrderNo  varchar(50))
+as 
+BEGIN
+Declare @Qty As Numeric(18,0) 
+Declare @ProductID As varchar(20)
+--Declare @OrderNo as varchar(50)
+Declare @KitID as int
+Declare SCur Cursor For
+ Select a.OrderNo,b.ProdID,a.Qty,b.BrandCode From TrnPartyOrderDetail a,M_ProductMaster b WHERE a.ProductCode=b.ProdID AND b.BrandCode>0 ORDER By a.OrderID
+
+Open SCur
+Fetch Next From Scur Into @OrderNo,@ProductID,@Qty,@KitID
+
+While @@FETCH_STATUS<>-1
+Begin
+--Declare 
+UPDATE TrnPartyOrderDetail SET Rate=0,Amount=0,TaxAmount=0 WHERE OrderNo=@OrderNo AND ProductCode=@ProductID
+INSERT TrnPartyOrderDetail(FSessId,OrderNo,SOrderNo,OrderBy,ProductCode,  ProductName,Qty,RemQty,
+Rate,Tax,Amount,TaxAmount,CardStatus,TaxType,OrderTo,Weight,
+MRP,Carton,MonoCarton,NetWeight,DP,DiscPer,UserId,Version,IsKit,ProdType,Discount,BatchNo,Barcode,OfferUId)
+Select M.FSessID,M.OrderNO,M.SOrderNo,M.OrderBy,M.ProductCode,b.ProductName,a.Qty*M.Qty,a.Qty*M.Qty,
+(a.MRP-(a.DiscAmt/a.Qty))*100/(100+c.VATTax) as DP,c.VATTax,(a.MRP-(a.DiscAmt/a.Qty))*a.Qty*M.Qty*100/(100+c.VATTax),(a.MRP-(a.DiscAmt/a.Qty))*a.Qty*M.Qty*c.VATTax/(100+c.VATTax),'Y',M.TaxType,M.OrderTo, M.Weight,
+a.MRP,M.Carton,M.MonoCarton,M.NetWeight,a.MRP-(a.DiscAmt/a.Qty),0,M.UserID,M.Version,'Y','F',M.Qty *a.DiscAmt,d.BatchNo,d.Barcode,@KitID 
+FROM VisionRoots..M_KitProductDetail a,M_ProductMaster b,M_TaxMaster c,V#AvailProdStockBarcodes d ,TrnPartyOrderDetail M
+WHERE a.ProdID=d.ProdID AND a.ProdID=c.ProdCode AND a.ProdID=b.Prodid AND KitID =@KitID  AND a.RowStatus='Y' AND M.OrderNo=@OrderNo AND M.ProductCode=@ProductID
+
+Fetch Next From Scur Into @OrderNo,@ProductID,@Qty,@KitID
+End
+Close SCur
+Deallocate SCur
+
+UPDATE TrnPartyOrderMain SET TotalOrdQty=b.Qty,TotalAmount=b.TotalAmount,TotalTaxAmt=b.TotalTaxAmt 
+FROM TrnPartyOrderMain a,(Select SUM(Qty) Qty,SUM(Amount) TotalAmount,SUM(TaxAmount) TotalTaxAmt FROM TrnPartyOrderDetail WHERE OrderNo=@OrderNo ) b
+WHERE a.OrderNo=@OrderNo
+END

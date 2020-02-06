@@ -1,0 +1,162 @@
+
+
+ALTER PROCEDURE REJECTORDER --- (If not Rejected then Reject, RefundAmt>0; 03:55 PM 2018-12-26
+       @OrderNo Numeric(18,0),       
+       @DReason Varchar(100),      
+       @DUserId Numeric(18,0),
+       @DeleteOrder char(1)='Y'
+WITH ENCRYPTION --- 
+AS      
+
+DECLARE @RejectionMsg As Varchar(100)
+DECLARE @PrintMsg As VarChar(50)
+Declare @SessID numeric(18,0)
+Declare @MSessID numeric(18,0)
+Declare @MaxVoucher numeric(18,0)
+Declare @RefundAmt numeric(18,0)
+Declare @Formno numeric(18,0)
+Declare @OrderType char(1)
+Declare @CardNo as varchar(20)
+BEGIN
+BEGIN TRY
+BEGIN TRANSACTION 
+-----:
+IF NOT EXISTS(Select OrderNo from PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo AND ActiveStatus<>'Y' )
+BEGIN
+IF @DUserId=0
+   BEGIN
+     SET @DUserId=887 -- DEFAULT USERID: REJECT ORDER
+   END
+
+IF Upper(LTrim(RTrim(@DReason)))=''-- DEFAULT DREASON: REJECT ORDER
+   BEGIN
+     SET @DReason='REASON UNKNOWN' 
+   END 
+  
+
+--- SET DEFAULT VALUE ----
+SET @RejectionMsg='Order has been Rejected on dated: (' + Convert(Varchar,GETDATE(),100) +') By S/w.'
+
+Select @SessID=IsNull(Max(SessID),0) from PhpRoyal..M_SessnMaster  
+Select @MSessID=IsNull(Max(SessID),0) from PhpRoyal..M_MonthSessnMaster  
+Select @MaxVoucher=IsNull(Max(VoucherNo),0)+1 from PhpRoyal..TrnVoucher  
+Select @OrderType=OrderType,@Formno=Formno,@CardNo=CountryName from PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo 
+--- END ---
+
+Declare @BillingBV as numeric(18,2)=0
+Select @BillingBV =ISNULL(SUM(BVValue),0) FROm PhpRoyalInv..TrnBillMain WHERE ORDERNo=Cast(@OrderNo as varchar) --Added ON 22Aug18
+
+if @DeleteOrder='Y'
+Update PhpRoyal..TrnOrder Set IsTransfer='R',IsConfirm='R',ActiveStatus='D',Remark= Remark +' (Deleted: '+  @RejectionMsg +')'  Where OrderNo=@OrderNo 
+
+Update PhpRoyal..TrnOrder Set DispatchStatus='C'  Where OrderNo=@OrderNo 
+Print '1';
+INSERT PhpRoyal..RepurchIncome(SessID,Formno,BillNo,BillDate,Imported,RepurchIncome,BillType,SoldBy,MSessID,DSessID)
+Select @SessID,Formno,BillNo,Cast(Getdate() as Date),'N',-(RepurchIncome-@BillingBV),BillType,SoldBy,@MSessID,Convert(varchar,Getdate() ,112) 
+FROM PhpRoyal..RepurchIncome WHERE BillNo='Order ' +Cast(@OrderNo  as varchar(10))
+
+--INSERT PhpRoyal..RepurchIncome(SessID,Formno,BillNo,BillDate,Imported,RepurchIncome,BillType,SoldBy,MSessID,DSessID)
+--Select @SessID,Formno,BillNo,Cast(Getdate() as Date),'N',-RepurchIncome,BillType,SoldBy,@MSessID,Convert(varchar,Getdate() ,112)FROM PhpRoyal..RepurchIncome WHERE BillNo='Order ' + Cast(@OrderNo  as varchar(10))
+
+----Delete FROM PhpRoyal..TrnVoucher WHERE RefNo='Order ' + Cast(@OrderNo  as varchar(10))
+
+--INSERT INTO PhpRoyal..TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,
+--AcType,VType,SessID,WSessID)
+--Select @MaxVoucher ,Cast(Getdate() as Date),Crto,DrTo,Amount,'Refund against Product Request rejected. Order No. ' + Cast(@OrderNo as varchar(20)) ,'Refund/' + Cast(@OrderNo as varchar(20))  ,
+--AcType,CASE WHEN VType='D' THEN 'C' ELSE 'D' END,Convert(varchar,Getdate(),112),@SessID FROM PhpRoyal..TrnVoucher WHERE RefNo ='Req/' + Cast(@OrderNo as varchar(20)) 
+Declare @BillingAmt as numeric(18,0)
+Declare @RefundedAmt as numeric(18,2)
+Select @BillingAmt=ISNULL(SUM(NetPayable),0) FROM PhpRoyalInv..TrnBillMain WHERE orderNO=Cast(@OrderNo as varchar(20))
+SET @RefundedAmt=@BillingAmt
+Declare @Amt as numeric(18,2)
+Declare @IsRefunded as char(1)
+SET @IsRefunded='N'
+Print '2';
+
+Select @Amt =ISNULL(SUM(Amount),0) FROM PhpRoyal..TrnVoucher WHERE RefNo ='Req/' + Cast(@OrderNo as varchar(20)) AND Actype='M'
+if @Amt>=@RefundedAmt
+BEGIN
+--PRINT '1'
+SET @RefundAmt=@Amt-@RefundedAmt
+;INSERT INTO PhpRoyal..TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) 
+Select @MaxVoucher ,Cast(Getdate() as Date),Crto,DrTo,@RefundAmt,'Refund against Product Request rejected. Order No. ' + Cast(@OrderNo as varchar(20)) ,'Refund/' + Cast(@OrderNo as varchar(20))  ,AcType,
+CASE WHEN VType='D' THEN 'C' ELSE 'D' END,Convert(varchar,Getdate(),112),@SessID FROM PhpRoyal..TrnVoucher WHERE Actype='M' AND RefNo ='Req/' + Cast(@OrderNo as varchar(20)) AND @RefundAmt >0
+SET @IsRefunded='Y'
+END
+ELSE
+BEGIN 
+SET @RefundedAmt=@RefundedAmt-@Amt
+--PRINT '2'
+END
+
+Print '3';
+IF @IsRefunded='Y'----2
+INSERT INTO PhpRoyal..TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) 
+Select @MaxVoucher ,Cast(Getdate() as Date),Crto,DrTo,Amount,'Refund against Product Request rejected. Order No. ' + Cast(@OrderNo as varchar(20)) ,'Refund/' + Cast(@OrderNo as varchar(20))  ,AcType,
+CASE WHEN VType='D' THEN 'C' ELSE 'D' END,Convert(varchar,Getdate(),112),@SessID FROM PhpRoyal..TrnVoucher WHERE Actype in ('S') AND RefNo ='Req/' + Cast(@OrderNo as varchar(20)) 
+ELSE----2
+BEGIN--ELSE[BEGIN]--2
+--PRINT '6'
+Select @Amt =ISNULL(SUM(Amount),0) FROM PhpRoyal..TrnVoucher WHERE RefNo ='Req/' + Cast(@OrderNo as varchar(20)) AND Actype='S'
+if @Amt>=@RefundedAmt
+BEGIN
+SET @RefundAmt=@Amt-@RefundedAmt
+; INSERT INTO PhpRoyal..TrnVoucher(VoucherNo,VoucherDate,DrTo,CrTo,Amount,Narration,RefNo,AcType,VTYpe,SessID,WSessID) 
+Select @MaxVoucher ,Cast(Getdate() as Date),Crto,DrTo,@RefundAmt,'Refund against Product Request rejected. Order No. ' + Cast(@OrderNo as varchar(20)) ,'Refund/' + Cast(@OrderNo as varchar(20))  ,AcType,
+CASE WHEN VType='D' THEN 'C' ELSE 'D' END,Convert(varchar,Getdate(),112),@SessID FROM PhpRoyal..TrnVoucher WHERE Actype='S' AND RefNo ='Req/' + Cast(@OrderNo as varchar(20)) AND @RefundAmt>0
+SET @IsRefunded='Y'
+END
+ELSE
+SET @RefundedAmt=@RefundedAmt-@Amt
+END--ELSE[END]--2
+
+
+
+Declare @KitID_  as numeric(18,0)
+Select @KitID_= ISNULL(KitId,0) from PhpRoyal..M_KitMaster WHERE KitName in (Select KitName FROM PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo )
+
+  if (Upper(LTrim(RTrim(@OrderType)))='T' ) 
+     BEGIN
+
+     Delete from PhpRoyal..pretopup_memDtl WHERE tmpID=(Select ISNULL(Max(tmpID),0) from PhpRoyal..pretopup_memDtl WHERE Formno=@Formno)
+     UPDATE PhpRoyal..M_MemberMaster SET kitid = b.KitID,ActiveStatus = b.ActiveStatus,BV=b.BV ,Rp=b.Rp,Sp=b.Sp,IsTopUp = b.IsTopUp ,BillNo = b.BillNo,
+     UpgrdSessid=b.UpgrdSessid,UpgradeDate = b.UpgradeDate,UpgrdDSessid=b.UpgrdDSessid
+     FROM PhpRoyal..M_MemberMaster a, (Select Top 1 * FROM PhpRoyal..TempMemberMaster WHERE Ctype='T' AND FormNo=@FormNO AND KitID<>@KitID_ ORDER BY AID Desc) b
+     WHERE a.FormNo=@FormNO 
+    
+   Select @KitID_=KitID  FROM PhpRoyal..posttopup_memDtl WHERE FormNo=@FormNO --AND CardNo=Cast(@CardNo as varchar(20))
+     --Delete FROM PhpRoyal..posttopup_memDtl WHERE FormNo=@FormNO AND CardNo=Cast(@CardNo as varchar(20))   
+       Delete from PhpRoyal..posttopup_memDtl WHERE tmpID=(Select ISNULL(Max(tmpID),0) from PhpRoyal..posttopup_memDtl WHERE Formno=@Formno)
+             
+ -- UPDATE PhpRoyal..MultiTopup SET Package2='',Kit2=0 WHERE Kit2=@KitID_ AND formno = @FormNo;                                                
+             
+  --UPDATE PhpRoyal..MultiTopup SET Package3='',Kit3=0 WHERE Kit3=@KitID_ AND formno = @FormNo;             
+           
+  --UPDATE PhpRoyal..MultiTopup SET Package4='',Kit4=0 WHERE Kit4=@KitID_ AND formno = @FormNo;             
+          
+  --UPDATE PhpRoyal..MultiTopup SET Package5='',Kit5=0 WHERE Kit5=@KitID_ AND formno = @FormNo;            
+ 
+    END
+
+if @CardNo<>''
+
+UPDATE PhpRoyal..M_FormGeneration SET UsedBy='0',UsedDate=NULL,IsTopUp='N',IsIssued='N',SoldTo=SoldTo + '; Refunded' WHERE Cast(Formno as varchar(10))=@CardNo
+
+END
+-----:
+COMMIT TRANSACTION
+--PRINT @PrintMsg
+END TRY
+
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION 
+  DECLARE @errmsg NVARCHAR(4000)
+  DECLARE @errseverity INT
+  DECLARE @errstate INT
+  SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+  SET @errmsg= @errmsg + ' ' + @PrintMsg
+  RAISERROR(@errmsg , @errseverity, @errstate)
+END CATCH
+END
+-------------------------

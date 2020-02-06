@@ -1,0 +1,442 @@
+ALTER TRIGGER Inv_Gen_SI
+ON TrnBillData --02:02 PM 2020-02-05 Added value to itemcode
+With Encryption --- 
+AFTER INSERT
+AS
+
+ BEGIN 
+ 
+ BEGIN TRANSACTION 
+  BEGIN TRY
+
+
+DECLARE @BillNo as varchar(50)
+DECLARE @OrderNo as varchar(50)
+DECLARE @SoldBy as varchar(50)
+DECLARE @SessId as INT
+DECLARE @FSessId as INT
+DECLARE @ActiveStatus as Char(1)
+DECLARE @TRGFireStatus as Char(1)
+
+SELECT @BillNo=BillNo,@FSessId=FSessId,@ActiveStatus=ActiveStatus,@TRGFireStatus=IsNull(IsCredit,''),@OrderNo=OrderNo,@SoldBy=SoldBy FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 15May14@04:03PM,Thursday
+SET @SessId=1
+IF UPPER(@TRGFireStatus)='F'
+  BEGIN 
+  
+--- DELETE IF Already Exists ---
+IF Exists(SELECT * FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y')
+  BEGIN
+   DELETE FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y'
+  END
+  
+IF Exists(SELECT * FROM TrnBillDetails WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y')
+  BEGIN
+    DELETE FROM TrnBillDetails WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y'
+  END
+--- END ---
+
+Declare @IGST numeric(18,2)
+Declare @SGST numeric(18,2)
+Declare @CGST numeric(18,2)
+Select @IGST=SUM(TaxAmount),@SGST=SUM(SGSTAmt),@CGST=SUM(CGSTAmt) FROM TrnBillData WHERE  BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' 
+--- Insert Record Into TrnBillMain Table -----  Add: UserSBillNo,UserBillNo on Dated: 19Nov13@08:58PM,Tuesday
+INSERT INTO TrnBillMain(FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
+FormNo,TaxAmount,STaxAmount,Discount,KitBvValue,BvValue,CvValue,PvValue,RPValue,CashDiscPer,CashDiscAmount,NetPayable,Amount,RndOff,CardAmount,PayMode,PayPrefix,SessId,
+BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightType,
+FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
+DiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
+RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,CGSTAmt,DocketNo)-- Add: (BuyerTIN - 03Mar15@07:29PM,Tue)..(BuyerAddress - 30Jan15@02:51PM,Fri)..(,TotalCorton,TotalMonoCorton - 23May14@03:22PM,Friday)...(UId-02Jan14@06:19PM,Thursday)...(STNFormNo,StkRecv,StkRecvDate,StkRecvUserId,InTransit)-28Nov13@03:23P,Thursday ...(OrderType)-09Nov13@12:46PM....(,OrderNo,OrderDate)..(16Oct13)... (LocId,LocName,Pincode,CourierId,CourierName)Dtd: 01Oct13...(,IDType,BranchName)On Dated: 26Sep13,Thursday ....DelvPlace,PaymentDtl 28Jun13,Friday
+SELECT TOP 1 FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
+FormNo,@IGST,@SGST,TotalDiscount,TotalKitBvValue,TotalBvValue,TotalCvValue,TotalPvValue,TotalRPValue
+,CashDiscPer,CashDiscAmount,NetPayable,TotalAmount,RndOff,CardAmount,PayMode,PayPrefix,@SessId,
+BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightType,
+FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
+TotalDiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
+RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,@CGST,DocketNo FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+--- END ---
+
+--- Update User Bill No (If It found Blank)----- 19Nov13@09:23PM,Tuesday
+Update TrnBillData SET UserBillNo=BillNo Where BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' And UserBillNo=''
+Update TrnBillMain SET UserBillNo=BillNo Where BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' And UserBillNo=''
+---- END ----
+
+--- Insert Record Into TrnBillDetails Table ----- 
+INSERT INTO TrnBillDetails
+(FSessId,SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
+Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
+TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID,FreeQty,itemcode)-- Add: (VAT-24Dec14@04:30PM,Wed)..(SpclOfferId - 25Aug14@12:27PM,Monday)...(Two - ,IsKit,ProdType (08Mar14)...Three New Clms (,OrdStatus,OrdQty,RemQty,DP1) : 26Sep13
+
+SELECT FSessId,@SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
+Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
+TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID,ISNULL(FreeQty,0),itemcode FROM TrnBillData WHERE BillNo Not In(
+Select Distinct BillNo From TrnBillDetails) AND ActiveStatus='Y' --- Add: AND ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+--CmtDt: 30Apr14@12:40PM,Wednesday For Resolve the Product Insert Sequence... INSERTED
+--- END ---
+
+
+--****** Credit against free Product****
+IF EXISTS(Select BillNo FROM TrnBillDetails WHERE BillNo=@BillNo AND @SoldBy<>'WR' AND (ProdType='F' OR FreeQty>0) )
+
+BEGIN
+Declare @TVoucherID as int=0
+Declare @FreeProdValue as numeric(18,2)=0
+Select @FreeProdValue=Cast(ISNULL(SUM(CASE WHEN a.ProdType='F' THEN a.Qty ELSE ISNULL(a.FreeQty,0) END*b.DP),0) as numeric(18,2))  FROM TrnBillDetails a,M_ProductMaster b
+WHERE a.ProductID=b.ProdID AND a.BillNo=@BillNo
+
+Select @TVoucherID=ISNULL(Max(VoucherNo),0)+1 FROM TrnVoucher
+Delete FROM TrnVoucher WHERE RefNo=@BillNo AND AccTransKey='BGC_Amt'
+INSERT INTO  TrnVoucher(FSessId,VoucherNo,VoucherDate,DepoCode,
+DrTo,CrTo,Amount,Narration,RefNo,BType,
+AccDocNo,AccDocType,AccDocDate,AccRemark,AccParentKey,
+AccCompany,AccTransKey,ActiveStatus,RecTimeStamp,UserId,
+UserName,Version,VType,SessID)
+Select b.FSessID,@TVoucherID,Cast(Getdate() as Date),b.SoldBy,
+'',b.SoldBy, @FreeProdValue,'Wallet credited against Free Product in ' + UserBillNo+'.',b.BillNo,'O',
+0,'Bill Generated',Getdate(),'','',
+'','BGC_Amt','Y',Getdate(),b.UserID,
+b.Username,b.Version,'R',b.SessID FROM TrnBillmain b
+WHERE BillNo=@BillNo  AND @FreeProdValue>0
+END
+--****** Credit against free Product ****
+
+
+  END -- TRGFire Closing
+
+     COMMIT TRANSACTION 
+  END TRY
+  
+  
+BEGIN CATCH
+ROLLBACK TRANSACTION 
+
+DECLARE @errmsg NVARCHAR(4000)
+DECLARE @errseverity INT
+DECLARE @errstate INT
+
+SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+RAISERROR(@errmsg, @errseverity, @errstate)
+
+END CATCH
+END
+GO
+---------------------------------------------------------------------------
+ALTER TRIGGER Inv_Gen_SI
+ON TrnBillData --02:02 PM 2020-01-23 Added wallet credit against freeProduct
+With Encryption --- 
+AFTER INSERT
+AS
+
+ BEGIN 
+ 
+ BEGIN TRANSACTION 
+  BEGIN TRY
+
+
+DECLARE @BillNo as varchar(50)
+DECLARE @OrderNo as varchar(50)
+DECLARE @SoldBy as varchar(50)
+DECLARE @SessId as INT
+DECLARE @FSessId as INT
+DECLARE @ActiveStatus as Char(1)
+DECLARE @TRGFireStatus as Char(1)
+
+SELECT @BillNo=BillNo,@FSessId=FSessId,@ActiveStatus=ActiveStatus,@TRGFireStatus=IsNull(IsCredit,''),@OrderNo=OrderNo,@SoldBy=SoldBy FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 15May14@04:03PM,Thursday
+SET @SessId=1
+IF UPPER(@TRGFireStatus)='F'
+  BEGIN 
+  
+--- DELETE IF Already Exists ---
+IF Exists(SELECT * FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y')
+  BEGIN
+   DELETE FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y'
+  END
+  
+IF Exists(SELECT * FROM TrnBillDetails WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y')
+  BEGIN
+    DELETE FROM TrnBillDetails WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y'
+  END
+--- END ---
+
+Declare @IGST numeric(18,2)
+Declare @SGST numeric(18,2)
+Declare @CGST numeric(18,2)
+Select @IGST=SUM(TaxAmount),@SGST=SUM(SGSTAmt),@CGST=SUM(CGSTAmt) FROM TrnBillData WHERE  BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' 
+--- Insert Record Into TrnBillMain Table -----  Add: UserSBillNo,UserBillNo on Dated: 19Nov13@08:58PM,Tuesday
+INSERT INTO TrnBillMain(FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
+FormNo,TaxAmount,STaxAmount,Discount,KitBvValue,BvValue,CvValue,PvValue,RPValue,CashDiscPer,CashDiscAmount,NetPayable,Amount,RndOff,CardAmount,PayMode,PayPrefix,SessId,
+BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightType,
+FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
+DiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
+RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,CGSTAmt,DocketNo)-- Add: (BuyerTIN - 03Mar15@07:29PM,Tue)..(BuyerAddress - 30Jan15@02:51PM,Fri)..(,TotalCorton,TotalMonoCorton - 23May14@03:22PM,Friday)...(UId-02Jan14@06:19PM,Thursday)...(STNFormNo,StkRecv,StkRecvDate,StkRecvUserId,InTransit)-28Nov13@03:23P,Thursday ...(OrderType)-09Nov13@12:46PM....(,OrderNo,OrderDate)..(16Oct13)... (LocId,LocName,Pincode,CourierId,CourierName)Dtd: 01Oct13...(,IDType,BranchName)On Dated: 26Sep13,Thursday ....DelvPlace,PaymentDtl 28Jun13,Friday
+SELECT TOP 1 FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
+FormNo,@IGST,@SGST,TotalDiscount,TotalKitBvValue,TotalBvValue,TotalCvValue,TotalPvValue,TotalRPValue
+,CashDiscPer,CashDiscAmount,NetPayable,TotalAmount,RndOff,CardAmount,PayMode,PayPrefix,@SessId,
+BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightType,
+FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
+TotalDiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
+RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,@CGST,DocketNo FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+--- END ---
+
+--- Update User Bill No (If It found Blank)----- 19Nov13@09:23PM,Tuesday
+Update TrnBillData SET UserBillNo=BillNo Where BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' And UserBillNo=''
+Update TrnBillMain SET UserBillNo=BillNo Where BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' And UserBillNo=''
+---- END ----
+
+--- Insert Record Into TrnBillDetails Table ----- 
+INSERT INTO TrnBillDetails
+(FSessId,SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
+Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
+TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID,FreeQty)-- Add: (VAT-24Dec14@04:30PM,Wed)..(SpclOfferId - 25Aug14@12:27PM,Monday)...(Two - ,IsKit,ProdType (08Mar14)...Three New Clms (,OrdStatus,OrdQty,RemQty,DP1) : 26Sep13
+SELECT FSessId,@SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
+Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
+TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID,ISNULL(FreeQty,0) FROM TrnBillData WHERE BillNo Not In(
+Select Distinct BillNo From TrnBillDetails) AND ActiveStatus='Y' --- Add: AND ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+--CmtDt: 30Apr14@12:40PM,Wednesday For Resolve the Product Insert Sequence... INSERTED
+--- END ---
+
+
+--****** Credit against free Product****
+IF EXISTS(Select BillNo FROM TrnBillDetails WHERE BillNo=@BillNo AND @SoldBy<>'WR' AND (ProdType='F' OR FreeQty>0) )
+
+BEGIN
+Declare @TVoucherID as int=0
+Declare @FreeProdValue as numeric(18,2)=0
+Select @FreeProdValue=Cast(ISNULL(SUM(CASE WHEN a.ProdType='F' THEN a.Qty ELSE ISNULL(a.FreeQty,0) END*b.DP),0) as numeric(18,2))  FROM TrnBillDetails a,M_ProductMaster b
+WHERE a.ProductID=b.ProdID AND a.BillNo=@BillNo
+
+Select @TVoucherID=ISNULL(Max(VoucherNo),0)+1 FROM TrnVoucher
+Delete FROM TrnVoucher WHERE RefNo=@BillNo AND AccTransKey='BGC_Amt'
+INSERT INTO  TrnVoucher(FSessId,VoucherNo,VoucherDate,DepoCode,
+DrTo,CrTo,Amount,Narration,RefNo,BType,
+AccDocNo,AccDocType,AccDocDate,AccRemark,AccParentKey,
+AccCompany,AccTransKey,ActiveStatus,RecTimeStamp,UserId,
+UserName,Version,VType,SessID)
+Select b.FSessID,@TVoucherID,Cast(Getdate() as Date),b.SoldBy,
+'',b.SoldBy, @FreeProdValue,'Wallet credited against Free Product in ' + UserBillNo+'.',b.BillNo,'O',
+0,'Bill Generated',Getdate(),'','',
+'','BGC_Amt','Y',Getdate(),b.UserID,
+b.Username,b.Version,'R',b.SessID FROM TrnBillmain b
+WHERE BillNo=@BillNo  AND @FreeProdValue>0
+END
+--****** Credit against free Product ****
+
+
+  END -- TRGFire Closing
+
+     COMMIT TRANSACTION 
+  END TRY
+  
+  
+BEGIN CATCH
+ROLLBACK TRANSACTION 
+
+DECLARE @errmsg NVARCHAR(4000)
+DECLARE @errseverity INT
+DECLARE @errstate INT
+
+SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+RAISERROR(@errmsg, @errseverity, @errstate)
+
+END CATCH
+END
+GO
+------------------------------
+ALTER TRIGGER Inv_Gen_SI
+ON TrnBillData --02:02 PM 2018-11-24 UID Added in TrnBillDetails
+With Encryption --- 
+AFTER INSERT
+AS
+
+ BEGIN 
+ 
+ BEGIN TRANSACTION 
+  BEGIN TRY
+
+
+DECLARE @BillNo as varchar(50)
+DECLARE @SessId as INT
+DECLARE @FSessId as INT
+DECLARE @ActiveStatus as Char(1)
+DECLARE @TRGFireStatus as Char(1)
+
+SELECT @BillNo=BillNo,@FSessId=FSessId,@ActiveStatus=ActiveStatus,@TRGFireStatus=IsNull(IsCredit,'') FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 15May14@04:03PM,Thursday
+--Select @SessId=Max(SessID)FROM PhpRoyal..M_SessnMaster
+SET @SessId=1
+IF UPPER(@TRGFireStatus)='F'
+  BEGIN 
+  
+--- DELETE IF Already Exists ---
+IF Exists(SELECT * FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y')
+  BEGIN
+   DELETE FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y'
+  END
+  
+IF Exists(SELECT * FROM TrnBillDetails WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y')
+  BEGIN
+    DELETE FROM TrnBillDetails WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y'
+  END
+--- END ---
+
+Declare @IGST numeric(18,2)
+Declare @SGST numeric(18,2)
+Declare @CGST numeric(18,2)
+Select @IGST=SUM(TaxAmount),@SGST=SUM(SGSTAmt),@CGST=SUM(CGSTAmt) FROM TrnBillData WHERE  BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' 
+--- Insert Record Into TrnBillMain Table -----  Add: UserSBillNo,UserBillNo on Dated: 19Nov13@08:58PM,Tuesday
+INSERT INTO TrnBillMain(FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
+FormNo,TaxAmount,STaxAmount,Discount,KitBvValue,BvValue,CvValue,PvValue,RPValue,CashDiscPer,CashDiscAmount,NetPayable,Amount,RndOff,CardAmount,PayMode,PayPrefix,SessId,
+BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightType,
+FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
+DiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
+RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,CGSTAmt,DocketNo)-- Add: (BuyerTIN - 03Mar15@07:29PM,Tue)..(BuyerAddress - 30Jan15@02:51PM,Fri)..(,TotalCorton,TotalMonoCorton - 23May14@03:22PM,Friday)...(UId-02Jan14@06:19PM,Thursday)...(STNFormNo,StkRecv,StkRecvDate,StkRecvUserId,InTransit)-28Nov13@03:23P,Thursday ...(OrderType)-09Nov13@12:46PM....(,OrderNo,OrderDate)..(16Oct13)... (LocId,LocName,Pincode,CourierId,CourierName)Dtd: 01Oct13...(,IDType,BranchName)On Dated: 26Sep13,Thursday ....DelvPlace,PaymentDtl 28Jun13,Friday
+SELECT TOP 1 FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
+FormNo,@IGST,@SGST,TotalDiscount,TotalKitBvValue,TotalBvValue,TotalCvValue,TotalPvValue,TotalRPValue
+,CashDiscPer,CashDiscAmount,NetPayable,TotalAmount,RndOff,CardAmount,PayMode,PayPrefix,@SessId,
+BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightType,
+FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
+TotalDiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
+RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,@CGST,DocketNo FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+--- END ---
+
+--- Update User Bill No (If It found Blank)----- 19Nov13@09:23PM,Tuesday
+Update TrnBillData SET UserBillNo=BillNo Where BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' And UserBillNo=''
+Update TrnBillMain SET UserBillNo=BillNo Where BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' And UserBillNo=''
+---- END ----
+
+--- Insert Record Into TrnBillDetails Table ----- 
+INSERT INTO TrnBillDetails
+(FSessId,SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
+Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
+TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID)-- Add: (VAT-24Dec14@04:30PM,Wed)..(SpclOfferId - 25Aug14@12:27PM,Monday)...(Two - ,IsKit,ProdType (08Mar14)...Three New Clms (,OrdStatus,OrdQty,RemQty,DP1) : 26Sep13
+SELECT FSessId,@SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
+Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
+TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID FROM TrnBillData WHERE BillNo Not In(
+Select Distinct BillNo From TrnBillDetails) AND ActiveStatus='Y' --- Add: AND ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+--CmtDt: 30Apr14@12:40PM,Wednesday For Resolve the Product Insert Sequence... INSERTED
+--- END ---
+  END -- TRGFire Closing
+
+     COMMIT TRANSACTION 
+  END TRY
+  
+  
+BEGIN CATCH
+ROLLBACK TRANSACTION 
+
+DECLARE @errmsg NVARCHAR(4000)
+DECLARE @errseverity INT
+DECLARE @errstate INT
+
+SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+RAISERROR(@errmsg, @errseverity, @errstate)
+
+END CATCH
+END
+GO
+---------------------------
+
+ALTER TRIGGER Inv_Gen_SI
+ON TrnBillData --02:02 PM 2018-11-24 UID Added in TrnBillDetails
+With Encryption --- 
+AFTER INSERT
+AS
+
+ BEGIN 
+ 
+ BEGIN TRANSACTION 
+  BEGIN TRY
+
+
+DECLARE @BillNo as varchar(50)
+DECLARE @SessId as INT
+DECLARE @FSessId as INT
+DECLARE @ActiveStatus as Char(1)
+DECLARE @TRGFireStatus as Char(1)
+
+SELECT @BillNo=BillNo,@FSessId=FSessId,@ActiveStatus=ActiveStatus,@TRGFireStatus=IsNull(IsCredit,'') FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 15May14@04:03PM,Thursday
+Select @SessId=Max(SessID)FROM PhpRoyal..M_SessnMaster
+IF UPPER(@TRGFireStatus)='F'
+  BEGIN 
+  
+--- DELETE IF Already Exists ---
+IF Exists(SELECT * FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y')
+  BEGIN
+   DELETE FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y'
+  END
+  
+IF Exists(SELECT * FROM TrnBillDetails WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y')
+  BEGIN
+    DELETE FROM TrnBillDetails WHERE BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y'
+  END
+--- END ---
+
+Declare @IGST numeric(18,2)
+Declare @SGST numeric(18,2)
+Declare @CGST numeric(18,2)
+Select @IGST=SUM(TaxAmount),@SGST=SUM(SGSTAmt),@CGST=SUM(CGSTAmt) FROM TrnBillData WHERE  BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' 
+--- Insert Record Into TrnBillMain Table -----  Add: UserSBillNo,UserBillNo on Dated: 19Nov13@08:58PM,Tuesday
+INSERT INTO TrnBillMain(FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
+FormNo,TaxAmount,STaxAmount,Discount,KitBvValue,BvValue,CvValue,PvValue,RPValue,CashDiscPer,CashDiscAmount,NetPayable,Amount,RndOff,CardAmount,PayMode,PayPrefix,SessId,
+BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightType,
+FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
+DiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
+RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,CGSTAmt,DocketNo)-- Add: (BuyerTIN - 03Mar15@07:29PM,Tue)..(BuyerAddress - 30Jan15@02:51PM,Fri)..(,TotalCorton,TotalMonoCorton - 23May14@03:22PM,Friday)...(UId-02Jan14@06:19PM,Thursday)...(STNFormNo,StkRecv,StkRecvDate,StkRecvUserId,InTransit)-28Nov13@03:23P,Thursday ...(OrderType)-09Nov13@12:46PM....(,OrderNo,OrderDate)..(16Oct13)... (LocId,LocName,Pincode,CourierId,CourierName)Dtd: 01Oct13...(,IDType,BranchName)On Dated: 26Sep13,Thursday ....DelvPlace,PaymentDtl 28Jun13,Friday
+SELECT TOP 1 FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
+FormNo,@IGST,@SGST,TotalDiscount,TotalKitBvValue,TotalBvValue,TotalCvValue,TotalPvValue,TotalRPValue
+,CashDiscPer,CashDiscAmount,NetPayable,TotalAmount,RndOff,CardAmount,PayMode,PayPrefix,@SessId,
+BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightType,
+FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
+TotalDiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
+RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,@CGST,DocketNo FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+--- END ---
+
+--- Update User Bill No (If It found Blank)----- 19Nov13@09:23PM,Tuesday
+Update TrnBillData SET UserBillNo=BillNo Where BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' And UserBillNo=''
+Update TrnBillMain SET UserBillNo=BillNo Where BillNo=@BillNo And FSessId=@FSessId And ActiveStatus='Y' And UserBillNo=''
+---- END ----
+
+--- Insert Record Into TrnBillDetails Table ----- 
+INSERT INTO TrnBillDetails
+(FSessId,SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
+Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
+TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID)-- Add: (VAT-24Dec14@04:30PM,Wed)..(SpclOfferId - 25Aug14@12:27PM,Monday)...(Two - ,IsKit,ProdType (08Mar14)...Three New Clms (,OrdStatus,OrdQty,RemQty,DP1) : 26Sep13
+SELECT FSessId,@SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
+Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
+TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID FROM TrnBillData WHERE BillNo Not In(
+Select Distinct BillNo From TrnBillDetails) AND ActiveStatus='Y' --- Add: AND ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+--CmtDt: 30Apr14@12:40PM,Wednesday For Resolve the Product Insert Sequence... INSERTED
+--- END ---
+  END -- TRGFire Closing
+
+     COMMIT TRANSACTION 
+  END TRY
+  
+  
+BEGIN CATCH
+ROLLBACK TRANSACTION 
+
+DECLARE @errmsg NVARCHAR(4000)
+DECLARE @errseverity INT
+DECLARE @errstate INT
+
+SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+RAISERROR(@errmsg, @errseverity, @errstate)
+
+END CATCH
+END
+GO

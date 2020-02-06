@@ -1,0 +1,140 @@
+
+--INSERT [M_MainMCatMaster] (MCatID,MCatName)
+--Select 1,'Men' UNION ALL 
+--Select 2,'Women' UNION ALL 
+--Select 3,'Home Decor' UNION ALL 
+--Select 4,'Personal Care' UNION ALL 
+--Select 5,'Health Care' UNION ALL 
+--Select 6,'SWADHARMA' 
+
+--UPDATE M_MainMCatMaster SET WebSequence=MCatID
+
+
+Insert M_CatMaster(CatID,CatName,CatDescription,ActiveStatus,LastModified)
+Select '101','Ayurveda','Health Care > Energy Powder','Y','5' UNION ALL
+Select '102','Energy Powder','Health Care > Health Juices','Y','5' UNION ALL
+Select '103','Health Juices','Health Care > Decor','Y','5' UNION ALL
+Select '104','Decor','Home Decor > Gift Items','Y','3' UNION ALL
+Select '105','Gift Items','Home Decor > Go Spiritual','Y','3' UNION ALL
+Select '106','Go Spiritual','Home Decor > Stationery','Y','3' UNION ALL
+Select '107','Stationery','Home Decor > Accessories','Y','3' UNION ALL
+Select '108','Accessories','Men > Bags','Y','1' UNION ALL
+Select '109','Bags','Men > Clothing','Y','1' UNION ALL
+Select '110','Clothing','Men > Footwear','Y','1' UNION ALL
+Select '111','Footwear','Men >  Fragrances','Y','1' UNION ALL
+Select '112',' Fragrances','Personal Care > Beauty Care','Y','4' UNION ALL
+Select '113','Beauty Care','Personal Care > Cosmetics','Y','4' UNION ALL
+Select '114','Cosmetics','Personal Care > Hygiene','Y','4' UNION ALL
+Select '115','Hygiene','Personal Care > Oils','Y','4' UNION ALL
+Select '116','Oils','Personal Care > TAMRA','Y','4' UNION ALL
+Select '117','TAMRA','SWADHARMA > Accessories','Y','6' UNION ALL
+Select '118','Accessories','Women > Clothing','Y','2' UNION ALL
+Select '119','Clothing','Women > Fashion Combos','Y','2' UNION ALL
+Select '120','Fashion Combos','Women > Fashion Jewellery','Y','2' UNION ALL
+Select '121','Fashion Jewellery','Women > ','Y','2' 
+
+INSERT M_SubCatMaster(CatID,SubCatID,SubCatName,Description,Remarks,LastModified,ActiveStatus)
+Select 1,'1','Belt','Accessories','Men>Accessories>Belt','Men','Y' UNION ALL 
+Select 1,'2','Cufflinks','Accessories','Men>Accessories>Cufflinks','Men','Y' UNION ALL 
+Select 1,'3','Lapel Pin','Accessories','Men>Accessories>Lapel Pin','Men','Y' UNION ALL 
+Select 1,'5','Pocket Square','Accessories','Men>Accessories>Pocket Square','Men','Y' UNION ALL 
+Select 1,'6','Neck Tie','Accessories','Men>Accessories>Neck Tie','Men','Y' UNION ALL 
+Select 1,'8','Wallet','Accessories','Men>Accessories>Wallet','Men','Y' UNION ALL 
+Select 1,'10','Travel Kit','Bags','Men>Bags>Travel Kit','Men','Y' UNION ALL 
+Select 1,'11','Suiting Fabric','Clothing','Men>Clothing>Suiting Fabric','Men','Y' UNION ALL 
+Select 1,'14','Health Juices','Health Juices','Health Care>Health Juices>Health Juices','Health Care','Y' UNION ALL 
+Select 1,'16','Bags','Accessories','Women>Accessories>Bags','Women','Y' UNION ALL 
+Select 1,'1002','Brogues','Footwear','Men>Footwear>Brogues','Men','Y' UNION ALL 
+Select 1,'1003','Flip Flops','Footwear','Men>Footwear>Flip Flops','Men','Y' UNION ALL 
+Select 1,'1004','Sandals','Footwear','Men>Footwear>Sandals','Men','Y' UNION ALL 
+Select 1,'1012','Collar Pins','Accessories','Men>Accessories>Collar Pins','Men','Y' UNION ALL 
+Select 1,'1013','Rings','Accessories','Men>Accessories>Rings','Men','Y' UNION ALL 
+Select 1,'1014','Bracelets','Accessories','Men>Accessories>Bracelets','Men','Y' UNION ALL 
+Select 1,'1017','Messenger bags','Bags','Men>Bags>Messenger bags','Men','Y' UNION ALL 
+Select 1,'1019','Jackets','Clothing','Women>Clothing>Jackets','Women','Y' UNION ALL 
+Select 1,'1021','Tunic','Clothing','Women>Clothing>Tunic','Women','Y' UNION ALL 
+Select 1,'1023','Leggings','Clothing','Women>Clothing>Leggings','Women','Y' UNION ALL 
+Select 1,'1024',' Kurtis','Clothing','Women>Clothing> Kurtis','Women','Y' UNION ALL 
+Select 1,'1025','Sarees','Clothing','Women>Clothing>Sarees','Women','Y' UNION ALL 
+Select 1,'1028','Belts','Accessories','Women>Accessories>Belts','Women','Y' UNION ALL 
+Select 1,'1029','Pouches','Accessories','Women>Accessories>Pouches','Women','Y' UNION ALL 
+Select 1,'1030','Scarves','Accessories','Women>Accessories>Scarves','Women','Y' UNION ALL 
+Select 1,'1033','Earrings','Fashion Jewellery','Women>Fashion Jewellery>Earrings','Women','Y' UNION ALL 
+Select 1,'1034','Necklaces','Fashion Jewellery','Women>Fashion Jewellery>Necklaces','Women','Y' UNION ALL 
+Select 1,'1035','Bracelets','Fashion Jewellery','Women>Fashion Jewellery>Bracelets','Women','Y' UNION ALL 
+Select 1,'1036','Bangles','Fashion Jewellery','Women>Fashion Jewellery>Bangles','Women','Y' UNION ALL 
+Select 1,'1037',' Rings','Fashion Jewellery','Women>Fashion Jewellery> Rings','Women','Y' UNION ALL 
+Select 1,'1038','Chains','Fashion Jewellery','Women>Fashion Jewellery>Chains','Women','Y' UNION ALL 
+Select 1,'1043',' Tooth Brush Holder','Gift Items','Home Decor>Gift Items> Tooth Brush Holder','Home Decor','Y' UNION ALL 
+Select 1,'1046','Manicure set','Beauty Care','Personal Care>Beauty Care>Manicure set','Personal Care','Y' UNION ALL 
+Select 1,'1047','Womens Kit','Beauty Care','Personal Care>Beauty Care>Womens Kit','Personal Care','Y' UNION ALL 
+Select 1,'1064','SARSO Noni Plus','Health Juices','Health Care>Health Juices>SARSO Noni Plus','Health Care','Y' UNION ALL 
+Select 1,'1067','Chocolate Energy Powder','Energy Powder','Health Care>Energy Powder>Chocolate Energy Powder','Health Care','Y' UNION ALL 
+Select 1,'1078','Shorts','Clothing','Men>Clothing>Shorts','Men','Y' UNION ALL 
+Select 1,'1079','T shirts','Clothing','Men>Clothing>T shirts','Men','Y' UNION ALL 
+Select 1,'1080','Shirts','Clothing','Men>Clothing>Shirts','Men','Y' UNION ALL 
+Select 1,'1082','Lowers','Clothing','Men>Clothing>Lowers','Men','Y' UNION ALL 
+Select 1,'1083','Jackets','Clothing','Men>Clothing>Jackets','Men','Y' UNION ALL 
+Select 1,'1090','Suits','Clothing','Women>Clothing>Suits','Women','Y' UNION ALL 
+Select 1,'1091','T-Shirts','Clothing','Women>Clothing>T-Shirts','Women','Y' UNION ALL 
+Select 1,'1092','Top & Lower Combo','Fashion Combos','Women>Fashion Combos>Top & Lower Combo','Women','Y' UNION ALL 
+Select 1,'1093','Tops','Clothing','Women>Clothing>Tops','Women','Y' UNION ALL 
+Select 1,'1103','Clutches','Accessories','Women>Accessories>Clutches','Women','Y' UNION ALL 
+Select 1,'1105','Decorative Items','Decor','Home Decor>Decor>Decorative Items','Home Decor','Y' UNION ALL 
+Select 1,'1107','Mukhallat Oud',' Fragrances','Personal Care> Fragrances>Mukhallat Oud','Personal Care','Y' UNION ALL 
+Select 1,'1110','Scarves','Accessories','Men>Accessories>Scarves','Men','Y' UNION ALL 
+Select 1,'1111','Cushion Covers ','Decor','Home Decor>Decor>Cushion Covers ','Home Decor','Y' UNION ALL 
+Select 1,'1112','Table Runners','Decor','Home Decor>Decor>Table Runners','Home Decor','Y' UNION ALL 
+Select 1,'1114','Success Guide','Stationery','Home Decor>Stationery>Success Guide','Home Decor','Y' UNION ALL 
+Select 1,'1116','Tie Pin & Cufflinks Combos','Accessories','Men>Accessories>Tie Pin & Cufflinks Combos','Men','Y' UNION ALL 
+Select 1,'1118','Gift Combos','Accessories','Men>Accessories>Gift Combos','Men','Y' UNION ALL 
+Select 1,'1121','Diya stand','Go Spiritual','Home Decor>Go Spiritual>Diya stand','Home Decor','Y' UNION ALL 
+Select 1,'1122','Shrimad Bhagavad Gita','Go Spiritual','Home Decor>Go Spiritual>Shrimad Bhagavad Gita','Home Decor','Y' UNION ALL 
+Select 1,'1124','Pad Folio','Stationery','Home Decor>Stationery>Pad Folio','Home Decor','Y' UNION ALL 
+Select 1,'1127','Gown','Clothing','Women>Clothing>Gown','Women','Y' UNION ALL 
+Select 1,'1131','Bottles','TAMRA','SWADHARMA>TAMRA>Bottles','SWADHARMA','Y' UNION ALL 
+Select 1,'1133','Cravat','Accessories','Men>Accessories>Cravat','Men','Y' UNION ALL 
+Select 1,'1134','Derby Shoes','Footwear','Men>Footwear>Derby Shoes','Men','Y' UNION ALL 
+Select 1,'1135','Vanilla Energy Powder','Energy Powder','Health Care>Energy Powder>Vanilla Energy Powder','Health Care','Y' UNION ALL 
+Select 1,'1136','Tulsi Tablets','Ayurveda','Health Care>Ayurveda>Tulsi Tablets','Health Care','Y' UNION ALL 
+Select 1,'1137','AlcoRelief Capsules','Ayurveda','Health Care>Ayurveda>AlcoRelief Capsules','Health Care','Y' UNION ALL 
+Select 1,'1138','Madhunashini Tablets','Ayurveda','Health Care>Ayurveda>Madhunashini Tablets','Health Care','Y' UNION ALL 
+Select 1,'1139','Hand Disinfectant','Hygiene','Personal Care>Hygiene>Hand Disinfectant','Personal Care','Y' UNION ALL 
+Select 1,'1140','Private Hygiene','Hygiene','Personal Care>Hygiene>Private Hygiene','Personal Care','Y' UNION ALL 
+Select 1,'1141','Intimate Care','Hygiene','Personal Care>Hygiene>Intimate Care','Personal Care','Y' UNION ALL 
+Select 1,'1142','ORTHO Thailam','Oils','Personal Care>Oils>ORTHO Thailam','Personal Care','Y' UNION ALL 
+Select 1,'1143','Sehatmand Malt','Ayurveda','Health Care>Ayurveda>Sehatmand Malt','Health Care','Y' UNION ALL 
+Select 1,'1144','Skin Care','Cosmetics','Personal Care>Cosmetics>Skin Care','Personal Care','Y' UNION ALL 
+Select 1,'1145','Face Care','Cosmetics','Personal Care>Cosmetics>Face Care','Personal Care','Y' UNION ALL 
+Select 1,'1146','Hair Care','Cosmetics','Personal Care>Cosmetics>Hair Care','Personal Care','Y'
+
+
+   UPDATE M_SubCatMaster SET CatID=b.CatID
+   FROM M_SubCatMaster a,M_CatMaster b
+   WHERE a.Description=b.CatName AND a.LastModified=b.Remarks
+
+
+INSERT INTO M_ProductMaster(CatID,SubCatID,ProductTYpe,UserProdID,ProductCode,ProdID,ProductName,ProductDesc,PurchaseRate,MRP,DP,DP1,OtherStateDP,
+--Costing,BV,CV,PV,Rp,Exp,VDiscount,Discount,DiscInRs,ActiveStatus,ImagePath,Val1,HSNCode,IMEINO)
+--Select 1,RPCID,'G',PCode,PCode,Pcode,PName,Descr,0,Price,Dp,ISNULL(OffPrice,0),ISNULL(ProdSalePrice,0),
+--Attr,0,0,PV,0,0,DPPercentage,0,0,'Y',SesID,0,ISNULL(HSNo,''),Garment --ORDER BY Pid
+-- FROM repurchaseproducts WHERE PStatus=0
+
+
+UPDATE M_ProductMaster SET BID=AID,BarcodeType='W',BCode=100000+AID,Barcode=100000+AID
+INSERT M_BarcodeMaster 
+Select BID,'WR',Getdate(),'',Prodid,Barcode,'W','Own',BCode,Barcode,PurchaseRate,MRP,DP,'N','1-Mar-2018','31-Dec-2020','','Y','','N',Getdate(),0,'',0,0,0 FROM M_ProductMaster
+
+INSERT INTO M_TaxMaster(ProdCode,ProdName,StateCode,VatTax,CstTax,Stax,ActiveStatus)
+--Select Pcode,Pname,20,Igst,Igst,Igst,1 FROM repurchaseproducts WHERE PStatus=0
+   
+
+   UPDATE M_ProductMaster SET CatID=b.CatID
+   FROM M_ProductMaster a,M_SubCatMaster b
+   WHERE a.SubCatID=b.SubCatID
+   
+
+ update M_ProductMaster SET ProductName=b.ProductName+'['+ Cast(RWNo as varchar(5)) +']'
+ FROM M_ProductMaster a,
+(Select ProductName,ROW_NUMBER() OVER(PARTITION BY ProductName ORDER BY ProdID) RWNo,ProdID FROM  M_ProductMaster WHERE ProductName in (  Select ProductName FROM M_ProductMaster GROUP BY ProductName HAVING Count(*)>1)) b
+WHERE a.ProdID=b.prodID

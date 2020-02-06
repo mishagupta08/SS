@@ -1,0 +1,59 @@
+ ALTER View V#BillWiseSaleSummary
+With Encryption -- 06:17 PM 2019-02-11
+AS -- 
+Select a.FSessId,a.OrderNo,a.OrderDate,a.UserSBillNo,a.UserBillNo,a.SBillNo,a.BillNo,Replace(Convert(varchar,a.BillDate,106),' ','-') as BillDateStr,a.BillDate,e.GroupId,e.GroupName,c.PartyCode,c.PartyName,
+a.Formno,a.FCode,
+Case When a.FCode='' then Cast(a.RefId as Varchar) else a.FCode end as NewFCode,
+a.PartyName as Name,
+a.OrderType,'' as DownIDNo,'' as DownMemName,--- Add: 09Nov13@05:50PM,Saturday
+a.BVValue as BillBVValue,
+IsNull(Sum(b.BVValue),0) as BVValue,
+IsNull(Sum(b.RPValue),0) as RPValue,
+IsNull(Sum(b.NetAmount),0) as Amount,
+IsNull(Sum(b.TaxAmount),0) as IGSTAmt,IsNull(Sum(b.SGSTAmt),0) SGSTAmt, IsNull(Sum(b.CGSTAmt),0) as CGSTAmt,ISNULL(b.OfferUID,0) OfferUID,
+IsNull(Sum(b.TaxAmount + b.SGSTAmt+ b.CGSTAmt),0) as TaxAmount,IsNull(Sum(b.NetAmount),0)+IsNull(Sum(b.TaxAmount+ b.SGSTAmt+ b.CGSTAmt),0) as NetAmt,
+IsNull(a.PayMode,'') as PayMode,
+a.RefId,a.RefName,IsNull(a.JType,'') as KitName,a.Series,a.BillType as BType,
+ Case when IsReceive ='G' Then 'General Customer Bill' When IsReceive ='R' Then 'Repurchase Bill' When IsReceive ='D' Then 'Distributor Bill' When IsReceive ='O' Then 'Old Booking Bill' When IsReceive ='B' Then 'Booking Bill' When IsReceive ='Z' Then 'Freedom Kit Bill' When IsReceive ='N' And BillType ='D' Then 'Voucher Discount Bill' When IsReceive ='N' And BillType ='P' Then 'Product Booking Bill' Else 'Party Bill' End as BillType
+ ,a.IsReceive,a.FType,a.Remarks, 'C' as  DispatchStatus
+
+From TrnBillMain as a LEFT JOIN TrnBillDetails as b ON a.BillNo=b.BillNo And a.FSessId=b.FSessId
+LEFT JOIN M_LedgerMaster as c ON a.SoldBy=c.PartyCode --Case When a.BillBy='' Then a.SoldBy Else a.BillBy End=c.PartyCode 
+LEFT JOIN M_GroupMaster as e ON c.GroupId=e.GroupId
+--LEFT JOIN PhpRoyal..M_MemberMaster as f ON a.FormNo=f.FormNo
+--LEFT JOIN (Select Cast(OrderNo as varchar(20)) OrderNo,DispatchStatus FROM PhpRoyal..TrnOrder)m ON a.OrderNo=m.OrderNo --Added on 14Jun17
+
+Group By a.OrderNo,a.OrderDate,a.UserSBillNo,a.UserBillNo,a.FormNo,a.BillFor,a.SBillNo,a.BillNo,a.BillDate,e.GroupId,e.GroupName,c.PartyCode,c.PartyName,a.FCode,a.Formno,c.PartyName,a.PartyName,
+a.OrderType,--- Add: 09Nov13@05:50PM,Saturday
+IsNull(a.PayMode,''),a.RefId,a.RefName,a.BillType,a.Series,a.IsReceive,IsNull(a.JType,''),a.SoldBy,a.BillBy,a.FType,a.Remarks,a.FSessId,ISNULL(b.OfferUID,0),a.BVValue 
+GO
+--------------------------
+ ALTER View V#BillWiseSaleSummary
+With Encryption -- 06:17 PM 2019-02-11
+AS -- 
+Select a.FSessId,a.OrderNo,a.OrderDate,a.UserSBillNo,a.UserBillNo,a.SBillNo,a.BillNo,Replace(Convert(varchar,a.BillDate,106),' ','-') as BillDateStr,a.BillDate,e.GroupId,e.GroupName,c.PartyCode,c.PartyName,
+a.Formno,a.FCode,
+Case When a.FCode='' then Cast(a.RefId as Varchar) else a.FCode end as NewFCode,
+a.PartyName as Name,
+a.OrderType,IsNull(f.IDNo,'') as DownIDNo,IsNull(f.MemFirstName + ' ' + f.MemLastName,'') as DownMemName,--- Add: 09Nov13@05:50PM,Saturday
+a.BVValue as BillBVValue,
+IsNull(Sum(b.BVValue),0) as BVValue,
+IsNull(Sum(b.RPValue),0) as RPValue,
+IsNull(Sum(b.NetAmount),0) as Amount,
+IsNull(Sum(b.TaxAmount),0) as IGSTAmt,IsNull(Sum(b.SGSTAmt),0) SGSTAmt, IsNull(Sum(b.CGSTAmt),0) as CGSTAmt,ISNULL(b.OfferUID,0) OfferUID,
+IsNull(Sum(b.TaxAmount + b.SGSTAmt+ b.CGSTAmt),0) as TaxAmount,IsNull(Sum(b.NetAmount),0)+IsNull(Sum(b.TaxAmount+ b.SGSTAmt+ b.CGSTAmt),0) as NetAmt,
+IsNull(a.PayMode,'') as PayMode,
+a.RefId,a.RefName,IsNull(a.JType,'') as KitName,a.Series,a.BillType as BType,
+ Case when IsReceive ='G' Then 'General Customer Bill' When IsReceive ='R' Then 'Repurchase Bill' When IsReceive ='D' Then 'Distributor Bill' When IsReceive ='O' Then 'Old Booking Bill' When IsReceive ='B' Then 'Booking Bill' When IsReceive ='Z' Then 'Freedom Kit Bill' When IsReceive ='N' And BillType ='D' Then 'Voucher Discount Bill' When IsReceive ='N' And BillType ='P' Then 'Product Booking Bill' Else 'Party Bill' End as BillType
+ ,a.IsReceive,a.FType,a.Remarks ,ISNULL(m.DispatchStatus,'C') DispatchStatus
+
+From TrnBillMain as a LEFT JOIN TrnBillDetails as b ON a.BillNo=b.BillNo And a.FSessId=b.FSessId
+LEFT JOIN M_LedgerMaster as c ON a.SoldBy=c.PartyCode --Case When a.BillBy='' Then a.SoldBy Else a.BillBy End=c.PartyCode 
+LEFT JOIN M_GroupMaster as e ON c.GroupId=e.GroupId
+LEFT JOIN PhpRoyal..M_MemberMaster as f ON a.FormNo=f.FormNo
+LEFT JOIN (Select Cast(OrderNo as varchar(20)) OrderNo,DispatchStatus FROM PhpRoyal..TrnOrder)m ON a.OrderNo=m.OrderNo --Added on 14Jun17
+
+Group By a.OrderNo,a.OrderDate,a.UserSBillNo,a.UserBillNo,a.FormNo,a.BillFor,a.SBillNo,a.BillNo,a.BillDate,e.GroupId,e.GroupName,c.PartyCode,c.PartyName,a.FCode,a.Formno,c.PartyName,a.PartyName,
+a.OrderType,IsNull(f.IDNo,''),IsNull(f.MemFirstName + ' ' + f.MemLastName,''),--- Add: 09Nov13@05:50PM,Saturday
+IsNull(a.PayMode,''),a.RefId,a.RefName,a.BillType,a.Series,a.IsReceive,IsNull(a.JType,''),a.SoldBy,a.BillBy,a.FType,a.Remarks,a.FSessId,m.DispatchStatus,ISNULL(b.OfferUID,0),a.BVValue 
+GO

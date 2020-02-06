@@ -1,0 +1,96 @@
+
+ ALTER PROCEDURE InsertProduct 
+		(
+		@KitID Numeric(18,0))           
+       --@ProdName Varchar(50),      
+       ----@Barcode Varchar(50),      
+       ----@BatchNo Varchar(35),      
+     
+       --@DP Numeric(18,2),
+       --@BV Numeric(18,2))
+ --      @VAT Numeric(18,2),
+ --@CST Numeric(18,2)
+       
+WITH ENCRYPTION
+AS      
+
+DECLARE @BCode as INT
+DECLARE @ProdCode as INT
+DECLARE @BID as INT
+DECLARE @PrintMsg As VarChar(50)
+Declare @Barcode varchar(15)
+Declare @BatchNo varchar(15)
+Declare @StateCode int
+Declare @VAT Numeric(18,2)
+Declare @CST Numeric(18,2),@CatID Numeric(18,0),@SubCatID Numeric(18,0), @MRP Numeric(18,2)
+Declare @ActiveStatus char(1)
+BEGIN
+BEGIN TRY
+BEGIN TRANSACTION 
+-------:
+SET @VAT=0
+SET @CST=0
+SET @CatID =1
+SET @SubCatID =1
+Declare @ProdName Varchar(50)
+Declare @DP numeric(18,2),@BV numeric(18,2),@TP numeric(18,2),@RP numeric(18,2)
+
+-- SET  '15','KTS TEST KIT','1500',150
+
+Select @ProdCode=ISNULL(MAX(ProductCode)+1,1) FROM M_ProductMaster
+Select @BID=ISNULL(MAX(BID)+1,1) FROM M_BarcodeMaster
+Select @BCode=ISNULL(MAX(BCode)+1,1) FROM M_BarcodeMaster WHERE BType='W'
+Select @StateCode=StateCode FROM M_LedgerMaster WHERE PartyCode='WR'
+Select Top 1 @VAT=VatTax,@CST=csttax FROM M_TaxMaster WHERE StateCode=@StateCode AND VatTax>0
+Select @ProdName=KitName,@DP=KitAmount,@TP=BV, @BV=PV,@RP=Rp,@ActiveStatus=ActiveStatus FROM PhpRoyal..M_KitMaster WHERE KitID=@KitID
+SET @MRP=@DP
+
+
+SET @Barcode=@BCode
+SET @BatchNo=@BCode
+IF EXISTS (Select * FROM M_ProductMaster WHERE BrandCode=@KitID )
+BEGIN
+Declare @ProdID_ varchar(100)
+Select @ProdID_=ProdId FROM M_ProductMaster WHERE BrandCode=@KitID
+UPDATE M_ProductMaster SET ProductName=@ProdName,DP=@DP,BV=@BV,PV=@TP,RP=@RP,ActiveStatus=@ActiveStatus WHERE  BrandCode=@KitID
+UPDATE M_BarCodeMaster SET DP=@DP,ActiveStatus=@ActiveStatus WHERE ProdID=@ProdID_
+END
+ELSE
+BEGIN
+ 
+ INSERT M_ProductMaster(GenerateBy,CatId,SubCatId,ProductType,UserProdId,
+ ProductCode,ProdId,ProductName,ProductDesc,
+ MRP,DP,BV,PV,RP,ActiveStatus,PType,
+ BId,BarcodeType,BCode,Barcode,IsExpired,Mfgdate,Expdate,BrandCode) VALUES 
+ ('WR',@CatID,@SubCatID,'P',CAST(@ProdCode as varchar(10))
+ ,@ProdCode,CAST(@ProdCode as varchar(10)),@ProdName,'',
+ @MRP,@DP,@BV,@TP,@RP,@ActiveStatus,'K',--PTYpe='K'(Mlm Generated Kit, not showing in Inventory)
+ @BID,'W',@BCode,@Barcode,'N',Cast(CONVERT(varchar,GETDATE(),106) as Datetime),Cast(CONVERT(varchar,GETDATE(),106) as Datetime),@KitID )
+ 
+ INSERT INTO M_BarCodeMaster (BID,GenerateBy,GenerateDate,ProdId,BatchNo,BType,BarCodeType,
+ BCode,BarCode,PRate,MRP,DP,
+ IsExpired,MfgDate,ExpDate,ActiveStatus)
+ VALUES (@BID,'WR',Cast(CONVERT(varchar,GETDATE(),106) as Datetime),CAST(@ProdCode as varchar(10)),@BatchNo,'W','Own',
+ @BCode,@Barcode,0,@MRP,@DP,'N',Cast(CONVERT(varchar,GETDATE(),106) as Datetime),Cast(CONVERT(varchar,GETDATE(),106) as Datetime) ,@ActiveStatus)
+ 
+ INSERT INTO M_TaxMaster(GenerateBy,ProdCode,ProdName,StateCode,VatTax,CstTax,WithCForm,ActiveStatus)
+ VALUES ('WR',CAST(@ProdCode as varchar(10)),@ProdName,@StateCode,@vat,@Cst,2,'Y')
+END 
+---:
+COMMIT TRANSACTION
+PRINT @PrintMsg
+END TRY
+
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION --RollBack in case of Error
+  --- Shows Actual ERROR --- 26Sep13
+  DECLARE @errmsg NVARCHAR(4000)
+  DECLARE @errseverity INT
+  DECLARE @errstate INT
+  SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+  SET @errmsg= @errmsg + ' ' + @PrintMsg
+  RAISERROR(@errmsg , @errseverity, @errstate)
+END CATCH
+END
+-----------------------------------------

@@ -1,0 +1,148 @@
+
+ 
+ALTER PROCEDURE DispatchOrder(@OrderNo numeric(18,0),@SoldBy varchar(20)='',@CourierID numeric(18,0)=0,@CourierName varchar(50)='' ,@DocketNo varchar(20)='' ,@DelvPlace varchar(50)='' )
+WITH ENCRYPTION --04:29 PM 2019-05-29
+as 
+BEGIN
+DECLARE @IdNo varchar(20)
+DECLARE @FSessID numeric(18,0)
+DECLARE @SessID numeric(18,0)
+DECLARE @FormNo numeric(18,0)
+DECLARE @MemName varchar(50)
+DECLARE @CompPrefix varchar(50)
+DECLARE @TQty numeric(18,0)
+DECLARE @KAmt numeric(18,2)
+DECLARE @KBV numeric(18,2)
+DECLARE @TotalRP numeric(18,2)
+DECLARE @TotalTP numeric(18,2)
+DECLARE @TotalNetAmt numeric(18,2)
+DECLARE @TotalTaxAmt numeric(18,2)
+
+DECLARE @StateCode numeric(18,0)
+DECLARE @CompStateCode numeric(18,0)
+
+DECLARE @UserSBillNo numeric(18,0)
+DECLARE @UserBillNo varchar(500)
+DECLARE @BillDt datetime
+Declare @BillBy varchar(20)
+Declare @HostIP char(1)
+Declare @TaxType char(1)
+Declare @OpenChoice char(1)
+
+--Select * FROM PhpRoyal..TrnOrder 
+--DECLARE @OrderNo numeric(18,0)
+--SET @OrderNo =100004
+BEGIN TRY
+BEGIN TRANSACTION
+
+IF EXISTS(Select OrderNo From PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo AND DispatchStatus<>'C')
+BEGIN
+Select @CompPrefix=CompPrefix,@CompStateCode =CompState  FROM M_CompanyMaster;
+Select @IdNo=IdNo,@BillBy=OrderFor,@HostIP=HostIP,@OpenChoice=ShippingStatus FROM PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo;
+Declare @PartyStateCode as numeric(18,2)
+Select @PartyStateCode=StateCode FROM PhpRoyal..M_MemberMaster WHERE IdNo=@IdNo;
+Select @FSessID=Max(FSessID) FROM M_FiscalMaster-- WHERE FrmDate<=@BillDt AND ToDate>=@BillDt;
+--SET @FSessID=1
+if @SoldBy <>''--Added on 26Apr17
+SET @BillBy=@SoldBy
+Select @FormNo=FormNo,@MemName =LTRIM(RTRIM(MemFirstName + ' '+ MemLastName)) FROM PhpRoyal..M_MemberMaster WHERE IDNo=@IDNo;;
+--Select @KAmt=KitAmount,@KitName=KitName,@KBV=PV FROM PhpRoyal..M_KitMaster WHERE KitID=@KitID;
+Select @SessID=Max(SessID) FROM PhpRoyal..M_SessnMaster --WHERE FrmDate<=@BillDt AND ( ToDate>=@BillDt OR ToDate is NULL) ;
+--Select @TQty=SUM(Qty) FROM PhpRoyal..TrnKitProducts  WHERE OrderNo=@OrderNo;
+Select @StateCode=StateCode FROM M_LedgerMaster WHERE PartyCode=@BillBy;
+Select @UserSBillNo=ISNULL(Max(UserSBillNo)+1,'1') FROM TrnBillMain WHERE FSessId=@FSessId AND BillType Not IN('S') And SoldBy=@BillBy;
+IF LEN(Cast(@UserSBillNo as varchar(5)))>=3
+SET @UserBillNo= @CompPrefix +  '/'+ @BillBy +'/' +   ( Cast(@UserSBillNo as varchar(5))) ;
+else
+SET @UserBillNo= @CompPrefix +  '/'+ @BillBy +'/' + RIGHT  ('00' + Cast(@UserSBillNo as varchar(5)),3) ;
+
+--UPDATE PhpRoyal..M_MemberMAster SET Fld2='Y',DispatchDate=Getdate() WHERE Idno=@IdNo;
+--SoldBy Condition removed from Max BillNo & UserBillNo :26Apr17
+SET @TaxType='I';
+If @PartyStateCode=@StateCode
+SET @TaxType='S';
+
+ Insert Into TrnProductDispatchDetail (UserSBillNo, UserBillNo,SBillNo, BillNo, BillDate, SupplierId, SoldBy, FType, RefNo, FCode, FormNo,
+ ProductId, ProductName, BatchNo,Qty, DispatchQty, RemainingQty, Rate, BV, BVValue,PV, PVValue, RP, RPValue, IsKitBV,
+ TaxType, Tax, TaxAmount, Discount, NetAmount, Series, Remarks, BillFor, Imported, IMEINo, BNo, ItemType,EntryType,
+ SessID,MSessID,FSessID,OrderNo,OrderDate,MRP,DP,DP1,BillType,PartyName,IDType,OrderType,PayMode,ChDDNo,ChDate,ChAmt,BankName,BranchName,
+ UserId,UserName,Version,LocId,LocName,Pincode,CourierId,CourierName,DocketNo,DelvAddress,ProdType)--ProdType Added on 26Apr17--DelvAddress Added on 20Apr17
+ 
+ Select @UserSBillNo,@UserBillNo,(Select Case When Max(SBillNo) Is Null Then 1 Else Max(SBillNo)+1 End From TrnBillMain Where FSessId=@FSessID And SoldBy=@BillBy),(Select @CompPrefix +  '/'+ @BillBy +'/' + Cast((Select Case When Max(SBillNo) Is Null Then 1 Else Max(SBillNo)+1 End From TrnBillMain Where FSessId=@FSessID And SoldBy=@BillBy) as Varchar)),
+ Convert(Varchar,GetDate(),106) as BillDate, '55' as SupplierId,@BillBy as  SoldBy,'M' as FType, 'Order '+ Cast(@OrderNo as varchar(8)) as RefNo,b.IDNo as  FCode, a.FormNo,
+ a.ProductId, a.ProductName,c.BatchNo as  BatchNo, a.RemQty As Qty , a.Qty, 0 as RemQty,(a.Rate * 100 /(100+d.VATTax)) , a.BV,a.RemQty*a.BV as  BVValue,p.PV, CASE WHEN a.ProdType='F' THEN 0 ELSE a.RemQty*p.PV END as PVValue,a.RP,CASE WHEN a.ProdType='F' THEN 0 ELSE a.RemQty*a.RP END as RPValue, 'N' as IsKitBV,
+ @TaxType, d.VATTax as Tax, (a.Rate * a.RemQty)-ROUND((a.Rate * a.RemQty * 100 /(100+d.VATTax)),2)As TaxAmount,0,ROUND((a.Rate * a.RemQty * 100 /(100+d.VATTax)),2) ,KitName as Series,'' as Remarks, b.FormNo as BillFor,'N' as  Imported,'' as IMEINo, '0' as BNo,b.OrderType as ItemType,'SHOPE' as EntryType ,
+ b.SessID,0 as MSessID,'1',a.OrderNo,b.OrderDate,a.MRP,a.DP,0 as DP1,CASE WHEN OrderType='T' THEN 'B' ELSE 'R' END as BillType,b.MemFirstName + ' ' + b.MemLastName as MemName,'D',b.OrderType,b.PayMode,b.ChDDNo,b.ChDate,b.ChAmt,b.BankName,b.BranchName,
+ '88','Auto','','0',CASE WHEN HostIP='C' THEN 'By Courier' WHEN HostIP='S' THEN 'By Speed Post' WHEN HostIP='H' THEN 'By Hand - '+ l.PartyName ELSE l.PartyName END,b.Pincode,@CourierID,@CourierName,@DocketNo,@DelvPlace,a.ProdType
+ From PhpRoyal..TrnOrderDetail as a,PhpRoyal..TrnOrder as b,V#AvailProdStockBarcodes as c,M_TaxMaster d,M_ProductMaster P,M_LedgerMAster l
+ Where a.OrderNo=b.OrderNo AND a.ProductID=c.ProdID AND a.RemQty>0 AND c.ProdID=d.ProdCode AND d.StateCode=@CompStateCode AND a.OrderNo=@OrderNo AND  c.ProdID=p.ProdID AND b.OrderFor=l.PartyCode
+if  @HostIP='H' OR @PartyStateCode=@StateCode --This is done, so that Tax could be equally btwn CGST&SGST And no Rnd.Off Problem 
+BEGIN
+ UPDATE TrnProductDispatchDetail SET NetAmount= CASE WHEN SUBSTRING(Reverse(Cast(Cast(TaxAmount/2 as numeric(18,3)) as varchar(20))),1,1)='5' THEN NetAmount+0.01 ELSE NetAmount END WHERE  OrderNo=@OrderNO ;
+ UPDATE TrnProductDispatchDetail SET TaxAmount= CASE WHEN SUBSTRING(Reverse(Cast(Cast(TaxAmount/2 as numeric(18,3)) as varchar(20))),1,1)='5' THEN TaxAmount-0.01 ELSE TaxAmount END WHERE  OrderNo=@OrderNO ;
+END
+
+ Select @TQty=Sum(Qty) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo
+ Select @TotalTaxAmt=Sum(TaxAmount) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo
+ 
+if EXISTS (Select * FROM PhpRoyal..TrnOrder WHERE OrderType<>'T' AND ORDERNo=Cast(@OrderNo as varchar(10)) )
+BEGIN
+Select @KBV=Sum(BVValue) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo
+Select @TotalRP=Sum(RPValue) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo
+Select @TotalTP=Sum(PvValue) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo
+Select @TotalNetAmt=Sum(NetAmount) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo
+--Select @TotalTaxAmt=Sum(TaxAmount) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo
+END
+ELSE
+BEGIN
+--Select @TQty=Sum(DispatchQty) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo
+Select @KBV=Sum(BV) FROM PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo
+Select @TotalRP=Sum(RewardPoint) FROM PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo
+Select @TotalTP=Sum(TravelPoint) FROM PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo
+Select @TotalNetAmt=Sum(OrderAmt) FROM PhpRoyal..TrnOrder WHERE OrderNo=@OrderNo
+--Select @TotalTaxAmt=Sum(TaxAmount) FROM TrnProductDispatchDetail WHERE OrderNo=@OrderNo--21Jun17@TotalTaxAmt=0
+SET @TotalNetAmt=@TotalNetAmt-@TotalTaxAmt;--21Jun17
+END
+
+Declare @UID_ as varchar(50)
+ Select @UID_=Convert(varchar,Getdate(),112) + REVERSE(Replace(Substring(Reverse(convert(varchar,Getdate(),109)),1, CharIndex(' ',Reverse(convert(varchar,Getdate(),109)))),':',''))
+
+INSERT INTO TrnBillData(FSessId,SessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,
+FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,FormNo,TotalQty,TotalBvValue,TotalRPValue,TotalAmount,TotalTaxAmount,RndOff,NetPayable,
+TotalSTaxAmount,TotalDiscount,TotalKitBvValue,TotalCVValue,TotalPVValue,CashDiscPer,CashDiscAmount,CardAmount,PayMode,PayPrefix,Remarks,
+DispatchStatus,BillTo,BillFor,IsReceive,IsCredit,BillType,UserId,UserName,Version,PaymentDtl,IDType,BranchName,UID,
+ProductId,ProductName,BatchNo,Barcode,Qty,MRP,DP,Rate,BV,BVValue,CV,CVValue,PV,PVValue,RP,RPValue,IsKitBV,TaxType,Tax,TaxAmount,DiscountPer,Discount,
+NetAmount,IMEINo,BNo,ItemType,FPoint,FPointValue,OrdStatus,OrdQty,RemQty,DP1,VAT,LocId,LocName,Pincode,CourierId,CourierName,
+OrderNo,OrderDate,OrderType,Series,DelvAddress,ProdType,SGST,SGSTAmt,CGST,CGSTAmt,ReceiverIDProof,LRDate,DocketNo)
+SELECT a.FSessId, a.SessId, a.UserSBillNo, a.UserBillNo, a.SBillNo, a.BillNo, a.RefNo, a.BillDate, a.IDType as CType, a.SoldBy, a.SoldBy as BillBy, a.FType,
+a.FCode, a.PartyName, a.SupplierId, a.ChDDNo, a.ChDate, a.ChAmt, 0 as BankCode, a.BankName, a.FormNo, @TQty as TotalQty,@KBV as TotalBvValue,@TotalRP as TotalRPValue,@TotalNetAmt,@TotalTaxAmt,'0' as RndOff,@TotalNetAmt+@TotalTaxAmt,
+0 as TotalSTaxAmount,0 as TotalDiscount,@KBv as TotalKitBvValue, 0 as TotalCVValue,0 as TotalPVValue,0 as CashDiscPer,0 as CashDiscAmount,0 as CardAmount, a.PayMode,a.PayMode as PayPrefix,a.Remarks,
+a.DispatchStatus,a.FCode as BillTo,a.BillFor,'R' as IsReceive, 'F' as IsCredit,a.BillType,a.UserId,a.UserName,a.Version,LTrim(RTrim(a.PayMode)) + ': ' + Cast(a.ChAmt as Varchar) as PaymentDtl,a.IDType, a.BranchName,@UID_ as UID,
+a.ProductId, a.ProductName, a.BatchNo, a.BatchNo as Barcode, a.DispatchQty, a. MRP, a.DP, a.Rate, a.BV, a.BVValue ,b.CV, CASE WHEN a.ProdType='F' THEN 0 ELSE b.CV*a.Qty END,b.PV,CASE WHEN a.ProdType='F' THEN 0 ELSE b.PV*a.Qty END,b.RP,CASE WHEN a.OrderType='T' THEN 0 ELSE b.RP*a.Qty END,IsKitBV,a.TaxType,CASE WHEN @TaxType='S' THEN 0 ELSE a.Tax END,CASE WHEN @TaxType='S' THEN 0 ELSE TaxAmount END,0 as DiscountPer,a.Discount,
+NetAmount,a.IMEINo,0 ,a.ItemType,b.FundPoint,CASE WHEN a.OrderType='T' THEN 0 ELSE b.FundPoint * a.Qty END,DispStatus as OrdStatus, a.Qty as OrdQty,0 as ProfitVal,0 as DevFundVal,CASE WHEN a.OrderType='T' THEN 0 ELSE b.Val2*a.Qty END,
+LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,Series ,DelvAddress,ProdType,CASE WHEN @TaxType='S' THEN a.Tax/2 ELSE 0 END,CASE WHEN @TaxType='S' THEN a.TaxAmount/2 ELSE 0 END,CASE WHEN @TaxType='S' THEN a.Tax/2 ELSE 0 END,CASE WHEN @TaxType='S' THEN a.TaxAmount/2 ELSE 0 END,@OpenChoice,Getdate(),DocketNo
+From TrnProductDispatchDetail a,M_ProductMaster b Where OrderNo=@OrderNo AND Cast(a.ProductId as varchar(10))=b.ProdID
+ 
+Update PhpRoyal..TrnOrderDetail Set DispQty=a.DispQty,DispAmt=a.DispAmt FROM ( Select a.FSessId,a.OrderNo,b.ProductId,b.ProdType,b.OfferUId,IsNull(SUM(b.Discount),0) as DiscountAmt,IsNull(SUM(b.Qty),0) as DispQty,IsNull(SUM(b.TaxAmount+b.CGSTAmt+b.SGSTAmt),0)+IsNull(SUM(b.NetAmount),0) as DispAmt FROM TrnBillMain as a,TrnBillDetails as b Where a.FSessId=b.FSessId And a.BillNo=b.BillNo And a.FSessId=@FSessID And a.OrderNo=Cast(@OrderNO as varchar(20)) Group BY a.FSessId,a.OrderNo,b.ProductId,b.ProdType,b.OfferUId) as a,PhpRoyal..TrnOrderDetail as b Where a.FSessId = b.FSessId And a.OrderNo=b.OrderNo And a.ProductId=b.ProductId ;
+Update PhpRoyal..TrnOrderDetail Set RemQty=Qty-DispQty Where FSessId=@FSessID And OrderNo=@OrderNO ;
+Update PhpRoyal..TrnOrderDetail Set DispStatus=Case When RemQty<=0 Then 'C' Else 'N' End Where FSessId=@FSessID And OrderNo=@OrderNO ;
+Update PhpRoyal..TrnOrder Set DispatchQty=a.TotalDispQty,DispatchAmount=Round(a.NetPayable,0) FROM ( Select FSessId,OrderNo,IsNull(SUM(Discount),0) as TotalDiscount,IsNull(SUM(TotalQty),0) as TotalDispQty, IsNull(SUM(Amount),0) as TotalAmount, IsNull(SUM(TaxAmount),0)+IsNull(SUM(STaxAmount),0) as TotalTaxAmt, IsNull(SUM(NetPayable),0) as NetPayable FROM TrnBillMain Group By FSessId,OrderNo) as a,PhpRoyal..TrnOrder as b  Where a.FSessId=b.FSessId And a.OrderNo=Cast(b.OrderNo as varchar(20)) And b.FSessId=@FSessID And b.OrderNo=@OrderNO ;
+Update PhpRoyal..TrnOrder Set RemainQty=OrderQty-DispatchQty,DispatchDate=Getdate() Where FSessId=@FSessID And OrderNo=@OrderNo ;
+--if EXISTS (Select * FROM PhpRoyal..TrnOrder WHERE OrderType='T' AND ORDERNo=Cast(@OrderNo as varchar(10)) )
+--BEGIN
+Update PhpRoyal..TrnOrder Set DispatchStatus=Case When RemainQty<=0 Then 'C' Else 'N' End Where FSessId=@FSessID And OrderNo=@OrderNO
+--END
+END
+COMMIT TRANSACTION
+END TRY
+BEGIN CATCH
+IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION --RollBack in case of Error
+  --- Shows Actual ERROR --- 
+  DECLARE @errmsg NVARCHAR(4000)
+  DECLARE @errseverity INT
+  DECLARE @errstate INT
+  SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+  RAISERROR(@errmsg, @errseverity, @errstate)END CATCH
+END
+--------------------------------------------

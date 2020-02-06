@@ -1,0 +1,38 @@
+ ALTER View V#CurrentStockDetailNotForStockist --04:02 PM 2019-06-21
+With Encryption -- 
+As 
+Select b.PartyCode,b.PartyName,c.CatId,c.CatName,d.ProdId,d.ProductName,a.BatchCode,a.Barcode,
+d.PurchaseRate,d.MfgDate,d.ExpDate,d.DP,d.MRP,d.RP,IsNull(SUM(Qty),0) as Qty,d.IMEINo as MinStockQty,
+SUM(CASE WHEN Qty>0 THEN Qty ELSE 0 END) StockIn,SUM(CASE WHEN Qty<0 THEN Qty ELSE 0 END) StockOut,
+0 KitProdQty, 0 NSProdQty, 0 FreeProdQty,IsNull(SUM(Qty),0) as TotalQty,
+Cast(RP*IsNull(SUM(Qty),0) as Numeric(18,2)) as RPValue,
+Cast(PurchaseRate*IsNull(SUM(Qty),0) as Numeric(18,2)) as StockValue,
+Cast(DP*IsNull(SUM(Qty),0) as Numeric(18,2)) as DPStockValue,
+Cast(MRP*IsNull(SUM(Qty),0) as Numeric(18,2)) as MRPStockValue
+
+FROM Im_CurrentStock as a,M_LedgerMaster as b,M_CatMaster as c,M_ProductMaster as d
+Where a.FCode=b.PartyCode AND b.GroupID not in (5,6,9,21) And c.CatId=d.CatId And a.ProdId=d.ProdId And a.ActiveStatus='Y' And b.ActiveStatus='Y' --  Add: (19May14@06:44PM,Monday) And b.ActiveStatus='Y'
+--AND d.Ptype<>'K'--Added on 31Mar17 
+AND a.BatchCode in (Select BatchNo FROM M_BarcodeMaster WHERE ActiveStatus='Y')--Added on 17May17
+Group By b.PartyCode,b.PartyName,c.CatId,c.CatName,d.ProdId,d.ProductName,a.BatchCode,a.Barcode,
+d.PurchaseRate,d.DP,d.MRP,d.MfgDate,d.ExpDate,d.RP,d.IMEINo--,a.ProdType
+------------------------------------------
+ALTER View V#CurrentStockDetailNotForStockist ---17May17
+With Encryption -- Re-Create: 13Mar15@03:32PM,Fri..12Mar15@06:29PM,Thur..29May14@07:44PM,Thursday;AND b.GroupID not in (5,6,9,21)Condition Added on 02Jun14
+As 
+Select b.PartyCode,b.PartyName,c.CatId,c.CatName,d.ProdId,d.ProductName,a.BatchCode,a.Barcode,
+d.PurchaseRate,d.MfgDate,d.ExpDate,d.DP,d.MRP,d.RP,IsNull(SUM(Qty),0) as Qty,d.IMEINo as MinStockQty,
+SUM(CASE WHEN Qty>0 THEN Qty ELSE 0 END) StockIn,SUM(CASE WHEN Qty<0 THEN Qty ELSE 0 END) StockOut,
+0 KitProdQty, 0 NSProdQty, 0 FreeProdQty,IsNull(SUM(Qty),0) as TotalQty,
+Cast(RP*IsNull(SUM(Qty),0) as Numeric(18,2)) as RPValue,
+Cast(PurchaseRate*IsNull(SUM(Qty),0) as Numeric(18,2)) as StockValue,
+Cast(DP*IsNull(SUM(Qty),0) as Numeric(18,2)) as DPStockValue,
+Cast(MRP*IsNull(SUM(Qty),0) as Numeric(18,2)) as MRPStockValue
+
+FROM Im_CurrentStock as a,M_LedgerMaster as b,M_CatMaster as c,M_ProductMaster as d
+Where a.FCode=b.PartyCode AND b.GroupID not in (5,6,9,21) And c.CatId=d.CatId And a.ProdId=d.ProdId And a.ActiveStatus='Y' And b.ActiveStatus='Y' --  Add: (19May14@06:44PM,Monday) And b.ActiveStatus='Y'
+AND d.Ptype<>'K'--Added on 31Mar17
+AND a.BatchCode in (Select BatchNo FROM M_BarcodeMaster WHERE ActiveStatus='Y')--Added on 17May17
+Group By b.PartyCode,b.PartyName,c.CatId,c.CatName,d.ProdId,d.ProductName,a.BatchCode,a.Barcode,
+d.PurchaseRate,d.DP,d.MRP,d.MfgDate,d.ExpDate,d.RP,d.IMEINo--,a.ProdType
+------------------------------------------

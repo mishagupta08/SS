@@ -1,0 +1,121 @@
+ALTER FUNCTION OfferResult ( @SessID int, @OfferUID int)   
+RETURNS @UserTable TABLE (IDNo varchar(20) NOT NULL,  
+MemName varchar(50) NOT NULL,  
+City varchar(50) NOT NULL,  
+MobileNo numeric(18,0) NOT NULL,  
+Mnth1 varchar(10) NOT NULL,  
+Mnth2 varchar(10) NOT NULL,  
+Mnth3 varchar(10) NOT NULL,  
+Mnth4 varchar(10) NOT NULL,  
+Mnth5 varchar(10) NOT NULL,  
+Mnth6 varchar(10) NOT NULL,  
+Status varchar(100) NOT NULL)  
+as  
+BEGIN  
+--Declare @SessID as int=14  
+--Declare @OfferUID as int=1  
+Declare @FrmDate as DateTime  
+Declare @ToDate as DateTime  
+Declare @Offervalue as numeric(18,2)  
+DECLARE @Tbl_ TABLE(FormNo numeric(18,0),OfferUID numeric(18,0))  
+Select @Offervalue=OfferOnValue FROM VisionOffers WHERE AID=@OfferUID  
+  
+INSERT @UserTable  
+Select m.IDNo,LTRIM(RTRIM(m.MemFirstName+ ' ' + m.MemLastName)) as MemName,m.City,m.Mobl MobileNo,IIF(ISNULL(SUM(Mnth1),0)>0,'Yes','No') as Mnth1,IIF(ISNULL(SUM(Mnth2),0)>0,'Yes','No') Mnth2,IIF(ISNULL(SUM(Mnth3),0)>0,'Yes','No') Mnth3,
+IIF(ISNULL(SUM(Mnth4),0)>0,'Yes','No') Mnth4,IIF(ISNULL(SUM(Mnth5),0)>0,'Yes','No') Mnth5, IIF(ISNULL(SUM(Mnth6),0)>0,'Yes','No') Mnth6,  
+CASE WHEN ISNULL(SUM(Mnth1),0)>0 AND ISNULL(SUM(Mnth2),0)>0 AND ISNULL(SUM(Mnth3),0)>0 AND ISNULL(SUM(Mnth4),0)>0 AND ISNULL(SUM(Mnth5),0)>0 AND ISNULL(SUM(Mnth6),0)>0 THEN 'Qualified'  
+WHEN  SUM(Mnth4)>0 AND SUM(Mnth5)>0 AND SUM(Mnth6)>0 THEN 'Running'  
+ ELSE 'Not Qualified' END as Status FROM (  
+Select DISTINCT Cast(FCode as numeric(18,0)) FormNo,1 as Mnth1,0 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..OldBillMain a,VisionRoots..M_MonthSessnMaster b   
+WHERE NetPayable>=@Offervalue AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-5  
+UNION  
+Select DISTINCT FormNo,1 as Mnth1,0 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b   
+WHERE a.OfferUID in (@OfferUID) AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-5  
+UNION  
+Select DISTINCT Cast(FCode as numeric(18,0)) FormNo,0 as Mnth1,1 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..OldBillMain a,VisionRoots..M_MonthSessnMaster b   
+WHERE NetPayable>=@Offervalue AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-4  
+UNION  
+Select DISTINCT FormNo,0 as Mnth1,1 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b   
+WHERE a.OfferUID in (@OfferUID) AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-4  
+UNION  
+Select DISTINCT Cast(FCode as numeric(18,0)) FormNo,0 as Mnth1,0 Mnth2,1 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..OldBillMain a,VisionRoots..M_MonthSessnMaster b   
+WHERE NetPayable>=@Offervalue AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-3  
+UNION  
+Select  DISTINCT FormNo,0 as Mnth1,0 Mnth2,1 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b   
+WHERE a.OfferUID in (@OfferUID) AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-3  
+UNION  
+Select DISTINCT Cast(FCode as numeric(18,0)) FormNo,0 as Mnth1,0 Mnth2,0 Mnth3,1 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..OldBillMain a,VisionRoots..M_MonthSessnMaster b   
+WHERE NetPayable>=@Offervalue AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-2  
+UNION  
+Select DISTINCT FormNo,0 as Mnth1,0 Mnth2,0 Mnth3,1 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b   
+WHERE  a.OfferUID in (@OfferUID) AND  A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-2  
+UNION  
+Select DISTINCT  FormNo,0 as Mnth1,0 Mnth2,0 Mnth3,0 Mnth4,1 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b   
+WHERE  a.OfferUID in (@OfferUID) AND  A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-1  
+UNION  
+Select DISTINCT FormNo,0 as Mnth1,0 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,1 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b   
+WHERE  a.OfferUID in (@OfferUID) AND  A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID  
+) a , VisionRoots..M_MemberMaster m WHERE a.Formno=m.FormNo GROUP BY m.IDNo,m.MemFirstName+ ' ' + m.MemLastName,m.City,m.Mobl   
+ Return;  
+END
+
+-----------------------
+
+CREATE FUNCTION OfferResult ( @SessID int, @OfferUID int) 
+RETURNS @UserTable TABLE (IDNo varchar(20) NOT NULL,
+MemName varchar(50) NOT NULL,
+City varchar(50) NOT NULL,
+MobileNo numeric(18,0) NOT NULL,
+Mnth1 int NOT NULL,
+Mnth2 int NOT NULL,
+Mnth3 int NOT NULL,
+Mnth4 int NOT NULL,
+Mnth5 int NOT NULL,
+Mnth6 int NOT NULL,Status varchar(100) NOT NULL)
+as
+BEGIN
+--Declare @SessID as int=14
+--Declare @OfferUID as int=1
+Declare @FrmDate as DateTime
+Declare @ToDate as DateTime
+Declare @Offervalue as numeric(18,2)
+DECLARE @Tbl_ TABLE(FormNo numeric(18,0),OfferUID numeric(18,0))
+Select @Offervalue=OfferOnValue FROM VisionOffers WHERE AID=@OfferUID
+
+INSERT @UserTable
+Select m.IDNo,LTRIM(RTRIM(m.MemFirstName+ ' ' + m.MemLastName)) as MemName,m.City,m.Mobl MobileNo,ISNULL(SUM(Mnth1),0) as Mnth1,ISNULL(SUM(Mnth2),0) Mnth2,ISNULL(SUM(Mnth3),0) Mnth3,ISNULL(SUM(Mnth4),0) Mnth4,ISNULL(SUM(Mnth5),0) Mnth5, ISNULL(SUM(Mnth6),0) Mnth6,
+CASE WHEN ISNULL(SUM(Mnth1),0)>0 AND ISNULL(SUM(Mnth2),0)>0 AND ISNULL(SUM(Mnth3),0)>0 AND ISNULL(SUM(Mnth4),0)>0 AND ISNULL(SUM(Mnth5),0)>0 AND ISNULL(SUM(Mnth6),0)>0 THEN 'Qualified'
+WHEN  SUM(Mnth4)>0 AND SUM(Mnth5)>0 AND SUM(Mnth6)>0 THEN 'Running'
+ ELSE 'Not Qualified' END as Status FROM (
+Select DISTINCT Cast(FCode as numeric(18,0)) FormNo,1 as Mnth1,0 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..OldBillMain a,VisionRoots..M_MonthSessnMaster b 
+WHERE NetPayable>=@Offervalue AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-5
+UNION
+Select DISTINCT FormNo,1 as Mnth1,0 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b 
+WHERE a.OfferUID in (@OfferUID) AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-5
+UNION
+Select DISTINCT Cast(FCode as numeric(18,0)) FormNo,0 as Mnth1,1 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..OldBillMain a,VisionRoots..M_MonthSessnMaster b 
+WHERE NetPayable>=@Offervalue AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-4
+UNION
+Select DISTINCT FormNo,0 as Mnth1,1 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b 
+WHERE a.OfferUID in (@OfferUID) AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-4
+UNION
+Select DISTINCT Cast(FCode as numeric(18,0)) FormNo,0 as Mnth1,0 Mnth2,1 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..OldBillMain a,VisionRoots..M_MonthSessnMaster b 
+WHERE NetPayable>=@Offervalue AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-3
+UNION
+Select  DISTINCT FormNo,0 as Mnth1,0 Mnth2,1 Mnth3,0 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b 
+WHERE a.OfferUID in (@OfferUID) AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-3
+UNION
+Select DISTINCT Cast(FCode as numeric(18,0)) FormNo,0 as Mnth1,0 Mnth2,0 Mnth3,1 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..OldBillMain a,VisionRoots..M_MonthSessnMaster b 
+WHERE NetPayable>=@Offervalue AND A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-2
+UNION
+Select DISTINCT FormNo,0 as Mnth1,0 Mnth2,0 Mnth3,1 Mnth4,0 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b 
+WHERE  a.OfferUID in (@OfferUID) AND  A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-2
+UNION
+Select DISTINCT  FormNo,0 as Mnth1,0 Mnth2,0 Mnth3,0 Mnth4,1 Mnth5,0 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b 
+WHERE  a.OfferUID in (@OfferUID) AND  A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID-1
+UNION
+Select DISTINCT FormNo,0 as Mnth1,0 Mnth2,0 Mnth3,0 Mnth4,0 Mnth5,1 Mnth6 FROM VRINV..TrnBillDetails a,VisionRoots..M_MonthSessnMaster b 
+WHERE  a.OfferUID in (@OfferUID) AND  A.BillDate>=B.FrmDate AND (A.BillDate<=B.ToDate OR B.ToDate is NULL) AND b.SessID=@SessID
+) a , VisionRoots..M_MemberMaster m WHERE a.Formno=m.FormNo GROUP BY m.IDNo,m.MemFirstName+ ' ' + m.MemLastName,m.City,m.Mobl 
+ Return;
+END

@@ -1,0 +1,398 @@
+  SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE ROLLBACKBILL --13:57 09-01-2020
+       @BillNo Varchar(50),      
+       @DReason Varchar(100),      
+       @DUserId Numeric(18,0),
+       @DFSessId as INT -- 
+ WITH ENCRYPTION  ----
+AS      
+
+DECLARE @OrderNo As Varchar(50)
+DECLARE @BillType As Char(10)
+DECLARE @CountDStatus as INT
+ -- DECLARE @FSessId as INT --  Use @DFSessId Instead of @FSessId on Dated: 31Mar15
+DECLARE @SetDispStatus As Char(1)
+DECLARE @FOUND as char(1)
+DECLARE @LastBillNo as Varchar(50)
+DECLARE @LastBillBy as Varchar(50)
+DECLARE @LastBillDate as DateTime
+DECLARE @DispAmt as Numeric(18,2)
+DECLARE @DispQty as Numeric(18,2)
+DECLARE @IsReceive As Char(10)
+Declare @BType char(1)='R'
+Declare @KitID_ as numeric(18,0)
+Declare @Formno as numeric(18,0)
+---- Add: 17Feb14@04:18PM,Monday ----
+DECLARE @PartyOrderNo As Varchar(50)
+DECLARE @PartyOrderBy As Varchar(50)
+-------- END ------
+
+---- Add: 08Dec14,Monday ----
+DECLARE @PLNo As Varchar(50) 
+DECLARE @BillDate As DateTime
+-------- END ------
+
+---- Add: 02jan16,Saturday (Sumit)----
+declare @SessID as numeric     =0 
+--Select @SessID=IsNull(Max(SessID),0) from PhpRoyal..M_SessnMaster  --- MstSessnMaster  
+------- END --------
+
+BEGIN
+BEGIN TRY
+BEGIN TRANSACTION 
+-----:
+
+SET @PartyOrderNo=0
+SET @PartyOrderBy=''
+
+--- GET Last BillNo
+SELECT @BillType=BillType,@IsReceive=IsReceive,@Formno=Formno FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@DFSessId --ORDER BY BillId DESC
+
+--- GET Party Order No & Order By ---- Add: 17Feb14@04:18PM,Monday
+SELECT @PartyOrderNo=OrderNo,@BillDate=BillDate FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@DFSessId
+SELECT @PartyOrderBy=OrderBy FROM TrnPartyOrderMain WHERE OrderNo=@PartyOrderNo And FSessId=@DFSessId
+--Select @BType=BillType,@KitID_=KitID FROM PhpRoyal..RepurchIncome WHERE BillNo=@BillNo
+--- SET DEFAULT VALUE ----
+SET @FOUND='N' 
+SET @DispAmt=0
+SET @DispQty=0
+--- END ---
+
+IF @DUserId=0
+   BEGIN
+     SET @DUserId=888 -- DEFAULT USERID: ROLLBACK BILL 
+   END
+
+IF Upper(LTrim(RTrim(@DReason)))=''
+   BEGIN
+     SET @DReason='REASON UNKNOWN' 
+   END   
+
+---- DELETE BILL PROCESS ---
+
+---- INSERTION PROCESS...
+INSERT INTO DeletedBillMain
+SELECT *,GetDate(),@DReason,@DUserId FROM TrnBillMain WHERE FSessId=@DFSessId AND BillNo=@BillNo
+INSERT INTO DeletedBillDetails
+SELECT *,@DUserId,GETDate() FROM TrnBillDetails WHERE FSessId=@DFSessId AND BillNo=@BillNo
+INSERT INTO DeletedVoucher
+SELECT *,GETDate(),@DReason,@DUserId FROM TrnVoucher WHERE FSessId=@DFSessId AND RefNo=@BillNo
+INSERT INTO DeletedCurrentStock
+SELECT *,@DUserId,@DReason,GetDate() FROM Im_CurrentStock WHERE FSessId=@DFSessId AND RefNo=@BillNo
+
+IF Upper(LTrim(RTrim(@IsReceive)))='G' --- IF FOUND Customer Bill -- Add: 18Oct13,Friday
+ BEGIN
+   -- INSERT 
+   INSERT INTO DeletedCustomerMaster
+   SELECT *,@DReason,GETDATE(),@DUserId FROM M_CustomerMaster WHERE RegBillNo=@BillNo
+   
+   -- DELETE 
+   DELETE FROM M_CustomerMaster WHERE RegBillNO=@BillNo
+ END
+
+--UPDATE PhpRoyalInv..TrnOrderDeliveryDetail SET ActiveStatus='D',DRecTimeStamp=Getdate() WHERE ActiveStatus ='Y' AND Billno=@BillNo --Added on 26Nov18
+---- DELETION PROCESS...
+--UPDATE TrnBillData SET Billno='Del' + Billno,ActiveStatus='D' WHERE FSessId=@DFSessId AND BillNo=@BillNo--02Jun17
+DELETE FROM TrnBillMain WHERE FSessId=@DFSessId AND BillNo=@BillNo
+DELETE FROM TrnBillDetails WHERE FSessId=@DFSessId AND BillNo=@BillNo
+DELETE FROM TrnVoucher WHERE FSessId=@DFSessId AND RefNo=@BillNo
+--DELETE FROM PhpRoyal..TrnVoucher WHERE RefNo=@BillNo
+
+--DECLARE @dDateTIME DATE,
+--        @RunSQL NVARCHAR(max) 
+
+--SET @dDateTIME = (SELECT SalesDate FROM dbo.SalesDate)
+
+--SELECT @RunSQL =
+--  'INSERT INTO dbo.EWallet
+--   SELECT * FROM OPENROWSET(''MSDASQL'', ''dsn=mydsn;uid=myid;pwd=mypwd;'',
+--    ''SELECT 
+--        ID,
+--        TranDate,
+--        ProductID,
+--        CostValue,
+--        SalesValue,
+--        QtySold,
+--    FROM tblSales WHERE TranDate=''''' + CONVERT(nvarchar, @dDateTIME, 112) + ''''''')'
+----PRINT @RunSQL    
+--EXEC sp_executesql @RunSQL 
+
+
+DELETE FROM Im_CurrentStock WHERE FSessId=@DFSessId AND RefNo=@BillNo
+DELETE FROM M_CouponSalesDetail WHERE FSessId=@DFSessId AND RefNo=@BillNo
+
+Delete FROM TrnProductDispatchDetail WHERE BillNo=@BillNo AND FSessId=@DFSessId --Added on 11Aug17 
+
+------ Start Repurchase Billing On Dated: 12Dec13,Thursday
+--IF Upper(LTrim(RTrim(@IsReceive)))='R' --- IF FOUND Repurchase Bill
+--  BEGIN
+--	DELETE FROM PhpRoyal..RepurchIncome WHERE BillNo=@BillNo And Cast(BillDate as Date)=Cast(Getdate() as Date) And SessID=@SessID	-- Add Condition >> SessID=@SessID <<(For Delete Only Current Session Bill)--- Need to delete if generated from repurchase billing. (Add: 17Feb14,Monday) >>  And Upper(BillType)='R'
+	
+--	INSERT PhpRoyal..RepurchIncome (SessId,FormNo,BillNo,BillDate,RepurchIncome,Imported,BillType,SoldBy,Msessid,KitID,Remarks,DSessID,PVValue,RecTimeStamp)
+--	Select @SessId,FormNo,BillNo,BillDate,-RepurchIncome,Imported,BillType,SoldBy,Msessid,KitID,Remarks,DSessID,PVValue,Getdate() FROM PhpRoyal..RepurchIncome WHERE BillNo=@BillNo And BillDate=@BillDate
+	
+--  END
+
+
+---- UPDATION PROCESS...
+UPDATE TrnBillData SET Billno='Del' + Billno,ActiveStatus='D',DUserId=@DUserId,DReason=@DReason,DRecTimeStamp=GETDATE() WHERE FSessId=@DFSessId AND BillNo=@BillNo
+UPDATE TrnPayModeDetail SET ActiveStatus='D',DUserId=@DUserId,DRecTimeStamp=GETDATE() WHERE FSessId=@DFSessId AND BillNo=@BillNo
+
+
+ --IF (@BType <>'R')
+ --    BEGIN
+ --    Delete from PhpRoyal..pretopup_memDtl WHERE tmpID=(Select ISNULL(Max(tmpID),0) from PhpRoyal..pretopup_memDtl WHERE Formno=@Formno)
+ --    UPDATE PhpRoyal..M_MemberMaster SET kitid = b.KitID,ActiveStatus = b.ActiveStatus,BV=b.BV,Imported=b.Imported ,Rp=b.Rp,Sp=b.Sp,IsTopUp = b.IsTopUp ,BillNo = b.BillNo,
+ --    UpgrdSessid=b.UpgrdSessid,UpgradeDate = b.UpgradeDate,UpgrdDSessid=b.UpgrdDSessid
+ --    FROM PhpRoyal..M_MemberMaster a, (Select Top 1 * FROM PhpRoyal..TempMemberMaster WHERE Ctype='T' AND FormNo=@FormNO AND KitID<>@KitID_ ORDER BY AID Desc) b
+ --    WHERE a.FormNo=@FormNo 
+    
+ --   Select @KitID_=KitID  FROM PhpRoyal..posttopup_memDtl WHERE FormNo=@FormNO --AND CardNo=Cast(@CardNo as varchar(20))
+ --    --Delete FROM PhpRoyal..posttopup_memDtl WHERE FormNo=@FormNO AND CardNo=Cast(@CardNo as varchar(20))   
+ --   Delete from PhpRoyal..posttopup_memDtl WHERE tmpID=(Select ISNULL(Max(tmpID),0) from PhpRoyal..posttopup_memDtl WHERE Formno=@Formno)
+             
+ -- UPDATE PhpRoyal..MultiTopup SET Package2='',Kit2=0 WHERE Kit2=@KitID_ AND formno = @FormNo;                                                
+ -- UPDATE PhpRoyal..MultiTopup SET Package3='',Kit3=0 WHERE Kit3=@KitID_ AND formno = @FormNo;             
+ -- UPDATE PhpRoyal..MultiTopup SET Package4='',Kit4=0 WHERE Kit4=@KitID_ AND formno = @FormNo;             
+ -- UPDATE PhpRoyal..MultiTopup SET Package5='',Kit5=0 WHERE Kit5=@KitID_ AND formno = @FormNo;            
+ 
+ --   END
+
+    ---- Update Status In Party Order's Related Tbl's ----- Add: 17Feb14@04:18PM,Monday
+    IF  Exists(Select * From TrnBillMain Where FSessId=@DFSessId AND OrderNo=@PartyOrderNo And BillType='P')
+      BEGIN 
+     ---- Update Status In TrnPartyOrderDetail 
+       Update TrnPartyOrderDetail Set DispatchQty=a.DispQty,RemQty=(Qty-a.DispQty),OrdType='O',
+       Status=Case When (Qty-a.DispQty)=0 Then 'C' Else 'P' End 
+       FROM (Select a.FSessId,a.OrderNo,b.ProductId,b.ProdType,b.OfferUId,IsNull(Sum(b.Qty),0) as DispQty FROM TrnBillMain as a,TrnBillDetails as b
+       Where a.BillNo=b.BillNo And a.FSessId=b.FSessId And a.BillNo=@BillNo And a.BillType=@BillType And a.FSessId=@DFSessId Group By a.FSessId,a.OrderNo,b.ProductId,b.ProdType,b.OfferUId) as a,
+       TrnPartyOrderDetail as b
+       Where a.FSessId=b.FSessId And a.OrderNo=b.OrderNo And a.ProductId=b.ProductCode And a.ProdType=b.ProdType AND a.OfferUId=b.OfferUId
+      And a.OrderNo=@PartyOrderNo And b.OrderBy=@PartyOrderBy And a.FSessId=@DFSessId
+     ---- Update Status In TrnPartyOrderMain          
+       Update TrnPartyOrderMain Set Status=Case When TotalOrdQty=TotalDispQty Then 'C' Else 'P' END,OType='D' Where OrderNo=@PartyOrderNo And OrderBy=@PartyOrderBy And FSessId=@DFSessId
+      END  
+    ELSE
+      BEGIN
+   
+        ---- Update Status In TrnPartyOrderDetail 
+       Update TrnPartyOrderDetail Set DispatchQty=0,RemQty=(Qty-DispatchQty),OrdType='O',
+       Status='P' Where OrderNo=@PartyOrderNo And OrderBy=@PartyOrderBy And FSessId=@DFSessId ---Case When (Qty-DispatchQty)=0 Then 'C' Else 'P' End 
+        ---- Update Status In TrnPartyOrderMain          
+       Update TrnPartyOrderMain Set Status='P',OType='O' Where OrderNo=@PartyOrderNo and OrderBy=@PartyOrderBy And FSessId=@DFSessId
+      END
+    ----- END ----
+    
+----**** Start from 11Aug17 
+--IF EXISTS(Select * FROM SarsoBiz..TrnOrder WHERE Cast(OrderNo as varchar(20))=@PartyOrderNo )
+--BEGIN
+--UPDATE SarsoBiz..TrnOrderDetail SET DispStatus='N',DispQty=0,RemQty=Qty,DispAmt=0 WHERE  Cast(OrderNo as varchar(20))=@PartyOrderNo
+--UPDATE SarsoBiz..TrnOrder SET DispatchStatus='N',DispatchQty=0,RemainQty=OrderQty,DispatchAmount=0 WHERE  Cast(OrderNo as varchar(20))=@PartyOrderNo
+--END
+-------:
+COMMIT TRANSACTION
+END TRY
+
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION --RollBack in case of Error
+  --- Shows Actual ERROR --- 26Sep13
+  DECLARE @errmsg NVARCHAR(4000)
+  DECLARE @errseverity INT
+  DECLARE @errstate INT
+  SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+  RAISERROR(@errmsg, @errseverity, @errstate)
+END CATCH
+END
+GO
+-----------------------------------
+
+  SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE ROLLBACKBILL --
+       @BillNo Varchar(50),      
+       @DReason Varchar(100),      
+       @DUserId Numeric(18,0),
+       @DFSessId as INT -- 
+ WITH ENCRYPTION  ----
+AS      
+
+DECLARE @OrderNo As Varchar(50)
+DECLARE @BillType As Char(10)
+DECLARE @CountDStatus as INT
+ -- DECLARE @FSessId as INT --  Use @DFSessId Instead of @FSessId on Dated: 31Mar15
+DECLARE @SetDispStatus As Char(1)
+DECLARE @FOUND as char(1)
+DECLARE @LastBillNo as Varchar(50)
+DECLARE @LastBillBy as Varchar(50)
+DECLARE @LastBillDate as DateTime
+DECLARE @DispAmt as Numeric(18,2)
+DECLARE @DispQty as Numeric(18,2)
+DECLARE @IsReceive As Char(10)
+Declare @BType char(1)
+Declare @KitID_ as numeric(18,0)
+Declare @Formno as numeric(18,0)
+---- Add: 17Feb14@04:18PM,Monday ----
+DECLARE @PartyOrderNo As Varchar(50)
+DECLARE @PartyOrderBy As Varchar(50)
+-------- END ------
+
+---- Add: 08Dec14,Monday ----
+DECLARE @PLNo As Varchar(50) 
+DECLARE @BillDate As DateTime
+-------- END ------
+
+---- Add: 02jan16,Saturday (Sumit)----
+declare @SessID as numeric      
+Select @SessID=IsNull(Max(SessID),0) from PhpRoyal..M_SessnMaster  --- MstSessnMaster  
+------- END --------
+
+BEGIN
+BEGIN TRY
+BEGIN TRANSACTION 
+-----:
+
+SET @PartyOrderNo=0
+SET @PartyOrderBy=''
+
+--- GET Last BillNo
+SELECT @BillType=BillType,@IsReceive=IsReceive,@Formno=Formno FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@DFSessId --ORDER BY BillId DESC
+
+--- GET Party Order No & Order By ---- Add: 17Feb14@04:18PM,Monday
+SELECT @PartyOrderNo=OrderNo,@BillDate=BillDate FROM TrnBillMain WHERE BillNo=@BillNo And FSessId=@DFSessId
+SELECT @PartyOrderBy=OrderBy FROM TrnPartyOrderMain WHERE OrderNo=@PartyOrderNo And FSessId=@DFSessId
+Select @BType=BillType,@KitID_=KitID FROM PhpRoyal..RepurchIncome WHERE BillNo=@BillNo
+--- SET DEFAULT VALUE ----
+SET @FOUND='N' 
+SET @DispAmt=0
+SET @DispQty=0
+--- END ---
+
+IF @DUserId=0
+   BEGIN
+     SET @DUserId=888 -- DEFAULT USERID: ROLLBACK BILL 
+   END
+
+IF Upper(LTrim(RTrim(@DReason)))=''
+   BEGIN
+     SET @DReason='REASON UNKNOWN' 
+   END   
+
+---- DELETE BILL PROCESS ---
+
+---- INSERTION PROCESS...
+INSERT INTO DeletedBillMain
+SELECT *,GetDate(),@DReason,@DUserId FROM TrnBillMain WHERE FSessId=@DFSessId AND BillNo=@BillNo
+INSERT INTO DeletedBillDetails
+SELECT *,@DUserId,GETDate() FROM TrnBillDetails WHERE FSessId=@DFSessId AND BillNo=@BillNo
+INSERT INTO DeletedVoucher
+SELECT *,GETDate(),@DReason,@DUserId FROM TrnVoucher WHERE FSessId=@DFSessId AND RefNo=@BillNo
+INSERT INTO DeletedCurrentStock
+SELECT *,@DUserId,@DReason,GetDate() FROM Im_CurrentStock WHERE FSessId=@DFSessId AND RefNo=@BillNo
+
+IF Upper(LTrim(RTrim(@IsReceive)))='G' --- IF FOUND Customer Bill -- Add: 18Oct13,Friday
+ BEGIN
+   -- INSERT 
+   INSERT INTO DeletedCustomerMaster
+   SELECT *,@DReason,GETDATE(),@DUserId FROM M_CustomerMaster WHERE RegBillNo=@BillNo
+   
+   -- DELETE 
+   DELETE FROM M_CustomerMaster WHERE RegBillNO=@BillNo
+ END
+
+UPDATE PhpRoyalInv..TrnOrderDeliveryDetail SET ActiveStatus='D',DRecTimeStamp=Getdate() WHERE ActiveStatus ='Y' AND Billno=@BillNo --Added on 26Nov18
+---- DELETION PROCESS...
+--UPDATE TrnBillData SET Billno='Del' + Billno,ActiveStatus='D' WHERE FSessId=@DFSessId AND BillNo=@BillNo--02Jun17
+DELETE FROM TrnBillMain WHERE FSessId=@DFSessId AND BillNo=@BillNo
+DELETE FROM TrnBillDetails WHERE FSessId=@DFSessId AND BillNo=@BillNo
+DELETE FROM TrnVoucher WHERE FSessId=@DFSessId AND RefNo=@BillNo
+DELETE FROM PhpRoyal..TrnVoucher WHERE RefNo=@BillNo
+
+DELETE FROM Im_CurrentStock WHERE FSessId=@DFSessId AND RefNo=@BillNo
+DELETE FROM M_CouponSalesDetail WHERE FSessId=@DFSessId AND RefNo=@BillNo
+
+Delete FROM TrnProductDispatchDetail WHERE BillNo=@BillNo AND FSessId=@DFSessId --Added on 11Aug17 
+
+---- Start Repurchase Billing On Dated: 12Dec13,Thursday
+IF Upper(LTrim(RTrim(@IsReceive)))='R' --- IF FOUND Repurchase Bill
+  BEGIN
+	DELETE FROM PhpRoyal..RepurchIncome WHERE BillNo=@BillNo And Cast(BillDate as Date)=Cast(Getdate() as Date) And SessID=@SessID	-- Add Condition >> SessID=@SessID <<(For Delete Only Current Session Bill)--- Need to delete if generated from repurchase billing. (Add: 17Feb14,Monday) >>  And Upper(BillType)='R'
+	
+	INSERT PhpRoyal..RepurchIncome (SessId,FormNo,BillNo,BillDate,RepurchIncome,Imported,BillType,SoldBy,Msessid,KitID,Remarks,DSessID,PVValue,RecTimeStamp)
+	Select @SessId,FormNo,BillNo,BillDate,-RepurchIncome,Imported,BillType,SoldBy,Msessid,KitID,Remarks,DSessID,PVValue,Getdate() FROM PhpRoyal..RepurchIncome WHERE BillNo=@BillNo And BillDate=@BillDate
+	
+  END
+
+
+---- UPDATION PROCESS...
+UPDATE TrnBillData SET Billno='Del' + Billno,ActiveStatus='D',DUserId=@DUserId,DReason=@DReason,DRecTimeStamp=GETDATE() WHERE FSessId=@DFSessId AND BillNo=@BillNo
+UPDATE TrnPayModeDetail SET ActiveStatus='D',DUserId=@DUserId,DRecTimeStamp=GETDATE() WHERE FSessId=@DFSessId AND BillNo=@BillNo
+
+
+ IF (@BType <>'R')
+     BEGIN
+     Delete from PhpRoyal..pretopup_memDtl WHERE tmpID=(Select ISNULL(Max(tmpID),0) from PhpRoyal..pretopup_memDtl WHERE Formno=@Formno)
+     UPDATE PhpRoyal..M_MemberMaster SET kitid = b.KitID,ActiveStatus = b.ActiveStatus,BV=b.BV,Imported=b.Imported ,Rp=b.Rp,Sp=b.Sp,IsTopUp = b.IsTopUp ,BillNo = b.BillNo,
+     UpgrdSessid=b.UpgrdSessid,UpgradeDate = b.UpgradeDate,UpgrdDSessid=b.UpgrdDSessid
+     FROM PhpRoyal..M_MemberMaster a, (Select Top 1 * FROM PhpRoyal..TempMemberMaster WHERE Ctype='T' AND FormNo=@FormNO AND KitID<>@KitID_ ORDER BY AID Desc) b
+     WHERE a.FormNo=@FormNo 
+    
+    Select @KitID_=KitID  FROM PhpRoyal..posttopup_memDtl WHERE FormNo=@FormNO --AND CardNo=Cast(@CardNo as varchar(20))
+     --Delete FROM PhpRoyal..posttopup_memDtl WHERE FormNo=@FormNO AND CardNo=Cast(@CardNo as varchar(20))   
+    Delete from PhpRoyal..posttopup_memDtl WHERE tmpID=(Select ISNULL(Max(tmpID),0) from PhpRoyal..posttopup_memDtl WHERE Formno=@Formno)
+             
+  UPDATE PhpRoyal..MultiTopup SET Package2='',Kit2=0 WHERE Kit2=@KitID_ AND formno = @FormNo;                                                
+  UPDATE PhpRoyal..MultiTopup SET Package3='',Kit3=0 WHERE Kit3=@KitID_ AND formno = @FormNo;             
+  UPDATE PhpRoyal..MultiTopup SET Package4='',Kit4=0 WHERE Kit4=@KitID_ AND formno = @FormNo;             
+  UPDATE PhpRoyal..MultiTopup SET Package5='',Kit5=0 WHERE Kit5=@KitID_ AND formno = @FormNo;            
+ 
+    END
+
+    ---- Update Status In Party Order's Related Tbl's ----- Add: 17Feb14@04:18PM,Monday
+    IF  Exists(Select * From TrnBillMain Where FSessId=@DFSessId AND OrderNo=@PartyOrderNo And BillType='P')
+      BEGIN 
+     ---- Update Status In TrnPartyOrderDetail 
+       Update TrnPartyOrderDetail Set DispatchQty=a.DispQty,RemQty=(Qty-a.DispQty),OrdType='O',
+       Status=Case When (Qty-a.DispQty)=0 Then 'C' Else 'P' End 
+       FROM (Select a.FSessId,a.OrderNo,b.ProductId,b.ProdType,b.OfferUId,IsNull(Sum(b.Qty),0) as DispQty FROM TrnBillMain as a,TrnBillDetails as b
+       Where a.BillNo=b.BillNo And a.FSessId=b.FSessId And a.BillNo=@BillNo And a.BillType=@BillType And a.FSessId=@DFSessId Group By a.FSessId,a.OrderNo,b.ProductId,b.ProdType,b.OfferUId) as a,
+       TrnPartyOrderDetail as b
+       Where a.FSessId=b.FSessId And a.OrderNo=b.OrderNo And a.ProductId=b.ProductCode And a.ProdType=b.ProdType AND a.OfferUId=b.OfferUId
+      And a.OrderNo=@PartyOrderNo And b.OrderBy=@PartyOrderBy And a.FSessId=@DFSessId
+     ---- Update Status In TrnPartyOrderMain          
+       Update TrnPartyOrderMain Set Status=Case When TotalOrdQty=TotalDispQty Then 'C' Else 'P' END,OType='D' Where OrderNo=@PartyOrderNo And OrderBy=@PartyOrderBy And FSessId=@DFSessId
+      END  
+    ELSE
+      BEGIN
+   
+        ---- Update Status In TrnPartyOrderDetail 
+       Update TrnPartyOrderDetail Set DispatchQty=0,RemQty=(Qty-DispatchQty),OrdType='O',
+       Status='P' Where OrderNo=@PartyOrderNo And OrderBy=@PartyOrderBy And FSessId=@DFSessId ---Case When (Qty-DispatchQty)=0 Then 'C' Else 'P' End 
+        ---- Update Status In TrnPartyOrderMain          
+       Update TrnPartyOrderMain Set Status='P',OType='O' Where OrderNo=@PartyOrderNo and OrderBy=@PartyOrderBy And FSessId=@DFSessId
+      END
+    ----- END ----
+    
+--**** Start from 11Aug17 
+IF EXISTS(Select * FROM PhpRoyal..TrnOrder WHERE Cast(OrderNo as varchar(20))=@PartyOrderNo )
+BEGIN
+UPDATE PhpRoyal..TrnOrderDetail SET DispStatus='N',DispQty=0,RemQty=Qty,DispAmt=0 WHERE  Cast(OrderNo as varchar(20))=@PartyOrderNo
+UPDATE PhpRoyal..TrnOrder SET DispatchStatus='N',DispatchQty=0,RemainQty=OrderQty,DispatchAmount=0 WHERE  Cast(OrderNo as varchar(20))=@PartyOrderNo
+END
+-----:
+COMMIT TRANSACTION
+END TRY
+
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION --RollBack in case of Error
+  --- Shows Actual ERROR --- 26Sep13
+  DECLARE @errmsg NVARCHAR(4000)
+  DECLARE @errseverity INT
+  DECLARE @errstate INT
+  SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+  RAISERROR(@errmsg, @errseverity, @errstate)
+END CATCH
+END
+GO

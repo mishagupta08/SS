@@ -1,0 +1,231 @@
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE ROLLBACK_PI---
+       @BillNo Varchar(50), --- 01:36 PM 2019-02-14
+       @DReason Varchar(100),      
+       @DUserId Numeric(18,0),
+       @DFSessId as INT -- 
+WITH ENCRYPTION
+AS      
+
+DECLARE @BillType As Char(10)
+DECLARE @MaxInvId as INT
+--DECLARE @FSessId as INT -- <<  Use @DFSessId Instead of @FSessId << 31Mar15@09:23PM,Tue
+DECLARE @LastBillNo as Varchar(50)
+DECLARE @LastBillBy as Varchar(50)
+DECLARE @LastBillDate as DateTime
+DECLARE @IsReceive As Char(10)
+DECLARE @OrderNo as Varchar(50) --- Add: 05Nov14,Wednesday
+
+BEGIN
+BEGIN TRY
+BEGIN TRANSACTION 
+-----:
+
+--- GET Last BillNo
+SELECT @OrderNo=OrderNo FROM M_InwardMain WHERE InwardNo=@BillNo And FSessId=@DFSessId-- ORDER BY IdNo DESC
+Select @MaxInvId=CASE WHEN Max(DID) is NULL THEN '1' ELSE Max(DID)+1 END FROM DeletedInwardMain
+IF @DUserId=0
+   BEGIN
+     SET @DUserId=888 -- DEFAULT USERID: ROLLBACK BILL 
+   END
+
+IF Upper(LTrim(RTrim(@DReason)))=''
+   BEGIN
+     SET @DReason='REASON UNKNOWN' 
+   END   
+   
+   --Select Top 2 * From M_InwardMain
+   --Select Top 2 * From DeletedBillMain
+
+---- INSERTION PROCESS...
+INSERT INTO DeletedInwardMain
+SELECT *,@DUserId,GetDate(),@DReason FROM M_InwardMain WHERE FSessId=@DFSessId AND InwardNo=@BillNo---Changed Clm Sequence Old GetDate(),DReason,DUserId -- 07Aug14@11:30PM,Thursday
+INSERT INTO DeletedInwardDetail
+SELECT @MaxInvId,*,GETDate(),@DUserId FROM M_InwardDetail WHERE FSessId=@DFSessId AND InwardNo=@BillNo
+INSERT INTO DeletedVoucher
+SELECT *,GETDate(),@DReason,@DUserId FROM TrnVoucher WHERE FSessId=@DFSessId AND RefNo=@BillNo
+INSERT INTO DeletedCurrentStock
+SELECT *,@DUserId,@DReason,GetDate() FROM Im_CurrentStock WHERE FSessId=@DFSessId AND RefNo=@BillNo
+
+UPDATE M_InwardData SET GRNO=0,InwardNo='Del/'+InwardNo,ActiveStatus='D',DUserId=@DUserId,DReason=@DReason,DRecTimeStamp=GETDATE() WHERE FSessId=@DFSessId AND InwardNo=@BillNo 
+DELETE FROM M_InwardMain WHERE FSessId=@DFSessId AND InwardNo=@BillNo
+DELETE FROM M_InwardDetail WHERE FSessId=@DFSessId AND InwardNo=@BillNo
+DELETE FROM TrnVoucher WHERE FSessId=@DFSessId AND RefNo=@BillNo
+DELETE FROM Im_CurrentStock WHERE FSessId=@DFSessId AND RefNo=@BillNo
+
+---- UPDATION PROCESS...
+
+UPDATE TrnPayModeDetail SET ActiveStatus='D',DUserId=@DUserId,DRecTimeStamp=GETDATE() WHERE FSessId=@DFSessId AND BillNo=@BillNo
+
+
+IF @OrderNo<>''-- IF Found PI Against P.Order --- Add: Purchase Order Updation Process on Dated: 05Nov14@04:56PM,Wednesday
+ BEGIN
+     
+		---- UPDATE
+		--- STEP: 1A. >> Reset Purchase Order Main & Detail Tbl Data ****
+			UPDATE TrnPurchaseOrderDetail Set DispQty=0,RemQty=0,Status='P' WHERE FSessId=@DFSessId And OrderNo=@OrderNo;
+			UPDATE TrnPurchaseOrderMain Set TotalDispQty=0,TotalRemQty=0,Status='P',BillNo='' WHERE FSessId=@DFSessId And OrderNo=@OrderNo;
+    
+       --- STEP: 1. >> Update Dispatch Qty 
+		   UPDATE TrnPurchaseOrderDetail Set DispQty=a.DispQty FROM(
+			SELECT a.FSessId,a.OrderNo,b.ProdCode,SUM(b.Qty) as DispQty FROM M_InwardMain AS a INNER JOIN M_InwardDetail as b ON a.FSessId=b.FSessId
+			AND a.InwardNo=b.InwardNo WHERE a.OrderNo<>'' GROUP BY a.FSessId,a.OrderNo,b.ProdCode) AS A, TrnPurchaseOrderDetail AS b
+   			WHERE a.FSessId=b.FSessId And a.OrderNo=b.OrderNo AND a.ProdCode=b.ProdId AND a.FSessId=@DFSessId And a.OrderNo=@OrderNo;
+
+        --- STEP: 2. >> Update Remaining Qty & Product Status
+		UPDATE TrnPurchaseOrderDetail SET RemQty=Qty-DispQty,
+		Status=CASE WHEN Qty=DispQty THEN 'C' ELSE 'P' END WHERE FSessId=@DFSessId And OrderNo=@OrderNo;
+
+        --- *********** UPDATION In TrnPurchaseOrderMain TBL *********** (TotalDispQty,TotalRemQty,Status,BillNo)
+        --- STEP: 1. >> Update Dispatch Qty 
+		UPDATE TrnPurchaseOrderMain Set TotalDispQty=a.TotalDispQty FROM(
+		SELECT a.FSessId,a.OrderNo,SUM(b.DispQty) as TotalDispQty FROM TrnPurchaseOrderMain AS a INNER JOIN TrnPurchaseOrderDetail as b ON a.FSessId=b.FSessId
+		AND a.OrderNo=b.OrderNo GROUP BY a.FSessId,a.OrderNo) AS A, TrnPurchaseOrderDetail AS b
+		WHERE a.FSessId=b.FSessId And a.OrderNo=b.OrderNo AND a.FSessId=@DFSessId And a.OrderNo=@OrderNo;
+
+        --- STEP: 2. >> Update Remaining Qty & Status
+		UPDATE TrnPurchaseOrderMain SET TotalRemQty=TotalOrdQty-TotalDispQty,
+		Status=CASE WHEN TotalOrdQty=TotalDispQty THEN 'C' ELSE 'P' END WHERE FSessId=@DFSessId And OrderNo=@OrderNo;
+
+        --- STEP: 3. >> Update Last InwardNo
+		UPDATE TrnPurchaseOrderMain SET BillNo=IsNull((SELECT Top 1 InwardNo FROM M_InwardMain
+		WHERE FSessId=@DFSessId And OrderNo=@OrderNo ORDER BY IDNo Desc),'')
+		WHERE FSessId=@DFSessId And OrderNo=@OrderNo
+ END
+		
+
+-----:
+COMMIT TRANSACTION
+END TRY
+
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION --RollBack in case of Error
+  --- Shows Actual ERROR --- 
+  DECLARE @errmsg NVARCHAR(4000)
+  DECLARE @errseverity INT
+  DECLARE @errstate INT
+  SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+  RAISERROR(@errmsg, @errseverity, @errstate)
+END CATCH
+END
+GO
+
+-----------------------------------------
+
+SET ANSI_NULLS, QUOTED_IDENTIFIER ON
+GO
+ALTER PROCEDURE ROLLBACK_PI--- 06Jan16
+       @BillNo Varchar(50), --- Last Alteration: 31Mar15@09:34PM,Tue..05Nov14@04:56PM,Wednesday...07Aug14@11:30PM,Thursday      
+       @DReason Varchar(100),      
+       @DUserId Numeric(18,0),
+       @DFSessId as INT -- << Add: Para - 31Mar15@09:34PM,Tue
+WITH ENCRYPTION
+AS      
+
+DECLARE @BillType As Char(10)
+DECLARE @MaxInvId as INT
+--DECLARE @FSessId as INT -- <<  Use @DFSessId Instead of @FSessId << 31Mar15@09:23PM,Tue
+DECLARE @LastBillNo as Varchar(50)
+DECLARE @LastBillBy as Varchar(50)
+DECLARE @LastBillDate as DateTime
+DECLARE @IsReceive As Char(10)
+DECLARE @OrderNo as Varchar(50) --- Add: 05Nov14,Wednesday
+
+BEGIN
+BEGIN TRY
+BEGIN TRANSACTION 
+-----:
+
+--- GET Last BillNo
+SELECT @OrderNo=OrderNo FROM M_InwardMain WHERE InwardNo=@BillNo And FSessId=@DFSessId-- ORDER BY IdNo DESC
+Select @MaxInvId=CASE WHEN Max(DID) is NULL THEN '1' ELSE Max(DID)+1 END FROM DeletedInwardMain
+IF @DUserId=0
+   BEGIN
+     SET @DUserId=888 -- DEFAULT USERID: ROLLBACK BILL 
+   END
+
+IF Upper(LTrim(RTrim(@DReason)))=''
+   BEGIN
+     SET @DReason='REASON UNKNOWN' 
+   END   
+   
+   --Select Top 2 * From M_InwardMain
+   --Select Top 2 * From DeletedBillMain
+
+---- INSERTION PROCESS...
+INSERT INTO DeletedInwardMain
+SELECT *,@DUserId,GetDate(),@DReason FROM M_InwardMain WHERE FSessId=@DFSessId AND InwardNo=@BillNo---Changed Clm Sequence Old GetDate(),DReason,DUserId -- 07Aug14@11:30PM,Thursday
+INSERT INTO DeletedInwardDetail
+SELECT @MaxInvId,*,GETDate(),@DUserId FROM M_InwardDetail WHERE FSessId=@DFSessId AND InwardNo=@BillNo
+INSERT INTO DeletedVoucher
+SELECT *,GETDate(),@DReason,@DUserId FROM TrnVoucher WHERE FSessId=@DFSessId AND RefNo=@BillNo
+INSERT INTO DeletedCurrentStock
+SELECT *,@DUserId,@DReason,GetDate() FROM Im_CurrentStock WHERE FSessId=@DFSessId AND RefNo=@BillNo
+
+UPDATE M_InwardData SET GRNO=0,InwardNo='Del/'+InwardNo WHERE FSessId=@DFSessId AND InwardNo=@BillNo 
+DELETE FROM M_InwardMain WHERE FSessId=@DFSessId AND InwardNo=@BillNo
+DELETE FROM M_InwardDetail WHERE FSessId=@DFSessId AND InwardNo=@BillNo
+DELETE FROM TrnVoucher WHERE FSessId=@DFSessId AND RefNo=@BillNo
+DELETE FROM Im_CurrentStock WHERE FSessId=@DFSessId AND RefNo=@BillNo
+
+---- UPDATION PROCESS...
+UPDATE M_InwardData SET ActiveStatus='D',DUserId=@DUserId,DReason=@DReason,DRecTimeStamp=GETDATE() WHERE FSessId=@DFSessId AND INWARDNo=@BillNo
+UPDATE TrnPayModeDetail SET ActiveStatus='D',DUserId=@DUserId,DRecTimeStamp=GETDATE() WHERE FSessId=@DFSessId AND BillNo=@BillNo
+
+
+IF @OrderNo<>''-- IF Found PI Against P.Order --- Add: Purchase Order Updation Process on Dated: 05Nov14@04:56PM,Wednesday
+ BEGIN
+     
+		---- UPDATE
+		--- STEP: 1A. >> Reset Purchase Order Main & Detail Tbl Data ****
+			UPDATE TrnPurchaseOrderDetail Set DispQty=0,RemQty=0,Status='P' WHERE FSessId=@DFSessId And OrderNo=@OrderNo;
+			UPDATE TrnPurchaseOrderMain Set TotalDispQty=0,TotalRemQty=0,Status='P',BillNo='' WHERE FSessId=@DFSessId And OrderNo=@OrderNo;
+    
+       --- STEP: 1. >> Update Dispatch Qty 
+		   UPDATE TrnPurchaseOrderDetail Set DispQty=a.DispQty FROM(
+			SELECT a.FSessId,a.OrderNo,b.ProdCode,SUM(b.Qty) as DispQty FROM M_InwardMain AS a INNER JOIN M_InwardDetail as b ON a.FSessId=b.FSessId
+			AND a.InwardNo=b.InwardNo WHERE a.OrderNo<>'' GROUP BY a.FSessId,a.OrderNo,b.ProdCode) AS A, TrnPurchaseOrderDetail AS b
+   			WHERE a.FSessId=b.FSessId And a.OrderNo=b.OrderNo AND a.ProdCode=b.ProdId AND a.FSessId=@DFSessId And a.OrderNo=@OrderNo;
+
+        --- STEP: 2. >> Update Remaining Qty & Product Status
+		UPDATE TrnPurchaseOrderDetail SET RemQty=Qty-DispQty,
+		Status=CASE WHEN Qty=DispQty THEN 'C' ELSE 'P' END WHERE FSessId=@DFSessId And OrderNo=@OrderNo;
+
+        --- *********** UPDATION In TrnPurchaseOrderMain TBL *********** (TotalDispQty,TotalRemQty,Status,BillNo)
+        --- STEP: 1. >> Update Dispatch Qty 
+		UPDATE TrnPurchaseOrderMain Set TotalDispQty=a.TotalDispQty FROM(
+		SELECT a.FSessId,a.OrderNo,SUM(b.DispQty) as TotalDispQty FROM TrnPurchaseOrderMain AS a INNER JOIN TrnPurchaseOrderDetail as b ON a.FSessId=b.FSessId
+		AND a.OrderNo=b.OrderNo GROUP BY a.FSessId,a.OrderNo) AS A, TrnPurchaseOrderDetail AS b
+		WHERE a.FSessId=b.FSessId And a.OrderNo=b.OrderNo AND a.FSessId=@DFSessId And a.OrderNo=@OrderNo;
+
+        --- STEP: 2. >> Update Remaining Qty & Status
+		UPDATE TrnPurchaseOrderMain SET TotalRemQty=TotalOrdQty-TotalDispQty,
+		Status=CASE WHEN TotalOrdQty=TotalDispQty THEN 'C' ELSE 'P' END WHERE FSessId=@DFSessId And OrderNo=@OrderNo;
+
+        --- STEP: 3. >> Update Last InwardNo
+		UPDATE TrnPurchaseOrderMain SET BillNo=IsNull((SELECT Top 1 InwardNo FROM M_InwardMain
+		WHERE FSessId=@DFSessId And OrderNo=@OrderNo ORDER BY IDNo Desc),'')
+		WHERE FSessId=@DFSessId And OrderNo=@OrderNo
+ END
+		
+
+-----:
+COMMIT TRANSACTION
+END TRY
+
+BEGIN CATCH
+  IF @@TRANCOUNT > 0
+    ROLLBACK TRANSACTION --RollBack in case of Error
+  --- Shows Actual ERROR --- 
+  DECLARE @errmsg NVARCHAR(4000)
+  DECLARE @errseverity INT
+  DECLARE @errstate INT
+  SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+  RAISERROR(@errmsg, @errseverity, @errstate)
+END CATCH
+END
+GO
+
+-----------------------------------------

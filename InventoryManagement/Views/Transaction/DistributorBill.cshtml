@@ -703,6 +703,7 @@
             }
             var Qty = $("#Quantity").val();
             var itemCode = $("#itemCode").val();
+            var Stock = parseFloat($("#StockAvailable").val());
             if (Qty != null && Qty != "") {
                 Qty = parseFloat(Qty);
             }
@@ -715,7 +716,7 @@
             @*var IsAddDuplicateRecord = '@Model.objConfigDetails.C_AddDuplicateProd';*@
             var IsReplaceRecord = false;
             debugger;
-            if ((ProductArray != null && parseFloat($("#StockAvailable").val()) != null) && (tqty > 0) && (tqty <= parseFloat($("#StockAvailable").val()) && parseFloat($("#StockAvailable").val()) != 0)) {
+            if ((ProductArray != null) && (tqty > 0) && (tqty <= Stock && Stock != 0)) {
                 var Flag = true;
                 var i;
                 for (i = 0; i < ProductGrid.length; i++) {
@@ -733,13 +734,13 @@
                 if (Flag) {
                     var TotalWeight = (ProductArray.Weight * ProductArray.Qty).toFixed(3);
                     //  var ProductGrid = [{ "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "" }];
-                    ProductGrid.push({ "itemCode":itemCode,"CatName": ProductArray.CatName, "CatId": ProductArray.CatId, "AvailStock": ProductArray.AvailStock, "SNo": ProductArray.SNo, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": (ProductArray.Rate).toFixed(2), "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "FreeQty": ProductArray.FreeQty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount).toFixed(2), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer.toFixed(2), "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "ProductTye": ProductArray.ProductTye, "Weight": ProductArray.Weight, "WeightVal": TotalWeight });
+                    ProductGrid.push({ "itemCode":itemCode,"CatName": ProductArray.CatName, "CatId": ProductArray.CatId, "AvailStock": Stock, "SNo": ProductArray.SNo, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": (ProductArray.Rate).toFixed(2), "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "FreeQty": ProductArray.FreeQty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount).toFixed(2), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer.toFixed(2), "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "ProductTye": ProductArray.ProductTye, "Weight": ProductArray.Weight, "WeightVal": TotalWeight });
                 }
                 else if (IsEditGrid==false) {
 
                     var Qty = (parseFloat(ProductGrid[i].Qty) + parseFloat(ProductArray.Qty)).toFixed(2);
                     
-                    if ((parseFloat(Qty)) <= parseFloat($("#AvailBal").val())) {
+                    if ((parseFloat(Qty)) <= Stock) {
                     ProductGrid[i].Qty = Qty;
 
                     var TaxAmt = (parseFloat(ProductGrid[i].TaxAmt) + parseFloat(ProductArray.TaxAmt)).toFixed(2);
@@ -832,11 +833,11 @@
 
                 
 
-                if (parseFloat($("#StockAvailable").val()) == null || parseFloat($("#StockAvailable").val()) == null || parseFloat($("#StockAvailable").val()) == 0) {
+                if (Stock == 0) {
                     OpenDialog("dialogMessage", "InSufficient Stock!", "false");
                     $("#" + ToFocuselemement).focus();
                 }
-                else if (tqty > parseFloat($("#StockAvailable").val())) {
+                else if (tqty > Stock) {
                     OpenDialog("dialogMessage", "Adjust Quantity. Entered Quantity + Free Quantity should be less than available stock", "false");
                     $("#Quantity").focus();
                 }
@@ -1245,12 +1246,120 @@
         });
 
         
-
         $("#setProdAttributes").click(function () {
             GetItemCodes(true, 0);
             $("#AttributeDialog").dialog("close");
 
         });
+
+        function getProductAttributes(ProductCode) {
+            $.ajax({
+                url: '/Transaction/GetProductAttibutes',
+                dataType: 'JSON',
+                method: 'GET',
+                data: { 'ProdId': ProductCode },
+                success: function (data) {
+                    ProdAttributeList = [];
+                    ProdAttributeFieldList = [];
+                    if (data != null && data.length > 0) {
+
+
+                        if (ProdAttributeList != null && ProdAttributeList.length > 0) {
+                            ProdAttributeList = $.grep(ProdAttributeList, function (e) {
+                                return e.Pcode != ProductCode;
+                            });
+                        }
+
+                        for (var i = 0; i < data.length; i++) {
+
+                            ProdAttributeList.push({ "Pcode": data[i].Pcode, "Attribute_Name": data[i].Attribute_Name });
+
+
+                            if (ProdAttributeFieldList != null && ProdAttributeFieldList.length > 0) {
+                                ProdAttributeFieldList = $.grep(ProdAttributeFieldList, function (e) {
+                                    return e.Pcode != data[i].Pcode && e.Attribute_Name != data[i].Attribute_Name;
+                                });
+                            }
+                            for (var j = 0; j < data[i].fields.length; j++) {
+                                ProdAttributeFieldList.push({ "Pcode": data[i].fields[j].Pcode, "Attribute_Name": data[i].fields[j].Attribute_Name, "Field": data[i].fields[j].Field });
+                            }
+                        }
+                    }
+                    if (ProdAttributeList == null || ProdAttributeList.length == 0) {
+                        GetItemCodes(false, ProductCode);
+                    }
+                    else {
+                        AddAttributeSelect(ProductCode);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function AddAttributeSelect(prodID) {
+            var i = 1;
+            for (var j = 0; j < ProdAttributeList.length; j++) {
+
+                var divId = "div_" + i;
+                var labelID = "label_" + i;
+                var selectID = "Attrib" + i;
+
+                $("#" + divId).show();
+                $("#" + labelID).html(ProdAttributeList[j].Attribute_Name);
+
+                $("#" + selectID).empty();
+                for (var k = 0 ; k < ProdAttributeFieldList.length; k++) {
+                    $("#" + selectID).append("<option value=" + ProdAttributeFieldList[k].Field + ">" + ProdAttributeFieldList[k].Field + "</option>");
+                }
+                i = i + 1;
+            }
+
+            $("#AttributeDialog").dialog({
+                modal: true,
+                width: "50%"
+            });
+
+        }
+
+        function GetItemCodes(WithAttributes, prodID) {
+            if (WithAttributes == true) {
+                var attr1 = $("#Attrib1").val();
+                var attr2 = $("#Attrib2").val();
+                var attr3 = $("#Attrib3").val();
+                var attr4 = $("#Attrib4").val();
+                var attr5 = $("#Attrib5").val();
+                var attr6 = $("#Attrib6").val();
+                var attr7 = $("#Attrib7").val();
+                var attr8 = $("#Attrib8").val();
+                var attr9 = $("#Attrib9").val();
+                var attr10 = $("#Attrib10").val();
+                var selectedItem = $.grep(ItemCodes, function (e) {
+                    return e.Attrib1 != null ? e.Attrib1 == attr1 : true
+                        && e.Attrib2 != null ? e.Attrib2 == attr2 : true
+                        && e.Attrib3 != null ? e.Attrib3 == attr3 : true
+                        && e.Attrib4 != null ? e.Attrib4 == attr4 : true
+                        && e.Attrib5 != null ? e.Attrib5 == attr5 : true
+                        && e.Attrib6 != null ? e.Attrib6 == attr6 : true
+                        && e.Attrib7 != null ? e.Attrib7 == attr7 : true
+                        && e.Attrib8 != null ? e.Attrib8 == attr8 : true
+                        && e.Attrib9 != null ? e.Attrib9 == attr9 : true
+                        && e.Attrib10 != null ? e.Attrib10 == attr10 : true
+                });
+                $("#itemCode").val(selectedItem[0].ItemCode1);
+                $("#StockAvailable").val(selectedItem[0].stockAvailable);
+            }
+            else {
+
+                //var selectedItem =  $.grep(ItemCodes, function (e) {
+                //    return e.PCode == prodID 
+                //});
+                $("#itemCode").val(ItemCodes[0].ItemCode1);
+                $("#StockAvailable").val(ItemCodes[0].stockAvailable);
+            }
+        }
+        
 
         function fillProductValues(objResult,offerProduct,OfferQty) {
             SearchText = $("#SearchText").val();
@@ -1302,118 +1411,7 @@
             getProductAttributes(objResult.ProductCodeStr);
         }
         
-        function getProductAttributes(ProductCode)
-        {
-            $.ajax({
-                url: '/Transaction/GetProductAttibutes',
-                dataType: 'JSON',
-                method: 'GET',
-                data: { 'ProdId': ProductCode },
-                success: function (data) {
-                    ProdAttributeList = [];
-                    ProdAttributeFieldList = [];
-                    if (data != null && data.length>0) {
-                        
-
-                        if (ProdAttributeList != null && ProdAttributeList.length > 0) {
-                            ProdAttributeList = $.grep(ProdAttributeList, function (e) {
-                                return e.Pcode != ProductCode;
-                            });
-                        }
-                        
-                        for (var i = 0; i < data.length; i++) {
-
-                            ProdAttributeList.push({ "Pcode": data[i].Pcode, "Attribute_Name": data[i].Attribute_Name });
-                            
-                            
-                            if (ProdAttributeFieldList != null && ProdAttributeFieldList.length > 0) {
-                                ProdAttributeFieldList = $.grep(ProdAttributeFieldList, function (e) {
-                                    return e.Pcode != data[i].Pcode && e.Attribute_Name != data[i].Attribute_Name;
-                                });
-                            }
-                            for (var j = 0; j < data[i].fields.length; j++) {
-                                ProdAttributeFieldList.push({ "Pcode": data[i].fields[j].Pcode, "Attribute_Name": data[i].fields[j].Attribute_Name, "Field": data[i].fields[j].Field });
-                            }
-                        }
-                    }
-                    if (ProdAttributeList == null || ProdAttributeList.length == 0) {
-                        GetItemCodes(false, ProductCode);
-                    }
-                    else {
-                        AddAttributeSelect(ProductCode);
-                    }
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function AddAttributeSelect(prodID)
-        {                       
-            var i = 1;
-            for (var j = 0; j < ProdAttributeList.length; j++)
-            {
-                
-                var divId = "div_" + i;
-                var labelID = "label_" + i;
-                var selectID = "Attrib" + i;
-
-                $("#" + divId).show();
-                $("#" + labelID).html(ProdAttributeList[j].Attribute_Name);
-                
-                $("#" + selectID).empty();
-                for (var k = 0 ; k < ProdAttributeFieldList.length; k++)
-                {
-                    $("#" + selectID).append("<option value=" + ProdAttributeFieldList[k].Field + ">" + ProdAttributeFieldList[k].Field + "</option>");
-                }
-                i = i + 1;
-            }
-
-            $("#AttributeDialog").dialog({
-                modal: true,
-                width:"50%"
-            });
-
-        }
-
-        function GetItemCodes(WithAttributes, prodID)
-        {
-            if (WithAttributes == true) {
-                var attr1 = $("#Attrib1").val();
-                var attr2 = $("#Attrib2").val();
-                var attr3 = $("#Attrib3").val();
-                var attr4 = $("#Attrib4").val();
-                var attr5 = $("#Attrib5").val();
-                var attr6 = $("#Attrib6").val();
-                var attr7 = $("#Attrib7").val();
-                var attr8 = $("#Attrib8").val();
-                var attr9 = $("#Attrib9").val();
-                var attr10 = $("#Attrib10").val();
-                var selectedItem = $.grep(ItemCodes, function (e) {
-                    return e.Attrib1!=null?e.Attrib1 == attr1:true
-                        && e.Attrib2!=null?e.Attrib2 == attr2:true
-                        && e.Attrib3!=null?e.Attrib3 == attr3:true
-                        && e.Attrib4!=null?e.Attrib4 == attr4:true
-                        && e.Attrib5!=null?e.Attrib5 == attr5:true
-                        && e.Attrib6!=null?e.Attrib6 == attr6:true
-                        && e.Attrib7!=null?e.Attrib7 == attr7:true
-                        && e.Attrib8!=null?e.Attrib8 == attr8:true
-                        && e.Attrib9!=null?e.Attrib9 == attr9:true
-                        && e.Attrib10 != null ? e.Attrib10 == attr10 : true
-                });
-                $("#itemCode").val(selectedItem[0].ItemCode1);
-                $("#StockAvailable").val(selectedItem[0].stockAvailable);
-            }
-            else {
-                
-                //var selectedItem =  $.grep(ItemCodes, function (e) {
-                //    return e.PCode == prodID 
-                //});
-                $("#itemCode").val(ItemCodes[0].ItemCode1);
-                $("#StockAvailable").val(ItemCodes[0].stockAvailable);
-            }
-        }
+        
        
 
         function getAllProductNames() {

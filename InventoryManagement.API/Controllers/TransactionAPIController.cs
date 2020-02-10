@@ -3150,8 +3150,8 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.TaxType = "I";
                                     objDTBillData.TaxBase = "I";
                                 }
-
-
+                                objDTBillData.ItemCode = obj.itemCode;
+                               
 
 
 
@@ -3553,7 +3553,7 @@ namespace InventoryManagement.API.Controllers
                                                   InvoiceFor = r.InwardForName + "-" + r.InwardFor,
                                                   objproduct = new ProductModel
                                                   {
-                                                      ProductCodeStr = p.ProdCode,
+                                                      ProductCodeStr = p.ItemCode,
                                                       ProductName = p.ProdName,
                                                       Barcode = p.Barcode,
                                                       Quantity = p.Qty,
@@ -3966,6 +3966,7 @@ namespace InventoryManagement.API.Controllers
                             objDTBillData.PLNo = 0;
                             objDTBillData.PLDate = DateTime.Now;
                             objDTBillData.ProductCode = obj.ProdCode.ToString();
+                            objDTBillData.ItemCode = obj.itemCode;
                             objDTBillData.ProductName = obj.ProductName;
                             objDTBillData.Qty = obj.Quantity;
                             objDTBillData.DispatchQty = 0;

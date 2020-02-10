@@ -672,8 +672,11 @@ namespace InventoryManagement.Controllers
                             ProductModel objTemp = new ProductModel();
                             foreach (KeyValuePair<String, JToken> app in root)
                             {
-                                // var appName = app.Key;
-                                //    var ProductGrid = [{"AvailStock":"", "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "","BatchNo":"", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": ""}];
+
+                                if (app.Key == "itemCode")
+                                {
+                                    objTemp.itemCode = (string)app.Value;
+                                }
                                 if (app.Key == "Code")
                                 {
                                     objTemp.ProdCode = (int)app.Value;
@@ -871,8 +874,10 @@ namespace InventoryManagement.Controllers
                         ProductModel objTemp = new ProductModel();
                         foreach (KeyValuePair<String, JToken> app in root)
                         {
-                            // var appName = app.Key;
-                            //    var ProductGrid = [{"AvailStock":"", "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "","BatchNo":"", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": ""}];
+                            if (app.Key == "itemCode")
+                            {
+                                objTemp.itemCode = (string)app.Value;
+                            }
                             if (app.Key == "Code")
                             {
                                 objTemp.ProdCode = (int)app.Value;

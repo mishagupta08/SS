@@ -75,5 +75,6 @@ namespace InventoryManagement.API.Models
         public decimal RPValue { get; set; }
         public int OfferUId { get; set; }
         public decimal VAT { get; set; }
+        public string ItemCode { get; set; }
     }
 }

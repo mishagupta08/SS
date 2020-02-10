@@ -69,7 +69,6 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<M_FormGeneration> M_FormGeneration { get; set; }
         public virtual DbSet<M_GroupMaster> M_GroupMaster { get; set; }
         public virtual DbSet<M_InsuranceCompMaster> M_InsuranceCompMaster { get; set; }
-        public virtual DbSet<M_InwardData> M_InwardData { get; set; }
         public virtual DbSet<M_InwardMain> M_InwardMain { get; set; }
         public virtual DbSet<M_JType> M_JType { get; set; }
         public virtual DbSet<M_KitProductMaster> M_KitProductMaster { get; set; }
@@ -163,7 +162,6 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<M_GrpPermissionMaster> M_GrpPermissionMaster { get; set; }
         public virtual DbSet<M_Initials> M_Initials { get; set; }
         public virtual DbSet<M_InvoiceTypeMaster> M_InvoiceTypeMaster { get; set; }
-        public virtual DbSet<M_InwardDetail> M_InwardDetail { get; set; }
         public virtual DbSet<M_IsCardIssue> M_IsCardIssue { get; set; }
         public virtual DbSet<M_MaxDiscount> M_MaxDiscount { get; set; }
         public virtual DbSet<M_MemberMaster> M_MemberMaster { get; set; }
@@ -257,6 +255,8 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<Prod_attributes_fields> Prod_attributes_fields { get; set; }
         public virtual DbSet<TrnBillData> TrnBillDatas { get; set; }
         public virtual DbSet<TrnBillDetail> TrnBillDetails { get; set; }
+        public virtual DbSet<M_InwardData> M_InwardData { get; set; }
+        public virtual DbSet<M_InwardDetail> M_InwardDetail { get; set; }
     
         [DbFunction("InventoryEntities", "MonthWiseSummary")]
         public virtual IQueryable<MonthWiseSummary_Result> MonthWiseSummary(string partyCode, string rptType, string prodType)

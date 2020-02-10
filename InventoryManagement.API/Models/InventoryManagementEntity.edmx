@@ -677,6 +677,7 @@ warning 6002: The table/view 'SrsInv.dbo.DeletedInwardDetail' does not have a pr
           <Property Name="CGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGST" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="1000" />
           <Property Name="DeleteRecTimeStamp" Type="datetime" Nullable="false" />
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
@@ -2483,6 +2484,7 @@ warning 6002: The table/view 'SrsInv.dbo.M_InvoiceTypeMaster' does not have a pr
           <Property Name="CGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGST" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.M_InwardDetail' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -2585,6 +2587,7 @@ warning 6002: The table/view 'SrsInv.dbo.M_InwardDetail' does not have a primary
           <Property Name="CGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGST" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="M_InwardMain">
           <Key>
@@ -6109,6 +6112,7 @@ warning 6002: The table/view 'SrsInv.dbo.TrnOrderDeliveryDetail' does not have a
           <Property Name="RPValue" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="OfferUId" Type="int" Nullable="false" />
           <Property Name="VAT" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="1000" />
         </EntityType>
         <EntityType Name="TrnPartyOrderMain">
           <Key>
@@ -9204,6 +9208,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [DeletedInwardDetail].[CGSTAmt] AS [CGSTAmt], 
     [DeletedInwardDetail].[SGST] AS [SGST], 
     [DeletedInwardDetail].[SGSTAmt] AS [SGSTAmt], 
+    [DeletedInwardDetail].[ItemCode] AS [ItemCode], 
     [DeletedInwardDetail].[DeleteRecTimeStamp] AS [DeleteRecTimeStamp], 
     [DeletedInwardDetail].[DUserId] AS [DUserId]
     FROM [dbo].[DeletedInwardDetail] AS [DeletedInwardDetail]</DefiningQuery>
@@ -9637,7 +9642,8 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [M_InwardDetail].[CGST] AS [CGST], 
     [M_InwardDetail].[CGSTAmt] AS [CGSTAmt], 
     [M_InwardDetail].[SGST] AS [SGST], 
-    [M_InwardDetail].[SGSTAmt] AS [SGSTAmt]
+    [M_InwardDetail].[SGSTAmt] AS [SGSTAmt], 
+    [M_InwardDetail].[ItemCode] AS [ItemCode]
     FROM [dbo].[M_InwardDetail] AS [M_InwardDetail]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="M_IsCardIssue" EntityType="Self.M_IsCardIssue" store:Type="Tables" store:Schema="dbo">
@@ -11829,7 +11835,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="M_FormGeneration" EntityType="InventoryModel.M_FormGeneration" />
           <EntitySet Name="M_GroupMaster" EntityType="InventoryModel.M_GroupMaster" />
           <EntitySet Name="M_InsuranceCompMaster" EntityType="InventoryModel.M_InsuranceCompMaster" />
-          <EntitySet Name="M_InwardData" EntityType="InventoryModel.M_InwardData" />
           <EntitySet Name="M_InwardMain" EntityType="InventoryModel.M_InwardMain" />
           <EntitySet Name="M_JType" EntityType="InventoryModel.M_JType" />
           <EntitySet Name="M_KitProductMaster" EntityType="InventoryModel.M_KitProductMaster" />
@@ -11923,7 +11928,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="M_GrpPermissionMaster" EntityType="InventoryModel.M_GrpPermissionMaster" />
           <EntitySet Name="M_Initials" EntityType="InventoryModel.M_Initials" />
           <EntitySet Name="M_InvoiceTypeMaster" EntityType="InventoryModel.M_InvoiceTypeMaster" />
-          <EntitySet Name="M_InwardDetail" EntityType="InventoryModel.M_InwardDetail" />
           <EntitySet Name="M_IsCardIssue" EntityType="InventoryModel.M_IsCardIssue" />
           <EntitySet Name="M_MaxDiscount" EntityType="InventoryModel.M_MaxDiscount" />
           <EntitySet Name="M_MemberMaster" EntityType="InventoryModel.M_MemberMaster" />
@@ -12026,6 +12030,8 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
             <Parameter Name="FromDate" Mode="In" Type="DateTime" />
             <Parameter Name="ToDate" Mode="In" Type="DateTime" />
           </FunctionImport>
+          <EntitySet Name="M_InwardData" EntityType="InventoryModel.M_InwardData" />
+          <EntitySet Name="M_InwardDetail" EntityType="InventoryModel.M_InwardDetail" />
         </EntityContainer>
         <ComplexType Name="MonthWiseSummary_Result">
           <Property Type="String" Name="Mnth" Nullable="false" MaxLength="10" />
@@ -13421,112 +13427,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="IncPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="BVPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
-        <EntityType Name="M_InwardData">
-          <Key>
-            <PropertyRef Name="FSessId" />
-            <PropertyRef Name="InwardNo" />
-            <PropertyRef Name="ProdCode" />
-            <PropertyRef Name="Barcode" />
-          </Key>
-          <Property Name="IdNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FSessId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="InwardBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="InwardByName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="GrNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="InwardNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SupplierCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SupplierName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="DeliveryDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RecvDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RefNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ProdCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ProdName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BatchNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Barcode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Qty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="MRP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TradeDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TradeAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="LotDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Tax" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TaxAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AValueAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DiscountAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalTradeDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalLotDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CashDiscPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalCashDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalFreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalTaxAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalEAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="RndOff" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="NetPayable" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="InwardFor" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="InwardForName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Version" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="DUserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="DReason" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="DRecTimeStamp" Type="DateTime" Precision="3" />
-          <Property Name="TaxType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="OrdQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ShortQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ExpQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="RemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalOrdQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalShortQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalDemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalExpQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalRemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="OrderNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="OrderBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CourierId" Type="Int32" Nullable="false" />
-          <Property Name="CourierName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="TransId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="TransName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LRNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="LRDate" Type="DateTime" Precision="3" />
-          <Property Name="UID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="FreightAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="OtherCharges" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TaxBase" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="ShortAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DemAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ExpAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TtlDedcAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalShortAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalDemAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalExpAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalDedcAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="GenDN" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="GenDNBy" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="DNNo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="DNDate" Type="DateTime" Precision="3" />
-          <Property Name="BType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="MfgDate" Type="DateTime" Precision="3" />
-          <Property Name="ExpDate" Type="DateTime" Precision="3" />
-          <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-        </EntityType>
         <EntityType Name="M_InwardMain">
           <Key>
             <PropertyRef Name="FSessId" />
@@ -14743,6 +14643,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="RPValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="OfferUId" Type="Int32" Nullable="false" />
           <Property Name="VAT" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ItemCode" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TrnPartyOrderMain">
           <Key>
@@ -15984,6 +15885,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="DeleteRecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DUserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ItemCode" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="DeletedInwardMain">
           <Key>
@@ -16657,106 +16559,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="Description" Type="String" Nullable="false" MaxLength="51" FixedLength="false" Unicode="false" />
           <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="M_InwardDetail">
-          <Key>
-            <PropertyRef Name="IdNo" />
-            <PropertyRef Name="FSessId" />
-            <PropertyRef Name="InwardBy" />
-            <PropertyRef Name="GrNo" />
-            <PropertyRef Name="InwardNo" />
-            <PropertyRef Name="InwardDate" />
-            <PropertyRef Name="SupplierCode" />
-            <PropertyRef Name="ProdCode" />
-            <PropertyRef Name="ProdName" />
-            <PropertyRef Name="BatchNo" />
-            <PropertyRef Name="Barcode" />
-            <PropertyRef Name="Qty" />
-            <PropertyRef Name="FreeQty" />
-            <PropertyRef Name="Mrp" />
-            <PropertyRef Name="SaleRate" />
-            <PropertyRef Name="Dp" />
-            <PropertyRef Name="TradeDiscount" />
-            <PropertyRef Name="TradeAmount" />
-            <PropertyRef Name="LotDiscount" />
-            <PropertyRef Name="Amount" />
-            <PropertyRef Name="Tax" />
-            <PropertyRef Name="TaxAmt" />
-            <PropertyRef Name="AValue" />
-            <PropertyRef Name="AValueAmt" />
-            <PropertyRef Name="DiscountAmt" />
-            <PropertyRef Name="TotalAmt" />
-            <PropertyRef Name="InwardFor" />
-            <PropertyRef Name="Status" />
-            <PropertyRef Name="RecTimeStamp" />
-            <PropertyRef Name="UserId" />
-            <PropertyRef Name="Version" />
-            <PropertyRef Name="ActiveStatus" />
-            <PropertyRef Name="TaxType" />
-            <PropertyRef Name="OrdQty" />
-            <PropertyRef Name="ShortQty" />
-            <PropertyRef Name="DemQty" />
-            <PropertyRef Name="ExpQty" />
-            <PropertyRef Name="RemQty" />
-            <PropertyRef Name="ShortAmt" />
-            <PropertyRef Name="DemAmt" />
-            <PropertyRef Name="ExpAmt" />
-            <PropertyRef Name="TtlDedcAmt" />
-            <PropertyRef Name="BType" />
-            <PropertyRef Name="CGST" />
-            <PropertyRef Name="CGSTAmt" />
-            <PropertyRef Name="SGST" />
-            <PropertyRef Name="SGSTAmt" />
-          </Key>
-          <Property Name="IdNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="FSessId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="InwardBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="GrNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="InwardNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="InwardDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="SupplierCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ProdCode" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="ProdName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="BatchNo" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
-          <Property Name="Barcode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Qty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Mrp" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SaleRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Dp" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TradeDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TradeAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="LotDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="Tax" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TaxAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="AValueAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DiscountAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TotalAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="InwardFor" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="UserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="Version" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="TaxType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="OrdQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ShortQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ExpQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="RemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ShortAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="DemAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="ExpAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="TtlDedcAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="BType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="MfgDate" Type="DateTime" Precision="3" />
-          <Property Name="ExpDate" Type="DateTime" Precision="3" />
-          <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="M_IsCardIssue">
           <Key>
@@ -20563,6 +20365,214 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Type="Decimal" Name="StockOutValue" Nullable="true" Precision="18" Scale="2" />
           <Property Type="Decimal" Name="ClsStockValue" Nullable="true" Precision="18" Scale="2" />
         </ComplexType>
+        <EntityType Name="M_InwardData">
+          <Key>
+            <PropertyRef Name="FSessId" />
+            <PropertyRef Name="InwardNo" />
+            <PropertyRef Name="ProdCode" />
+            <PropertyRef Name="Barcode" />
+          </Key>
+          <Property Name="IdNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FSessId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="InwardBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InwardByName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="GrNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="InwardNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SupplierCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SupplierName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OrderDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DeliveryDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RecvDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RefNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProdCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProdName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BatchNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Barcode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Qty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="MRP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TradeDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TradeAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="LotDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Tax" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TaxAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AValueAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DiscountAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="TotalAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalTradeDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalLotDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CashDiscPer" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalCashDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalFreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalTaxAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalEAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RndOff" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="NetPayable" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="InwardFor" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InwardForName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Version" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="DUserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="DReason" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="DRecTimeStamp" Type="DateTime" Precision="3" />
+          <Property Name="TaxType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="OrdQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ShortQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ExpQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalOrdQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalShortQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalDemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalExpQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalRemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="OrderNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CourierId" Type="Int32" Nullable="false" />
+          <Property Name="CourierName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TransId" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TransName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LRNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="LRDate" Type="DateTime" Precision="3" />
+          <Property Name="UID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FreightAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="OtherCharges" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TaxBase" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ShortAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DemAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ExpAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TtlDedcAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalShortAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalDemAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalExpAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalDedcAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="GenDN" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="GenDNBy" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DNNo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DNDate" Type="DateTime" Precision="3" />
+          <Property Name="BType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="MfgDate" Type="DateTime" Precision="3" />
+          <Property Name="ExpDate" Type="DateTime" Precision="3" />
+          <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ItemCode" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="M_InwardDetail">
+          <Key>
+            <PropertyRef Name="IdNo" />
+            <PropertyRef Name="FSessId" />
+            <PropertyRef Name="InwardBy" />
+            <PropertyRef Name="GrNo" />
+            <PropertyRef Name="InwardNo" />
+            <PropertyRef Name="InwardDate" />
+            <PropertyRef Name="SupplierCode" />
+            <PropertyRef Name="ProdCode" />
+            <PropertyRef Name="ProdName" />
+            <PropertyRef Name="BatchNo" />
+            <PropertyRef Name="Barcode" />
+            <PropertyRef Name="Qty" />
+            <PropertyRef Name="FreeQty" />
+            <PropertyRef Name="Mrp" />
+            <PropertyRef Name="SaleRate" />
+            <PropertyRef Name="Dp" />
+            <PropertyRef Name="TradeDiscount" />
+            <PropertyRef Name="TradeAmount" />
+            <PropertyRef Name="LotDiscount" />
+            <PropertyRef Name="Amount" />
+            <PropertyRef Name="Tax" />
+            <PropertyRef Name="TaxAmt" />
+            <PropertyRef Name="AValue" />
+            <PropertyRef Name="AValueAmt" />
+            <PropertyRef Name="DiscountAmt" />
+            <PropertyRef Name="TotalAmt" />
+            <PropertyRef Name="InwardFor" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="RecTimeStamp" />
+            <PropertyRef Name="UserId" />
+            <PropertyRef Name="Version" />
+            <PropertyRef Name="ActiveStatus" />
+            <PropertyRef Name="TaxType" />
+            <PropertyRef Name="OrdQty" />
+            <PropertyRef Name="ShortQty" />
+            <PropertyRef Name="DemQty" />
+            <PropertyRef Name="ExpQty" />
+            <PropertyRef Name="RemQty" />
+            <PropertyRef Name="ShortAmt" />
+            <PropertyRef Name="DemAmt" />
+            <PropertyRef Name="ExpAmt" />
+            <PropertyRef Name="TtlDedcAmt" />
+            <PropertyRef Name="BType" />
+            <PropertyRef Name="CGST" />
+            <PropertyRef Name="CGSTAmt" />
+            <PropertyRef Name="SGST" />
+            <PropertyRef Name="SGSTAmt" />
+          </Key>
+          <Property Name="IdNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FSessId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="InwardBy" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="GrNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="InwardNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="InwardDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SupplierCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProdCode" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ProdName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="BatchNo" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Barcode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Qty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Mrp" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SaleRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Dp" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TradeDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TradeAmount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="LotDiscount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Tax" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TaxAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="AValueAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DiscountAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="InwardFor" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="Version" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="TaxType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="OrdQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ShortQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ExpQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RemQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ShortAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="DemAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ExpAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TtlDedcAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="MfgDate" Type="DateTime" Precision="3" />
+          <Property Name="ExpDate" Type="DateTime" Precision="3" />
+          <Property Name="CGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SGST" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ItemCode" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -21951,110 +21961,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="M_InwardData">
-            <EntityTypeMapping TypeName="InventoryModel.M_InwardData">
-              <MappingFragment StoreEntitySet="M_InwardData">
-                <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
-                <ScalarProperty Name="SGST" ColumnName="SGST" />
-                <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
-                <ScalarProperty Name="CGST" ColumnName="CGST" />
-                <ScalarProperty Name="ExpDate" ColumnName="ExpDate" />
-                <ScalarProperty Name="MfgDate" ColumnName="MfgDate" />
-                <ScalarProperty Name="BType" ColumnName="BType" />
-                <ScalarProperty Name="DNDate" ColumnName="DNDate" />
-                <ScalarProperty Name="DNNo" ColumnName="DNNo" />
-                <ScalarProperty Name="GenDNBy" ColumnName="GenDNBy" />
-                <ScalarProperty Name="GenDN" ColumnName="GenDN" />
-                <ScalarProperty Name="TotalDedcAmt" ColumnName="TotalDedcAmt" />
-                <ScalarProperty Name="TotalExpAmt" ColumnName="TotalExpAmt" />
-                <ScalarProperty Name="TotalDemAmt" ColumnName="TotalDemAmt" />
-                <ScalarProperty Name="TotalShortAmt" ColumnName="TotalShortAmt" />
-                <ScalarProperty Name="TtlDedcAmt" ColumnName="TtlDedcAmt" />
-                <ScalarProperty Name="ExpAmt" ColumnName="ExpAmt" />
-                <ScalarProperty Name="DemAmt" ColumnName="DemAmt" />
-                <ScalarProperty Name="ShortAmt" ColumnName="ShortAmt" />
-                <ScalarProperty Name="TaxBase" ColumnName="TaxBase" />
-                <ScalarProperty Name="OtherCharges" ColumnName="OtherCharges" />
-                <ScalarProperty Name="FreightAmt" ColumnName="FreightAmt" />
-                <ScalarProperty Name="UID" ColumnName="UID" />
-                <ScalarProperty Name="LRDate" ColumnName="LRDate" />
-                <ScalarProperty Name="LRNo" ColumnName="LRNo" />
-                <ScalarProperty Name="TransName" ColumnName="TransName" />
-                <ScalarProperty Name="TransId" ColumnName="TransId" />
-                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
-                <ScalarProperty Name="CourierId" ColumnName="CourierId" />
-                <ScalarProperty Name="OrderBy" ColumnName="OrderBy" />
-                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
-                <ScalarProperty Name="TotalRemQty" ColumnName="TotalRemQty" />
-                <ScalarProperty Name="TotalExpQty" ColumnName="TotalExpQty" />
-                <ScalarProperty Name="TotalDemQty" ColumnName="TotalDemQty" />
-                <ScalarProperty Name="TotalShortQty" ColumnName="TotalShortQty" />
-                <ScalarProperty Name="TotalOrdQty" ColumnName="TotalOrdQty" />
-                <ScalarProperty Name="RemQty" ColumnName="RemQty" />
-                <ScalarProperty Name="ExpQty" ColumnName="ExpQty" />
-                <ScalarProperty Name="DemQty" ColumnName="DemQty" />
-                <ScalarProperty Name="ShortQty" ColumnName="ShortQty" />
-                <ScalarProperty Name="OrdQty" ColumnName="OrdQty" />
-                <ScalarProperty Name="TaxType" ColumnName="TaxType" />
-                <ScalarProperty Name="DRecTimeStamp" ColumnName="DRecTimeStamp" />
-                <ScalarProperty Name="DReason" ColumnName="DReason" />
-                <ScalarProperty Name="DUserId" ColumnName="DUserId" />
-                <ScalarProperty Name="Version" ColumnName="Version" />
-                <ScalarProperty Name="UserName" ColumnName="UserName" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="RecTimeStamp" ColumnName="RecTimeStamp" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="InwardForName" ColumnName="InwardForName" />
-                <ScalarProperty Name="InwardFor" ColumnName="InwardFor" />
-                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="NetPayable" ColumnName="NetPayable" />
-                <ScalarProperty Name="RndOff" ColumnName="RndOff" />
-                <ScalarProperty Name="TotalEAmt" ColumnName="TotalEAmt" />
-                <ScalarProperty Name="TotalTaxAmt" ColumnName="TotalTaxAmt" />
-                <ScalarProperty Name="TotalDiscount" ColumnName="TotalDiscount" />
-                <ScalarProperty Name="TotalFreeQty" ColumnName="TotalFreeQty" />
-                <ScalarProperty Name="TotalQty" ColumnName="TotalQty" />
-                <ScalarProperty Name="TotalCashDiscount" ColumnName="TotalCashDiscount" />
-                <ScalarProperty Name="CashDiscPer" ColumnName="CashDiscPer" />
-                <ScalarProperty Name="TotalLotDiscount" ColumnName="TotalLotDiscount" />
-                <ScalarProperty Name="TotalTradeDiscount" ColumnName="TotalTradeDiscount" />
-                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-                <ScalarProperty Name="PStatus" ColumnName="PStatus" />
-                <ScalarProperty Name="TotalAmt" ColumnName="TotalAmt" />
-                <ScalarProperty Name="DiscountAmt" ColumnName="DiscountAmt" />
-                <ScalarProperty Name="AValueAmt" ColumnName="AValueAmt" />
-                <ScalarProperty Name="AValue" ColumnName="AValue" />
-                <ScalarProperty Name="TaxAmt" ColumnName="TaxAmt" />
-                <ScalarProperty Name="Tax" ColumnName="Tax" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="LotDiscount" ColumnName="LotDiscount" />
-                <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
-                <ScalarProperty Name="TradeDiscount" ColumnName="TradeDiscount" />
-                <ScalarProperty Name="DP" ColumnName="DP" />
-                <ScalarProperty Name="PRate" ColumnName="PRate" />
-                <ScalarProperty Name="MRP" ColumnName="MRP" />
-                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
-                <ScalarProperty Name="BatchNo" ColumnName="BatchNo" />
-                <ScalarProperty Name="ProdName" ColumnName="ProdName" />
-                <ScalarProperty Name="ProdCode" ColumnName="ProdCode" />
-                <ScalarProperty Name="RefNo" ColumnName="RefNo" />
-                <ScalarProperty Name="RecvDate" ColumnName="RecvDate" />
-                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
-                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
-                <ScalarProperty Name="SupplierCode" ColumnName="SupplierCode" />
-                <ScalarProperty Name="InwardNo" ColumnName="InwardNo" />
-                <ScalarProperty Name="GrNo" ColumnName="GrNo" />
-                <ScalarProperty Name="InwardByName" ColumnName="InwardByName" />
-                <ScalarProperty Name="InwardBy" ColumnName="InwardBy" />
-                <ScalarProperty Name="FSessId" ColumnName="FSessId" />
-                <ScalarProperty Name="IdNo" ColumnName="IdNo" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="M_InwardMain">
             <EntityTypeMapping TypeName="InventoryModel.M_InwardMain">
               <MappingFragment StoreEntitySet="M_InwardMain">
@@ -23249,6 +23155,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="TrnPartyOrderDetails">
             <EntityTypeMapping TypeName="InventoryModel.TrnPartyOrderDetail">
               <MappingFragment StoreEntitySet="TrnPartyOrderDetail">
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="VAT" ColumnName="VAT" />
                 <ScalarProperty Name="OfferUId" ColumnName="OfferUId" />
                 <ScalarProperty Name="RPValue" ColumnName="RPValue" />
@@ -24279,6 +24186,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="DeletedInwardDetails">
             <EntityTypeMapping TypeName="InventoryModel.DeletedInwardDetail">
               <MappingFragment StoreEntitySet="DeletedInwardDetail">
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="DUserId" ColumnName="DUserId" />
                 <ScalarProperty Name="DeleteRecTimeStamp" ColumnName="DeleteRecTimeStamp" />
                 <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
@@ -24746,61 +24654,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="AId" ColumnName="AId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="M_InwardDetail">
-            <EntityTypeMapping TypeName="InventoryModel.M_InwardDetail">
-              <MappingFragment StoreEntitySet="M_InwardDetail">
-                <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
-                <ScalarProperty Name="SGST" ColumnName="SGST" />
-                <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
-                <ScalarProperty Name="CGST" ColumnName="CGST" />
-                <ScalarProperty Name="ExpDate" ColumnName="ExpDate" />
-                <ScalarProperty Name="MfgDate" ColumnName="MfgDate" />
-                <ScalarProperty Name="BType" ColumnName="BType" />
-                <ScalarProperty Name="TtlDedcAmt" ColumnName="TtlDedcAmt" />
-                <ScalarProperty Name="ExpAmt" ColumnName="ExpAmt" />
-                <ScalarProperty Name="DemAmt" ColumnName="DemAmt" />
-                <ScalarProperty Name="ShortAmt" ColumnName="ShortAmt" />
-                <ScalarProperty Name="RemQty" ColumnName="RemQty" />
-                <ScalarProperty Name="ExpQty" ColumnName="ExpQty" />
-                <ScalarProperty Name="DemQty" ColumnName="DemQty" />
-                <ScalarProperty Name="ShortQty" ColumnName="ShortQty" />
-                <ScalarProperty Name="OrdQty" ColumnName="OrdQty" />
-                <ScalarProperty Name="TaxType" ColumnName="TaxType" />
-                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
-                <ScalarProperty Name="Version" ColumnName="Version" />
-                <ScalarProperty Name="UserId" ColumnName="UserId" />
-                <ScalarProperty Name="RecTimeStamp" ColumnName="RecTimeStamp" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="InwardFor" ColumnName="InwardFor" />
-                <ScalarProperty Name="TotalAmt" ColumnName="TotalAmt" />
-                <ScalarProperty Name="DiscountAmt" ColumnName="DiscountAmt" />
-                <ScalarProperty Name="AValueAmt" ColumnName="AValueAmt" />
-                <ScalarProperty Name="AValue" ColumnName="AValue" />
-                <ScalarProperty Name="TaxAmt" ColumnName="TaxAmt" />
-                <ScalarProperty Name="Tax" ColumnName="Tax" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="LotDiscount" ColumnName="LotDiscount" />
-                <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
-                <ScalarProperty Name="TradeDiscount" ColumnName="TradeDiscount" />
-                <ScalarProperty Name="Dp" ColumnName="Dp" />
-                <ScalarProperty Name="SaleRate" ColumnName="SaleRate" />
-                <ScalarProperty Name="Mrp" ColumnName="Mrp" />
-                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
-                <ScalarProperty Name="Qty" ColumnName="Qty" />
-                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
-                <ScalarProperty Name="BatchNo" ColumnName="BatchNo" />
-                <ScalarProperty Name="ProdName" ColumnName="ProdName" />
-                <ScalarProperty Name="ProdCode" ColumnName="ProdCode" />
-                <ScalarProperty Name="SupplierCode" ColumnName="SupplierCode" />
-                <ScalarProperty Name="InwardDate" ColumnName="InwardDate" />
-                <ScalarProperty Name="InwardNo" ColumnName="InwardNo" />
-                <ScalarProperty Name="GrNo" ColumnName="GrNo" />
-                <ScalarProperty Name="InwardBy" ColumnName="InwardBy" />
-                <ScalarProperty Name="FSessId" ColumnName="FSessId" />
-                <ScalarProperty Name="IdNo" ColumnName="IdNo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -27420,6 +27273,167 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="M_InwardData">
+            <EntityTypeMapping TypeName="InventoryModel.M_InwardData">
+              <MappingFragment StoreEntitySet="M_InwardData">
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
+                <ScalarProperty Name="SGST" ColumnName="SGST" />
+                <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
+                <ScalarProperty Name="CGST" ColumnName="CGST" />
+                <ScalarProperty Name="ExpDate" ColumnName="ExpDate" />
+                <ScalarProperty Name="MfgDate" ColumnName="MfgDate" />
+                <ScalarProperty Name="BType" ColumnName="BType" />
+                <ScalarProperty Name="DNDate" ColumnName="DNDate" />
+                <ScalarProperty Name="DNNo" ColumnName="DNNo" />
+                <ScalarProperty Name="GenDNBy" ColumnName="GenDNBy" />
+                <ScalarProperty Name="GenDN" ColumnName="GenDN" />
+                <ScalarProperty Name="TotalDedcAmt" ColumnName="TotalDedcAmt" />
+                <ScalarProperty Name="TotalExpAmt" ColumnName="TotalExpAmt" />
+                <ScalarProperty Name="TotalDemAmt" ColumnName="TotalDemAmt" />
+                <ScalarProperty Name="TotalShortAmt" ColumnName="TotalShortAmt" />
+                <ScalarProperty Name="TtlDedcAmt" ColumnName="TtlDedcAmt" />
+                <ScalarProperty Name="ExpAmt" ColumnName="ExpAmt" />
+                <ScalarProperty Name="DemAmt" ColumnName="DemAmt" />
+                <ScalarProperty Name="ShortAmt" ColumnName="ShortAmt" />
+                <ScalarProperty Name="TaxBase" ColumnName="TaxBase" />
+                <ScalarProperty Name="OtherCharges" ColumnName="OtherCharges" />
+                <ScalarProperty Name="FreightAmt" ColumnName="FreightAmt" />
+                <ScalarProperty Name="UID" ColumnName="UID" />
+                <ScalarProperty Name="LRDate" ColumnName="LRDate" />
+                <ScalarProperty Name="LRNo" ColumnName="LRNo" />
+                <ScalarProperty Name="TransName" ColumnName="TransName" />
+                <ScalarProperty Name="TransId" ColumnName="TransId" />
+                <ScalarProperty Name="CourierName" ColumnName="CourierName" />
+                <ScalarProperty Name="CourierId" ColumnName="CourierId" />
+                <ScalarProperty Name="OrderBy" ColumnName="OrderBy" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="TotalRemQty" ColumnName="TotalRemQty" />
+                <ScalarProperty Name="TotalExpQty" ColumnName="TotalExpQty" />
+                <ScalarProperty Name="TotalDemQty" ColumnName="TotalDemQty" />
+                <ScalarProperty Name="TotalShortQty" ColumnName="TotalShortQty" />
+                <ScalarProperty Name="TotalOrdQty" ColumnName="TotalOrdQty" />
+                <ScalarProperty Name="RemQty" ColumnName="RemQty" />
+                <ScalarProperty Name="ExpQty" ColumnName="ExpQty" />
+                <ScalarProperty Name="DemQty" ColumnName="DemQty" />
+                <ScalarProperty Name="ShortQty" ColumnName="ShortQty" />
+                <ScalarProperty Name="OrdQty" ColumnName="OrdQty" />
+                <ScalarProperty Name="TaxType" ColumnName="TaxType" />
+                <ScalarProperty Name="DRecTimeStamp" ColumnName="DRecTimeStamp" />
+                <ScalarProperty Name="DReason" ColumnName="DReason" />
+                <ScalarProperty Name="DUserId" ColumnName="DUserId" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RecTimeStamp" ColumnName="RecTimeStamp" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="InwardForName" ColumnName="InwardForName" />
+                <ScalarProperty Name="InwardFor" ColumnName="InwardFor" />
+                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="NetPayable" ColumnName="NetPayable" />
+                <ScalarProperty Name="RndOff" ColumnName="RndOff" />
+                <ScalarProperty Name="TotalEAmt" ColumnName="TotalEAmt" />
+                <ScalarProperty Name="TotalTaxAmt" ColumnName="TotalTaxAmt" />
+                <ScalarProperty Name="TotalDiscount" ColumnName="TotalDiscount" />
+                <ScalarProperty Name="TotalFreeQty" ColumnName="TotalFreeQty" />
+                <ScalarProperty Name="TotalQty" ColumnName="TotalQty" />
+                <ScalarProperty Name="TotalCashDiscount" ColumnName="TotalCashDiscount" />
+                <ScalarProperty Name="CashDiscPer" ColumnName="CashDiscPer" />
+                <ScalarProperty Name="TotalLotDiscount" ColumnName="TotalLotDiscount" />
+                <ScalarProperty Name="TotalTradeDiscount" ColumnName="TotalTradeDiscount" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="PStatus" ColumnName="PStatus" />
+                <ScalarProperty Name="TotalAmt" ColumnName="TotalAmt" />
+                <ScalarProperty Name="DiscountAmt" ColumnName="DiscountAmt" />
+                <ScalarProperty Name="AValueAmt" ColumnName="AValueAmt" />
+                <ScalarProperty Name="AValue" ColumnName="AValue" />
+                <ScalarProperty Name="TaxAmt" ColumnName="TaxAmt" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="LotDiscount" ColumnName="LotDiscount" />
+                <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
+                <ScalarProperty Name="TradeDiscount" ColumnName="TradeDiscount" />
+                <ScalarProperty Name="DP" ColumnName="DP" />
+                <ScalarProperty Name="PRate" ColumnName="PRate" />
+                <ScalarProperty Name="MRP" ColumnName="MRP" />
+                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="BatchNo" ColumnName="BatchNo" />
+                <ScalarProperty Name="ProdName" ColumnName="ProdName" />
+                <ScalarProperty Name="ProdCode" ColumnName="ProdCode" />
+                <ScalarProperty Name="RefNo" ColumnName="RefNo" />
+                <ScalarProperty Name="RecvDate" ColumnName="RecvDate" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+                <ScalarProperty Name="SupplierCode" ColumnName="SupplierCode" />
+                <ScalarProperty Name="InwardNo" ColumnName="InwardNo" />
+                <ScalarProperty Name="GrNo" ColumnName="GrNo" />
+                <ScalarProperty Name="InwardByName" ColumnName="InwardByName" />
+                <ScalarProperty Name="InwardBy" ColumnName="InwardBy" />
+                <ScalarProperty Name="FSessId" ColumnName="FSessId" />
+                <ScalarProperty Name="IdNo" ColumnName="IdNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M_InwardDetail">
+            <EntityTypeMapping TypeName="InventoryModel.M_InwardDetail">
+              <MappingFragment StoreEntitySet="M_InwardDetail">
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
+                <ScalarProperty Name="SGST" ColumnName="SGST" />
+                <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
+                <ScalarProperty Name="CGST" ColumnName="CGST" />
+                <ScalarProperty Name="ExpDate" ColumnName="ExpDate" />
+                <ScalarProperty Name="MfgDate" ColumnName="MfgDate" />
+                <ScalarProperty Name="BType" ColumnName="BType" />
+                <ScalarProperty Name="TtlDedcAmt" ColumnName="TtlDedcAmt" />
+                <ScalarProperty Name="ExpAmt" ColumnName="ExpAmt" />
+                <ScalarProperty Name="DemAmt" ColumnName="DemAmt" />
+                <ScalarProperty Name="ShortAmt" ColumnName="ShortAmt" />
+                <ScalarProperty Name="RemQty" ColumnName="RemQty" />
+                <ScalarProperty Name="ExpQty" ColumnName="ExpQty" />
+                <ScalarProperty Name="DemQty" ColumnName="DemQty" />
+                <ScalarProperty Name="ShortQty" ColumnName="ShortQty" />
+                <ScalarProperty Name="OrdQty" ColumnName="OrdQty" />
+                <ScalarProperty Name="TaxType" ColumnName="TaxType" />
+                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
+                <ScalarProperty Name="Version" ColumnName="Version" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="RecTimeStamp" ColumnName="RecTimeStamp" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="InwardFor" ColumnName="InwardFor" />
+                <ScalarProperty Name="TotalAmt" ColumnName="TotalAmt" />
+                <ScalarProperty Name="DiscountAmt" ColumnName="DiscountAmt" />
+                <ScalarProperty Name="AValueAmt" ColumnName="AValueAmt" />
+                <ScalarProperty Name="AValue" ColumnName="AValue" />
+                <ScalarProperty Name="TaxAmt" ColumnName="TaxAmt" />
+                <ScalarProperty Name="Tax" ColumnName="Tax" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="LotDiscount" ColumnName="LotDiscount" />
+                <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
+                <ScalarProperty Name="TradeDiscount" ColumnName="TradeDiscount" />
+                <ScalarProperty Name="Dp" ColumnName="Dp" />
+                <ScalarProperty Name="SaleRate" ColumnName="SaleRate" />
+                <ScalarProperty Name="Mrp" ColumnName="Mrp" />
+                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="BatchNo" ColumnName="BatchNo" />
+                <ScalarProperty Name="ProdName" ColumnName="ProdName" />
+                <ScalarProperty Name="ProdCode" ColumnName="ProdCode" />
+                <ScalarProperty Name="SupplierCode" ColumnName="SupplierCode" />
+                <ScalarProperty Name="InwardDate" ColumnName="InwardDate" />
+                <ScalarProperty Name="InwardNo" ColumnName="InwardNo" />
+                <ScalarProperty Name="GrNo" ColumnName="GrNo" />
+                <ScalarProperty Name="InwardBy" ColumnName="InwardBy" />
+                <ScalarProperty Name="FSessId" ColumnName="FSessId" />
+                <ScalarProperty Name="IdNo" ColumnName="IdNo" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

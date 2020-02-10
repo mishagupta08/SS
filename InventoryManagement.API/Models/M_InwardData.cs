@@ -112,5 +112,6 @@ namespace InventoryManagement.API.Models
         public decimal CGSTAmt { get; set; }
         public decimal SGST { get; set; }
         public decimal SGSTAmt { get; set; }
+        public string ItemCode { get; set; }
     }
 }

@@ -66,5 +66,6 @@ namespace InventoryManagement.API.Models
         public decimal SGSTAmt { get; set; }
         public System.DateTime DeleteRecTimeStamp { get; set; }
         public decimal DUserId { get; set; }
+        public string ItemCode { get; set; }
     }
 }

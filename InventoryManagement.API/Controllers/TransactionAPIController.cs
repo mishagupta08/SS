@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
+using System.Xml.Serialization;
 using static InventoryManagement.Entity.Common.EnumCalculation;
 
 namespace InventoryManagement.API.Controllers
@@ -1525,13 +1526,7 @@ namespace InventoryManagement.API.Controllers
 
                                     i = entity.SaveChanges();
                                     objDTTrans.Commit();
-                                    //try
-                                    //{
-                                    //    Task<ResponseDetail> resp_ = SendMySMS("Dear " + objModel.objCustomer.IdNo + "! Thank you for shopping of worth Rs. " + Math.Round(objModel.objProduct.TotalNetPayable) + ", Total BV " + objModel.objProduct.TotalBV.ToString() + " added into your Current Month Business. " + System.Configuration.ConfigurationManager.AppSettings["CompName"], objModel.objCustomer.MobileNo.ToString());
-                                    //}
-                                    //catch (Exception)
-                                    //{
-                                    //}
+
 
                                 }
                                 catch (DbUpdateConcurrencyException ex)
@@ -1550,6 +1545,8 @@ namespace InventoryManagement.API.Controllers
                             }
                             if (i == objModel.objListProduct.Count)
                             {
+
+
                                 var resultPayMode = (from r in entity.M_PayModeMaster select r).ToList();
                                 foreach (var obj in objDTListPayMode)
                                 {
@@ -1574,8 +1571,21 @@ namespace InventoryManagement.API.Controllers
                                 i = entity.SaveChanges();
                                 if (i == objDTListPayMode.Count)
                                 {
+
+                                    var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
+                                    var BillDetails = entity.TrnBillDetails.Where(r => r.BillNo == billPrefix + "/" + SoldByCode + "/" + maxSbillNo).ToList();
+                                    var BillMainXML = Serialize(BillMain);
+                                    var BillDetailsXML = Serialize(BillDetails);
+
+                                    cmd.CommandText = "Exec BillGeneration '" + BillMainXML + "','" + BillDetailsXML + "'";
+                                    cmd.Connection = SC;
+                                    SC.Close();
+                                    SC.Open();
+                                    int t = cmd.ExecuteNonQuery();
+
                                     objResponse.ResponseMessage = "Saved Successfully!";
                                     objResponse.ResponseStatus = "OK";
+
                                     objResponse.ResponseDetailsToPrint = new DistributorBillModel();
                                     objResponse.ResponseDetailsToPrint.BillNo = UserBillNo;
                                     objResponse.ResponseDetailsToPrint.SoldBy = SoldByCode;
@@ -8060,6 +8070,21 @@ namespace InventoryManagement.API.Controllers
                 
             }
             return objprodAttr;
+        }
+
+        public static string Serialize<T>(T dataToSerialize)
+        {
+            try
+            {
+                var stringwriter = new System.IO.StringWriter();
+                var serializer = new XmlSerializer(typeof(T));
+                serializer.Serialize(stringwriter, dataToSerialize);
+                return stringwriter.ToString();
+            }
+            catch
+            {
+                throw;
+            }
         }
 
 

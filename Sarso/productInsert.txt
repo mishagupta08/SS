@@ -1,0 +1,192 @@
+set nocount on
+
+declare @i int --iterator
+declare @iRwCnt int --rowcount
+declare @IDNo int
+declare @UplnFormno int
+declare @LegNo int
+declare @Bcode int
+declare @Bid int
+set @i = 1 --initialize
+
+
+
+ --insert into #tbl ([GenerateBy]
+ --     ,[BrandCode]
+ --     ,[CatId]
+ --     ,[SubCatId]
+ --     ,[ProductType]
+ --     ,[UserProdId]
+ --     ,[ProductCode]
+ --     ,[ProdId]
+ --     ,[ProductName]
+ --     ,[ProductDesc]
+ --     ,[Prefix]
+ --     ,[ItemType]
+ --     ,[BuyingTax]
+ --     ,[Weight]
+ --     ,[PurchaseRate]
+ --     ,[MRP]
+ --     ,[DP]
+ --     ,[DP1]
+ --     ,[OtherStateDP]
+ --     ,[Exp]
+ --     ,[Costing]
+ --     ,[BV]
+ --     ,[CV]
+ --     ,[PV]
+ --     ,[RP]
+ --     ,[FundPoint]
+ --     ,[IsDiscount]
+ --     ,[Discount]
+ --     ,[DiscInRs]
+ --     ,[VDiscount]
+ --     ,[ProdCommssn]
+ --     ,[GRate]
+ --     ,[GMCharge]
+ --     ,[GMType]
+ --     ,[IsCardIssue]
+ --     ,[Remarks]
+ --     ,[ActiveStatus]
+ --     ,[IsImage]
+ --     ,[ImagePath]
+ --     ,[OnWebSite]
+ --     ,[TaxType]
+ --     ,[Company]
+ --     ,[PurchaseFrom]
+ --     ,[PurchaseStore]
+ --     ,[Imported]
+ --     ,[IMEINo]
+ --     ,[BNo]
+ --     ,[PType]
+ --     ,[BId]
+ --     ,[BarcodeType]
+ --     ,[BCode]
+ --     ,[Barcode]
+ --     ,[IsExpired]
+ --     ,[MfgDate]
+ --     ,[ExpDate]
+ --     ,[OpStockQty]
+ --     ,[RecTimeStamp]
+ --     ,[UserId]
+ --     ,[LastModified]
+ --     ,[Val1]
+ --     ,[Val2]
+ --     ,[OrderDesc]
+ --     ,[SpclOffer]
+ --     ,[HotSell]
+ --     ,[IsForPC]
+ --     ,[IsFlexible]
+ --     ,[SubQty]
+ --     ,[CalcKitRate]
+ --     ,[FlexiQty]
+ --     ,[MsgText]
+ --     ,[MsgStatus]
+ --     ,[ImgPath1]
+ --     ,[ImgPath2]
+ --     ,[ImgPath3]
+ --     ,[ImgPath4]
+ --     ,[AlterID]
+ --     ,[HSNCode])
+ -- select '',0,0,0,'P',PCode,PCode,PCode,PName,Descr,'','',0,0,0,Price,DP,ISNULL(prodsaleprice,0),ISNULL(prodsaleprice,0),0,0,0,0,PV,0,0,'N',0,0,0,0,0,0,'','N','','Y','N','','Y','','U','','','N',0,'','G',1,'W',0,0,'N',CAst(getdate() as date),CAst(getdate() as date),0,getdate(),0,'Administrator',0,0,'','','','N','N',0,'Y',0,'','','','','','',88,ISNULL(HSNO,'')
+ -- from sarso.[sarsobiz].[dbo].[repurchaseproducts]
+ -- where PCode  not in (select [ProdId] FROM [SrsInv].[dbo].[M_ProductMaster])
+
+set @iRwCnt = @@ROWCOUNT --SCOPE_IDENTITY() would also work
+
+/*
+
+Always do this after the insert, since it's faster to add the index in bulk than to update the index as you write into the temp table. Since you know the data in this column, you can set the fill factor to 100% to get the best read times.
+
+*/
+select * from #tbl
+while @iRwCnt >0
+begin
+select top 1 @IdNo = [ProdId] from #tbl
+set @iRwCnt = @@ROWCOUNT --ensure that we still have data
+
+select @Bcode = max(BCode)+1 from M_BarcodeMaster
+select @Bid = max(BId)+1 from M_BarcodeMaster
+if @iRwCnt >0
+begin
+
+Update #tbl
+set [BCode] = @Bcode
+,[Barcode] = @Bcode,
+BId= @Bid
+ where ProdId =  @IdNo ;
+
+ insert into [SrsInv].[dbo].[M_ProductMaster] 
+  select *
+  from #tbl
+  where ProdId =  @IdNo
+  
+  Insert into M_BarcodeMaster
+([BId]
+      ,[GenerateBy]
+      ,[GenerateDate]
+      ,[SupplierCode]
+      ,[ProdId]
+      ,[BatchNo]
+      ,[BType]
+      ,[BarCodeType]
+      ,[BCode]
+      ,[BarCode]
+      ,[PRate]
+      ,[MRP]
+      ,[DP]
+      ,[IsExpired]
+      ,[MfgDate]
+      ,[ExpDate]
+      ,[Remarks]
+      ,[ActiveStatus]
+      ,[Company]
+      ,[Imported]
+      ,[RecTimeStamp]
+      ,[UserId]
+      ,[LastModified]
+      ,[DP1]
+      ,[Val1]
+      ,[Val2])
+	  
+	 values ( @Bid, 
+	   'WR',
+	   getdate(),
+	   '',
+	   @IdNo,
+	   @Bcode,
+	   'W',
+	   	  
+	   (select BarCodeType from #tbl where ProdId = @IdNo),
+	   (select [BCode] from #tbl where ProdId = @IdNo),
+       (select [BarCode] from #tbl where ProdId = @IdNo),
+       (select PurchaseRate from #tbl where ProdId = @IdNo),
+       (select [MRP] from #tbl where ProdId = @IdNo),
+       (select [DP] from #tbl where ProdId = @IdNo),
+	   'N',
+	   getdate(),
+	   getdate(),
+	   '',
+	   'Y',
+	   '',
+	   'N',
+	   getdate(),
+	   88,
+	   '',
+	   0,
+	   0,
+	   0)
+	  
+
+--begin tran
+--print 'My Value is ' + Cast(@IdNo as nvarchar(1000)) --replace with your operations on this value
+
+--INSERT INTO TempMemtreerelation(FormNo,UplnFormno,LegNo)
+--Values(@FormNo,@UplnFormno,@LegNo)
+--commit tran
+
+
+
+delete from #tbl where [ProdId] = @IdNo --remove processed record
+end
+end

@@ -39,60 +39,56 @@ namespace InventoryManagement.API.Controllers
                     {
                         if (objPartyModel.IsSupplier == false)
                         {
-                            if (objPartyModel.IsActionName != "Delete")
-                            {
-                                objDTLedger.GroupId = objPartyModel.GroupId;
-                                objDTLedger.PGroupId = objPartyModel.PGroupId;
-                                objDTLedger.UserPartyCode = string.IsNullOrEmpty(objPartyModel.UserPartyCode) ? "" : objPartyModel.UserPartyCode;
-                                if (objPartyModel.IsActionName == "Add")
-                                {
-                                    decimal MaxPcode = (from r in entity.M_LedgerMaster
-                                                        where r.GroupId == objPartyModel.GroupId //&& r.ActiveStatus == "Y" 'Cmnted on 28Aug18
-                                                        select r.PCode
-                                                ).DefaultIfEmpty(0).Max();
-                                    MaxPcode = MaxPcode + 1;
-                                    objDTLedger.PCode = MaxPcode;
-                                }
-                                objDTLedger.PartyCode = objPartyModel.PartyCode;
-                                objDTLedger.PartyName = objPartyModel.PartyName;
-                                objDTLedger.ParentPartyCode = objPartyModel.ParentPartyCode;
-                                objDTLedger.Address1 = string.IsNullOrEmpty(objPartyModel.Address1) ? "" : objPartyModel.Address1;
-                                objDTLedger.Address2 = string.IsNullOrEmpty(objPartyModel.Address2) ? "" : objPartyModel.Address2;
-                                objDTLedger.StateCode = objPartyModel.StateCode;
-                                objDTLedger.CityCode = objPartyModel.CityCode;
-                                objDTLedger.CityName = objPartyModel.CityName;
-                                objDTLedger.Tehsil = string.IsNullOrEmpty(objPartyModel.Tehsil) ? "" : objPartyModel.Tehsil;
-                                objDTLedger.PinCode = objPartyModel.PinCode;
-                                objDTLedger.PhoneNo = string.IsNullOrEmpty(objPartyModel.PhoneNo) ? "" : objPartyModel.PhoneNo;
-                                objDTLedger.MobileNo = objPartyModel.MobileNo;
-                                objDTLedger.FaxNo = string.IsNullOrEmpty(objPartyModel.FaxNo) ? "" : objPartyModel.FaxNo;
-                                objDTLedger.PanNo = string.IsNullOrEmpty(objPartyModel.PanNo) ? "" : objPartyModel.PanNo;
-                                objDTLedger.TinNo = string.IsNullOrEmpty(objPartyModel.GSTIN) ? "" : objPartyModel.GSTIN;
-                                objDTLedger.STaxNo = string.IsNullOrEmpty(objPartyModel.STaxNo) ? "" : objPartyModel.STaxNo;
-                                objDTLedger.CstNo = "";
-                                objDTLedger.BankAcNo = string.IsNullOrEmpty(objPartyModel.BankAccNo) ? "" : objPartyModel.BankAccNo;
-                                objDTLedger.BankCode = objPartyModel.BankCode;
-                                objDTLedger.BankName = string.IsNullOrEmpty(objPartyModel.BankName) ? "" : objPartyModel.BankName;
-                                objDTLedger.RequestTo = string.IsNullOrEmpty(objPartyModel.RequestTo) ? "" : objPartyModel.RequestTo;
-                                objDTLedger.AccountVerify = string.IsNullOrEmpty(objPartyModel.AccountVerify) ? "" : objPartyModel.AccountVerify;
-                                objDTLedger.RecommandBy = string.IsNullOrEmpty(objPartyModel.RecommandBy) ? "" : objPartyModel.RecommandBy;
-                                objDTLedger.ContactPerson = string.IsNullOrEmpty(objPartyModel.ContactPerson) ? "" : objPartyModel.ContactPerson;
-                                objDTLedger.E_MailAdd = string.IsNullOrEmpty(objPartyModel.EmailAddress) ? "" : objPartyModel.EmailAddress;
-                                objDTLedger.ActiveStatus = objPartyModel.ActiveStatus;
-                                objDTLedger.OnWebSite = objPartyModel.OnWebsite;
-                                objDTLedger.CreditLimit = objPartyModel.CreditLimit;
-                                objDTLedger.Remarks = string.IsNullOrEmpty(objPartyModel.Remarks) ? "" : objPartyModel.Remarks;
-                                objDTLedger.RecTimeStamp = DateTime.Now;
-                                objDTLedger.NewFld1 = string.IsNullOrEmpty(objPartyModel.NewFId1) ? "" : objPartyModel.NewFId1;
-                                objDTLedger.NewFld2 = string.IsNullOrEmpty(objPartyModel.NewFId2) ? "" : objPartyModel.NewFId2;
-                                objDTLedger.NewFld3 = string.IsNullOrEmpty(objPartyModel.NewFId3) ? "" : objPartyModel.NewFId3;
-                                objDTLedger.NewFld4 = string.IsNullOrEmpty(objPartyModel.NewFId4) ? "" : objPartyModel.NewFId4;
-                                objDTLedger.Company = "";
-                                objDTLedger.UserId = objPartyModel.LoginUser.UserId;
-                                objDTLedger.UserName = objPartyModel.LoginUser.UserName;
+                            objDTLedger.GroupId = objPartyModel.GroupId;
+                            objDTLedger.PGroupId = objPartyModel.PGroupId;
+                            objDTLedger.UserPartyCode = string.IsNullOrEmpty(objPartyModel.UserPartyCode) ? "" : objPartyModel.UserPartyCode;
+                            decimal MaxPcode = (from r in entity.M_LedgerMaster
+                                                where r.GroupId == objPartyModel.GroupId //&& r.ActiveStatus == "Y" 'Cmnted on 28Aug18
+                                                select r.PCode
+                                        ).DefaultIfEmpty(0).Max();
+                            MaxPcode = MaxPcode + 1;
+                            objDTLedger.PCode = MaxPcode;
+                            objDTLedger.PartyCode = objPartyModel.PartyCode;
+                            objDTLedger.PartyName = objPartyModel.PartyName;
+                            objDTLedger.ParentPartyCode = objPartyModel.ParentPartyCode;
+                            objDTLedger.Address1 = string.IsNullOrEmpty(objPartyModel.Address1) ? "" : objPartyModel.Address1;
+                            objDTLedger.Address2 = string.IsNullOrEmpty(objPartyModel.Address2) ? "" : objPartyModel.Address2;
+                            objDTLedger.StateCode = objPartyModel.StateCode;
+                            objDTLedger.CityCode = objPartyModel.CityCode;
+                            objDTLedger.CityName = objPartyModel.CityName;
+                            objDTLedger.Tehsil = string.IsNullOrEmpty(objPartyModel.Tehsil) ? "" : objPartyModel.Tehsil;
+                            objDTLedger.PinCode = objPartyModel.PinCode;
+                            objDTLedger.PhoneNo = string.IsNullOrEmpty(objPartyModel.PhoneNo) ? "" : objPartyModel.PhoneNo;
+                            objDTLedger.MobileNo = objPartyModel.MobileNo;
+                            objDTLedger.FaxNo = string.IsNullOrEmpty(objPartyModel.FaxNo) ? "" : objPartyModel.FaxNo;
+                            objDTLedger.PanNo = string.IsNullOrEmpty(objPartyModel.PanNo) ? "" : objPartyModel.PanNo;
+                            objDTLedger.TinNo = string.IsNullOrEmpty(objPartyModel.GSTIN) ? "" : objPartyModel.GSTIN;
+                            objDTLedger.STaxNo = string.IsNullOrEmpty(objPartyModel.STaxNo) ? "" : objPartyModel.STaxNo;
+                            objDTLedger.CstNo = "";
+                            objDTLedger.BankAcNo = string.IsNullOrEmpty(objPartyModel.BankAccNo) ? "" : objPartyModel.BankAccNo;
+                            objDTLedger.BankCode = objPartyModel.BankCode;
+                            objDTLedger.BankName = string.IsNullOrEmpty(objPartyModel.BankName) ? "" : objPartyModel.BankName;
+                            objDTLedger.RequestTo = string.IsNullOrEmpty(objPartyModel.RequestTo) ? "" : objPartyModel.RequestTo;
+                            objDTLedger.AccountVerify = string.IsNullOrEmpty(objPartyModel.AccountVerify) ? "" : objPartyModel.AccountVerify;
+                            objDTLedger.RecommandBy = string.IsNullOrEmpty(objPartyModel.RecommandBy) ? "" : objPartyModel.RecommandBy;
+                            objDTLedger.ContactPerson = string.IsNullOrEmpty(objPartyModel.ContactPerson) ? "" : objPartyModel.ContactPerson;
+                            objDTLedger.E_MailAdd = string.IsNullOrEmpty(objPartyModel.EmailAddress) ? "" : objPartyModel.EmailAddress;
+                            objDTLedger.ActiveStatus = objPartyModel.ActiveStatus;
+                            objDTLedger.OnWebSite = objPartyModel.OnWebsite;
+                            objDTLedger.CreditLimit = objPartyModel.CreditLimit;
+                            objDTLedger.Remarks = string.IsNullOrEmpty(objPartyModel.Remarks) ? "" : objPartyModel.Remarks;
+                            objDTLedger.RecTimeStamp = DateTime.Now;
+                            objDTLedger.NewFld1 = string.IsNullOrEmpty(objPartyModel.NewFId1) ? "" : objPartyModel.NewFId1;
+                            if (objPartyModel.IsActionName == "Add")
+                                objDTLedger.NewFld2 = string.IsNullOrEmpty(objPartyModel.objUserDetails.UserName) ? "" : objPartyModel.objUserDetails.UserName;
 
-                                objDTLedger.RecvdCForm = "N";
-                            }
+                            objDTLedger.NewFld3 = string.IsNullOrEmpty(objPartyModel.NewFId3) ? "" : objPartyModel.NewFId3;
+                            objDTLedger.NewFld4 = string.IsNullOrEmpty(objPartyModel.NewFId4) ? "" : objPartyModel.NewFId4;
+                            objDTLedger.Company = "";
+                            objDTLedger.UserId = objPartyModel.LoginUser.UserId;
+                            objDTLedger.UserName = objPartyModel.LoginUser.UserName;
+
+                            objDTLedger.RecvdCForm = "N";
                             var i = 0;
                             if (objPartyModel.IsActionName == "Add")
                             {
@@ -202,15 +198,12 @@ namespace InventoryManagement.API.Controllers
                             objDTLedger.GroupId = 5;
                             objDTLedger.PGroupId = 0;
                             objDTLedger.UserPartyCode = string.IsNullOrEmpty(objPartyModel.UserPartyCode) ? "" : objPartyModel.UserPartyCode;
-                            if (objPartyModel.IsActionName == "Add")
-                            {
-                                decimal MaxPcode = (from r in entity.M_LedgerMaster
-                                                    where r.GroupId == 5 //&& r.ActiveStatus == "Y" Cmnted on 28Aug18
-                                                    select r.PCode
-                                            ).DefaultIfEmpty(0).Max();
-                                MaxPcode = MaxPcode + 1;
-                                objDTLedger.PCode = MaxPcode;
-                            }
+                            decimal MaxPcode = (from r in entity.M_LedgerMaster
+                                                where r.GroupId == 5 //&& r.ActiveStatus == "Y" Cmnted on 28Aug18
+                                                select r.PCode
+                                        ).DefaultIfEmpty(0).Max();
+                            MaxPcode = MaxPcode + 1;
+                            objDTLedger.PCode = MaxPcode;
                             objDTLedger.PartyCode = objPartyModel.PartyCode;
                             objDTLedger.PartyName = objPartyModel.PartyName;
                             objDTLedger.ParentPartyCode = "0";

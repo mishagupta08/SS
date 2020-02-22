@@ -15,7 +15,8 @@ namespace InventoryManagement.API.Controllers
         public ResponseDetail SetUserRights(List<UserPermissionMasterModel> objPermissionList)
         {
             ResponseDetail objResponse = new ResponseDetail();
-            
+            objResponse.ResponseStatus = "FAILED";
+            objResponse.ResponseMessage = "Something went wrong!";
             try
             {
                 using (var entity = new InventoryEntities())
@@ -437,7 +438,7 @@ namespace InventoryManagement.API.Controllers
                                  select r.UserId
                                ).DefaultIfEmpty(0).Max();
                     maxUserId = maxUserId + 1;
-                     DTUser = (from r in entity.Inv_M_UserMaster where r.UserId == objModel.UserId && r.ActiveStatus == "Y" select r).FirstOrDefault();
+                     DTUser = (from r in entity.Inv_M_UserMaster where r.UserId == objModel.UserId select r).FirstOrDefault();
                     if (DTUser == null)
                     {
                         DTUser = new Inv_M_UserMaster();
@@ -473,11 +474,11 @@ namespace InventoryManagement.API.Controllers
                         string AppConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["InventoryServices"].ConnectionString;
                         SqlConnection SC = new SqlConnection(AppConnectionString);
 
-                        string query = "INSERT Inv_TempUserMaster Select *,'"+ LoggedUser.UserId +"',Getdate() FROM Inv_M_UserMaster WHERE UserID='"+ DTUser.UserId + "'";
-                        SC.Open();
-                        SqlCommand cmd = new SqlCommand(query,SC);
-                        cmd.ExecuteNonQuery();
-                        SC.Close();
+                       // string query = "INSERT Inv_TempUserMaster Select *,'"+ LoggedUser.UserId +"',Getdate() FROM Inv_M_UserMaster WHERE UserID='"+ DTUser.UserId + "'";
+                       // SC.Open();
+                       // SqlCommand cmd = new SqlCommand(query,SC);
+                       // cmd.ExecuteNonQuery();
+                       // SC.Close();
                     }
                         //updating values
                         if (objModel.IsActionName == "Delete")

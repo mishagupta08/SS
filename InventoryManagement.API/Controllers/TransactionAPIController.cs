@@ -1763,7 +1763,7 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.SessId = SessId ?? 0;
                                 objDTBillData.ActiveStatus = "Y";
                                 objDTBillData.BillDate = BillDate.Date;
-
+                                objDTBillData.itemcode = obj.itemCode;
                                 objDTBillData.RefNo = string.IsNullOrEmpty(objModel.objCustomer.ReferenceIdNo) ? "" : objModel.objCustomer.ReferenceIdNo;
                                 objDTBillData.RefId = 0;
                                 objDTBillData.RefName = "";
@@ -2168,7 +2168,7 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.SessId = SessId ?? 0;
                                 objDTBillData.ActiveStatus = "Y";
                                 objDTBillData.BillDate = BillDate.Date;
-
+                                objDTBillData.itemcode = obj.itemCode;
                                 objDTBillData.RefNo = string.IsNullOrEmpty(objModel.objCustomer.ReferenceIdNo) ? "" : objModel.objCustomer.ReferenceIdNo;
                                 objDTBillData.RefId = 0;
                                 objDTBillData.RefName = "";

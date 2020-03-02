@@ -4020,7 +4020,7 @@ namespace InventoryManagement.API.Controllers
                             objDTBillData.MID = 0;
                             objDTBillData.DiscPer = obj.DiscPer ?? 0;
                             objDTBillData.Discount = obj.DiscAmt ?? 0;
-                            objDTBillData.FSessId = FsessId ?? 0;
+                            objDTBillData.FSessId = 1; //FsessId ?? 0;
                             objDTBillData.IsKit = "N";
                             objDTBillData.ProdType = "P";
                             objDTBillData.BV = obj.BV ?? 0;
@@ -4088,7 +4088,7 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillMain.Version = version;
                                 objDTBillMain.UserId = objPartyOrderModel.LoginUser.UserId;
                                 objDTBillMain.RecTimeStamp = DateTime.Now;
-                                objDTBillMain.FSessId = FsessId ?? 0;
+                                objDTBillMain.FSessId = 1;// FsessId ?? 0;
                                 objDTBillMain.UserName = objPartyOrderModel.LoginUser.UserName;
                                 objDTBillMain.IsConfirm = "N";
                                 objDTBillMain.ConfDate = DateTime.Now;
@@ -4221,7 +4221,8 @@ namespace InventoryManagement.API.Controllers
                                                 OrderedOty = r.RemQty == 0 ? r.Qty : r.RemQty,
                                                 DispQty = r.DispatchQty,
                                                 OfferUID = r.OfferUId,
-                                                ProductType = r.ProdType
+                                                ProductType = r.ProdType,
+                                                itemCode = r.ItemCode
                                             }
                                           ).ToList();
                 }
@@ -4360,11 +4361,11 @@ namespace InventoryManagement.API.Controllers
                             {
                                 objListProductModel.Add(obj);
                                 objDTBillData.SBillNo = maxSbillNo;
-                                objDTBillData.FSessId = FsessId ?? 0;
-                                objDTBillData.SessId = SessId ?? 0;
+                                objDTBillData.FSessId = 1;
+                                objDTBillData.SessId = 1;
                                 objDTBillData.ActiveStatus = "Y";
                                 objDTBillData.BillDate = BillDate.Date;
-
+                                objDTBillData.itemcode = obj.itemCode;
                                 objDTBillData.RefNo = "";
                                 objDTBillData.RefId = 0;
                                 objDTBillData.RefName = "";
@@ -5190,7 +5191,6 @@ namespace InventoryManagement.API.Controllers
             objResponse.ResponseStatus = "FAILED";
             try
             {
-
 
                 string InvConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["InventoryServices"].ConnectionString;
                 SqlConnection SC = new SqlConnection(InvConnectionString);

@@ -1216,6 +1216,10 @@ namespace InventoryManagement.Controllers
                             {
                                 objTemp.ProdCode = (int)app.Value;
                             }
+                            if (app.Key == "Itemcode")
+                            {
+                                objTemp.itemCode = (string)app.Value;
+                            }
                             else if (app.Key == "ProductName")
                             {
                                 objTemp.ProductName = (string)app.Value;

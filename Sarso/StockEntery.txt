@@ -1,0 +1,36 @@
+INSERT INTO [SrsInv].[dbo].[Im_CurrentStock]
+           ([FSessId],[SupplierCode],[StockDate],[RefNo],[FCode],[GroupId],[ProdId],[BatchCode],[Barcode],[Qty],[ItemCode],[SType],[BType],[Remarks],[ActiveStatus],[EntryBy],[StockFor],[RecTimeStamp]
+           ,[UserId],[Version],[IsDisp],[InvoiceNo],[DispQty],[BillType],[ProdType])
+     VALUES
+           (1,'WRD04',getdate(),'AUTO' ,'WR',0
+         ,1820
+           ,'101052'
+           ,'101052'
+           ,-8
+           ,'28130160360151'
+           ,'O','OP','Opening Stock Of Product Registration','Y','WR','AUTO',getdate(),88,'','N','',0.00,'OP','P')
+GO
+
+INSERT INTO [SrsInv].[dbo].[Im_CurrentStock]
+           ([FSessId],[SupplierCode],[StockDate],[RefNo],[FCode],[GroupId],[ProdId],[BatchCode],[Barcode],[Qty],[ItemCode],[SType],[BType],[Remarks],[ActiveStatus],[EntryBy],[StockFor],[RecTimeStamp]
+           ,[UserId],[Version],[IsDisp],[InvoiceNo],[DispQty],[BillType],[ProdType])
+     VALUES
+           (1,'WR',getdate(),'AUTO' ,'WRD04',0
+          ,1820
+           ,'101052'
+           ,'101052'
+           ,8
+           ,'28130160360151'
+           ,'I','OP','Opening Stock Of Product Registration','Y','WR','AUTO',getdate(),88,'','N','',0.00,'OP','P')
+GO
+
+select * from [Im_CurrentStock] where ProdId = 1820
+
+
+
+
+
+
+
+
+

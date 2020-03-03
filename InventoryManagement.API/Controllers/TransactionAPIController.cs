@@ -4306,8 +4306,10 @@ namespace InventoryManagement.API.Controllers
             objResponse.ResponseStatus = "FAILED";
             try
             {
+
                 if (objPartyDispatchOrder.OrderNo.All(char.IsNumber))
                     objPartyDispatchOrder.FType = "M";
+
                 string AppConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["ApplicationServices"].ConnectionString;
                 SqlConnection SC = new SqlConnection(AppConnectionString);
                 SqlConnection SC1 = new SqlConnection(System.Configuration.ConfigurationManager.ConnectionStrings["InventoryServices"].ConnectionString);
@@ -4637,7 +4639,7 @@ namespace InventoryManagement.API.Controllers
                                 cmd.Connection = SC1;
                                 i = cmd.ExecuteNonQuery();
                                 SC1.Close();
-                                RejectFranchiseOrder(objPartyDispatchOrder.OrderNo, "Dispatched", objPartyDispatchOrder.LoginUser.UserId, false);
+                                //RejectFranchiseOrder(objPartyDispatchOrder.OrderNo, "Dispatched", objPartyDispatchOrder.LoginUser.UserId, false);
                             }
                             else
                             {

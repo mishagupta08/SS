@@ -283,37 +283,50 @@
 
             if (IsBatch == false) {
                 tableString += "<th>S.No.</th>";
-                tableString += "<th>Party Code</th>";
-                tableString += "<th>Party Name</th>";
+                if ('@IsSoldByHo' == "true") {
+                    tableString += "<th>Party Code</th>";
+                    tableString += "<th>Party Name</th>";
+                }
                 tableString += "<th>Category</th>";
                 tableString += "<th>Code</th>";
                 tableString += "<th>Product Name</th>";
-                tableString += "<th>Batch No.</th>";
-                tableString += "<th>Barcode</th>";
+                //tableString += "<th>Batch No.</th>";
+                //tableString += "<th>Barcode</th>";
                 tableString += "<th>Rate/DP</th>";
                 tableString += "<th>MRP</th>";
+                tableString += "<th>Stock In</th>";
+                tableString += "<th>Stock Out</th>";
                 tableString += "<th>Qty</th>";
+                tableString += "<th>CV</th>";
                 tableString += "<th>Stock Value</th>";
+                tableString += "<th>(CV)Stock Value</th>";
                 tableString += "<th>(DP)Stock Value</th>";
                 tableString += "<th>(MRP)Stock Value</th>";
                 tableString += "</tr></thead><tbody>";
                 for (var i = 0; i < StockGrid.length; i++) {
                     tableString += "<tr>";
                     tableString += "<td>" + StockGrid[i].SNo + "</td>";
+                    if ('@IsSoldByHo' == "true")
+                    {
                     tableString += "<td>" + StockGrid[i].PartyCode + "</td>";
                     tableString += "<td>" + StockGrid[i].PartyName + "</td>";
+                        }
                     console.log("StockGrid[i].Catgeory", StockGrid[i].Category);
                     tableString += "<td>" + StockGrid[i].Category + "</td>";
                     console.log("StockGrid[i].ProductCode", StockGrid[i].ProductCode);
 
                     tableString += "<td class=formatText>" + StockGrid[i].ProductCode.toString() + "</td>";
                     tableString += "<td>" + StockGrid[i].ProductName + "</td>";
-                    tableString += "<td class=formatText>" + StockGrid[i].BatchNo + "</td>";
-                    tableString += "<td class=formatText>" + StockGrid[i].Barcode + "</td>";
+                    //tableString += "<td class=formatText>" + StockGrid[i].BatchNo + "</td>";
+                    //tableString += "<td class=formatText>" + StockGrid[i].Barcode + "</td>";
                     tableString += "<td>" + StockGrid[i].RateOrDP + "</td>";
                     tableString += "<td>" + StockGrid[i].MRP + "</td>";
+                    tableString += "<td>" + StockGrid[i].PV + "</td>";
+                    tableString += "<td>" + StockGrid[i].InStock + "</td>";
+                    tableString += "<td>" + StockGrid[i].StockOut + "</td>";
                     tableString += "<td>" + StockGrid[i].Qty + "</td>";
                     tableString += "<td>" + StockGrid[i].StockValue + "</td>";
+                    tableString += "<td>" + StockGrid[i].PVStockValue + "</td>";
                     tableString += "<td>" + StockGrid[i].DPStockValue + "</td>";
                     tableString += "<td>" + StockGrid[i].MRPSTockValue + "</td>";
                     tableString += "</tr>";
@@ -321,8 +334,10 @@
             }
             else{
                 tableString += "<th>S.No.</th>";
-                tableString += "<th>Party Code</th>";
-                tableString += "<th>Party Name</th>";
+                if ('@IsSoldByHo' == "true") {
+                    tableString += "<th>Party Code</th>";
+                    tableString += "<th>Party Name</th>";
+                }
                 tableString += "<th>Category</th>";
                 tableString += "<th>Product Code</th>";
                 tableString += "<th>Product Name</th>";
@@ -330,20 +345,27 @@
                 tableString += "<th>Expired</th>";
                 tableString += "<th>Exp. Date</th>";
                 tableString += "<th>Mfg. Date</th>";
-                tableString += "<th>Batch No.</th>";
-                tableString += "<th>Barcode</th>";
+                //tableString += "<th>Batch No.</th>";
+                //tableString += "<th>Barcode</th>";
                 tableString += "<th>Rate/DP</th>";
                 tableString += "<th>MRP</th>";
+                tableString += "<th>CV</th>";
+                tableString += "<th>Stock In</th>";
+                tableString += "<th>Stock Out</th>";
                 tableString += "<th>Qty</th>";
+               
                 tableString += "<th>Stock Value</th>";
+                tableString += "<th>(CV) Stock Value</th>";
                 tableString += "<th>(DP)Stock Value</th>";
                 tableString += "<th>(MRP)Stock Value</th>";
                 tableString += "</tr></thead><tbody>";
                 for (var i = 0; i < StockGrid.length; i++) {
                     tableString += "<tr>";
-                    tableString += "<td>"+StockGrid[i].SNo+"</td>";
-                    tableString += "<td>"+StockGrid[i].PartyCode+"</td>";
-                    tableString += "<td>" + StockGrid[i].PartyName + "</td>";
+                    tableString += "<td>" + StockGrid[i].SNo + "</td>";
+                    if ('@IsSoldByHo' == "true") {
+                        tableString += "<td>" + StockGrid[i].PartyCode + "</td>";
+                        tableString += "<td>" + StockGrid[i].PartyName + "</td>";
+                    }
                     console.log("StockGrid[i].Catgeory", StockGrid[i].Category);
                     tableString += "<td>" + StockGrid[i].Category + "</td>";
                   //  console.log("StockGrid[i].ProductCode.toString()", StockGrid[i].ProductCode.toString());
@@ -353,12 +375,16 @@
                     tableString += "<td>" + StockGrid[i].Expired + "</td>";
                     tableString += "<td>" + StockGrid[i].ExpDate + "</td>";
                     tableString += "<td>" + StockGrid[i].MfgDate + "</td>";
-                    tableString += "<td class=formatText>" + StockGrid[i].BatchNo + "</td>";
-                    tableString += "<td class=formatText>" + StockGrid[i].Barcode + "</td>";
+                    //tableString += "<td class=formatText>" + StockGrid[i].BatchNo + "</td>";
+                    //tableString += "<td class=formatText>" + StockGrid[i].Barcode + "</td>";
                     tableString += "<td>" + StockGrid[i].RateOrDP + "</td>";
                     tableString += "<td>" + StockGrid[i].MRP + "</td>";
+                    tableString += "<td>" + StockGrid[i].PV + "</td>";
+                    tableString += "<td>" + StockGrid[i].InStock + "</td>";
+                    tableString += "<td>" + StockGrid[i].StockOut + "</td>";
                     tableString += "<td>" + StockGrid[i].Qty + "</td>";
                     tableString += "<td>" + StockGrid[i].StockValue + "</td>";
+                    tableString += "<td>" + StockGrid[i].PVStockValue + "</td>";
                     tableString += "<td>" + StockGrid[i].DPStockValue + "</td>";
                     tableString += "<td>" + StockGrid[i].MRPSTockValue + "</td>";
                     tableString += "</tr>";
@@ -589,45 +615,55 @@
             $('#grid').empty();
 
         }
+        var partyDisplay = false;
+        if ('@IsSoldByHo' == "true")
+        {
+            partyDisplay = true;
+        }
+
         console.log("IsBatch", IsBatch);
-        if (IsBatch == false) {
-            grid = $('#grid').grid({
-                dataSource: StockGrid,
+            if (IsBatch == false) {
+                grid = $('#grid').grid({
+                    dataSource: StockGrid,
                 uiLibrary: 'bootstrap',
                 headerFilter: true,
                 columns: [
-                    { field: 'SNo', title: 'S.No.',width:80, sortable: true, hidden: false, filterable: false },
-                     { field: 'PartyCode', width:100, title: 'Party Code', sortable: true, hidden: false, filterable: true },
-                      { field: 'PartyName', width: 150, title: 'Party Name', sortable: true, hidden: false, filterable: true },
+                        { field: 'SNo', title: 'S.No.',width:80, sortable: true, hidden: false, filterable: false },
+                     { field: 'PartyCode', width: 100, title: 'Party Code', sortable: true, hidden: partyDisplay, filterable: true },
+                      { field: 'PartyName', width: 150, title: 'Party Name', sortable: true, hidden: partyDisplay, filterable: true },
                        { field: 'Category', width: 100, title: 'Category', sortable: true, hidden: false, filterable: true },
                         { field: 'ProductCode', width: 80, title: 'Code', sortable: true, hidden: false, filterable: true },
                          { field: 'ProductName', width: 150, title: 'Product Name', sortable: true, hidden: false, filterable: true },
-                         { field: 'BatchNo', width: 100, title: 'Batch No.', sortable: true, hidden: false, filterable: true },
-                         { field: 'Barcode', width: 100, title: 'Barcode', sortable: true, hidden: false, filterable: true },
+                         { field: 'BatchNo', width: 100, title: 'Batch No.', sortable: true, hidden: true, filterable: true },
+                         { field: 'Barcode', width: 100, title: 'Barcode', sortable: true, hidden: true, filterable: true },
                           { field: 'RateOrDP', width: 80, title: 'Rate/DP', sortable: true, hidden: false, filterable: true },
                            { field: 'MRP', title: 'MRP', width: 80, sortable: true, hidden: false, filterable: true },
-                            { field: 'Qty', width: 80, title: 'Qty', sortable: true, hidden: false, filterable: true },
+                           { field: 'PV', width: 80, title: 'CV', sortable: true, hidden: false, filterable: true },
+                           { field: 'InStock', width: 80, title: 'In Stock', sortable: true, hidden: false, filterable: true },
+                            { field: 'StockOut', width: 80, title: 'Out Stock', sortable: true, hidden: false, filterable: true },
+
+                           { field: 'Qty', width: 80, title: 'Qty', sortable: true, hidden: false, filterable: true },
+                            { field: 'PVStockValue', width: 80, title: 'CV Stock Value', sortable: true, hidden: false, filterable: true },
                              //{ field: 'StockValue', title: 'Stock Value',sortable: true, hidden: false, filterable: true },
                               { field: 'DPStockValue', width: 80, title: '(DP)Stock Value', sortable: true, hidden: false, filterable: true },
                                { field: 'MRPSTockValue', width: 80, title: '(MRP)Stock Value', sortable: true, hidden: false, filterable: true },
                 ],
                 pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
-            });
+                });
 
-        }
-        else {
-            grid = $('#grid').grid({
-                dataSource: StockGrid,
+            }
+            else {
+                grid = $('#grid').grid({
+                    dataSource: StockGrid,
                 uiLibrary: 'bootstrap',
                 headerFilter: true,
                 columns: [
-                    { field: 'SNo',width:80, title: 'S.No.', sortable: true, hidden: false, filterable: true },
-
-                     { field: 'PartyCode', width: 100, title: 'Party Code', sortable: true, hidden: false, filterable: true },
-                      { field: 'PartyName', width: 150, title: 'Party Name', sortable: true, hidden: false, filterable: true },
-                       { field: 'Category', width: 100, title: 'Category', sortable: true, hidden: false, filterable: true },
+                        { field: 'SNo',width:80, title: 'S.No.', sortable: true, hidden: false, filterable: true },
+                        { field: 'PartyCode', width: 100, title: 'Party Code', sortable: true, hidden: partyDisplay, filterable: true },
+                        { field: 'PartyName', width: 150, title: 'Party Name', sortable: true, hidden: partyDisplay, filterable: true },
+                        { field: 'Category', width: 100, title: 'Category', sortable: true, hidden: false, filterable: true },
                         { field: 'ProductCode', width: 80, title: 'Code', sortable: true, hidden: false, filterable: true },
-                         { field: 'ProductName', width: 150, title: 'Product Name', sortable: true, hidden: false, filterable: true },
+                        { field: 'ProductName', width: 150, title: 'Product Name', sortable: true, hidden: false, filterable: true },
                           //{ field: 'BatchNo', title: 'Batch No.', sortable: true, hidden: false, filterable: true },
                                { field: 'Expired', width: 80, title: 'Expired', sortable: true, hidden: false, filterable: true },
                                { field: 'ExpDate', width: 100, title: 'Exp. Date', sortable: true, hidden: false, filterable: true },
@@ -636,18 +672,23 @@
                          { field: 'Barcode', width: 100, title: 'Barcode', sortable: true, hidden: false, filterable: true },
                           { field: 'RateOrDP', width: 80, title: 'Rate/DP', sortable: true, hidden: false, filterable: true },
                            { field: 'MRP', width: 80, title: 'MRP', sortable: true, hidden: false, filterable: true },
-                            { field: 'Qty', width: 80, title: 'Qty', sortable: true, hidden: false, filterable: true },
-                             //{ field: 'StockValue', title: 'Stock Value', sortable: true, hidden: false, filterable: true },
+                           { field: 'PV', width: 80, title: 'CV', sortable: true, hidden: false, filterable: true },
+                           { field: 'InStock', width: 80, title: 'In Stock', sortable: true, hidden: false, filterable: true },
+                            { field: 'StockOut', width: 80, title: 'Out Stock', sortable: true, hidden: false, filterable: true },
+
+                           { field: 'Qty', width: 80, title: 'Qty', sortable: true, hidden: false, filterable: true },
+                            
+                            { field: 'PVStockValue', width: 80, title: 'CV Stock Value', sortable: true, hidden: false, filterable: true },
                               { field: 'DPStockValue', width: 80, title: '(DP)Stock Value', sortable: true, hidden: false, filterable: true },
                                { field: 'MRPSTockValue', width: 80, title: '(MRP)STock Value', sortable: true, hidden: false, filterable: true },
                 ],
                 pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
-            });
+                });
 
 
-        }
+            }
         $(".loader").hide();
-    }
+        }
 
     function GetStockDetails(CategoryCode, ProductCode, PartyCode, IsBatchWise, StockType) {
         if (CategoryCode == "" || CategoryCode == null || ProductCode == "" || ProductCode==null) {
@@ -684,10 +725,10 @@
                                 dateObj = new Date(objResult[i].MfgDateD.match(/\d+/)[0] * 1);
                                 var MfgD = (dateObj.getDate()) + "/" + (dateObj.getMonth() + 1) + "/" + dateObj.getFullYear();
 
-                                StockGrid.push({ "SNo": i + 1, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Category": objResult[i].Category, "ProductCode": objResult[i].ProductCode, "ProductName": objResult[i].ProductName, "RateOrDP": objResult[i].RateOrDP, "MRP": objResult[i].MRP, "Qty": objResult[i].Qty, "StockValue": objResult[i].StockValue, "DPStockValue": objResult[i].DPStockValue, "MRPSTockValue": objResult[i].MRPSTockValue, "BatchNo": objResult[i].BatchNo, "Barcode": objResult[i].Barcode, "Expired": objResult[i].Expired, "ExpDate": ExpD, "MfgDate": MfgD });
+                                StockGrid.push({ "SNo": i + 1,"PVStockValue":objResult[i].PVStockValue, "PV": objResult[i].PV, "InStock": objResult[i].InStock, "StockOut": objResult[i].StockOut, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Category": objResult[i].Category, "ProductCode": objResult[i].ProductCode, "ProductName": objResult[i].ProductName, "RateOrDP": objResult[i].RateOrDP, "MRP": objResult[i].MRP, "Qty": objResult[i].Qty, "StockValue": objResult[i].StockValue, "DPStockValue": objResult[i].DPStockValue, "MRPSTockValue": objResult[i].MRPSTockValue, "BatchNo": objResult[i].BatchNo, "Barcode": objResult[i].Barcode, "Expired": objResult[i].Expired, "ExpDate": ExpD, "MfgDate": MfgD });
                             }
                             else {
-                                StockGrid.push({ "SNo": i + 1, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Category": objResult[i].Category, "ProductCode": objResult[i].ProductCode, "ProductName": objResult[i].ProductName, "RateOrDP": objResult[i].RateOrDP, "MRP": objResult[i].MRP, "Qty": objResult[i].Qty, "StockValue": objResult[i].StockValue, "DPStockValue": objResult[i].DPStockValue, "MRPSTockValue": objResult[i].MRPSTockValue, "BatchNo": objResult[i].BatchNo, "Barcode": objResult[i].Barcode, "Expired": objResult[i].Expired, "ExpDate": objResult[i].ExpDate, "MfgDate": objResult[i].MfgDate });
+                                StockGrid.push({ "SNo": i + 1, "PVStockValue": objResult[i].PVStockValue, "PV": objResult[i].PV, "InStock": objResult[i].InStock, "StockOut": objResult[i].StockOut, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Category": objResult[i].Category, "ProductCode": objResult[i].ProductCode, "ProductName": objResult[i].ProductName, "RateOrDP": objResult[i].RateOrDP, "MRP": objResult[i].MRP, "Qty": objResult[i].Qty, "StockValue": objResult[i].StockValue, "DPStockValue": objResult[i].DPStockValue, "MRPSTockValue": objResult[i].MRPSTockValue, "BatchNo": objResult[i].BatchNo, "Barcode": objResult[i].Barcode, "Expired": objResult[i].Expired, "ExpDate": objResult[i].ExpDate, "MfgDate": objResult[i].MfgDate });
                             }
 
                         }

@@ -18,6 +18,7 @@ namespace InventoryManagement.Entity.Common
         public string ProductName { get; set; }
         public string RateOrDP { get; set; }
         public string MRP { get; set; }
+        public string PV { get; set; }
         public string Qty { get; set; }
         public decimal Quantity { get; set; }
         public string StockValue { get; set; }
@@ -26,7 +27,7 @@ namespace InventoryManagement.Entity.Common
         public string PrintType { get; set; }
         public DateTime StockDate { get; set; }
         public string StockDateStr { get; set; }
-
+        public string PVStockValue { get; set; }
         public decimal OpStock { get; set; }
         public decimal InStock { get; set; }
         public decimal StockOut { get; set; }

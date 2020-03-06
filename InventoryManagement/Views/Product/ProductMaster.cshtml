@@ -423,7 +423,7 @@
                                     
                                
                                
-                                    <div class="form-group">
+                                    <div class="form-group" style="display:none;">
 
                                         <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="purchaseRate">
                                             Barcode Type
@@ -443,7 +443,7 @@
                                         </div>
                                     </div>
 
-                                    <div  class="form-group">
+                                    <div  class="form-group" style="display:none;">
                                         <label class="control-label col-lg-4 col-md-4 col-sm-3 col-xs-12" for="mfgDate">
                                             Barcode
                                         </label>
@@ -506,11 +506,11 @@
                                             </div>
                                             <div class="col-lg-6">
                                                 <label class="control-label col-lg-4 col-md-3 col-sm-3 col-xs-12" for="purchaseRate">
-                                                    @BVCaption
+                                                    @PVCaption
                                                 </label>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
 
-                                                    @Html.TextBoxFor(m => m.BV, new { tabindex = "9", name = "BV", id = "BV", @class = "form-control col-md-7 col-xs-12" })
+                                                    @Html.TextBoxFor(m => m.PV, new { tabindex = "9", name = "PV", id = "PV", @class = "form-control col-md-7 col-xs-12" })
 
                                                 </div>
 

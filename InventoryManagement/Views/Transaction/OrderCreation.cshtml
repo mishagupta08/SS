@@ -1864,12 +1864,12 @@
                     { field: 'RP', width: 80, title: '@RPCaption', sortable: true, hidden: true, filterable: true },
                     { field: 'CV', width: 80, title: '@CVCaption', sortable: true, hidden: true, filterable: true },
                     { field: 'BV', width: 80, title: '@BVCaption', sortable: true, hidden: true, filterable: true },
-                    { field: 'PV', width: 80, title: '@PVCaption', sortable: true, hidden: true, filterable: true },
+                    { field: 'PV', width: 80, title: '@PVCaption', sortable: true, hidden: false, filterable: true },
                     { field: 'Qty', width: 80, title: 'Qty', sortable: true, hidden: false, filterable: true },
                     { field: 'RPValue', width: 80, title: '@RPCaption Value', sortable: true, hidden: true, filterable: true },
                     { field: 'CVValue', width: 80, title: '@CVCaption Value', sortable: true, hidden: true, filterable: true },
                     { field: 'BVValue', width: 80, title: '@BVCaption Value', sortable: true, hidden: true, filterable: true },
-                    { field: 'PVValue', width: 80, title: '@PVCaption Value', sortable: true, hidden: true, filterable: true },
+                    { field: 'PVValue', width: 80, title: '@PVCaption Value', sortable: true, hidden: false, filterable: true },
                     { field: 'CommsnPer', width: 80, title: 'Commsn %', sortable: true, hidden: true, filterable: true },
                     { field: 'CommsnAmt', width: 80, title: 'Commsn Amt.', sortable: true, hidden: true, filterable: true },
                     { field: 'DiscPer', width: 80, title: 'Disc %', sortable: true, hidden: true, filterable: true },
@@ -3148,10 +3148,10 @@
                             </div>
                             <div class="col-lg-4">
                                 <label class="control-label col-lg-4" for="category-name">
-                                    Total @BVCaption
+                                    Total @PVCaption
                                 </label>
                                 <div class="col-lg-8">
-                                    @Html.TextBoxFor(m => m.objProduct.TotalBV, new { name = "TotalBV", id = "TotalBV", @class = "form-control", @readonly = "readonly" })
+                                    @Html.TextBoxFor(m => m.objProduct.TotalPV, new { name = "TotalPV", id = "TotalPV", @class = "form-control", @readonly = "readonly" })
                                     @*<input type="text" id="TotalRP"/>*@
                                 </div>
                             </div>
@@ -3300,7 +3300,7 @@
                         @Html.HiddenFor(m => m.objProduct.TotalBV, new { name = "TotalBV", @id = "TotalBV" })
                         @Html.HiddenFor(m => m.objProduct.TotalRP, new { name = "TotalRP", @id = "TotalRP" })
                         @Html.HiddenFor(m => m.objProduct.TotalCV, new { name = "TotalCV", @id = "TotalCV" })
-                        @Html.HiddenFor(m => m.objProduct.TotalPV, new { name = "TotalPV", @id = "TotalPV" })
+                        @*@Html.HiddenFor(m => m.objProduct.TotalPV, new { name = "TotalPV", @id = "TotalPV" })*@
                         @Html.HiddenFor(m => m.objProduct.TotalDiscPer, new { name = "TotalDiscPer", @id = "TotalDiscPer" })
                         @Html.HiddenFor(m => m.objProduct.TotalCommsonAmt, new { name = "TotalCommsonAmt", @id = "TotalCommsonAmt" })
                         @Html.HiddenFor(m => m.objProduct.TotalTotalAmount, new { name = "TotalTotalAmount", id = "TotalTotalAmount"})

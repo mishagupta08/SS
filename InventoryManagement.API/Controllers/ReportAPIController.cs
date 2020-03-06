@@ -215,11 +215,14 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                              ExpDateD = r.ExpDate,
                                              MfgDateD = r.MfgDate,
                                              BatchNo = r.BatchCode,
-
+                                             InStock=r.StockIn??0,
+                                             StockOut=r.StockOut??0,
                                              Barcode = r.Barcode,
 
                                              Quantity = r.Qty ,//?? 0,
-                                             CatCode = r.CatId
+                                             CatCode = r.CatId,
+                                             PV = r.PV.ToString(),
+                                             PVStockValue = r.PVStockValue.ToString()
                                          }
 
                                                ).ToList();
@@ -247,9 +250,12 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                              ExpDate = "",
                                              BatchNo = r.BatchCode,
                                              Barcode = r.Barcode,
-
+                                             InStock = r.StockIn ?? 0,
+                                             StockOut = r.StockOut ?? 0,
                                              Quantity = r.Qty,// ?? 0,
-                                             CatCode = r.CatId
+                                             CatCode = r.CatId,
+                                             PV = r.PV.ToString(),
+                                             PVStockValue = r.PVStockValue.ToString()
                                          }
 
                                                ).ToList();

@@ -1460,9 +1460,9 @@
                         NetAmounPayable = FinalAmountToPay;
                     }
                     else {
-                        var disountAmount = ((discPer / 100) * NetAmounPayable).toFixed(2);
+                        var disountAmount = ((discPer / 100) * FinalAmountToPay).toFixed(2);
                         $("#CashDiscAmount").val(disountAmount);
-                        NetAmounPayable = (NetAmounPayable - disountAmount).toFixed(2);
+                        NetAmounPayable = (FinalAmountToPay - disountAmount).toFixed(2);
 
                     }
                     $("#NetPayable").val(NetAmounPayable);
@@ -1480,9 +1480,9 @@
                         NetAmounPayable = FinalAmountToPay;
                     }
                     else {
-                        var disountPer = ((discAmount * 100) / NetAmounPayable).toFixed(2);
+                        var disountPer = ((discAmount * 100) / FinalAmountToPay).toFixed(2);
                         $("#CashDiscPer").val(disountPer);
-                        NetAmounPayable = (NetAmounPayable - discAmount).toFixed(2);
+                        NetAmounPayable = (FinalAmountToPay - discAmount).toFixed(2);
                     }
                     $("#NetPayable").val(NetAmounPayable);
                 }

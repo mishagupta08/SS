@@ -211,7 +211,6 @@
         <EntityTypeShape EntityType="InventoryModel.TrnPurchaseReqMain" Width="1.5" PointX="18.75" PointY="26.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.V_AccountStatement" Width="1.5" PointX="26.75" PointY="20.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.V_AvailProdStockBarcodes" Width="1.5" PointX="20.75" PointY="26.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="InventoryModel.V_BillWiseSaleSummary" Width="1.5" PointX="26.75" PointY="22.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.V_City" Width="1.5" PointX="22.75" PointY="26.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.V_CurrentStockDetail" Width="1.5" PointX="26.75" PointY="24.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.V_CurrentStockDetail_STK" Width="1.5" PointX="24.75" PointY="26.75" IsExpanded="false" />
@@ -250,6 +249,7 @@
         <EntityTypeShape EntityType="InventoryModel.M_InwardData" Width="1.5" PointX="8.8542637810363729" PointY="10.248220090869916" />
         <EntityTypeShape EntityType="InventoryModel.M_InwardDetail" Width="1.5" PointX="3.2085620254318048" PointY="21.403956691456937" />
         <EntityTypeShape EntityType="InventoryModel.V_CurrentStockDetailNotForStockist" Width="1.5" PointX="0.58181388330730321" PointY="9.44349381767376" />
+        <EntityTypeShape EntityType="InventoryModel.V_BillWiseSaleSummary" Width="1.5" PointX="11.449788825330225" PointY="26.184645292435142" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

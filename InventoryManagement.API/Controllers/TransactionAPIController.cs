@@ -1400,8 +1400,8 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.TotalAmount = objModel.objProduct.TotalTotalAmount;
                                 //tax excluding
                                 objDTBillData.NetAmount = obj.Amount;
-                                objDTBillData.CashDiscPer = obj.CashDiscPer;
-                                objDTBillData.CashDiscAmount = obj.CashDiscAmount;
+                                objDTBillData.CashDiscPer = objModel.objProduct.CashDiscPer;
+                                objDTBillData.CashDiscAmount = objModel.objProduct.CashDiscAmount;
 
                                 objDTBillData.NetPayable = Math.Round(objModel.objProduct.TotalNetPayable);
                                 if (objModel.objProduct.Roundoff == 0)
@@ -1862,8 +1862,8 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.SGSTAmt = 0;
                                     objDTBillData.TaxType = "I";
                                 }
-                                objDTBillData.CashDiscPer = obj.CashDiscPer;
-                                objDTBillData.CashDiscAmount = obj.CashDiscAmount;
+                                objDTBillData.CashDiscPer = objModel.objProduct.CashDiscPer;
+                                objDTBillData.CashDiscAmount = objModel.objProduct.CashDiscAmount;
 
                                 objDTBillData.NetPayable = Math.Round(objModel.objProduct.TotalNetPayable);
                                 if (objModel.objProduct.Roundoff == 0)
@@ -2249,8 +2249,8 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.SGSTAmt = obj.TaxAmt / 2 ?? 0;
                                 objDTBillData.TaxType = "S";
 
-                                objDTBillData.CashDiscPer = obj.CashDiscPer;
-                                objDTBillData.CashDiscAmount = obj.CashDiscAmount;
+                                objDTBillData.CashDiscPer = objModel.objProduct.CashDiscPer;
+                                objDTBillData.CashDiscAmount = objModel.objProduct.CashDiscAmount;
 
                                 objDTBillData.NetPayable = Math.Round(objModel.objProduct.TotalNetPayable);
                                 if (objModel.objProduct.Roundoff == 0)
@@ -2475,11 +2475,13 @@ namespace InventoryManagement.API.Controllers
                     //objDistributorModel.objListProduct.AddRange(objListproduct);
 
                     objDistributorModel.objListProduct = objDistributorModel.objListProduct.OrderByDescending(m => m.ProductType).ThenByDescending(m => m.Rate).ToList();
-
+                    objDistributorModel.CashdisAmount = (from r in entity.TrnBillMains
+                                                         where r.UserBillNo == BillNo
+                                                         select r.CashDiscAmount).FirstOrDefault();
                     decimal? TotalTaxableAmount = 0;
                     string OrderType = objDistributorModel.objListProduct[0].OrderType;
                     objDistributorModel.objTaxSummary = new List<TaxSummary>();
-
+                    
                     objDistributorModel.objTaxSummary = objDistributorModel.objListProduct.GroupBy(m => new
                     {
                         m.TaxPer,

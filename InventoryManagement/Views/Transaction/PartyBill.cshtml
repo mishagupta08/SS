@@ -1379,17 +1379,17 @@
                     { field: 'DP', width: 80, title: 'DP', sortable: true, hidden: true, filterable: true },
                     { field: 'Rate', width: 80, title: 'Rate', sortable: true, hidden: false, filterable: true },
                     { field: 'BatchNo', width: 100, title: 'Batch No.', sortable: true, hidden: true, filterable: true },
-                    { field: 'Barcode', width: 100, title: 'Barcode', sortable: true, hidden: false, filterable: true },
+                    { field: 'Barcode', width: 100, title: 'Barcode', sortable: true, hidden: true, filterable: true },
                     { field: 'BV', width: 80, title: '@BVCaption', sortable: true, hidden: true, filterable: true },
-                    { field: 'RP', width: 80, title: '@RPCaption', sortable: true, hidden: false, filterable: true },
-                    { field: 'CV', width: 0, title: '@CVCaption', sortable: true, hidden: true, filterable: true },
+                    { field: 'RP', width: 80, title: '@RPCaption', sortable: true, hidden: true, filterable: true },
+                    { field: 'CV', width: 80, title: '@CVCaption', sortable: true, hidden: true, filterable: true },
                     { field: 'Weight', width: 0, title: 'Weight', sortable: true, hidden: true, filterable: true },
-                    { field: 'PV', width: 0, title: '@PVCaption', sortable: true, hidden: false, filterable: true },
+                    { field: 'PV', width: 80, title: '@PVCaption', sortable: true, hidden: false, filterable: true },
                     { field: 'Qty', width: 80, title: 'Qty', sortable: true, hidden: false, filterable: true },
                     { field: 'BVValue', width: 80, title: '@BVCaption Value', sortable: true, hidden: true, filterable: true },
-                    { field: 'RPValue', width: 0, title: '@RPCaption Value', sortable: true, hidden: false, filterable: true },
+                    { field: 'RPValue', width: 0, title: '@RPCaption Value', sortable: true, hidden: true, filterable: true },
                     { field: 'CVValue', width: 0, title: '@CVCaption Value', sortable: true, hidden: true, filterable: true },
-                    { field: 'PVValue', width: 0, title: '@PVCaption Value', sortable: true, hidden: false, filterable: true },
+                    { field: 'PVValue', width: 80, title: '@PVCaption Value', sortable: true, hidden: false, filterable: true },
                     { field: 'WeightVal', width: 80, title: 'Weight', sortable: true, filterable: true },
 
                     { field: 'CommsnPer', width: 80, title: 'Commsn %', sortable: true, hidden: true, filterable: true },
@@ -1611,9 +1611,9 @@
                         NetAmounPayable = FinalAmountToPay;
                     }
                     else {
-                        var disountAmount = ((discPer / 100) * NetAmounPayable).toFixed(2);
+                        var disountAmount = ((discPer / 100) * FinalAmountToPay).toFixed(2);
                         $("#CashDiscAmount").val(disountAmount);
-                        NetAmounPayable = (NetAmounPayable - disountAmount).toFixed(2);
+                        NetAmounPayable = (FinalAmountToPay - disountAmount).toFixed(2);
 
                     }
                     $("#NetPayable").val(NetAmounPayable);
@@ -1631,9 +1631,9 @@
                         NetAmounPayable = FinalAmountToPay;
                     }
                     else {
-                        var disountPer = ((discAmount * 100) / NetAmounPayable).toFixed(2);
+                        var disountPer = ((discAmount * 100) / FinalAmountToPay).toFixed(2);
                         $("#CashDiscPer").val(disountPer);
-                        NetAmounPayable = (NetAmounPayable - discAmount).toFixed(2);
+                        NetAmounPayable = (FinalAmountToPay - discAmount).toFixed(2);
                     }
                     $("#NetPayable").val(NetAmounPayable);
                 }

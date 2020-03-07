@@ -443,7 +443,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                 List<SalesReport> objSales = new List<SalesReport>();
                                 objSales = (from result in entity.V_BillWiseSaleSummary
                                             where result.BType != BType
-                                            group result by new { result.UserBillNo, result.SBillNo, result.BillNo, result.BillDate,result.BillDateStr,result.OfferUID,result.FType, result.PartyCode, result.PartyName, result.FCode, result.Name,result.BillBVValue   , result.OrderNo, result.FSessId, result.OrderDate, result.BillType, result.SGSTAmt, result.CGSTAmt, result.IGSTAmt }
+                                            group result by new { result.UserBillNo, result.SBillNo, result.BillNo, result.BillDate,result.BillDateStr,result.OfferUID,result.FType, result.PartyCode, result.PartyName, result.FCode, result.Name,result.PVValue   , result.OrderNo, result.FSessId, result.OrderDate, result.BillType, result.SGSTAmt, result.CGSTAmt, result.IGSTAmt }
                                                     into BillResult
                                             orderby BillResult.Key.BillDate descending, BillResult.Key.SBillNo descending, BillResult.Key.PartyCode, BillResult.Key.FType
                                             select new SalesReport
@@ -458,7 +458,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                                 CustCode = BillResult.Key.FCode,
                                                 CustName = BillResult.Key.Name,
                                                 Amount = BillResult.Sum(m => m.Amount).ToString(),
-                                                TotalBV = BillResult.Sum(m => m.BillBVValue).ToString(), //BillResult.Sum(m => m.BVValue).ToString(),
+                                                TotalBV = BillResult.Sum(m => m.PVValue).ToString(), //BillResult.Sum(m => m.BVValue).ToString(),
                                                 NetAmount = BillResult.Sum(m => m.NetAmt).ToString(),
                                                 CGSTAmount = BillResult.Sum(m => m.CGSTAmt).ToString(),
                                                 SGSTAmount = BillResult.Sum(m => m.SGSTAmt).ToString(),

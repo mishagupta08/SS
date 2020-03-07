@@ -7,7 +7,7 @@
     bool IsSoldByHo = (Session["LoginUser"] as User).IsSoldByHo;
     string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
     string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
-    string BVCaption = System.Configuration.ConfigurationManager.AppSettings["BVCaption"];
+    string PVCaption = System.Configuration.ConfigurationManager.AppSettings["PVCaption"];
 }
 
 <style>
@@ -59,7 +59,7 @@
     var BVCaption = "";
     $(document).ready(function () {
         var IsAdministrator = '@IsSoldByHo';
-        BVCaption = '@BVCaption';
+        BVCaption = '@PVCaption';
         if (IsAdministrator == "True") {
             GetAllParty();
         }
@@ -861,7 +861,7 @@
                                 <br /><br /><center><div class="loader" style="display:none"></div></center>
                                 <br /> <div style="width:100%">
     <div style="float:right;">
-        Total @BVCaption: <label id="lblTotalBV">
+        Total @PVCaption: <label id="lblTotalBV">
         </label> &nbsp;&nbsp; &nbsp;&nbsp;
         Amount: <label id="lblTotalAmt"></label> &nbsp;&nbsp; &nbsp;&nbsp;
         Net Payable: <label id="lblNetAmt"></label> &nbsp;&nbsp;

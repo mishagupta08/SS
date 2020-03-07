@@ -36,6 +36,7 @@ namespace InventoryManagement.Entity.Common
         public string DelvAddress { get; set; }
         public decimal? SoapandToothpastepv { get; set; }
         public decimal? OtherProductpv { get; set; }
+        public decimal CashdisAmount { get; set; }
         //public List<StateModel> StateList { get; set; }
 
     }

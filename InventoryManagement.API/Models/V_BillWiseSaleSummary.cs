@@ -36,6 +36,7 @@ namespace InventoryManagement.API.Models
         public string DownMemName { get; set; }
         public decimal BillBVValue { get; set; }
         public decimal BVValue { get; set; }
+        public decimal PVValue { get; set; }
         public decimal RPValue { get; set; }
         public decimal Amount { get; set; }
         public decimal IGSTAmt { get; set; }

@@ -11,6 +11,7 @@
     int count = 1;
     int colcount = 10;
     decimal? TotalQty = 0;
+    decimal TotalAmount = 0;
 }
 
 <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
@@ -296,7 +297,7 @@
                             <th scope="col" align="left" class="addAllPadding AllBorder">Total Dis</th>
                             @if (Model.objListProduct[0].OrderType != "T")
                             {
-                                <th scope="col" align="left" class="addAllPadding AllBorder">@BVCaption</th>
+                                <th scope="col" align="left" class="addAllPadding AllBorder">@PVCaption</th>
                                 colcount = colcount + 1;
                             }
 
@@ -360,7 +361,7 @@
                                 s = Math.Round((decimal)s, 0);
                                 @s
                                 TotalQty += s;
-                           }
+                            }
                     </td>
                     @*<td class="addAllPadding rightBorderOnly">Pcs.</td>*@
                    
@@ -375,7 +376,7 @@
             @if (Model.objListProduct[0].OrderType != "T")
             {
             <td class="addAllPadding rightBorderOnly" align="right">
-                @obj.BVValue
+                @obj.PVValue
             </td>}
             @{
                 if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
@@ -415,6 +416,7 @@
             <td class="addAllPadding rightBorderOnly" align="right">
                 @if (!(obj.OrderType == "T" && obj.Rate == 0))
                 {@(obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount)}
+                @{TotalAmount += (obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount)??0;}
             </td>
         </tr>
                     }
@@ -435,7 +437,7 @@
                             <td class="addAllPadding NoBorder">&nbsp;</td>
                             @if (Model.objListProduct[0].OrderType != "T")
                             {
-                        <td class="addAllPadding NoBorder" align="right">@Model.objProduct.TotalBV</td>}
+                        <td class="addAllPadding NoBorder" align="right">@Model.objProduct.TotalPV</td>}
                             @{
                                 if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
                                 {
@@ -455,7 +457,14 @@
                                 }
                             }
                             <td class="addAllPadding NoBorder" align="right"><img src="~/images/rupee.png" /></td>
-                            <td class="addAllPadding AllBorder" align="right">@Model.objListProduct[0].TotalNetPayable</td>
+                            <td class="addAllPadding AllBorder" align="right">
+                            @TotalAmount<br/>
+                            @if (Model.CashdisAmount >0 )
+                            { 
+                                <span>-</span><span>@Model.CashdisAmount</span><br />
+                                @Model.objListProduct[0].TotalNetPayable
+                            }
+                            </td>
                         </tr>
                         <tr class="NoBorder"><td colspan=@colcount class="NoBorder">&nbsp;</td></tr>
                         <tr class="NoBorder">

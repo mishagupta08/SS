@@ -8153,7 +8153,7 @@ namespace InventoryManagement.API.Controllers
             }
             return UserCanAcess;
         }
-        public ResponseDetail SaveOffer(Offer offerDetail)
+        public ResponseDetail SaveOffer(OfferOneRupee offerDetail)
         {
             ResponseDetail objResponse = new ResponseDetail();
             try

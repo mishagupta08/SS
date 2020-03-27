@@ -376,7 +376,7 @@ namespace InventoryManagement.DataAccess
         {
             return objTransacAPI.CanUserAccessMenu(UserID, MenuFile);
         }
-        public ResponseDetail SaveOffer(Offer offerDetail)
+        public ResponseDetail SaveOffer(OfferOneRupee offerDetail)
         {
             ResponseDetail objResponse = objTransacAPI.SaveOffer(offerDetail);
             return objResponse;

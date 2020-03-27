@@ -8,6 +8,7 @@ a.PartyName as Name,
 a.OrderType,'' as DownIDNo,'' as DownMemName,--- Add: 09Nov13@05:50PM,Saturday
 a.BVValue as BillBVValue,
 IsNull(Sum(b.BVValue),0) as BVValue,
+IsNull(Sum(b.PVValue),0) as PVValue,
 IsNull(Sum(b.RPValue),0) as RPValue,
 IsNull(Sum(b.NetAmount),0) as Amount,
 IsNull(Sum(b.TaxAmount),0) as IGSTAmt,IsNull(Sum(b.SGSTAmt),0) SGSTAmt, IsNull(Sum(b.CGSTAmt),0) as CGSTAmt,ISNULL(b.OfferUID,0) OfferUID,
@@ -25,7 +26,7 @@ LEFT JOIN M_GroupMaster as e ON c.GroupId=e.GroupId
 
 Group By a.OrderNo,a.OrderDate,a.UserSBillNo,a.UserBillNo,a.FormNo,a.BillFor,a.SBillNo,a.BillNo,a.BillDate,e.GroupId,e.GroupName,c.PartyCode,c.PartyName,a.FCode,a.Formno,c.PartyName,a.PartyName,
 a.OrderType,--- Add: 09Nov13@05:50PM,Saturday
-IsNull(a.PayMode,''),a.RefId,a.RefName,a.BillType,a.Series,a.IsReceive,IsNull(a.JType,''),a.SoldBy,a.BillBy,a.FType,a.Remarks,a.FSessId,ISNULL(b.OfferUID,0),a.BVValue 
+IsNull(a.PayMode,''),a.RefId,a.RefName,a.BillType,a.Series,a.IsReceive,IsNull(a.JType,''),a.SoldBy,a.BillBy,a.FType,a.Remarks,a.FSessId,ISNULL(b.OfferUID,0),a.BVValue ,a.PVValue 
 GO
 --------------------------
  ALTER View V#BillWiseSaleSummary

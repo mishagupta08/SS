@@ -388,7 +388,7 @@ namespace InventoryManagement.Business
         {
             return objTransacRepo.CanUserAccessMenu(UserID, MenuFile);
         }
-        public ResponseDetail SaveOffer(Offer offerDetail)
+        public ResponseDetail SaveOffer(OfferOneRupee offerDetail)
         {
             ResponseDetail objResponse = objTransacRepo.SaveOffer(offerDetail);
             return objResponse;

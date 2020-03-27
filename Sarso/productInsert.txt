@@ -10,87 +10,170 @@ declare @Bid int
 set @i = 1 --initialize
 
 
+CREATE TABLE #tbl(
+	
+	[GenerateBy] [varchar](50) NOT NULL,
+	[BrandCode] [numeric](18, 0) NOT NULL,
+	[CatId] [numeric](18, 0) NOT NULL,
+	[SubCatId] [numeric](18, 0) NOT NULL,
+	[ProductType] [varchar](50) NOT NULL,
+	[UserProdId] [varchar](50) NOT NULL,
+	[ProductCode] [numeric](18, 0) NOT NULL,
+	[ProdId] [varchar](100) NOT NULL,
+	[ProductName] [varchar](255) NOT NULL,
+	[ProductDesc] [nvarchar](max) NULL,
+	[Prefix] [varchar](50) NOT NULL,
+	[ItemType] [char](10) NOT NULL,
+	[BuyingTax] [numeric](18, 2) NOT NULL,
+	[Weight] [numeric](18, 2) NOT NULL,
+	[PurchaseRate] [numeric](18, 2) NOT NULL,
+	[MRP] [numeric](18, 2) NOT NULL,
+	[DP] [numeric](18, 2) NOT NULL,
+	[DP1] [numeric](18, 2) NOT NULL,
+	[OtherStateDP] [numeric](18, 2) NOT NULL,
+	[Exp] [numeric](18, 2) NOT NULL,
+	[Costing] [numeric](18, 2) NOT NULL,
+	[BV] [numeric](18, 2) NOT NULL,
+	[CV] [numeric](18, 2) NOT NULL,
+	[PV] [numeric](18, 2) NOT NULL,
+	[RP] [numeric](18, 2) NOT NULL,
+	[FundPoint] [numeric](18, 2) NOT NULL,
+	[IsDiscount] [char](1) NOT NULL,
+	[Discount] [numeric](18, 2) NOT NULL,
+	[DiscInRs] [numeric](18, 2) NOT NULL,
+	[VDiscount] [numeric](18, 2) NOT NULL,
+	[ProdCommssn] [numeric](18, 2) NOT NULL,
+	[GRate] [numeric](18, 2) NOT NULL,
+	[GMCharge] [numeric](18, 2) NOT NULL,
+	[GMType] [varchar](50) NOT NULL,
+	[IsCardIssue] [char](1) NOT NULL,
+	[Remarks] [varchar](5000) NOT NULL,
+	[ActiveStatus] [char](1) NOT NULL,
+	[IsImage] [char](1) NOT NULL,
+	[ImagePath] [varchar](250) NOT NULL,
+	[OnWebSite] [char](1) NOT NULL,
+	[TaxType] [char](1) NOT NULL,
+	[Company] [char](1) NOT NULL,
+	[PurchaseFrom] [varchar](50) NOT NULL,
+	[PurchaseStore] [varchar](50) NOT NULL,
+	[Imported] [char](1) NOT NULL,
+	[IMEINo] [varchar](50) NOT NULL,
+	[BNo] [varchar](50) NOT NULL,
+	[PType] [char](1) NOT NULL,
+	[BId] [numeric](18, 0) NOT NULL,
+	[BarcodeType] [char](1) NOT NULL,
+	[BCode] [numeric](18, 0) NOT NULL,
+	[Barcode] [varchar](50) NOT NULL,
+	[IsExpired] [char](1) NOT NULL,
+	[MfgDate] [datetime] NOT NULL,
+	[ExpDate] [datetime] NOT NULL,
+	[OpStockQty] [numeric](18, 2) NOT NULL,
+	[RecTimeStamp] [datetime] NOT NULL,
+	[UserId] [numeric](18, 0) NOT NULL,
+	[LastModified] [varchar](500) NOT NULL,
+	[Val1] [numeric](18, 2) NOT NULL,
+	[Val2] [numeric](18, 2) NOT NULL,
+	[OrderDesc] [varchar](500) NOT NULL,
+	[SpclOffer] [char](1) NOT NULL,
+	[HotSell] [char](1) NOT NULL,
+	[IsForPC] [char](1) NOT NULL,
+	[IsFlexible] [char](1) NOT NULL,
+	[SubQty] [numeric](18, 0) NOT NULL,
+	[CalcKitRate] [char](1) NOT NULL,
+	[FlexiQty] [numeric](18, 0) NOT NULL,
+	[MsgText] [varchar](1000) NOT NULL,
+	[MsgStatus] [char](1) NOT NULL,
+	[ImgPath1] [varchar](100) NOT NULL,
+	[ImgPath2] [varchar](100) NOT NULL,
+	[ImgPath3] [varchar](100) NOT NULL,
+	[ImgPath4] [varchar](100) NOT NULL,
+	[AlterID] [numeric](18, 0) NOT NULL,
+	[HSNCode] [varchar](50) NOT NULL
+)
 
- --insert into #tbl ([GenerateBy]
- --     ,[BrandCode]
- --     ,[CatId]
- --     ,[SubCatId]
- --     ,[ProductType]
- --     ,[UserProdId]
- --     ,[ProductCode]
- --     ,[ProdId]
- --     ,[ProductName]
- --     ,[ProductDesc]
- --     ,[Prefix]
- --     ,[ItemType]
- --     ,[BuyingTax]
- --     ,[Weight]
- --     ,[PurchaseRate]
- --     ,[MRP]
- --     ,[DP]
- --     ,[DP1]
- --     ,[OtherStateDP]
- --     ,[Exp]
- --     ,[Costing]
- --     ,[BV]
- --     ,[CV]
- --     ,[PV]
- --     ,[RP]
- --     ,[FundPoint]
- --     ,[IsDiscount]
- --     ,[Discount]
- --     ,[DiscInRs]
- --     ,[VDiscount]
- --     ,[ProdCommssn]
- --     ,[GRate]
- --     ,[GMCharge]
- --     ,[GMType]
- --     ,[IsCardIssue]
- --     ,[Remarks]
- --     ,[ActiveStatus]
- --     ,[IsImage]
- --     ,[ImagePath]
- --     ,[OnWebSite]
- --     ,[TaxType]
- --     ,[Company]
- --     ,[PurchaseFrom]
- --     ,[PurchaseStore]
- --     ,[Imported]
- --     ,[IMEINo]
- --     ,[BNo]
- --     ,[PType]
- --     ,[BId]
- --     ,[BarcodeType]
- --     ,[BCode]
- --     ,[Barcode]
- --     ,[IsExpired]
- --     ,[MfgDate]
- --     ,[ExpDate]
- --     ,[OpStockQty]
- --     ,[RecTimeStamp]
- --     ,[UserId]
- --     ,[LastModified]
- --     ,[Val1]
- --     ,[Val2]
- --     ,[OrderDesc]
- --     ,[SpclOffer]
- --     ,[HotSell]
- --     ,[IsForPC]
- --     ,[IsFlexible]
- --     ,[SubQty]
- --     ,[CalcKitRate]
- --     ,[FlexiQty]
- --     ,[MsgText]
- --     ,[MsgStatus]
- --     ,[ImgPath1]
- --     ,[ImgPath2]
- --     ,[ImgPath3]
- --     ,[ImgPath4]
- --     ,[AlterID]
- --     ,[HSNCode])
- -- select '',0,0,0,'P',PCode,PCode,PCode,PName,Descr,'','',0,0,0,Price,DP,ISNULL(prodsaleprice,0),ISNULL(prodsaleprice,0),0,0,0,0,PV,0,0,'N',0,0,0,0,0,0,'','N','','Y','N','','Y','','U','','','N',0,'','G',1,'W',0,0,'N',CAst(getdate() as date),CAst(getdate() as date),0,getdate(),0,'Administrator',0,0,'','','','N','N',0,'Y',0,'','','','','','',88,ISNULL(HSNO,'')
- -- from sarso.[sarsobiz].[dbo].[repurchaseproducts]
- -- where PCode  not in (select [ProdId] FROM [SrsInv].[dbo].[M_ProductMaster])
+
+
+
+ insert into #tbl ([GenerateBy]
+      ,[BrandCode]
+      ,[CatId]
+      ,[SubCatId]
+      ,[ProductType]
+      ,[UserProdId]
+      ,[ProductCode]
+      ,[ProdId]
+      ,[ProductName]
+      ,[ProductDesc]
+      ,[Prefix]
+      ,[ItemType]
+      ,[BuyingTax]
+      ,[Weight]
+      ,[PurchaseRate]
+      ,[MRP]
+      ,[DP]
+      ,[DP1]
+      ,[OtherStateDP]
+      ,[Exp]
+      ,[Costing]
+      ,[BV]
+      ,[CV]
+      ,[PV]
+      ,[RP]
+      ,[FundPoint]
+      ,[IsDiscount]
+      ,[Discount]
+      ,[DiscInRs]
+      ,[VDiscount]
+      ,[ProdCommssn]
+      ,[GRate]
+      ,[GMCharge]
+      ,[GMType]
+      ,[IsCardIssue]
+      ,[Remarks]
+      ,[ActiveStatus]
+      ,[IsImage]
+      ,[ImagePath]
+      ,[OnWebSite]
+      ,[TaxType]
+      ,[Company]
+      ,[PurchaseFrom]
+      ,[PurchaseStore]
+      ,[Imported]
+      ,[IMEINo]
+      ,[BNo]
+      ,[PType]
+      ,[BId]
+      ,[BarcodeType]
+      ,[BCode]
+      ,[Barcode]
+      ,[IsExpired]
+      ,[MfgDate]
+      ,[ExpDate]
+      ,[OpStockQty]
+      ,[RecTimeStamp]
+      ,[UserId]
+      ,[LastModified]
+      ,[Val1]
+      ,[Val2]
+      ,[OrderDesc]
+      ,[SpclOffer]
+      ,[HotSell]
+      ,[IsForPC]
+      ,[IsFlexible]
+      ,[SubQty]
+      ,[CalcKitRate]
+      ,[FlexiQty]
+      ,[MsgText]
+      ,[MsgStatus]
+      ,[ImgPath1]
+      ,[ImgPath2]
+      ,[ImgPath3]
+      ,[ImgPath4]
+      ,[AlterID]
+      ,[HSNCode])
+  select '',0,0,RPCID,'P',PCode,PCode,PCode,PName,Descr,'','',0,0,0,Price,DP,ISNULL(prodsaleprice,0),ISNULL(prodsaleprice,0),0,0,0,0,PV,0,0,'N',0,0,0,0,0,0,'','N','','Y','N','','Y','','U','','','N',0,'','G',1,'W',0,0,'N',CAst(getdate() as date),CAst(getdate() as date),0,getdate(),0,'Administrator',0,0,'','','','N','N',0,'Y',0,'','','','','','',88,ISNULL(HSNO,'')
+  from sarso.[sarsobiz].[dbo].[repurchaseproducts]
+  where PCode  not in (select [ProdId] FROM [SrsInv].[dbo].[M_ProductMaster])
 
 set @iRwCnt = @@ROWCOUNT --SCOPE_IDENTITY() would also work
 
@@ -190,3 +273,75 @@ BId= @Bid
 delete from #tbl where [ProdId] = @IdNo --remove processed record
 end
 end
+
+-- Enter itemcodes in inventory
+insert into itemcodes (
+[ItemCode]
+      ,[PCode]
+      ,[RPCId]
+      ,[Attrib1]
+      ,[Attrib2]
+      ,[Attrib3]
+      ,[Attrib4]
+      ,[Attrib5]
+      ,[CreationDate]
+      ,[Status]
+      ,[myChoice]
+      ,[descr]
+      ,[Attrib6]
+      ,[Attrib7]
+      ,[Attrib8]
+      ,[Attrib9]
+      ,[Attrib10]
+)
+select [ItemCode]
+      ,[PCode]
+      ,[RPCId]
+      ,[Attrib1]
+      ,[Attrib2]
+      ,[Attrib3]
+      ,[Attrib4]
+      ,[Attrib5]
+      ,[CreationDate]
+      ,[Status]
+      ,[myChoice]
+      ,[descr]
+      ,[Attrib6]
+      ,[Attrib7]
+      ,[Attrib8]
+      ,[Attrib9]
+      ,[Attrib10] from sarso.sarsobiz.dbo.itemcodes
+where itemcode not in (select itemcode from itemcodes) ;
+
+-- enter taxmster details
+
+INSERT INTO [SrsInv].[dbo].[M_TaxMaster]
+           ([GenerateBy]
+           ,[ProdCode]
+           ,[ProdName]
+           ,[StateCode]
+           ,[VatTax]
+           ,[STax]
+           ,[CstTax]
+           ,[WithCForm]
+           ,[AValue]
+           ,[ActiveStatus]
+           ,[Remarks]
+           ,[Company]
+           ,[Imported]
+           ,[UserId]
+           ,[RecTimeStamp]
+           ,[LastModified])
+
+select '',pcode,pname,20,GST,GST,GST,0,0,1,'','','N',0,getdate(),''
+from sarso.sarsobiz.dbo.repurchaseproducts
+where pcode not in(select prodcode from M_TaxMaster)
+
+GO
+
+
+
+
+
+
+

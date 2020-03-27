@@ -3554,7 +3554,7 @@ namespace InventoryManagement.Controllers
         [SessionExpire]
         public ActionResult OneRupeeOffer(string ActionName, string OfferCode)
         {
-            Offer OfferDetail = new Offer();
+            OfferOneRupee OfferDetail = new OfferOneRupee();
             try
             {
                 List<SelectListItem> Activeoption = new List<SelectListItem>();
@@ -3586,7 +3586,7 @@ namespace InventoryManagement.Controllers
                     if (!string.IsNullOrEmpty(OfferCode))
                     {
                         decimal OfferId = decimal.Parse(OfferCode);
-                        OfferDetail = objTransacManager.GetSelectedOfferDetails(OfferId);
+                        //OfferDetail = objTransacManager.GetSelectedOfferDetails(OfferId);
                     }
                 }
                 OfferDetail.Action = ActionName;
@@ -3630,18 +3630,18 @@ namespace InventoryManagement.Controllers
             return objTransacManager.CanUserAccessMenu(UserID, MenuFile);
         }
         [HttpPost]
-        public ActionResult SaveOffer(Offer obj)
+        public ActionResult SaveOffer(OfferOneRupee obj)
         {
             ResponseDetail objResponse = new ResponseDetail();
             try
             {
-                obj.OfferProds = new List<OfferProducts>();
+                obj.OfferProds = new List<OfferProductsOneRupee>();
                 if (!string.IsNullOrEmpty(obj.PrductString))
                 {
                     var objects = JArray.Parse(obj.PrductString); // parse as array  
                     foreach (JObject root in objects)
                     {
-                        OfferProducts objTemp = new OfferProducts();
+                        OfferProductsOneRupee objTemp = new OfferProductsOneRupee();
                         foreach (KeyValuePair<String, JToken> app in root)
                         {
                             if (app.Key == "ProdCode")
@@ -3675,7 +3675,7 @@ namespace InventoryManagement.Controllers
                     var objects = JArray.Parse(obj.BuyPrductString); // parse as array  
                     foreach (JObject root in objects)
                     {
-                        OfferProducts objTemp = new OfferProducts();
+                        OfferProductsOneRupee objTemp = new OfferProductsOneRupee();
                         foreach (KeyValuePair<String, JToken> app in root)
                         {
                             if (app.Key == "ProdCode")

@@ -1,0 +1,97 @@
+set nocount on
+
+declare @i int --iterator
+declare @iRwCnt int --rowcount
+declare @IDNo nvarchar
+declare @UplnFormno int
+declare @LegNo int
+declare @Bcode int
+declare @Bid int
+set @i = 1 --initialize
+
+CREATE TABLE #tbl(
+	[CatId] [numeric](18, 0) NOT NULL,
+	[CatName] [varchar](255) NULL,
+	[Prefix] [varchar](50) NOT NULL,
+	[CatDescription] [varchar](255) NOT NULL,
+	[Remarks] [varchar](255) NOT NULL,
+	[ActiveStatus] [char](1) NOT NULL,
+	[Company] [char](1) NOT NULL,
+	[UserId] [numeric](18, 0) NOT NULL,
+	[RecTimeStamp] [datetime] NOT NULL,
+	[LastModified] [varchar](150) NOT NULL,
+	[OnWebSite] [char](1) NOT NULL,
+	[IsForPC] [char](1) NOT NULL,
+	[DelCharge] [char](1) NOT NULL,
+	[WebSequence] [numeric](18, 0) NOT NULL)
+
+
+INSERT INTO #tbl
+           ([CatId]
+           ,[CatName]
+           ,[Prefix]
+           ,[CatDescription]
+           ,[Remarks]
+           ,[ActiveStatus]
+           ,[Company]
+           ,[UserId]
+           ,[RecTimeStamp]
+           ,[LastModified]
+           ,[OnWebSite]
+           ,[IsForPC]
+           ,[DelCharge]
+           ,[WebSequence])
+
+      select 
+            (select max(catId)+1 from [M_CatMaster])
+           ,SubCategory
+           ,''
+           ,Category+'>'+SubCategory
+           ,Category
+           ,'Y'
+           ,'S'
+           ,0
+           ,getdate()
+           ,''
+           ,'Y'
+           ,'N'
+           ,'Y'
+           ,0
+           from sarso.sarsobiz.dbo.rpcategories
+where SubCategory not in(select catName from M_CatMaster)
+group by category,subcategory
+
+set @iRwCnt = @@ROWCOUNT --SCOPE_IDENTITY() would also work
+
+/*
+
+Always do this after the insert, since it's faster to add the index in bulk than to update the index as you write into the temp table. Since you know the data in this column, you can set the fill factor to 100% to get the best read times.
+
+*/
+select * from #tbl
+while @iRwCnt >0
+begin
+select top 1 @IDNo=CatName from #tbl
+
+set @iRwCnt = @@ROWCOUNT --ensure that we still have data
+
+select @Bcode = max(CatId)+1 from M_CatMaster
+
+if @iRwCnt >0
+begin
+
+Update #tbl
+set [CatId] = @Bcode
+where CatName =  @IdNo ;
+ 
+  
+INSERT INTO M_CatMaster
+select top 1 * from #tbl
+
+
+delete from #tbl where [CatName] = @IdNo --remove processed record
+end
+end
+
+
+

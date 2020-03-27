@@ -1,0 +1,126 @@
+USE [sarsobiz]
+GO
+/****** Object:  StoredProcedure [dbo].[BillGeneration]    Script Date: 18/03/2020 05:31:15 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+ALTER proc [dbo].[BillGeneration](@BillMain nvarchar(max),@BillDetail nvarchar(max))
+
+
+
+ As    
+ 
+
+Begin 
+ 
+
+ declare @BillMainXml xml,@BillDetailXml xml;
+ declare @UserBillNo varchar(50);
+ set @BillMainXml  = CAST(@BillMain as xml)
+ set @BillDetailXml  = CAST(@BillDetail as xml)
+ set @UserBillNo = (SELECT [Table].[Column].value('UserBillNo[1]','varchar(30)') AS BillNo            
+                    FROM  
+                    @BillMainXml.nodes('/TrnBillMain') as [Table]([Column]))
+ BEGIN TRANSACTION 
+  BEGIN TRY
+
+  
+INSERT INTO dbo.mastermop(memno,billno,challandt,code,totalpv,cancel,sesid,
+totalamt,commDate,totprice,remarks,reqno,memtype,InvoiceNo,InvDate,
+InvStatus,CourierName,crchrg,DespBno,PlanType,tktremarks,bsidno,
+oldbillno,BillType,Sprno,Coupvalue,prdcrdAmt,offtype,TAxAmt,Fcode) 
+
+
+SELECT
+              [Table].[Column].value('FormNo[1]','numeric(10,0)') AS FormNo,              
+              [Table].[Column].value('UserBillNo[1]','varchar(30)') AS BillNo,              
+              getdate(),0,
+			  [Table].[Column].value('PVValue[1]','money') AS pvvalue, 0,'F',
+			  [Table].[Column].value('NetPayable[1]','money') AS NetPayable,
+			  getdate(),
+			  [Table].[Column].value('NetPayable[1]','money') AS Amount,'Franchisee Order',
+			  [Table].[Column].value('FormNo[1]','varchar(30)') AS FormNo, 
+			  'SICP','',Getdate(),'A','',0,'DB10000','RREP',null,null,null,null,0,null,null,'F',0,
+			  [Table].[Column].value('SoldBy[1]','varchar(20)') AS FCode
+        FROM
+            @BillMainXml.nodes('/TrnBillMain') as [Table]([Column])
+
+
+
+INSERT INTO dbo.repurchasesales(
+billno,regid,billdate,pcode,pname,qty,amount,code,sesid,pv,price,BasicRate,DDPCommission,
+Vat,VatAmt,taxper,taxtype,taxamt,Attribute,offerqty,ReturnSts,GST,CGST,SGST,IGST,FreePrd,itemcode) 
+
+SELECT                   
+              @UserBillNo AS BillNo, --billno 
+			  [Table].[Column].value('FormNo[1]','numeric(10,0)') AS FormNo, -- regid            
+              getdate(), --billdate
+			  [Table].[Column].value('ProductId[1]','varchar(10)') AS ProductId,	--pcode	  
+			  [Table].[Column].value('ProductName[1]','varchar(100)') AS ProductName,--pname
+			  Cast([Table].[Column].value('Qty[1]','numeric(18,2)') as int) AS Qty,--qty
+			  [Table].[Column].value('NetAmount[1]','money') AS NetAmount, --amount
+			  0, --code
+			  'F', --sesid
+			  [Table].[Column].value('PVValue[1]','money') AS PvValue, --pv 
+			  [Table].[Column].value('DP[1]','money') AS DP, --price
+			  0, --BasicRate,
+			  0, --DDPCommission,
+			  0, --Vat
+			  0, --VatAmt
+			 0, --taxper
+			  'VAT', --taxtype
+			  0 , --taxamt
+			  0, --Attribute
+			   0,--offerqty
+			  0, --,ReturnSts
+			   [Table].[Column].value('Tax[1]','varchar(10)')AS Tax, --GST,
+			  [Table].[Column].value('CGSTAmt[1]','money')AS CGST, --CGST
+			  [Table].[Column].value('SGSTAmt[1]','money') AS SGST, --,SGST
+			  [Table].[Column].value('TaxAmount[1]','money') AS IGST, --,IGST,
+			  0, --FreePrd
+			  [Table].[Column].value('itemcode[1]','varchar(500)') AS Itemcode --itemcode
+
+
+			 
+        FROM
+            @BillDetailXml.nodes('/ArrayOfTrnBillDetail/TrnBillDetail') as [Table]([Column])
+
+
+
+
+INSERT INTO dbo.mopsales(mop,regid,billno,challandt,ddno,dddate,bank,branch,amount,code,repurno,sesid,oldbillno,Remarks,Rflag,RAmt,RMop,RRemarks,RefundDate) 
+
+
+
+SELECT        'POS',
+              [Table].[Column].value('FormNo[1]','numeric(10,0)') AS FormNo,              
+              [Table].[Column].value('UserBillNo[1]','varchar(30)') AS BillNo,              
+              getdate(),'',
+			  getdate(),'','',			  
+			  [Table].[Column].value('Amount[1]','money') AS Amount,0,
+			  [Table].[Column].value('UserBillNo[1]','varchar(30)') AS BillNo,
+			  'F',null,'Franchisee Bill',0,0,'','',
+			  getdate()
+			 
+        FROM
+            @BillMainXml.nodes('/TrnBillMain') as [Table]([Column])
+
+
+     COMMIT TRANSACTION 
+  END TRY
+  
+  
+BEGIN CATCH
+ROLLBACK TRANSACTION 
+
+DECLARE @errmsg NVARCHAR(4000)
+DECLARE @errseverity INT
+DECLARE @errstate INT
+
+SELECT @errmsg = ERROR_MESSAGE(), @errseverity = ERROR_SEVERITY(), @errstate = ERROR_STATE()
+RAISERROR(@errmsg, @errseverity, @errstate)
+
+END CATCH
+END

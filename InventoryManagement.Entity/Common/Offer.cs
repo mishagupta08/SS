@@ -3,6 +3,52 @@ using System.Collections.Generic;
 
 namespace InventoryManagement.Entity.Common
 {
+    public class OfferOneRupee
+    {
+        public decimal OfferID { get; set; }
+        public DateTime OfferFromDt { get; set; }
+        public DateTime OfferToDt { get; set; }
+        public string OfferDatePart { get; set; }
+        public decimal OfferOnValue { get; set; }
+        public decimal OfferOnBV { get; set; }
+        public decimal OfferOnToBV { get; set; }
+        public decimal TotalQty { get; set; }
+        public decimal CreatedBy { get; set; }
+        public string ActiveStatus { get; set; }
+        public DateTime RecTimeStamp { get; set; }
+        public string ForNewIds { get; set; }
+        public DateTime? IdDate { get; set; }
+        public string IdStatus { get; set; }
+        public bool ForAllProducts { get; set; }
+        public string PrductString { get; set; }
+        public string BuyPrductString { get; set; }
+        public string ForBillType { get; set; }
+        public string Action { get; set; }
+        public string OfferName { get; set; }
+        public int StartProduct { get; set; }
+        public decimal offerType { get; set; }
+        public List<OfferProductsOneRupee> OfferProds { get; set; }
+        public List<PartyModel> OfferParty { get; set; }
+        public string Party { get; set; }
+    }
+    public class OfferProductsOneRupee
+    {
+        public decimal offerID { get; set; }
+        public string ProdID { get; set; }
+        public string ProdName { get; set; }
+        public decimal Qty { get; set; }
+        public decimal FreeQty { get; set; }
+        public string IsFlexible { get; set; }
+        public decimal MinBV { get; set; }
+        public decimal MinToBV { get; set; }
+        public decimal MinAmt { get; set; }
+        public decimal TotalQty { get; set; }
+        public decimal? OfferMrp { get; set; }
+        public string ActiveStatus { get; set; }
+        public string offerType { get; set; }
+        public string BuyProduct { get; set; }
+
+    }
     public class Offer
     {
         public decimal OfferID { get; set; }

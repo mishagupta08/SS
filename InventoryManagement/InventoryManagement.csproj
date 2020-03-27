@@ -1955,6 +1955,7 @@
     <Content Include="Views\Offer\Offers.cshtml" />
     <Content Include="Views\Transaction\OneRupeeOffer.cshtml" />
     <Content Include="Views\Transaction\OneRupeeOfferMaster.cshtml" />
+    <Content Include="Views\Transaction\OfferMaster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

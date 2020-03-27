@@ -1928,7 +1928,7 @@ warning 6002: The table/view 'SrsInv.dbo.M_BloodGroupMaster' does not have a pri
             <PropertyRef Name="CatId" />
           </Key>
           <Property Name="CatId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="CatName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="CatName" Type="varchar" MaxLength="255" />
           <Property Name="Prefix" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CatDescription" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Remarks" Type="varchar" MaxLength="255" Nullable="false" />
@@ -3297,6 +3297,21 @@ warning 6002: The table/view 'SrsInv.dbo.M_NewOfferMaster' does not have a prima
           <Property Name="UserCode" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="UserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
+        <EntityType Name="M_OfferProducts">
+          <Key>
+            <PropertyRef Name="AID" />
+          </Key>
+          <Property Name="AID" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OfferID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ProdID" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ActiveStatus" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="RectimeStamp" Type="datetime" Nullable="false" />
+          <Property Name="Qty" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="FreeQty" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="IsFlexible" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="OfferMrp" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="IsBuyProduct" Type="varchar" MaxLength="1" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.M_OfferProductType' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="M_OfferProductType">
@@ -3310,6 +3325,29 @@ warning 6002: The table/view 'SrsInv.dbo.M_OfferProductType' does not have a pri
           <Property Name="OfferProductType" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ActiveStatus" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="M_Offers">
+          <Key>
+            <PropertyRef Name="AID" />
+          </Key>
+          <Property Name="AID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OfferFromDt" Type="datetime" Nullable="false" />
+          <Property Name="OfferToDt" Type="datetime" Nullable="false" />
+          <Property Name="OfferDatePart" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="OfferOnValue" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="OfferOnBV" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="TotalQty" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ActiveStatus" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
+          <Property Name="ForNewIds" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="IdDate" Type="datetime" />
+          <Property Name="IdStatus" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="UserID" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ForBillType" Type="varchar" MaxLength="50" />
+          <Property Name="OfferType" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="ForFranchise" Type="varchar" MaxLength="200" />
+          <Property Name="OfferName" Type="varchar" MaxLength="100" />
+          <Property Name="OfferOnToBV" Type="numeric" Precision="18" Scale="2" Nullable="false" />
         </EntityType>
         <EntityType Name="M_OfferType">
           <Key>
@@ -4398,7 +4436,6 @@ warning 6002: The table/view 'SrsInv.dbo.TempCatMaster' does not have a primary 
           <Key>
             <PropertyRef Name="TId" />
             <PropertyRef Name="CatId" />
-            <PropertyRef Name="CatName" />
             <PropertyRef Name="Prefix" />
             <PropertyRef Name="CatDescription" />
             <PropertyRef Name="Remarks" />
@@ -4413,10 +4450,11 @@ warning 6002: The table/view 'SrsInv.dbo.TempCatMaster' does not have a primary 
             <PropertyRef Name="WebSequence" />
             <PropertyRef Name="MUserId" />
             <PropertyRef Name="MRecTimeStamp" />
+            <PropertyRef Name="CatName" />
           </Key>
           <Property Name="TId" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CatId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="CatName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="CatName" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Prefix" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="CatDescription" Type="varchar" MaxLength="255" Nullable="false" />
           <Property Name="Remarks" Type="varchar" MaxLength="255" Nullable="false" />
@@ -8857,6 +8895,8 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="M_MPayModeMaster" EntityType="Self.M_MPayModeMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="M_NewsSeminarMaster" EntityType="Self.M_NewsSeminarMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="M_OccupationMaster" EntityType="Self.M_OccupationMaster" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="M_OfferProducts" EntityType="Self.M_OfferProducts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="M_Offers" EntityType="Self.M_Offers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="M_OfferType" EntityType="Self.M_OfferType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="M_PackageProductMaster" EntityType="Self.M_PackageProductMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="M_PartyDiscount" EntityType="Self.M_PartyDiscount" Schema="dbo" store:Type="Tables" />
@@ -12038,6 +12078,8 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="M_InwardDetail" EntityType="InventoryModel.M_InwardDetail" />
           <EntitySet Name="V_CurrentStockDetailNotForStockist" EntityType="InventoryModel.V_CurrentStockDetailNotForStockist" />
           <EntitySet Name="V_BillWiseSaleSummary" EntityType="InventoryModel.V_BillWiseSaleSummary" />
+          <EntitySet Name="M_OfferProducts" EntityType="InventoryModel.M_OfferProducts" />
+          <EntitySet Name="M_Offers" EntityType="InventoryModel.M_Offers" />
         </EntityContainer>
         <ComplexType Name="MonthWiseSummary_Result">
           <Property Type="String" Name="Mnth" Nullable="false" MaxLength="10" />
@@ -13103,7 +13145,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
             <PropertyRef Name="CatId" />
           </Key>
           <Property Name="CatId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="CatName" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="CatName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Prefix" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CatDescription" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Remarks" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
@@ -17552,7 +17594,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           </Key>
           <Property Name="TId" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="CatId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="CatName" Type="String" Nullable="false" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="CatName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Prefix" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="CatDescription" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
           <Property Name="Remarks" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
@@ -20581,6 +20623,44 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="FType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Remarks" Type="String" Nullable="false" MaxLength="1001" FixedLength="false" Unicode="false" />
           <Property Name="DispatchStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="M_OfferProducts">
+          <Key>
+            <PropertyRef Name="AID" />
+          </Key>
+          <Property Name="AID" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OfferID" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ProdID" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RectimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Qty" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="IsFlexible" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="OfferMrp" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="IsBuyProduct" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="M_Offers">
+          <Key>
+            <PropertyRef Name="AID" />
+          </Key>
+          <Property Name="AID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OfferFromDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OfferToDt" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OfferDatePart" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="OfferOnValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="OfferOnBV" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="TotalQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ActiveStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ForNewIds" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="IdDate" Type="DateTime" Precision="3" />
+          <Property Name="IdStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="UserID" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ForBillType" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OfferType" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ForFranchise" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="OfferName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OfferOnToBV" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -27443,6 +27523,46 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
                 <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
                 <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
                 <ScalarProperty Name="FSessId" ColumnName="FSessId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M_OfferProducts">
+            <EntityTypeMapping TypeName="InventoryModel.M_OfferProducts">
+              <MappingFragment StoreEntitySet="M_OfferProducts">
+                <ScalarProperty Name="IsBuyProduct" ColumnName="IsBuyProduct" />
+                <ScalarProperty Name="OfferMrp" ColumnName="OfferMrp" />
+                <ScalarProperty Name="IsFlexible" ColumnName="IsFlexible" />
+                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="RectimeStamp" ColumnName="RectimeStamp" />
+                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
+                <ScalarProperty Name="ProdID" ColumnName="ProdID" />
+                <ScalarProperty Name="OfferID" ColumnName="OfferID" />
+                <ScalarProperty Name="AID" ColumnName="AID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="M_Offers">
+            <EntityTypeMapping TypeName="InventoryModel.M_Offers">
+              <MappingFragment StoreEntitySet="M_Offers">
+                <ScalarProperty Name="OfferOnToBV" ColumnName="OfferOnToBV" />
+                <ScalarProperty Name="OfferName" ColumnName="OfferName" />
+                <ScalarProperty Name="ForFranchise" ColumnName="ForFranchise" />
+                <ScalarProperty Name="OfferType" ColumnName="OfferType" />
+                <ScalarProperty Name="ForBillType" ColumnName="ForBillType" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="IdStatus" ColumnName="IdStatus" />
+                <ScalarProperty Name="IdDate" ColumnName="IdDate" />
+                <ScalarProperty Name="ForNewIds" ColumnName="ForNewIds" />
+                <ScalarProperty Name="RecTimeStamp" ColumnName="RecTimeStamp" />
+                <ScalarProperty Name="ActiveStatus" ColumnName="ActiveStatus" />
+                <ScalarProperty Name="TotalQty" ColumnName="TotalQty" />
+                <ScalarProperty Name="OfferOnBV" ColumnName="OfferOnBV" />
+                <ScalarProperty Name="OfferOnValue" ColumnName="OfferOnValue" />
+                <ScalarProperty Name="OfferDatePart" ColumnName="OfferDatePart" />
+                <ScalarProperty Name="OfferToDt" ColumnName="OfferToDt" />
+                <ScalarProperty Name="OfferFromDt" ColumnName="OfferFromDt" />
+                <ScalarProperty Name="AID" ColumnName="AID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -368,5 +368,18 @@ namespace InventoryManagement.DataAccess
         {
             return objTransacAPI.GetProductAttibutes(ProdId);
         }
-        }        
+        public Offer GetSelectedOfferDetails(decimal OfferId)
+        {
+            return (objTransacAPI.GetSelectedOfferDetails(OfferId));
+        }
+        public bool CanUserAccessMenu(int UserID, string MenuFile)
+        {
+            return objTransacAPI.CanUserAccessMenu(UserID, MenuFile);
+        }
+        public ResponseDetail SaveOffer(Offer offerDetail)
+        {
+            ResponseDetail objResponse = objTransacAPI.SaveOffer(offerDetail);
+            return objResponse;
+        }
+    }        
 }

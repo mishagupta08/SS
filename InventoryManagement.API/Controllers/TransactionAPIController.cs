@@ -8090,6 +8090,149 @@ namespace InventoryManagement.API.Controllers
                 throw;
             }
         }
+        public Offer GetSelectedOfferDetails(decimal offerID)
+        {
+            Offer offer = new Offer();
+            try
+            {
+                using (var entity = new InventoryEntities())
+                {
+                    offer = (from r in entity.M_Offers
+                             where r.AID == offerID
+                             select new Offer
+                             {
+                                 OfferID = r.AID,
+                                 OfferName = r.OfferName,
+                                 OfferFromDt = r.OfferFromDt,
+                                 OfferToDt = r.OfferToDt,
+                                 OfferOnBV = r.OfferOnBV,
+                                 OfferOnToBV = r.OfferOnToBV,
+                                 OfferOnValue = r.OfferOnValue,
+                                 OfferDatePart = r.OfferDatePart,
+                                 ActiveStatus = r.ActiveStatus,
+                                 ForNewIds = r.ForNewIds,
+                                 IdDate = r.IdDate,
+                                 IdStatus = r.IdStatus,
+                                 ForBillType = r.ForBillType,
+                                 Party = r.ForFranchise
+                             }).FirstOrDefault();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return (offer);
+        }
+        public bool CanUserAccessMenu(int UserID, string MenuFile)
+        {
+            bool UserCanAcess = false;
+            try
+            {
+                using (var entity = new InventoryEntities())
+                {
+                    var result = (from r in entity.Web_M_MenuMaster
+                                  join s in entity.Web_M_UserPermissionMaster on r.MenuId equals s.MenuId
+                                  where s.GroupId == UserID
+                                  select r).ToList();
+                    foreach (var obj in result)
+                    {
+                        string[] onselect = obj.OnSelect.Split('/');
+                        if (onselect.Length > 1)
+                            if (onselect[1] == MenuFile)
+                            {
+                                UserCanAcess = true;
+                                break;
+                            }
+                    }
+                }
+
+            }
+            catch (Exception)
+            {
+            }
+            return UserCanAcess;
+        }
+        public ResponseDetail SaveOffer(Offer offerDetail)
+        {
+            ResponseDetail objResponse = new ResponseDetail();
+            try
+            {
+                M_Offers offer = new M_Offers();
+                int MaxId = 0;
+
+                using (var entity = new InventoryEntities())
+                {
+                    if (offerDetail.Action.ToLower() == "edit")
+                    {
+                        offer = (from r in entity.M_Offers where r.AID == offerDetail.OfferID select r).FirstOrDefault();
+                        MaxId = offer.AID;
+                        var prodList = (from r in entity.M_OfferProducts where r.OfferID == offerDetail.OfferID select r).ToList();
+                        foreach (var obj in prodList)
+                        {
+                            entity.M_OfferProducts.Remove(obj);
+                        }
+                    }
+                    else
+                    {
+                        MaxId = (from r in entity.M_Offers select r.AID).DefaultIfEmpty(0).Max();
+                        MaxId += 1;
+                        offer.AID = MaxId;
+                    }
+                    offer.ActiveStatus = offerDetail.ActiveStatus;
+                    offer.ForNewIds = offerDetail.ForNewIds;
+                    offer.IdDate = offerDetail.IdDate;
+                    offer.OfferDatePart = "R";
+                    offer.OfferOnBV = offerDetail.OfferOnBV;
+                    offer.OfferOnToBV = offerDetail.OfferOnToBV;
+                    offer.OfferOnValue = offerDetail.OfferOnValue;
+                    offer.OfferToDt = offerDetail.OfferToDt;
+                    offer.IdStatus = offerDetail.IdStatus;
+                    offer.OfferFromDt = offerDetail.OfferFromDt;
+                    offer.TotalQty = offerDetail.TotalQty;
+                    offer.ForBillType = offerDetail.ForBillType;
+                    offer.ForFranchise = string.IsNullOrEmpty(offerDetail.Party) ? "all" : offerDetail.Party;
+                    offer.OfferType = offerDetail.offerType;
+                    offer.OfferName = offerDetail.OfferName;
+
+                    if (offerDetail.Action.ToLower() != "edit")
+                    {
+                        offer.UserID = offerDetail.CreatedBy;
+                        offer.RecTimeStamp = DateTime.Now;
+                        entity.M_Offers.Add(offer);
+                    }
+                    foreach (var product in offerDetail.OfferProds)
+                    {
+                        M_OfferProducts offerProduct = new M_OfferProducts();
+                        offerProduct.OfferID = MaxId;
+                        offerProduct.ActiveStatus = "Y";
+                        offerProduct.ProdID = product.ProdID;
+                        offerProduct.RectimeStamp = DateTime.Now;
+                        offerProduct.Qty = product.Qty;
+                        offerProduct.FreeQty = product.FreeQty;
+                        offerProduct.IsFlexible = String.IsNullOrEmpty(product.IsFlexible) ? "N" : product.IsFlexible;
+                        offerProduct.OfferMrp = product.OfferMrp;
+                        offerProduct.IsBuyProduct = product.BuyProduct;
+                        entity.M_OfferProducts.Add(offerProduct);
+                    }
+                    int i = entity.SaveChanges();
+                    if (i > 0)
+                    {
+                        objResponse.ResponseStatus = "OK";
+                    }
+                    else
+                    {
+                        objResponse.ResponseMessage = "Something went wrong.";
+                    }
+
+                }
+            }
+            catch (Exception e)
+            {
+                objResponse.ResponseMessage = "Something went wrong.";
+            }
+            return objResponse;
+        }
 
 
     }

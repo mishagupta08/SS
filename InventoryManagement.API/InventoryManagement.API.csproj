@@ -525,7 +525,13 @@
     <Compile Include="Models\M_OccupationMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_OfferProducts.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_OfferProductType.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_Offers.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_OfferType.cs">

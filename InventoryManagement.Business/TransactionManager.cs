@@ -380,5 +380,18 @@ namespace InventoryManagement.Business
         {
             return objTransacRepo.GetProductAttibutes(ProdId);
         }
+        public Offer GetSelectedOfferDetails(decimal OfferId)
+        {
+            return (objTransacRepo.GetSelectedOfferDetails(OfferId));
+        }
+        public bool CanUserAccessMenu(int UserID, string MenuFile)
+        {
+            return objTransacRepo.CanUserAccessMenu(UserID, MenuFile);
+        }
+        public ResponseDetail SaveOffer(Offer offerDetail)
+        {
+            ResponseDetail objResponse = objTransacRepo.SaveOffer(offerDetail);
+            return objResponse;
+        }
     }
 }

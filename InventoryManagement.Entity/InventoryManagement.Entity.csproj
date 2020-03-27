@@ -103,6 +103,7 @@
     <Compile Include="Common\MenuMasterModel.cs" />
     <Compile Include="Common\MonthlySumm.cs" />
     <Compile Include="Common\Offer.cs" />
+    <Compile Include="Common\OfferProducts.cs" />
     <Compile Include="Common\OfferResult.cs" />
     <Compile Include="Common\OldBills.cs" />
     <Compile Include="Common\PackUnpack.cs" />

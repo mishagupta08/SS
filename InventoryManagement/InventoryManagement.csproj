@@ -1795,6 +1795,7 @@
     <None Include="Properties\PublishProfiles\SarsoPublish.pubxml" />
     <None Include="Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="Scripts\CreateOffer.js" />
+    <Content Include="Scripts\CreateOneOffer.js" />
     <Content Include="Scripts\gijgo\combined\gijgo.js" />
     <Content Include="Scripts\gijgo\combined\gijgo.min.js" />
     <Content Include="Scripts\gijgo\combined\messages\messages.bg-bg.js" />
@@ -1952,6 +1953,8 @@
     <Content Include="Views\Transaction\BuythisGetthatOfferMaster.cshtml" />
     <Content Include="Views\Offer\OfferMaster.cshtml" />
     <Content Include="Views\Offer\Offers.cshtml" />
+    <Content Include="Views\Transaction\OneRupeeOffer.cshtml" />
+    <Content Include="Views\Transaction\OneRupeeOfferMaster.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

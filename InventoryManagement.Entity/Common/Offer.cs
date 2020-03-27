@@ -5,8 +5,11 @@ namespace InventoryManagement.Entity.Common
 {
     public class Offer
     {
+        public decimal OfferID { get; set; }
         public int AID { get; set; }
         public DateTime OfferFromDt { get; set; }
+        public decimal? OfferOnBV { get; set; }
+        public decimal OfferOnToBV { get; set; }
         public DateTime OfferToDt { get; set; }
         public string OfferFromDtStr { get; set; }
         public string OfferToDtStr { get; set; }
@@ -17,7 +20,6 @@ namespace InventoryManagement.Entity.Common
         public string OfferExceptSubCat { get; set; }
         public string FreeProdIDs { get; set; }
         public string FreeProdQty { get; set; }
-        public decimal? OfferOnBV { get; set; }
         public string ConfFreeProdIDs { get; set; }
         public string ConfFreeProdQtys { get; set; }
         public string checkBillWith { get; set; }
@@ -51,6 +53,17 @@ namespace InventoryManagement.Entity.Common
         public decimal? CBAmount { get; set; }
         public int OfferFrequncy { get; set; }
         public int CustBillNo { get; set; }
+        public string Action { get; set; }
+        public decimal offerType { get; set; }
+        public List<PartyModel> OfferParty { get; set; }
+        public string IdStatus { get; set; }
+        public string ForBillType { get; set; }
+        public string Party { get; set; }
+        public string PrductString { get; set; }
+        public string BuyPrductString { get; set; }
+        public decimal TotalQty { get; set; }
+        public List<OfferProducts> OfferProds { get; set; }
+        public decimal CreatedBy { get; set; }
     }
 
     public class OfferProduct

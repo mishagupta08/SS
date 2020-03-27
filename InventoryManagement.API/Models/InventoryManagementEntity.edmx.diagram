@@ -250,6 +250,8 @@
         <EntityTypeShape EntityType="InventoryModel.M_InwardDetail" Width="1.5" PointX="3.2085620254318048" PointY="21.403956691456937" />
         <EntityTypeShape EntityType="InventoryModel.V_CurrentStockDetailNotForStockist" Width="1.5" PointX="0.58181388330730321" PointY="9.44349381767376" />
         <EntityTypeShape EntityType="InventoryModel.V_BillWiseSaleSummary" Width="1.5" PointX="11.449788825330225" PointY="26.184645292435142" />
+        <EntityTypeShape EntityType="InventoryModel.M_OfferProducts" Width="1.5" PointX="9.5897173851680559" PointY="5.7529336687889572" />
+        <EntityTypeShape EntityType="InventoryModel.M_Offers" Width="1.5" PointX="1.3984395812258308" PointY="8.9071575146667463" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

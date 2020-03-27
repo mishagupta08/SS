@@ -3551,6 +3551,155 @@ namespace InventoryManagement.Controllers
         {
             return Json(objTransacManager.GetProductAttibutes(ProdId), JsonRequestBehavior.AllowGet);
         }
+        [SessionExpire]
+        public ActionResult OneRupeeOffer(string ActionName, string OfferCode)
+        {
+            Offer OfferDetail = new Offer();
+            try
+            {
+                List<SelectListItem> Activeoption = new List<SelectListItem>();
+                Activeoption.Add(new SelectListItem() { Text = "Active", Value = "Y" });
+                Activeoption.Add(new SelectListItem() { Text = "Deactive", Value = "N" });
+                ViewBag.ActiveDropDown = Activeoption;
+
+                List<SelectListItem> option = new List<SelectListItem>();
+                option.Add(new SelectListItem() { Text = "All", Value = "A" });
+                option.Add(new SelectListItem() { Text = "Yes", Value = "Y" });
+                //option.Add(new SelectListItem() { Text = "No", Value = "N" });
+                ViewBag.DropDownOptions = option;
+
+                List<SelectListItem> idStatus = new List<SelectListItem>();
+                idStatus.Add(new SelectListItem() { Text = "All", Value = "A" });
+                idStatus.Add(new SelectListItem() { Text = "Active", Value = "Y" });
+                idStatus.Add(new SelectListItem() { Text = "Deactive", Value = "N" });
+                ViewBag.idStatusDropDown = idStatus;
+
+                List<SelectListItem> ForBillType = new List<SelectListItem>();
+                ForBillType.Add(new SelectListItem() { Text = "All", Value = "All" });
+                ForBillType.Add(new SelectListItem() { Text = "Repurchase", Value = "Repurchase" });
+                ForBillType.Add(new SelectListItem() { Text = "FirstBill", Value = "FirstBill" });
+                ViewBag.ForBillTypeDropDown = ForBillType;
+                OfferDetail.OfferFromDt = DateTime.Now;
+                OfferDetail.OfferToDt = DateTime.Now;
+                if (ActionName.ToLower() == "edit")
+                {
+                    if (!string.IsNullOrEmpty(OfferCode))
+                    {
+                        decimal OfferId = decimal.Parse(OfferCode);
+                        OfferDetail = objTransacManager.GetSelectedOfferDetails(OfferId);
+                    }
+                }
+                OfferDetail.Action = ActionName;
+                OfferDetail.offerType = 2;
+                List<PartyModel> objparty = objRegistrationManager.GetAllPartyList(false);
+                objparty = objparty.Where(r => r.GroupId != 5).ToList();
+                OfferDetail.OfferParty = objparty;
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View(OfferDetail);
+
+        }
+        [SessionExpire]
+        public ActionResult OfferMaster()
+        {
+            //if (CanUserAccessMenu((Session["LoginUser"] as User).UserId, "OfferMaster"))
+            //{
+                ViewBag.OfferType = 1;
+                return View();
+            //}
+            //else
+            //    return RedirectToAction("Dashboard", "Home");
+        }
+
+        [SessionExpire]
+        public ActionResult OneRupeeOfferMaster()
+        {
+            /*if (CanUserAccessMenu((Session["LoginUser"] as User).UserId, "OneRupeeOfferMaster"))
+            {*/
+                ViewBag.OfferType = 2;
+                return View("OfferMaster");
+            /*}*/
+            /*else*/
+                //return RedirectToAction("Dashboard", "Home");
+        }
+        public bool CanUserAccessMenu(int UserID, string MenuFile)
+        {
+            return objTransacManager.CanUserAccessMenu(UserID, MenuFile);
+        }
+        [HttpPost]
+        public ActionResult SaveOffer(Offer obj)
+        {
+            ResponseDetail objResponse = new ResponseDetail();
+            try
+            {
+                obj.OfferProds = new List<OfferProducts>();
+                if (!string.IsNullOrEmpty(obj.PrductString))
+                {
+                    var objects = JArray.Parse(obj.PrductString); // parse as array  
+                    foreach (JObject root in objects)
+                    {
+                        OfferProducts objTemp = new OfferProducts();
+                        foreach (KeyValuePair<String, JToken> app in root)
+                        {
+                            if (app.Key == "ProdCode")
+                            {
+                                objTemp.ProdID = (string)app.Value;
+                            }
+                            if (app.Key == "Qty")
+                            {
+                                objTemp.Qty = (decimal)app.Value;
+                            }
+                            if (app.Key == "FreeQty")
+                            {
+                                objTemp.FreeQty = (decimal)app.Value;
+                            }
+                            if (app.Key == "Flexible")
+                            {
+                                objTemp.IsFlexible = (string)app.Value;
+                            }
+                            if (app.Key == "OfferMrp")
+                            {
+                                objTemp.OfferMrp = (decimal?)app.Value;
+                            }
+                            objTemp.BuyProduct = "N";
+                        }
+                        obj.OfferProds.Add(objTemp);
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(obj.BuyPrductString))
+                {
+                    var objects = JArray.Parse(obj.BuyPrductString); // parse as array  
+                    foreach (JObject root in objects)
+                    {
+                        OfferProducts objTemp = new OfferProducts();
+                        foreach (KeyValuePair<String, JToken> app in root)
+                        {
+                            if (app.Key == "ProdCode")
+                            {
+                                objTemp.ProdID = (string)app.Value;
+                            }
+                            if (app.Key == "Qty")
+                            {
+                                objTemp.Qty = (decimal)app.Value;
+                            }
+                            objTemp.BuyProduct = "Y";
+                        }
+                        obj.OfferProds.Add(objTemp);
+                    }
+                }
+                obj.CreatedBy = (Session["LoginUser"] as User).UserId;
+                objResponse = objTransacManager.SaveOffer(obj);
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return Json(objResponse, JsonRequestBehavior.AllowGet);
+        }
     }
 }
 

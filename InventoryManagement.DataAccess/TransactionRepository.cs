@@ -381,5 +381,9 @@ namespace InventoryManagement.DataAccess
             ResponseDetail objResponse = objTransacAPI.SaveOffer(offerDetail);
             return objResponse;
         }
+        public List<Offer> GetAllOfferList(decimal OfferType)
+        {
+            return (objTransacAPI.GetAllOfferList(OfferType));
+        }
     }        
 }

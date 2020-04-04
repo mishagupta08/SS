@@ -109,7 +109,7 @@
                                                     <a><i class="fa fa-edit"></i> @menu.MenuName <span class="fa fa-chevron-down"></span></a>
                                                     @{
                                                         var FirstLevelChildList = objMenuList.Where(m => m.ParentId == menu.MenuId).OrderBy(m=>m.ChildSequence).ToList();
-                                                        if (FirstLevelChildList.Count > 0)
+                                                            if (FirstLevelChildList.Count > 0)
                                                         {
                                                             <ul class="nav child_menu">
                                                                 @foreach (var child in FirstLevelChildList)

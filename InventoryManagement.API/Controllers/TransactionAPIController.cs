@@ -8233,6 +8233,40 @@ namespace InventoryManagement.API.Controllers
             }
             return objResponse;
         }
+        public List<Offer> GetAllOfferList(decimal OfferType)
+        {
+            List<Offer> offerList = new List<Offer>();
+            try
+            {
+                using (var entity = new InventoryEntities())
+                {
+                    offerList = (from r in entity.M_Offers
+                                 where r.OfferType == OfferType
+                                 select new Offer
+                                 {
+                                     OfferID = r.AID,
+                                     OfferFromDt = r.OfferFromDt,
+                                     OfferToDt = r.OfferToDt,
+                                     OfferOnBV = r.OfferOnBV,
+                                     OfferOnToBV = r.OfferOnToBV,
+                                     OfferOnValue = r.OfferOnValue,
+                                     OfferDatePart = r.OfferDatePart,
+                                     ActiveStatus = r.ActiveStatus,
+                                     ForNewIds = r.ForNewIds,
+                                     IdDate = r.IdDate,
+                                     IdStatus = r.IdStatus,
+                                     ForBillType = r.ForBillType,
+                                     RecTimeStamp = r.RecTimeStamp,
+                                     OfferName = r.OfferName
+                                 }).OrderByDescending(r => r.RecTimeStamp).ToList();
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+            return (offerList);
+        }
 
 
     }

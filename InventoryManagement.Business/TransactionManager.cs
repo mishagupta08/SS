@@ -393,5 +393,9 @@ namespace InventoryManagement.Business
             ResponseDetail objResponse = objTransacRepo.SaveOffer(offerDetail);
             return objResponse;
         }
+        public List<Offer> GetAllOfferList(decimal OfferType)
+        {
+            return (objTransacRepo.GetAllOfferList(OfferType));
+        }
     }
 }

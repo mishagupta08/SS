@@ -110,6 +110,7 @@ namespace InventoryManagement.Entity.Common
         public decimal TotalQty { get; set; }
         public List<OfferProducts> OfferProds { get; set; }
         public decimal CreatedBy { get; set; }
+        public DateTime RecTimeStamp { get; set; }
     }
 
     public class OfferProduct

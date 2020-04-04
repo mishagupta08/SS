@@ -3586,6 +3586,7 @@ namespace InventoryManagement.Controllers
                     if (!string.IsNullOrEmpty(OfferCode))
                     {
                         decimal OfferId = decimal.Parse(OfferCode);
+                        OfferDetail.OfferID = OfferId;
                         //OfferDetail = objTransacManager.GetSelectedOfferDetails(OfferId);
                     }
                 }
@@ -3692,6 +3693,8 @@ namespace InventoryManagement.Controllers
                     }
                 }
                 obj.CreatedBy = (Session["LoginUser"] as User).UserId;
+                obj.ForNewIds = "N";
+                obj.IdStatus = "N";
                 objResponse = objTransacManager.SaveOffer(obj);
             }
             catch (Exception ex)
@@ -3699,6 +3702,11 @@ namespace InventoryManagement.Controllers
 
             }
             return Json(objResponse, JsonRequestBehavior.AllowGet);
+        }
+        [HttpGet]
+        public ActionResult GetAllOfferList(decimal OfferType)
+        {
+            return Json(objTransacManager.GetAllOfferList(OfferType), JsonRequestBehavior.AllowGet);
         }
     }
 }

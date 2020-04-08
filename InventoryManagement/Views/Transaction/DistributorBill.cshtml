@@ -34,7 +34,7 @@
     .ui-widget-content {
         background: white !important;
         border-radius: 15px !important;
-        -webkit-border-radius: 4px !important;
+        -webkit-border-radius: 4px !important
     }
     /*.ui-widget-header .ui-icon {
         background-color: black!important;
@@ -1257,6 +1257,7 @@
                 url: '/Transaction/GetProductAttibutes',
                 dataType: 'JSON',
                 method: 'GET',
+                async:false,
                 data: { 'ProdId': ProductCode },
                 success: function (data) {
                     ProdAttributeList = [];
@@ -2038,7 +2039,7 @@
 
                            var freeQty = parseInt(Freedata[i].Qty) * parseInt(offset);
                            GetProductInfo("P", Freedata[i].ProductName, true, freeQty);
-                           if (parseInt(ProductArray.AvailStock) >= parseInt(finalQty)) {
+                           if (parseInt(ProductArray.AvailStock) >= parseInt(freeQty)) {
                                $("#Quantity").val(freeQty);
                                DoCalculationforBTGT(freeQty, freeQty, 0, 'F');
                                ProductArray.FreeQty = freeQty;

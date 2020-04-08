@@ -99,17 +99,10 @@ namespace InventoryManagement.Entity.Common
         public decimal? CBAmount { get; set; }
         public int OfferFrequncy { get; set; }
         public int CustBillNo { get; set; }
-        public string Action { get; set; }
-        public decimal offerType { get; set; }
-        public List<PartyModel> OfferParty { get; set; }
+        
         public string IdStatus { get; set; }
         public string ForBillType { get; set; }
         public string Party { get; set; }
-        public string PrductString { get; set; }
-        public string BuyPrductString { get; set; }
-        public decimal TotalQty { get; set; }
-        public List<OfferProducts> OfferProds { get; set; }
-        public decimal CreatedBy { get; set; }
         public DateTime RecTimeStamp { get; set; }
     }
 

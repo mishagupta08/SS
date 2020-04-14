@@ -22,10 +22,10 @@ namespace InventoryManagement.Business
 
         public List<Offer> GetValidOfferList(string Doj, string UpgradeDate, string IsFirstBill, string ActiveStatus, string FormNo)
         {
-            return objOfferRepo.GetValidOfferList(Doj, UpgradeDate, IsFirstBill, ActiveStatus,  FormNo);
+            return objOfferRepo.GetValidOfferList(Doj, UpgradeDate, IsFirstBill, ActiveStatus, FormNo);
         }
 
-        public Offer getOfferDetail(int id,string CustId)
+        public Offer getOfferDetail(int id, string CustId)
         {
             return objOfferRepo.getOfferDetail(id, CustId);
         }
@@ -36,15 +36,15 @@ namespace InventoryManagement.Business
         }
         public ResponseDetail CheckOfferName(string offerName, int offerID)
         {
-            return (objOfferRepo.CheckOfferName(offerName,offerID));
+            return (objOfferRepo.CheckOfferName(offerName, offerID));
         }
         public string CheckbtgtOffers(string checkwith, string check)
         {
             return (objOfferRepo.CheckbtgtOffers(checkwith, check));
         }
-        public List<OfferProduct> getProductsForOffer(string offerID)
+        public List<OfferProduct> getProductsForOffer(string offerID, string OType)
         {
-            return (objOfferRepo.getProductsForOffer(offerID));
+            return (objOfferRepo.getProductsForOffer(offerID, OType));
         }
     }
 }

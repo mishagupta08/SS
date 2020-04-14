@@ -62,7 +62,7 @@ namespace InventoryManagement.API.Controllers
 
                     offer.ForNewIds = offerDetail.ForNewIds;
 
-                    offer.IdStaus = string.IsNullOrEmpty(offerDetail.IdStaus)?"A": offerDetail.IdStaus;
+                    offer.IdStaus = string.IsNullOrEmpty(offerDetail.IdStaus) ? "A" : offerDetail.IdStaus;
 
                     offer.OfferType = offerDetail.OfferType;
 
@@ -76,9 +76,9 @@ namespace InventoryManagement.API.Controllers
                     offer.FreeProdIDs = "";
                     offer.Remarks = offerDetail.Remark;
                     offer.ContinueForMonth = offerDetail.ForMonth;
-                    offer.CheckFirstBillWith =string.IsNullOrEmpty(offerDetail.checkBillWith) ?"A" : offerDetail.checkBillWith;
+                    offer.CheckFirstBillWith = string.IsNullOrEmpty(offerDetail.checkBillWith) ? "A" : offerDetail.checkBillWith;
                     offer.CombineWithOffer = offerDetail.CombineWithOffer;
-                    offer.CBAmount = offerDetail.CBAmount??0;
+                    offer.CBAmount = offerDetail.CBAmount ?? 0;
                     offer.OfferFrequency = offerDetail.OfferFrequncy;
                     if (offer.OfferBillType.ToLower() == "all")
                     {
@@ -313,7 +313,7 @@ namespace InventoryManagement.API.Controllers
                                                              Qty = r.Qty,
                                                              OnMRP = r.OnMRP,
                                                              IsParent = true,
-                                                             IncludeInOffer = r.IncludeInOffer??false
+                                                             IncludeInOffer = r.IncludeInOffer ?? false
                                                          }).ToList();
 
                         OfferDetail.objProductList = new List<OfferProduct>();
@@ -377,11 +377,11 @@ namespace InventoryManagement.API.Controllers
             {
                 string InvConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["InventoryServices"].ConnectionString;
                 SqlConnection SC = new SqlConnection(InvConnectionString);
-                string qry = "GetOfferCondition '"+ FormNo + "'";
+                string qry = "GetOfferCondition '" + FormNo + "'";
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandText = qry;
                 cmd.Connection = SC;
-           
+
                 if (SC.State == System.Data.ConnectionState.Closed) SC.Open();
                 string Condition = "";
                 //using (SqlDataReader reader = cmd.ExecuteReader())
@@ -392,25 +392,28 @@ namespace InventoryManagement.API.Controllers
                 //    }
                 //}
                 string dbInv = System.Configuration.ConfigurationManager.AppSettings["INVDatabase"];
-                qry = "select offerid,OfferName,isnull(CombineWithOffer,'') as Combinewithoffer,ForNewIds,OfferType,OfferBillType,offeronValue,OfferOnBV as OfferONPV from "+dbInv+"..VisionOffers " +
-                " where ActiveStatus='Y' AND (Cast(OfferFromDt as Date)<=Cast(Getdate() as Date) AND Cast(OfferToDt as Date)>=Cast(Getdate() as Date))";
+                qry = "select offerid,OfferName,isnull(CombineWithOffer,'') as Combinewithoffer,ForNewIds,OfferType,OfferBillType,offeronValue,OfferOnBV as OfferONPV,1 OfrType from " + dbInv + "..VisionOffers " +
+                " where ActiveStatus='Y' AND (Cast(OfferFromDt as Date)<=Cast(Getdate() as Date) AND Cast(OfferToDt as Date)>=Cast(Getdate() as Date))" +
+                " Union all " +
+                "select aid, OfferName, '' as Combinewithoffer,ForNewIds,'' OfferType,'' OfferBillType,offeronValue,OfferOnBV as OfferONPV,2 from " + dbInv + "..M_Offers where ActiveStatus = 'Y' AND(Cast(OfferFromDt as Date) <= Cast(Getdate() as Date) AND Cast(OfferToDt as Date) >= Cast(Getdate() as Date))";
                 cmd = new SqlCommand();
                 cmd.CommandText = qry;
                 cmd.Connection = SC;
-                if (SC.State == System.Data.ConnectionState.Closed) SC.Open();      
+                if (SC.State == System.Data.ConnectionState.Closed) SC.Open();
                 using (SqlDataReader reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
                     {
                         Offer obj = new Offer();
-                        obj.AID = Convert.ToInt32( reader["OfferID"].ToString());
+                        obj.AID = Convert.ToInt32(reader["OfferID"].ToString());
                         obj.OfferName = reader["OfferName"].ToString();
-                        obj.OfferOnBV = Convert.ToDecimal( reader["OfferONPV"].ToString());
+                        obj.OfferOnBV = Convert.ToDecimal(reader["OfferONPV"].ToString());
                         obj.OfferOnValue = Convert.ToDecimal(reader["OfferOnValue"].ToString());
                         obj.OfferType = reader["OfferType"].ToString();
                         obj.ForNewIds = reader["ForNewIds"].ToString();
                         obj.OfferBillType = reader["OfferBillType"].ToString();
-                        obj.CombineOffer = reader["Combinewithoffer"].ToString().Length>0 ?true:false;
+                        obj.CombineOffer = reader["Combinewithoffer"].ToString().Length > 0 ? true : false;
+                        obj.OfrType = reader["OfrType"].ToString();
                         OfferList.Add(obj);
 
                     }
@@ -456,7 +459,7 @@ namespace InventoryManagement.API.Controllers
             return OfferList;
         }
 
-        public Offer getOfferDetail(int id,string custId)
+        public Offer getOfferDetail(int id, string custId)
         {
             Offer offer = new Offer();
             try
@@ -489,15 +492,15 @@ namespace InventoryManagement.API.Controllers
                                  Remark = r.Remarks,
                                  CombineWithOffer = r.CombineWithOffer,
                                  checkBillWith = r.CheckFirstBillWith,
-                                 CombineOffer = r.CombineOffer??false,
+                                 CombineOffer = r.CombineOffer ?? false,
                                  CBAmount = r.CBAmount,
-                                 OfferFrequncy = r.OfferFrequency??0
+                                 OfferFrequncy = r.OfferFrequency ?? 0
                              }).FirstOrDefault();
 
                     offer.OfferFromDtStr = offer.OfferFromDt.ToString("dd-MM-yyyy");
                     offer.OfferToDtStr = offer.OfferToDt.ToString("dd-MM-yyyy");
                     offer.IdDateStr = offer.IdDate.HasValue ? offer.IdDate.Value.ToString("dd-MM-yyyy") : string.Empty;
-                    offer.CustBillNo = CheckOfferBill(id, custId) +1;
+                    offer.CustBillNo = CheckOfferBill(id, custId) + 1;
                     offer.objProductList = GetOfferProductsList(id);
                 }
             }
@@ -553,9 +556,10 @@ namespace InventoryManagement.API.Controllers
             {
                 using (var db = new InventoryEntities())
                 {
-                    var result = (from r in db.VisionOffers where r.OfferName == offerName && r.OfferToDt >= DateTime.Now && r.OfferId!= offerID select r).FirstOrDefault();
-                    if (result!= null)
-                    { resp.ResponseStatus = "FAILED";
+                    var result = (from r in db.VisionOffers where r.OfferName == offerName && r.OfferToDt >= DateTime.Now && r.OfferId != offerID select r).FirstOrDefault();
+                    if (result != null)
+                    {
+                        resp.ResponseStatus = "FAILED";
                         resp.ResponseMessage = "Offer name already exist.";
                     }
                     else
@@ -576,7 +580,7 @@ namespace InventoryManagement.API.Controllers
             int bill = 0;
             try
             {
-                decimal offer = 0;               
+                decimal offer = 0;
                 using (var entity = new InventoryEntities())
                 {
                     var list = (from r in entity.TrnBillDatas
@@ -603,7 +607,7 @@ namespace InventoryManagement.API.Controllers
                 if (!string.IsNullOrEmpty(checkwith) && !string.IsNullOrEmpty(check))
                 {
                     int checkfor = Convert.ToInt32(check);
-                    List<OfferProduct> checkproducts = GetOfferProductsList(checkfor).Where(r=>r.IsBuyProduct=="Y").ToList();
+                    List<OfferProduct> checkproducts = GetOfferProductsList(checkfor).Where(r => r.IsBuyProduct == "Y").ToList();
                     string[] checkwitharray = checkwith.Split(',');
                     for (int i = 0; i < checkwitharray.Length; i++)
                     {
@@ -618,19 +622,20 @@ namespace InventoryManagement.API.Controllers
                                 {
                                     response = checkwitharray[i];
                                     return response;
-                                }                                
+                                }
                             }
                         }
                     }
                 }
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
 
             }
             return response;
         }
 
-        public List<OfferProduct> getProductsForOffer(string offerID)
+        public List<OfferProduct> getProductsForOffer(string offerID, string OType)
         {
             List<OfferProduct> prodModel = new List<OfferProduct>();
             try
@@ -641,9 +646,18 @@ namespace InventoryManagement.API.Controllers
                 SqlConnection SC = new SqlConnection(InvConnectionString);
 
                 SqlCommand cmd = new SqlCommand();
+
                 if (!string.IsNullOrEmpty(offerID))
                 {
-                    Sql = "Select * from VisionOfferProducts where OfferId =  '" + offerID + "'";
+                    if (OType == "1")
+                    {
+                        Sql = "Select * from VisionOfferProducts where OfferId =  '" + offerID + "'";
+                    }
+                    else
+                    {
+                        Sql = "Select A.OfferID,A.ProdID,A.ActiveStatus,A.Qty,A.FreeQty,ISNULL(A.OfferMRP,0) OfferMRP,ProductName ProdName,IsBuyProduct from M_OfferProducts A With(Nolock) INNER JOIN M_ProductMaster B With(Nolock) On A.ProdID=B.ProdID where A.OfferId =  '" + offerID + "'";
+                    }
+
                     cmd.CommandText = Sql;
                     cmd.Connection = SC;
                     SC.Close();
@@ -658,13 +672,13 @@ namespace InventoryManagement.API.Controllers
                             tempobj.ProductName = reader["ProdName"] != null ? reader["ProdName"].ToString() : "";
                             tempobj.Qty = reader["Qty"] != null ? Convert.ToDecimal(reader["Qty"]) : 0;
                             tempobj.Confirm = "";
-                            tempobj.Discount =  0;
-                            tempobj.Rate =  0;
+                            tempobj.Discount = 0;
+                            tempobj.Rate = 0;
                             tempobj.PV = 0;
                             tempobj.PVValue = 0;
-                            tempobj.freeQty =  0;
+                            tempobj.freeQty = 0;
                             tempobj.ProductType = ((reader["IsBuyProduct"] != null ? Convert.ToString(reader["IsBuyProduct"]) : "") == "Y") ? "P" : "F";
-                            tempobj.Amount =  0;                                                
+                            tempobj.Amount = (OType == "1" ? 0 : Convert.ToDecimal(reader["OfferMRP"]));
                             prodModel.Add(tempobj);
                         }
                     }

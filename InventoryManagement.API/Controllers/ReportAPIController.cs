@@ -851,7 +851,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                         if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                         {
                             var SplitDate = ToDate.Split('-');
-                            string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                            string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                             EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                             EndDate = EndDate.Date;
                         }

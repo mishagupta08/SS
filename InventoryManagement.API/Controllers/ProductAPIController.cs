@@ -3,6 +3,7 @@ using InventoryManagement.Entity.Common;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -997,15 +998,15 @@ namespace InventoryManagement.API.Controllers
                             if (!string.IsNullOrEmpty(model.ProductBarcodeDetails.MfgDateStr))
                             {
                                 var SplitDate = model.ProductBarcodeDetails.MfgDateStr.Split('-');
-                                string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                                MfgDate = Convert.ToDateTime(NewDate);
+                                string NewDate = (SplitDate[1].Length == 1 ? "0" + SplitDate[1] : SplitDate[1]) + "/" + (SplitDate[0].Length == 1 ? "0" + SplitDate[0] : SplitDate[0]) + "/" + SplitDate[2];
+                                MfgDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                                 MfgDate = MfgDate.Date;
                             }
                             if (!string.IsNullOrEmpty(model.ProductBarcodeDetails.ExpDateStr))
                             {
                                 var SplitDate = model.ProductBarcodeDetails.ExpDateStr.Split('-');
-                                string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                                ExpDate = Convert.ToDateTime(NewDate);
+                                string NewDate = (SplitDate[1].Length == 1 ? "0" + SplitDate[1] : SplitDate[1]) + "/" + (SplitDate[0].Length == 1 ? "0" + SplitDate[0] : SplitDate[0]) + "/" + SplitDate[2];
+                                ExpDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                                 ExpDate = ExpDate.Date;
                             }
                             objDTProduct.MfgDate = MfgDate.Date;

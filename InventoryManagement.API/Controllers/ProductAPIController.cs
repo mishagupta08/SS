@@ -1069,7 +1069,7 @@ namespace InventoryManagement.API.Controllers
                                                 objDTTax.LastModified = DateTime.Now.ToString();
                                                 if (model.UserDetails != null)
                                                 {
-                                                    objDTTax.StateCode = model.UserDetails.StateCode;
+                                                   // objDTTax.StateCode = model.UserDetails.StateCode;
                                                     objDTTax.UserId = model.UserDetails.UserId;
                                                     objDTTax.GenerateBy = model.UserDetails.UserName;
                                                 }

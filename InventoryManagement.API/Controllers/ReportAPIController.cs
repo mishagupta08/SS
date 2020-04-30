@@ -844,19 +844,19 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                         if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                         {
                             var SplitDate = FromDate.Split('-');
-                            string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                            StartDate = Convert.ToDateTime(NewDate);
+                            string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                            StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                             StartDate = StartDate.Date;
                         }
                         if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                         {
                             var SplitDate = ToDate.Split('-');
                             string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                            EndDate = Convert.ToDateTime(NewDate);
+                            EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                             EndDate = EndDate.Date;
                         }
-                  
-                                List<SalesReport> objSales = new List<SalesReport>();
+
+                        List<SalesReport> objSales = new List<SalesReport>();
                                 objSales = (from result in entity.V_DeletedSaleSummary
                                             where result.BType != BType
                                             group result by new { result.UserBillNo, result.SBillNo, result.BillNo,result.UID, result.BillDate, result.BillDateStr, result.OfferUID, result.FType, result.PartyCode, result.PartyName, result.FCode, result.Name, result.OrderNo, result.FSessId, result.OrderDate, result.BillType, result.SGSTAmt, result.CGSTAmt, result.IGSTAmt,result.DltDate,result.Dreason,result.Username,result.DRecTimeStamp }
@@ -1063,18 +1063,18 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
             {
                 DateTime StartDate = DateTime.Now;
                 DateTime EndDate = DateTime.Now;
-                if (!string.IsNullOrEmpty(FromDate)&& FromDate!="All")
+                if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                 {
                     var SplitDate = FromDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                    StartDate = Convert.ToDateTime(NewDate);
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                    StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     StartDate = StartDate.Date;
                 }
                 if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                 {
                     var SplitDate = ToDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                    EndDate = Convert.ToDateTime(NewDate);
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                    EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     EndDate = EndDate.Date;
                 }
                 using (var entity = new InventoryEntities())
@@ -1733,15 +1733,15 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                     if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                     {
                         var SplitDate = FromDate.Split('-');
-                        string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                        StartDate = Convert.ToDateTime(NewDate);
+                        string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                        StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                         StartDate = StartDate.Date;
                     }
                     if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                     {
                         var SplitDate = ToDate.Split('-');
-                        string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                        EndDate = Convert.ToDateTime(NewDate);
+                        string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                        EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                         EndDate = EndDate.Date;
                     }
                     switch (ReportType)
@@ -1960,20 +1960,20 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                     if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                     {
                         var SplitDate = FromDate.Split('-');
-                        string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                        StartDate = Convert.ToDateTime(NewDate);
+                        string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                        StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                         StartDate = StartDate.Date;
                     }
                     if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                     {
                         var SplitDate = ToDate.Split('-');
-                        string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                        EndDate = Convert.ToDateTime(NewDate);
+                        string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                        EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                         EndDate = EndDate.Date;
                     }
-                    
-                            
-                            if (PartyCode == "0" && SupplierCode == "0")
+
+
+                    if (PartyCode == "0" && SupplierCode == "0")
                             {
                         if (ProductCode == "0")
                         {
@@ -2973,15 +2973,18 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                             //StartDate = new DateTime(Convert.ToInt16(sqlFromdate[2]), Convert.ToInt16(sqlFromdate[1]), Convert.ToInt16(sqlFromdate[0]));
                             var SplitFromDate = FromDate.Split('-');
                             FromDate = SplitFromDate[1] + "-" + SplitFromDate[0] + "-" + SplitFromDate[2];
-                            StartDate = Convert.ToDateTime(FromDate);
+                            string NewDate = SplitFromDate[1] + "/" + ("0" + SplitFromDate[0]).Substring(("0" + SplitFromDate[0]).Length - 2, 2) + "/" + SplitFromDate[2];
+                            StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
+                            StartDate = StartDate.Date;
                         }
                         if (ToDate != "All")
                         {
                             //var sqlFromdate = ToDate.Split('-');
                             //EndDate = new DateTime(Convert.ToInt16(sqlFromdate[2]), Convert.ToInt16(sqlFromdate[1]), Convert.ToInt16(sqlFromdate[0]));
                             var SplitToDate = ToDate.Split('-');
-                            ToDate = SplitToDate[1] + "-" + SplitToDate[0] + "-" + SplitToDate[2];
-                            EndDate = Convert.ToDateTime(ToDate);
+                            string NewDate = SplitToDate[1] + "/" + ("0" + SplitToDate[0]).Substring(("0" + SplitToDate[0]).Length - 2, 2) + "/" + SplitToDate[2];
+                            EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
+                            EndDate = EndDate.Date;
                         }
 
                         //if (PCode == "All")
@@ -3156,15 +3159,15 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                     if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                     {
                         var SplitDate = FromDate.Split('-');
-                        string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                        StartDate = Convert.ToDateTime(NewDate);
+                        string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                        StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                         StartDate = StartDate.Date;
                     }
                     if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                     {
                         var SplitDate = ToDate.Split('-');
-                        string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                        EndDate = Convert.ToDateTime(NewDate);
+                        string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                        EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                         EndDate = EndDate.Date;
                     }
                     if (FromDate != "All" && ToDate != "All")
@@ -3247,14 +3250,14 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                 if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                 {
                     var SplitDate = FromDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                     StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     StartDate = StartDate.Date;
                 }
                 if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                 {
                     var SplitDate = ToDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                     EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     EndDate = EndDate.Date;
                 }
@@ -3381,14 +3384,14 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                 if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                 {
                     var SplitDate = FromDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                     StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     StartDate = StartDate.Date;
                 }
                 if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                 {
                     var SplitDate = ToDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                     EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     EndDate = EndDate.Date;
                 }
@@ -3605,14 +3608,14 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                 if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                 {
                     var SplitDate = FromDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                     StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     StartDate = StartDate.Date;
                 }
                 if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                 {
                     var SplitDate = ToDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                     EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     EndDate = EndDate.Date;
                 }
@@ -3715,15 +3718,15 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                 if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
                 {
                     var SplitDate = FromDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                    StartDate = Convert.ToDateTime(NewDate);
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                    StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     StartDate = StartDate.Date;
                 }
                 if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
                 {
                     var SplitDate = ToDate.Split('-');
-                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                    EndDate = Convert.ToDateTime(NewDate);
+                    string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                    EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                     EndDate = EndDate.Date;
                 }
             }
@@ -4045,14 +4048,14 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
             if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
             {
                 var SplitDate = FromDate.Split('-');
-                string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                 StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                 StartDate = StartDate.Date;
             }
             if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
             {
                 var SplitDate = ToDate.Split('-');
-                string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
+                string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
                 EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                 EndDate = EndDate.Date;
             }

@@ -4337,9 +4337,10 @@ namespace InventoryManagement.API.Controllers
                     ////decimal? SessId = (from result in entity.M_SessnMaster select result.SessID).Max();
 
                     billPrefix = (from result in entity.M_ConfigMaster select result.BillPrefix).FirstOrDefault();
+                    string fbillSeries = (from result in entity.M_FiscalMaster where result.FSessId == FsessId select result.BillSeries).FirstOrDefault();
                     maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objPartyDispatchOrder.LoginUser.PartyCode && result.BillType != "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
                     maxUserSBillNo = maxUserSBillNo + 1;
-                    UserBillNo = billPrefix + "/" + objPartyDispatchOrder.LoginUser.PartyCode + "/" + maxUserSBillNo;
+                    UserBillNo = billPrefix + "/" + objPartyDispatchOrder.LoginUser.PartyCode + "/" + fbillSeries.Trim() + "/" + maxUserSBillNo;
                     version = (from result in entity.M_NewHOVersionInfo select result.VersionNo).FirstOrDefault();
 
                     DateTime BillDate = DateTime.Now.Date;

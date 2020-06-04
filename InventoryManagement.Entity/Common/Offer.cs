@@ -104,6 +104,7 @@ namespace InventoryManagement.Entity.Common
         public string ForBillType { get; set; }
         public string Party { get; set; }
         public DateTime RecTimeStamp { get; set; }
+        public string OfrType { get; set; }
     }
 
     public class OfferProduct

@@ -11,7 +11,7 @@ using System.Web.Mvc;
 
 namespace InventoryManagement.Controllers
 {
-    
+
     public class OfferController : Controller
     {
         OfferManager objOfferManager = new OfferManager();
@@ -38,7 +38,7 @@ namespace InventoryManagement.Controllers
         }
 
         [HttpGet]
-        public ActionResult GetValidOfferList(string Doj, string UpgradeDate, string IsFirstBill, string ActiveStatus,string FormNo)
+        public ActionResult GetValidOfferList(string Doj, string UpgradeDate, string IsFirstBill, string ActiveStatus, string FormNo)
         {
             return Json(objOfferManager.GetValidOfferList(Doj, UpgradeDate, IsFirstBill, ActiveStatus, FormNo), JsonRequestBehavior.AllowGet);
         }
@@ -109,7 +109,7 @@ namespace InventoryManagement.Controllers
                             {
                                 objTemp.Confirm = (string)app.Value;
                             }
-                            
+
                         }
                         ObjOffer.objProductList.Add(objTemp);
                     }
@@ -184,20 +184,20 @@ namespace InventoryManagement.Controllers
             List<SelectListItem> option = new List<SelectListItem>();
             //option.Add(new SelectListItem() { Text = "All", Value = "A" });
             option.Add(new SelectListItem() { Text = "No", Value = "A" });
-           
+
             ViewBag.DropDownOptions = option;
 
             List<SelectListItem> idStatus = new List<SelectListItem>();
             idStatus.Add(new SelectListItem() { Text = "All", Value = "A" });
-           ViewBag.idStatus = idStatus;
+            ViewBag.idStatus = idStatus;
 
             List<SelectListItem> ForBillType = new List<SelectListItem>();
             ForBillType.Add(new SelectListItem() { Text = "Any Bill", Value = "All" });
-           ViewBag.ForBillType = ForBillType;
+            ViewBag.ForBillType = ForBillType;
 
             List<SelectListItem> ForDateType = new List<SelectListItem>();
             ForDateType.Add(new SelectListItem() { Text = "Range", Value = "R" });
-            
+
             ViewBag.ForDateType = ForDateType;
 
             List<SelectListItem> OfferType = new List<SelectListItem>();
@@ -207,7 +207,7 @@ namespace InventoryManagement.Controllers
             List<SelectListItem> Days = new List<SelectListItem>();
             for (int i = 1; i <= 31; i++)
             {
-                Days.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString() ,Selected=(i==1?true:false) });
+                Days.Add(new SelectListItem() { Text = i.ToString(), Value = i.ToString(), Selected = (i == 1 ? true : false) });
             }
             ViewBag.Days = Days;
 
@@ -230,7 +230,7 @@ namespace InventoryManagement.Controllers
             if (!string.IsNullOrEmpty(OfferCode))
             {
                 int code = int.Parse(OfferCode);
-                objoffer = objOfferManager.getOfferDetail(code,null);
+                objoffer = objOfferManager.getOfferDetail(code, null);
                 objoffer.ActionName = ActionName;
                 if (!string.IsNullOrEmpty(objoffer.CombineWithOffer))
                 {
@@ -259,7 +259,7 @@ namespace InventoryManagement.Controllers
         }
 
         [HttpGet]
-        public ActionResult getOfferDetail(int id,string CustId)
+        public ActionResult getOfferDetail(int id, string CustId)
         {
             return Json(objOfferManager.getOfferDetail(id, CustId), JsonRequestBehavior.AllowGet);
         }
@@ -279,13 +279,13 @@ namespace InventoryManagement.Controllers
         [HttpGet]
         public ActionResult CheckbtgtOffers(string checkwith, string check)
         {
-            return Json(objOfferManager.CheckbtgtOffers(checkwith, check),JsonRequestBehavior.AllowGet);
+            return Json(objOfferManager.CheckbtgtOffers(checkwith, check), JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]
-        public ActionResult getProductsForOffer(string OfferID)
+        public ActionResult getProductsForOffer(string OfferID, string OType)
         {
-            return Json(objOfferManager.getProductsForOffer(OfferID), JsonRequestBehavior.AllowGet);
+            return Json(objOfferManager.getProductsForOffer(OfferID, OType), JsonRequestBehavior.AllowGet);
         }
 
 

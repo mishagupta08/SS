@@ -12,8 +12,8 @@ namespace InventoryManagement.DataAccess
         OfferAPIController objOfferAPI = new OfferAPIController();
         public List<Offer> GetValidOfferList(string Doj, string UpgradeDate, string IsFirstBill, string ActiveStatus, string FormNo)
         {
-            return objOfferAPI.GetValidOfferList(Doj, UpgradeDate, IsFirstBill, ActiveStatus,  FormNo);
-        }        
+            return objOfferAPI.GetValidOfferList(Doj, UpgradeDate, IsFirstBill, ActiveStatus, FormNo);
+        }
         public ResponseDetail SaveOffer(Offer ObjOffer)
         {
             return objOfferAPI.saveOfferDynamicNew(ObjOffer);
@@ -22,7 +22,7 @@ namespace InventoryManagement.DataAccess
         {
             return objOfferAPI.GetAllOffers();
         }
-        public Offer getOfferDetail(int id,string CustId)
+        public Offer getOfferDetail(int id, string CustId)
         {
             return objOfferAPI.getOfferDetail(id, CustId);
         }
@@ -32,16 +32,16 @@ namespace InventoryManagement.DataAccess
         }
         public ResponseDetail CheckOfferName(string offerName, int offerID)
         {
-            return (objOfferAPI.CheckOfferName(offerName,offerID));
+            return (objOfferAPI.CheckOfferName(offerName, offerID));
         }
         public string CheckbtgtOffers(string checkwith, string check)
         {
             return (objOfferAPI.CheckbtgtOffers(checkwith, check));
         }
-        public List<OfferProduct> getProductsForOffer(string offerID)
+        public List<OfferProduct> getProductsForOffer(string offerID, string OType)
         {
-            return (objOfferAPI.getProductsForOffer(offerID));
+            return (objOfferAPI.getProductsForOffer(offerID, OType));
         }
 
-        }
+    }
 }

@@ -1830,7 +1830,8 @@
             OfferError = "";
             ResetDetails();
             var OID = $(this).val();
-            GetBuythisGetthatProducts(OID);
+            var OType = $('option:selected', $("#OfferList")).attr("data-offer");
+            GetBuythisGetthatProducts(OID, OType);
         });
 
         $("#ResendOTP").click(function () {
@@ -1988,7 +1989,7 @@
            var IsOfferApplicable = true;
 
            var OfferId = $("#OfferList").val();
-           
+           var OType = $('option:selected', $("#OfferList")).attr("data-offer");
            if (BuyProductArray != null && BuyProductArray.length >= 0) {               
                for (var i = 0; i < BuyProductArray.length; i++) {
                    var index = ProductGrid.map(function (o) { return o.Code; }).indexOf(BuyProductArray[i].ProductCode);
@@ -2022,7 +2023,7 @@
                            GetProductInfo("P", Freedata[i].ProductName, true, finalQty);
                            if (parseInt(ProductArray.AvailStock) >= parseInt(finalQty)) {
                                $("#Quantity").val(finalQty);
-                               DoCalculationforBTGT(freeQty, finalQty, ProductArray.DP, 'P');
+                               DoCalculationforBTGT(freeQty, finalQty,ProductArray.DP, 'P');
                                ProductArray.FreeQty = freeQty;
                                ProductGrid = $.grep(ProductGrid, function (e) {
                                    return e.Code != Freedata[i].ProductCode;
@@ -2041,7 +2042,7 @@
                            GetProductInfo("P", Freedata[i].ProductName, true, freeQty);
                            if (parseInt(ProductArray.AvailStock) >= parseInt(freeQty)) {
                                $("#Quantity").val(freeQty);
-                               DoCalculationforBTGT(freeQty, freeQty, 0, 'F');
+                               DoCalculationforBTGT(freeQty, freeQty, Freedata[i].Amount, 'F');
                                ProductArray.FreeQty = freeQty;
                            }
                            else {
@@ -2229,7 +2230,7 @@
                         //$("#OfferCheckdiv").html("");
                         for (var i = 0; i < objResult.length; i++) {
                             //if (objResult[i].OfferType.toLowerCase() != "buythisgetthat") {
-                                $("#OfferList").append("<option data-ot='OFFER' value=" + objResult[i].AID + ">" + objResult[i].OfferName + " </option>");
+                            $("#OfferList").append("<option data-ot='OFFER' data-offer=" + objResult[i].OfrType + " value=" + objResult[i].AID + ">" + objResult[i].OfferName + " </option>");
                             //}
                             //else {
                             //    var divId = "btgtcheck_" + objResult[i].AID;
@@ -2250,12 +2251,12 @@
         }
 
 
-        function GetBuythisGetthatProducts(OfferId) {            
+    function GetBuythisGetthatProducts(OfferId, OType) {
             $.ajax({
                 url: '/Offer/getProductsForOffer',
                 dataType: 'JSON',
                 method: 'GET',
-                data: { "OfferID": OfferId },
+                data: { "OfferID": OfferId, "OType": OType },
                 async: false,
                 success: function (data) {
                     if (data != null && data.length >= 0) {

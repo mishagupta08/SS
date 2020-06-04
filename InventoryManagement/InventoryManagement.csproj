@@ -50,6 +50,10 @@
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="InventoryManagement.API, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\InventoryManagement.API\bin\InventoryManagement.API.dll</HintPath>
+    </Reference>
     <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
       <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
       <Private>True</Private>
@@ -79,8 +83,9 @@
       <HintPath>..\packages\NPOI.2.3.0\lib\net40\NPOI.OpenXmlFormats.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="paytm">
-      <HintPath>C:\Users\Misha\Downloads\Paytm_Web_Sample_Kit_dotNet-master\.net_4.5\paytm.dll</HintPath>
+    <Reference Include="paytm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PayTM_AstroBasic.2.0.0\lib\.net_4.5\paytm.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -1792,6 +1797,7 @@
     <Content Include="ckeditor\ckeditor\samples\toolbarconfigurator\lib\codemirror\LICENSE" />
     <Content Include="ckeditor\ckeditor\skins\moono-lisa\readme.md" />
     <None Include="Properties\PublishProfiles\Padmini.pubxml" />
+    <None Include="Properties\PublishProfiles\Sarso.pubxml" />
     <None Include="Properties\PublishProfiles\SarsoPublish.pubxml" />
     <None Include="Scripts\jquery-1.12.4.intellisense.js" />
     <Content Include="Scripts\CreateOffer.js" />
@@ -1970,10 +1976,6 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\InventoryManagement.API\InventoryManagement.API.csproj">
-      <Project>{C4577E34-4A34-4954-AB00-23E4A5539606}</Project>
-      <Name>InventoryManagement.API</Name>
-    </ProjectReference>
     <ProjectReference Include="..\InventoryManagement.Business\InventoryManagement.Business.csproj">
       <Project>{f951daa1-5d11-4305-a65c-03be650f32ce}</Project>
       <Name>InventoryManagement.Business</Name>

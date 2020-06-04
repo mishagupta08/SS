@@ -3786,8 +3786,8 @@ namespace InventoryManagement.API.Controllers
                                 if (!string.IsNullOrEmpty(objPartyOrderModel.objProduct.PayDetails.ChequeDateStr))
                                 {
                                     var SplitDate = objPartyOrderModel.objProduct.PayDetails.ChequeDateStr.Split('-');
-                                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                                    objPartyOrderModel.objProduct.PayDetails.ChequeDate = Convert.ToDateTime(NewDate);
+                                    string NewDate = (SplitDate[1].Length == 1 ? "0" + SplitDate[1] : SplitDate[1]) + "/" + (SplitDate[0].Length == 1 ? "0" + SplitDate[0] : SplitDate[0]) + "/" + SplitDate[2];
+                                    objPartyOrderModel.objProduct.PayDetails.ChequeDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                                     objPartyOrderModel.objProduct.PayDetails.ChequeDate = objPartyOrderModel.objProduct.PayDetails.ChequeDate.Date;
                                 }
                                 else
@@ -3810,8 +3810,8 @@ namespace InventoryManagement.API.Controllers
                                 if (!string.IsNullOrEmpty(objPartyOrderModel.objProduct.PayDetails.ChequeDateStr))
                                 {
                                     var SplitDate = objPartyOrderModel.objProduct.PayDetails.ChequeDateStr.Split('-');
-                                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                                    objPartyOrderModel.objProduct.PayDetails.ChequeDate = Convert.ToDateTime(NewDate);
+                                    string NewDate = (SplitDate[1].Length == 1 ? "0" + SplitDate[1] : SplitDate[1]) + "/" + (SplitDate[0].Length == 1 ? "0" + SplitDate[0] : SplitDate[0]) + "/" + SplitDate[2];
+                                    objPartyOrderModel.objProduct.PayDetails.ChequeDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                                     objPartyOrderModel.objProduct.PayDetails.ChequeDate = objPartyOrderModel.objProduct.PayDetails.ChequeDate.Date;
                                 }
                                 else
@@ -3832,8 +3832,8 @@ namespace InventoryManagement.API.Controllers
                                 if (!string.IsNullOrEmpty(objPartyOrderModel.objProduct.PayDetails.ChequeDateStr))
                                 {
                                     var SplitDate = objPartyOrderModel.objProduct.PayDetails.ChequeDateStr.Split('-');
-                                    string NewDate = SplitDate[1] + "/" + SplitDate[0] + "/" + SplitDate[2];
-                                    objPartyOrderModel.objProduct.PayDetails.ChequeDate = Convert.ToDateTime(NewDate);
+                                    string NewDate = (SplitDate[1].Length == 1 ? "0" + SplitDate[1] : SplitDate[1]) + "/" + (SplitDate[0].Length == 1 ? "0" + SplitDate[0] : SplitDate[0]) + "/" + SplitDate[2];
+                                    objPartyOrderModel.objProduct.PayDetails.ChequeDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                                     objPartyOrderModel.objProduct.PayDetails.ChequeDate = objPartyOrderModel.objProduct.PayDetails.ChequeDate.Date;
                                 }
                                 else
@@ -4337,9 +4337,10 @@ namespace InventoryManagement.API.Controllers
                     ////decimal? SessId = (from result in entity.M_SessnMaster select result.SessID).Max();
 
                     billPrefix = (from result in entity.M_ConfigMaster select result.BillPrefix).FirstOrDefault();
+                    string fbillSeries = (from result in entity.M_FiscalMaster where result.FSessId == FsessId select result.BillSeries).FirstOrDefault();
                     maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objPartyDispatchOrder.LoginUser.PartyCode && result.BillType != "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
                     maxUserSBillNo = maxUserSBillNo + 1;
-                    UserBillNo = billPrefix + "/" + objPartyDispatchOrder.LoginUser.PartyCode + "/" + maxUserSBillNo;
+                    UserBillNo = billPrefix + "/" + objPartyDispatchOrder.LoginUser.PartyCode + "/" + fbillSeries.Trim() + "/" + maxUserSBillNo;
                     version = (from result in entity.M_NewHOVersionInfo select result.VersionNo).FirstOrDefault();
 
                     DateTime BillDate = DateTime.Now.Date;
@@ -4850,21 +4851,23 @@ namespace InventoryManagement.API.Controllers
 
                     if (!string.IsNullOrEmpty(FromDate) && (!string.IsNullOrEmpty(ToDate)))
                     {
+
                         if (FromDate != "All")
                         {
                             //var sqlFromdate = FromDate.Split('-');
                             //StartDate = new DateTime(Convert.ToInt16(sqlFromdate[2]), Convert.ToInt16(sqlFromdate[1]), Convert.ToInt16(sqlFromdate[0]));
                             var SplitFromDate = FromDate.Split('-');
-                            FromDate = SplitFromDate[1] + "-" + SplitFromDate[0] + "-" + SplitFromDate[2];
-                            StartDate = Convert.ToDateTime(FromDate);
+                            FromDate = (SplitFromDate[1].Length == 1 ? "0" + SplitFromDate[1] : SplitFromDate[1]) + "/" + (SplitFromDate[0].Length == 1 ? "0" + SplitFromDate[0] : SplitFromDate[0]) + "/" + SplitFromDate[2];
+                            StartDate = Convert.ToDateTime(DateTime.ParseExact(FromDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                         }
                         if (ToDate != "All")
                         {
                             //var sqlFromdate = ToDate.Split('-');
                             //EndDate = new DateTime(Convert.ToInt16(sqlFromdate[2]), Convert.ToInt16(sqlFromdate[1]), Convert.ToInt16(sqlFromdate[0]));
                             var SplitToDate = ToDate.Split('-');
-                            ToDate = SplitToDate[1] + "-" + SplitToDate[0] + "-" + SplitToDate[2];
-                            EndDate = Convert.ToDateTime(ToDate);
+
+                            ToDate = (SplitToDate[1].Length == 1 ? "0" + SplitToDate[1] : SplitToDate[1]) + "/" + (SplitToDate[0].Length == 1 ? "0" + SplitToDate[0] : SplitToDate[0]) + "/" + SplitToDate[2];
+                            EndDate = Convert.ToDateTime(DateTime.ParseExact(FromDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
                         }
                     }
                     string NewFromDate = StartDate.Date.ToString("dd-MMM-yyyy");

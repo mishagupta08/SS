@@ -82,7 +82,7 @@
     function printPageElement() {
         var url = window.location.href;
         console.log("url", url);
-       
+
         window.print();
         return true;
     }
@@ -140,11 +140,11 @@
                                             </td>
                                         </tr>
                                         @*<tr>
-                                            <td align="center">
-                                                CIN&nbsp;&nbsp;:@if (!string.IsNullOrEmpty(Model.CinNo))
-                                                {@Model.CinNo}
-                                            </td>
-                                        </tr>*@
+                                                <td align="center">
+                                                    CIN&nbsp;&nbsp;:@if (!string.IsNullOrEmpty(Model.CinNo))
+                                                    {@Model.CinNo}
+                                                </td>
+                                            </tr>*@
                                         <tr>
                                             <td align="center">
                                                 <em>
@@ -204,13 +204,13 @@
                 <td class="addAllPadding" width="50%">
                     <table>
                         @*<tr>
-                            <td width="30%">Pan No</td>
-                            <td width="10%">:</td>
-                            <td width="60%">
-                                @if (!string.IsNullOrEmpty(Model.objCustomer.PANNo))
-                                {@Model.objCustomer.PANNo}
-                            </td>
-                        </tr>*@
+                                <td width="30%">Pan No</td>
+                                <td width="10%">:</td>
+                                <td width="60%">
+                                    @if (!string.IsNullOrEmpty(Model.objCustomer.PANNo))
+                                    {@Model.objCustomer.PANNo}
+                                </td>
+                            </tr>*@
                         <tr>
                             <td width="30%">Order No.</td>
                             <td width="10%">:</td>
@@ -292,7 +292,7 @@
                             <th scope="col" align="left" class="addAllPadding AllBorder">HSN Code</th>
                             <th scope="col" align="left" class="addAllPadding AllBorder">Qty</th>
                             @*<th scope="col" align="left" class="addAllPadding AllBorder">Unit</th>*@
-                            
+
                             <th scope="col" align="left" class="addAllPadding AllBorder">Price</th>
                             <th scope="col" align="left" class="addAllPadding AllBorder">Total Dis</th>
                             @if (Model.objListProduct[0].OrderType != "T")
@@ -326,102 +326,103 @@
                         {
                             if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {
-                             <tr>
+                                <tr>
 
-                           <td class="addAllPadding rightBorderOnly" align="right">@count.
-                    </td>
-                           
-                            <td class="addAllPadding rightBorderOnly">
-                                @if (obj.OrderType == "T" && obj.Rate == 0)
-                                {
-                                    <b> @obj.ProductName </b>
-                                }
-                                else
-                                {
-                                    @obj.ProductName
-                                }
+                                    <td class="addAllPadding rightBorderOnly" align="right">
+                                        @count.
+                                </td>
+
+                                <td class="addAllPadding rightBorderOnly">
+                                    @if (obj.OrderType == "T" && obj.Rate == 0)
+                                    {
+                                        <b> @obj.ProductName </b>
+                                    }
+                                    else
+                                    {
+                                        @obj.ProductName
+                                    }
 
 
-                            </td>
+                                </td>
 
-                            <td class="addAllPadding rightBorderOnly">
-                                @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                                { @obj.itemCode}
-                            </td>
-                            <td class="addAllPadding rightBorderOnly">
-                                @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                                {@obj.HSNCode
-                                }
-                        </td>
-                        <td class="addAllPadding rightBorderOnly" align="right">
-                            @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                            {
-                                count = count + 1;
-                                var s = obj.Quantity;
-                                s = Math.Round((decimal)s, 0);
-                                @s
-                                TotalQty += s;
-                            }
-                    </td>
-                    @*<td class="addAllPadding rightBorderOnly">Pcs.</td>*@
-                   
-                <td class="addAllPadding rightBorderOnly" align="right">
-                    @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                <td class="addAllPadding rightBorderOnly">
+                                    @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                    { @obj.itemCode}
+                                </td>
+                                <td class="addAllPadding rightBorderOnly">
+                                    @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                    {@obj.HSNCode
+                                    }
+                                </td>
+                                <td class="addAllPadding rightBorderOnly" align="right">
+                                    @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                    {
+                                        count = count + 1;
+                                        var s = obj.Quantity;
+                                        s = Math.Round((decimal)s, 0);
+                                        @s
+                                        TotalQty += s;
+                                    }
+                                </td>
+                                @*<td class="addAllPadding rightBorderOnly">Pcs.</td>*@
+
+                                <td class="addAllPadding rightBorderOnly" align="right">
+                                    @if (!(obj.OrderType == "T" && obj.Rate == 0))
                     {@obj.Rate}
-            </td>
-                                 <td class="addAllPadding rightBorderOnly" align="right">
-                                     @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                                     {@obj.DiscAmt}
-                                 </td>
-            @if (Model.objListProduct[0].OrderType != "T")
-            {
-            <td class="addAllPadding rightBorderOnly" align="right">
-                @obj.PVValue
-            </td>}
-            @{
-                if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
-                {
-                    if (Model.objListProduct[0].TaxType.Trim() == "I")
-                    {
-                        <td scope="col" class="addAllPadding rightBorderOnly">
-                            @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                </td>
+                                <td class="addAllPadding rightBorderOnly" align="right">
+                                    @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                    {@obj.DiscAmt}
+                                </td>
+                                @if (Model.objListProduct[0].OrderType != "T")
+                                {
+                                    <td class="addAllPadding rightBorderOnly" align="right">
+                                        @obj.PVValue
+                                    </td>}
+                                @{
+                                    if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
+                                    {
+                                        if (Model.objListProduct[0].TaxType.Trim() == "I")
+                                        {
+                                            <td scope="col" class="addAllPadding rightBorderOnly">
+                                                @if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {@obj.TaxPer}
-                    </td>
-                        <td scope="col" class="addAllPadding rightBorderOnly" align="right">
-                            @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                            </td>
+                                            <td scope="col" class="addAllPadding rightBorderOnly" align="right">
+                                                @if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {@obj.TaxAmt}
-                    </td>
-                    }
-                    else
-                    {
-                        <td scope="col" class="addAllPadding rightBorderOnly">
-                            @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td scope="col" class="addAllPadding rightBorderOnly">
+                                                @if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {@obj.CGST}
-                    </td>
-                        <td scope="col" class="addAllPadding rightBorderOnly" align="right">
-                            @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                            </td>
+                                            <td scope="col" class="addAllPadding rightBorderOnly" align="right">
+                                                @if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {@obj.CGSTAmount}
-                    </td>
-                        <td scope="col" class="addAllPadding rightBorderOnly">
-                            @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                            </td>
+                                            <td scope="col" class="addAllPadding rightBorderOnly">
+                                                @if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {@obj.SGST}
-                    </td>
-                        <td scope="col" class="addAllPadding rightBorderOnly" align="right">
-                            @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                            </td>
+                                            <td scope="col" class="addAllPadding rightBorderOnly" align="right">
+                                                @if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {@obj.SGSTAmount}
-                        </td>
-                    }
-                }
-            }
-            <td class="addAllPadding rightBorderOnly" align="right">
-                @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                {@(obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount)}
-                @{TotalAmount += (obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount)??0;}
-            </td>
-        </tr>
-                    }
-                    //count = count + 1;
-                }
+                                            </td>
+                                        }
+                                    }
+                                }
+                                <td class="addAllPadding rightBorderOnly" align="right">
+                                    @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                    {@(obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount)}
+                                    @{TotalAmount += Math.Round((obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount) ?? 0, 0);}
+                                </td>
+                            </tr>
+                                            }
+                                            //count = count + 1;
+                                        }
                         <tr class="topborder NoBorder">
                             <td class="addAllPadding NoBorder">&nbsp;</td>
                             <td class="addAllPadding NoBorder">&nbsp;</td>
@@ -437,7 +438,7 @@
                             <td class="addAllPadding NoBorder">&nbsp;</td>
                             @if (Model.objListProduct[0].OrderType != "T")
                             {
-                        <td class="addAllPadding NoBorder" align="right">@Model.objProduct.TotalPV</td>}
+                                <td class="addAllPadding NoBorder" align="right">@Model.objProduct.TotalPV</td>}
                             @{
                                 if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
                                 {
@@ -458,12 +459,12 @@
                             }
                             <td class="addAllPadding NoBorder" align="right"><img src="~/images/rupee.png" /></td>
                             <td class="addAllPadding AllBorder" align="right">
-                            @TotalAmount<br/>
-                            @if (Model.CashdisAmount >0 )
-                            { 
-                                <span>-</span><span>@Model.CashdisAmount</span><br />
-                                @Model.objListProduct[0].TotalNetPayable
-                            }
+                                @TotalAmount<br />
+                                @if (Model.CashdisAmount > 0)
+                                {
+                                    <span>-</span><span>@Model.CashdisAmount</span><br />
+                                    @Model.objListProduct[0].TotalNetPayable
+                                }
                             </td>
                         </tr>
                         <tr class="NoBorder"><td colspan=@colcount class="NoBorder">&nbsp;</td></tr>
@@ -585,12 +586,12 @@
 
                                         <tr class="topborder borderbottom">
                                             @{
-    CheckDate = new DateTime(2017, 8, 1);
-    if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
-    {//means date is greater than 1 jult 2017
-        if (Model.objListProduct[0].TaxType.Trim() == "I")
-        {
-                                        <td class="topborder borderbottom"><b>Total</b></td>
+                                                CheckDate = new DateTime(2017, 8, 1);
+                                                if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
+                                                {//means date is greater than 1 jult 2017
+                                                    if (Model.objListProduct[0].TaxType.Trim() == "I")
+                                                    {
+                                                        <td class="topborder borderbottom"><b>Total</b></td>
                                                     }
                                                     else
                                                     {
@@ -643,47 +644,47 @@
                         @if (Model.objListProduct[0].OrderType == "T")
                         {
                             <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Tota @BVCaption: @Model.objProduct.TotalBV</b></td></tr>}
-                    <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Rupee @Model.objProduct.TotalAmountString</b></td></tr>
-                </table>
-            </td>
-        </tr>
-        <tr class="borderbottom"></tr>
-        <tr>
-            <td width="40%" class="rightBorderOnly addAllPadding">
-                @if (Model.objListProduct[0].CourierName != "")
-                {
-                <b>Courier Name: </b>@Model.objListProduct[0].CourierName<br />
-                <b>Docket No.: </b>@Model.objListProduct[0].DocketNo<br />
-                <b>Docket Date: </b>@Model.objListProduct[0].DocketDate<br /><br />
-                }
-                <b><u>Terms & Conditions:</u></b><br />
-                <span>E. & O.E.</span>
-                <ol>
-                    <li>Goods once sold will not be taken back.</li>
-                    <li>Interest @@ 18% p.a. will be charged if the payment is not made with in the stipulated time.</li>
-                    <li>Subject to @Model.CompCity jurisdiction only.</li>
-                </ol>
-            </td>
-            <td width="60%" >
-                <table border="1" class="NoBorder">
-                    @*<tr class="borderbottom">
-                        <td class="borderbottom addAllPadding"><b>Receiver's Signature:</b><br /><br /><br /></td>
-                    </tr>*@
-                    <tr class="NoBorder">
-                        <td align="right" valign="top" class="NoBorder addAllPadding">
-                   <b>
-                                @if (!string.IsNullOrEmpty(Model.SoldByName))
-                                {@Model.SoldByName }
-                                <br /><br /><br /><br />
-                                <span>Authorised Signatory</span>
-                            </b>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </tbody>
-</table>
+                        <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Rupee @Model.objProduct.TotalAmountString</b></td></tr>
+                    </table>
+                </td>
+            </tr>
+            <tr class="borderbottom"></tr>
+            <tr>
+                <td width="40%" class="rightBorderOnly addAllPadding">
+                    @if (Model.objListProduct[0].CourierName != "")
+                    {
+                        <b>Courier Name: </b>@Model.objListProduct[0].CourierName<br />
+                        <b>Docket No.: </b>@Model.objListProduct[0].DocketNo<br />
+                        <b>Docket Date: </b>@Model.objListProduct[0].DocketDate<br /><br />
+                    }
+                    <b><u>Terms & Conditions:</u></b><br />
+                    <span>E. & O.E.</span>
+                    <ol>
+                        <li>Goods once sold will not be taken back.</li>
+                        <li>Interest @@ 18% p.a. will be charged if the payment is not made with in the stipulated time.</li>
+                        <li>Subject to @Model.CompCity jurisdiction only.</li>
+                    </ol>
+                </td>
+                <td width="60%">
+                    <table border="1" class="NoBorder">
+                        @*<tr class="borderbottom">
+                                <td class="borderbottom addAllPadding"><b>Receiver's Signature:</b><br /><br /><br /></td>
+                            </tr>*@
+                        <tr class="NoBorder">
+                            <td align="right" valign="top" class="NoBorder addAllPadding">
+                                <b>
+                                    @if (!string.IsNullOrEmpty(Model.SoldByName))
+                                    {@Model.SoldByName }
+                                    <br /><br /><br /><br />
+                                    <span>Authorised Signatory</span>
+                                </b>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
-<center><span id="lblRegdOffice" align="center" style="font-size:11px;">This is computer generated invoice, doesn't require signature.</span></center>
+    <center><span id="lblRegdOffice" align="center" style="font-size:11px;">This is computer generated invoice, doesn't require signature.</span></center>
 </div>

@@ -9,7 +9,7 @@
     string PVCaption = System.Configuration.ConfigurationManager.AppSettings["PVCaption"];
     string RPCaption = System.Configuration.ConfigurationManager.AppSettings["RPCaption"];
     int count = 1;
-    int colcount = 10;
+    int colcount = 11;
     decimal? TotalQty = 0;
     decimal TotalAmount = 0;
 }
@@ -295,12 +295,13 @@
 
                             <th scope="col" align="left" class="addAllPadding AllBorder">Price</th>
                             <th scope="col" align="left" class="addAllPadding AllBorder">Total Dis</th>
+
                             @if (Model.objListProduct[0].OrderType != "T")
                             {
                                 <th scope="col" align="left" class="addAllPadding AllBorder">@PVCaption</th>
                                 colcount = colcount + 1;
                             }
-
+                            <th scope="col" align="left" class="addAllPadding AllBorder">Taxable Amount</th>
                             @{
                                 DateTime CheckDate = new DateTime(2017, 7, 1);
                                 if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
@@ -379,6 +380,9 @@
                                     <td class="addAllPadding rightBorderOnly" align="right">
                                         @obj.PVValue
                                     </td>}
+                                <td scope="col" class="addAllPadding rightBorderOnly">
+                                    @obj.Amount
+                                </td>
                                 @{
                                     if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
                                     {
@@ -439,6 +443,7 @@
                             @if (Model.objListProduct[0].OrderType != "T")
                             {
                                 <td class="addAllPadding NoBorder" align="right">@Model.objProduct.TotalPV</td>}
+                            <td class="addAllPadding NoBorder">&nbsp;</td>
                             @{
                                 if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
                                 {
@@ -662,7 +667,7 @@
                     <ol>
                         <li>Goods once sold will not be taken back.</li>
                         <li>Interest @@ 18% p.a. will be charged if the payment is not made with in the stipulated time.</li>
-                        <li>Subject to @Model.CompCity jurisdiction only.</li>
+                        <li>Subject to Karnal (Haryana) jurisdiction only.</li>
                     </ol>
                 </td>
                 <td width="60%">
@@ -670,6 +675,9 @@
                         @*<tr class="borderbottom">
                                 <td class="borderbottom addAllPadding"><b>Receiver's Signature:</b><br /><br /><br /></td>
                             </tr>*@
+                        <tr class="borderbottom">
+                            <td class="borderbottom addAllPadding"><b></b><br /><br /><br /></td>
+                        </tr>
                         <tr class="NoBorder">
                             <td align="right" valign="top" class="NoBorder addAllPadding">
                                 <b>

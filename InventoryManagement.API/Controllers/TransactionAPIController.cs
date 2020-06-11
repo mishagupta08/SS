@@ -2586,7 +2586,7 @@ namespace InventoryManagement.API.Controllers
                         objDistributorModel.objProduct.TotalSGSTPer = TotSGSTTaxPer ?? 0;
                         objDistributorModel.objProduct.TotalSGSTAmt = TotSGSTTaxAmt ?? 0;
                         objDistributorModel.objProduct.TotalTaxableAmt = TotalTaxableAmount ?? 0;
-                        objDistributorModel.objProduct.TotalNetPayable = objDistributorModel.objListProduct[0].TotalNetPayable;
+                        objDistributorModel.objProduct.TotalNetPayable = objDistributorModel.objProduct.TotalTaxAmount +objDistributorModel.objProduct.TotalCGSTAmt +objDistributorModel.objProduct.TotalSGSTAmt+objDistributorModel.objProduct.TotalTaxableAmt;
                         //objDistributorModel.objProduct.TotalNetPayable = TotalNetPayableTobill;
                         //objDistributorModel.objProduct.TotalAmount = TotalNetAmount ?? 0;
                         objDistributorModel.objProduct.Roundoff = objDistributorModel.objListProduct[0].Roundoff;
@@ -3771,6 +3771,7 @@ namespace InventoryManagement.API.Controllers
                     bool IsWalletEntry = false;
                     billPrefix = (from result in entity.M_ConfigMaster select result.BillPrefix).FirstOrDefault();
                     version = (from result in entity.M_NewHOVersionInfo select result.VersionNo).FirstOrDefault();
+                    FsessId = FsessId = (from result in entity.M_FiscalMaster where result.ActiveStatus == "Y" select result.FSessId).DefaultIfEmpty(0).Max();
                     if (objPartyOrderModel != null)
                     {
                         if (objPartyOrderModel.objProduct.PayDetails != null)
@@ -4022,7 +4023,7 @@ namespace InventoryManagement.API.Controllers
                             objDTBillData.MID = 0;
                             objDTBillData.DiscPer = obj.DiscPer ?? 0;
                             objDTBillData.Discount = obj.DiscAmt ?? 0;
-                            objDTBillData.FSessId = 1; //FsessId ?? 0;
+                            objDTBillData.FSessId = FsessId ?? 0;
                             objDTBillData.IsKit = "N";
                             objDTBillData.ProdType = "P";
                             objDTBillData.BV = obj.BV ?? 0;
@@ -4090,7 +4091,7 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillMain.Version = version;
                                 objDTBillMain.UserId = objPartyOrderModel.LoginUser.UserId;
                                 objDTBillMain.RecTimeStamp = DateTime.Now;
-                                objDTBillMain.FSessId = 1;// FsessId ?? 0;
+                                objDTBillMain.FSessId =  FsessId ?? 0;
                                 objDTBillMain.UserName = objPartyOrderModel.LoginUser.UserName;
                                 objDTBillMain.IsConfirm = "N";
                                 objDTBillMain.ConfDate = DateTime.Now;
@@ -4366,8 +4367,8 @@ namespace InventoryManagement.API.Controllers
                             {
                                 objListProductModel.Add(obj);
                                 objDTBillData.SBillNo = maxSbillNo;
-                                objDTBillData.FSessId = 1;
-                                objDTBillData.SessId = 1;
+                                objDTBillData.FSessId = FsessId ?? 0;
+                                objDTBillData.SessId = SessId ?? 0;
                                 objDTBillData.ActiveStatus = "Y";
                                 objDTBillData.BillDate = BillDate.Date;
                                 objDTBillData.itemcode = obj.itemCode;

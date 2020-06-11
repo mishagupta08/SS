@@ -11,6 +11,7 @@
     int count = 1;
     int colcount = 11;
     decimal? TotalQty = 0;
+    decimal? TotalPV = 0;
     decimal TotalAmount = 0;
 }
 
@@ -325,6 +326,7 @@
                         </tr>
                         @foreach (var obj in Model.objListProduct)
                         {
+                            TotalPV += obj.PVValue;
                             if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {
                                 <tr>
@@ -379,7 +381,9 @@
                                 {
                                     <td class="addAllPadding rightBorderOnly" align="right">
                                         @obj.PVValue
-                                    </td>}
+                                       
+                                    </td>
+                                }
                                 <td scope="col" class="addAllPadding rightBorderOnly">
                                     @obj.Amount
                                 </td>
@@ -420,7 +424,9 @@
                                 }
                                 <td class="addAllPadding rightBorderOnly" align="right">
                                     @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                                    {@(obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount)}
+                                    {
+                                        @Math.Round(obj.Amount + (obj.TaxAmt??0) + obj.SGSTAmount + obj.CGSTAmount)
+                                    }
                                     @{TotalAmount += Math.Round((obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount) ?? 0, 0);}
                                 </td>
                             </tr>
@@ -442,7 +448,7 @@
                             <td class="addAllPadding NoBorder">&nbsp;</td>
                             @if (Model.objListProduct[0].OrderType != "T")
                             {
-                                <td class="addAllPadding NoBorder" align="right">@Model.objProduct.TotalPV</td>}
+                                <td class="addAllPadding NoBorder" align="right">@TotalPV</td>}
                             <td class="addAllPadding NoBorder">&nbsp;</td>
                             @{
                                 if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)
@@ -585,7 +591,7 @@
                                                 }
 
 
-                                                <td class="NoBorder">@tax.SumNetPayableAmount</td>
+                                                <td class="NoBorder">@Math.Round(tax.SumNetPayableAmount)</td>
                                             </tr>
                                                     }
 
@@ -638,7 +644,7 @@
                                             }
 
 
-                                            <td class="topborder borderbottom"><b>@Model.objProduct.TotalNetPayable</b></td>
+                                            <td class="topborder borderbottom"><b>@Math.Round(Model.objProduct.TotalTaxAmount + Model.objProduct.TotalSGSTAmt + Model.objProduct.TotalCGSTAmt + Model.objProduct.TotalTaxableAmt)</b></td>
                                         </tr>
 
                                     </tbody>
@@ -648,7 +654,7 @@
                         <tr class="NoBorder"><td colspan=@colcount class="NoBorder">&nbsp;</td></tr>
                         @if (Model.objListProduct[0].OrderType == "T")
                         {
-                            <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Tota @BVCaption: @Model.objProduct.TotalBV</b></td></tr>}
+                            <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Total @BVCaption: @Model.objProduct.TotalBV</b></td></tr>}
                         <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Rupee @Model.objProduct.TotalAmountString</b></td></tr>
                     </table>
                 </td>

@@ -335,12 +335,12 @@
             var lastNum = parseInt(temp[temp.length - 1]);
 
             var supplierstate = $("#returnto option:selected").attr("data-statecode");
-            if (supplierstate == '@CurrentStateCode') {
+            @*if (supplierstate == '@CurrentStateCode') {
                 if ((parseInt(lastNum) % 2) != 0) {  // && both parties are from same state
                     ProductArray.Amount = parseFloat(ProductArray.Amount) + 0.01;
                     ProductArray.TaxAmount = parseFloat(ProductArray.TaxAmount) - 0.01;
                 }
-            }
+            }*@
 
             var DiscPer = parseFloat(ProductArray.DiscPer);
 

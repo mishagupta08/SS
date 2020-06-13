@@ -364,10 +364,10 @@ namespace InventoryManagement.Controllers
                             {
                                 objTemp.TaxPer = (decimal)app.Value;
                             }
-                            else if (app.Key == "Amount")
+                            else if (app.Key == "FAmount")
                             {
                                 objTemp.Amount = (decimal)app.Value;
-                            }
+                            }                           
                             else if (app.Key == "TotalAmount")
                             {
                                 objTemp.TotalAmount = (decimal)app.Value;

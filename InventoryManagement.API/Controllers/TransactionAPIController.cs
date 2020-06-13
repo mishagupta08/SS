@@ -1341,9 +1341,9 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.TaxAmount = 0;
                                     objDTBillData.Tax = 0;
                                     objDTBillData.CGST = obj.TaxPer / 2 ?? 0;
-                                    objDTBillData.CGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                    objDTBillData.CGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                     objDTBillData.SGST = obj.TaxPer / 2 ?? 0;
-                                    objDTBillData.SGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                    objDTBillData.SGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                     objDTBillData.TaxType = "S";
                                 }
                                 else
@@ -1399,7 +1399,7 @@ namespace InventoryManagement.API.Controllers
 
                                 objDTBillData.TotalAmount = objModel.objProduct.TotalTotalAmount;
                                 //tax excluding
-                                objDTBillData.NetAmount = obj.Amount;
+                                objDTBillData.NetAmount = Decimal.Round(obj.Amount, 2, MidpointRounding.AwayFromZero);
                                 objDTBillData.CashDiscPer = objModel.objProduct.CashDiscPer;
                                 objDTBillData.CashDiscAmount = objModel.objProduct.CashDiscAmount;
 
@@ -1835,15 +1835,15 @@ namespace InventoryManagement.API.Controllers
 
                                 objDTBillData.TotalAmount = objModel.objProduct.TotalTotalAmount;
                                 //tax excluding
-                                objDTBillData.NetAmount = obj.Amount;
+                                objDTBillData.NetAmount = Decimal.Round(obj.Amount, 2, MidpointRounding.AwayFromZero);
                                 if (objModel.objCustomer.StateCode == objModel.objCustomer.UserDetails.StateCode)
                                 {
                                     objDTBillData.TaxAmount = 0;
                                     objDTBillData.Tax = 0;
                                     objDTBillData.CGST = obj.TaxPer / 2 ?? 0;
-                                    objDTBillData.CGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                    objDTBillData.CGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                     objDTBillData.SGST = obj.TaxPer / 2 ?? 0;
-                                    objDTBillData.SGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                    objDTBillData.SGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                     objDTBillData.TaxType = "S";
                                 }
                                 else
@@ -2239,14 +2239,14 @@ namespace InventoryManagement.API.Controllers
 
                                 objDTBillData.TotalAmount = objModel.objProduct.TotalTotalAmount;
                                 //tax excluding
-                                objDTBillData.NetAmount = obj.Amount;
+                                objDTBillData.NetAmount = Decimal.Round(obj.Amount, 2, MidpointRounding.AwayFromZero);
 
                                 objDTBillData.TaxAmount = 0;
                                 objDTBillData.Tax = 0;
                                 objDTBillData.CGST = obj.TaxPer / 2 ?? 0;
-                                objDTBillData.CGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                objDTBillData.CGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                 objDTBillData.SGST = obj.TaxPer / 2 ?? 0;
-                                objDTBillData.SGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                objDTBillData.SGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                 objDTBillData.TaxType = "S";
 
                                 objDTBillData.CashDiscPer = objModel.objProduct.CashDiscPer;
@@ -3139,9 +3139,9 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.TaxAmt = 0;
                                     objDTBillData.Tax = 0;
                                     objDTBillData.CGST = obj.TaxPer / 2 ?? 0;
-                                    objDTBillData.CGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                    objDTBillData.CGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                     objDTBillData.SGST = obj.TaxPer / 2 ?? 0;
-                                    objDTBillData.SGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                    objDTBillData.SGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                     objDTBillData.TaxType = "S";
                                     objDTBillData.TaxBase = "S";
                                 }
@@ -4439,7 +4439,7 @@ namespace InventoryManagement.API.Controllers
 
                                 objDTBillData.TotalAmount = objPartyDispatchOrder.objProduct.TotalTotalAmount;
                                 //tax excluding
-                                objDTBillData.NetAmount = obj.Amount;
+                                objDTBillData.NetAmount = Decimal.Round(obj.Amount, 2, MidpointRounding.AwayFromZero);
                                 decimal PartyStateCode = 0;
                                 if (objPartyDispatchOrder.FType == "M")
                                     PartyStateCode = GetCustInfo(objPartyDispatchOrder.PartyCode).StateCode;
@@ -4451,9 +4451,9 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.TaxAmount = 0;
                                     objDTBillData.Tax = 0;
                                     objDTBillData.CGST = obj.TaxPer / 2 ?? 0;
-                                    objDTBillData.CGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                    objDTBillData.CGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                     objDTBillData.SGST = obj.TaxPer / 2 ?? 0;
-                                    objDTBillData.SGSTAmt = obj.TaxAmt / 2 ?? 0;
+                                    objDTBillData.SGSTAmt = Decimal.Round(obj.TaxAmt / 2 ?? 0, 2, MidpointRounding.AwayFromZero);
                                     objDTBillData.TaxType = "S";
                                 }
                                 else

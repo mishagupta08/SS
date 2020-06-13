@@ -424,10 +424,10 @@
             var temp = (ProductArray.TaxAmount.toFixed(2)).toString();
             var lastNum = parseInt(temp[temp.length - 1]);
            
-            if ((parseInt(lastNum) % 2) != 0) {
-                ProductArray.Amount = parseFloat(ProductArray.Amount) + 0.01;
-                ProductArray.TaxAmount = parseFloat(ProductArray.TaxAmount) - 0.01;
-            }
+            //if ((parseInt(lastNum) % 2) != 0) {
+            //    ProductArray.Amount = parseFloat(ProductArray.Amount) + 0.01;
+            //    ProductArray.TaxAmount = parseFloat(ProductArray.TaxAmount) - 0.01;
+            //}
 
             ProductArray.TotalAmount = (dpValue * Quantity);
 

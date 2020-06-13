@@ -437,14 +437,14 @@
                     ProductArray.TaxAmt = ProductArray.TaxAmt * Quantity;
                     var temp = (ProductArray.TaxAmt.toFixed(2)).toString();
                     var lastNum = parseInt(temp[temp.length - 1]);
-                    console.log("lastNum", lastNum);
-                    console.log("ProductArray.TaxAmt", ProductArray.TaxAmt);
-                    console.log("ProductArray.Amount", ProductArray.Amount);
-                    if ((parseInt(lastNum) % 2) != 0) {
-                        $("#OldTaxAmount").val(parseFloat(ProductArray.TaxAmt));
-                        ProductArray.Amount = parseFloat(ProductArray.Amount) + 0.01;
-                        ProductArray.TaxAmt = parseFloat(ProductArray.TaxAmt) - 0.01;
-                    }
+                    //console.log("lastNum", lastNum);
+                    //console.log("ProductArray.TaxAmt", ProductArray.TaxAmt);
+                    //console.log("ProductArray.Amount", ProductArray.Amount);
+                    //if ((parseInt(lastNum) % 2) != 0) {
+                    //    $("#OldTaxAmount").val(parseFloat(ProductArray.TaxAmt));
+                    //    ProductArray.Amount = parseFloat(ProductArray.Amount) + 0.01;
+                    //    ProductArray.TaxAmt = parseFloat(ProductArray.TaxAmt) - 0.01;
+                    //}
 
                     ProductArray.TotalAmt = (dpValue * Quantity) + ProductArray.TaxAmt;
 
@@ -541,8 +541,7 @@
                     ProductGrid[i].TotalAmount = TotalAmount;
                     var Amount = (parseFloat(ProductGrid[i].Amount) + parseFloat(ProductArray.Amount)).toFixed(2);
                     ProductGrid[i].Amount = Amount;
-                    var Rate = (parseFloat(ProductGrid[i].Rate) + parseFloat(ProductArray.Rate)).toFixed(2);
-                    ProductGrid[i].Rate = Rate;
+                   
                     var CommsnAmt = (parseFloat(ProductGrid[i].CommsnAmt) + parseFloat(ProductArray.CommssnAmt)).toFixed(2);
                     ProductGrid[i].CommsnAmt = CommsnAmt;
                     var RPValue = (parseFloat(ProductGrid[i].RPValue) + parseFloat(ProductArray.RPValue)).toFixed(2);

@@ -651,7 +651,8 @@
 
 
                     ProductArray.Rate = dpValue * 100 / (100 + parseFloat(ProductArray.TaxPer));
-                    ProductArray.Amount = dpValue * Quantity * 100 / (100 + (parseFloat(ProductArray.TaxPer)));
+                    ProductArray.Rate = parseFloat(ProductArray.Rate).toFixed(2);
+                    ProductArray.Amount = parseFloat(Quantity * ProductArray.Rate).toFixed(2);
 
                     ProductArray.TaxAmt = (dpValue * Quantity) - ProductArray.Amount;
 
@@ -687,7 +688,7 @@
                     }
                     $("#DiscAmt").val((ProductArray.DiscAmt).toFixed(2));
                     $("#TaxAmt").val((ProductArray.TaxAmt).toFixed(2));
-                    $("#Amount").val((ProductArray.Amount).toFixed(2));
+                    $("#Amount").val((ProductArray.Amount));
                     $("#TotalAmount").val((ProductArray.TotalAmt).toFixed(2));
 
             }
@@ -732,7 +733,7 @@
                 if (Flag) {
                     var TotalWeight = (ProductArray.Weight * ProductArray.Qty).toFixed(3);
                     //  var ProductGrid = [{ "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "" }];
-                    ProductGrid.push({ "itemCode":itemCode,"CatName": ProductArray.CatName, "CatId": ProductArray.CatId, "AvailStock": Stock, "SNo": ProductArray.SNo, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": (ProductArray.Rate).toFixed(2), "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "FreeQty": ProductArray.FreeQty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount).toFixed(2), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer.toFixed(2), "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "ProductTye": ProductArray.ProductTye, "Weight": ProductArray.Weight, "WeightVal": TotalWeight });
+                    ProductGrid.push({ "itemCode":itemCode,"CatName": ProductArray.CatName, "CatId": ProductArray.CatId, "AvailStock": Stock, "SNo": ProductArray.SNo, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": (ProductArray.Rate), "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "FreeQty": ProductArray.FreeQty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer.toFixed(2), "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "ProductTye": ProductArray.ProductTye, "Weight": ProductArray.Weight, "WeightVal": TotalWeight });
                 }
                 else if (IsEditGrid==false) {
 
@@ -2124,7 +2125,7 @@
                
                $("#DiscAmt").val((ProductArray.DiscAmt).toFixed(2));
                $("#TaxAmt").val((ProductArray.TaxAmt).toFixed(2));
-               $("#Amount").val((ProductArray.Amount).toFixed(2));
+               $("#Amount").val((ProductArray.Amount));
                $("#TotalAmount").val((ProductArray.TotalAmt).toFixed(2));
 
            }

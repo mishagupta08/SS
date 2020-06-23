@@ -525,7 +525,7 @@ namespace InventoryManagement.API.Controllers
 
                         i = 0;
                        
-                        objDTProduct.ProductCode = model.ProductCode;
+                        objDTProduct.ProductCode = Convert.ToDecimal(model.UserDefinedCode);
                         objDTProduct.ProductName = model.ProductName;
                         objDTProduct.ProdId = model.ProductCode.ToString();
                         objDTProduct.PV = model.PV;

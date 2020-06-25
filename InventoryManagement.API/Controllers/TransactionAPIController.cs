@@ -532,6 +532,7 @@ namespace InventoryManagement.API.Controllers
             {
                 if (!string.IsNullOrEmpty(data))
                 {
+                   
                     using (var entity = new InventoryEntities())
                     {
 
@@ -539,7 +540,7 @@ namespace InventoryManagement.API.Controllers
                         {
 
                             TempResult = (from product in entity.M_ProductMaster
-                                          where product.ProductName.ToLower().Equals(data.ToLower()) && product.ActiveStatus == "Y" //&& product.IsCardIssue == "N"
+                                          where (product.ProductName +"="+product.UserProdId).Equals(data) && product.ActiveStatus == "Y" //&& product.IsCardIssue == "N"
                                           join barcode in entity.M_BarCodeMaster on product.ProdId equals barcode.ProdId
 
                                           join tax in entity.M_TaxMaster on product.ProdId equals tax.ProdCode
@@ -1006,11 +1007,11 @@ namespace InventoryManagement.API.Controllers
                     if (RestrictedproductsAlso == true)
                         objProductNames = (from result in entity.M_ProductMaster
                                            where result.ActiveStatus == "Y" //&& result.IsCardIssue == "N" //&& result.PType != "K"
-                                           select result.ProductName).ToList();
+                                           select result.ProductName + "=" + result.UserProdId).ToList();
                     else
                         objProductNames = (from result in entity.M_ProductMaster
                                            where result.ActiveStatus == "Y" && result.IsCardIssue == "N" //&& result.PType != "K"
-                                           select result.ProductName).ToList();
+                                           select result.ProductName + "=" + result.UserProdId).ToList();
                 }
 
             }
@@ -1031,7 +1032,7 @@ namespace InventoryManagement.API.Controllers
                 {
                     objProductNames = (from result in entity.M_ProductMaster
                                        where result.ActiveStatus == "Y" && result.IsCardIssue == "N" && result.PType != "K"
-                                       select result.ProductName).ToList();
+                                       select result.ProductName + "=" + result.UserProdId).ToList();
                 }
             }
             catch (Exception e)

@@ -3045,7 +3045,7 @@ namespace InventoryManagement.Controllers
             var list = (from r in objProductList
                         select new
                         {
-                            ProductName = r.ProductName,
+                            ProductName = r.ProductName + "=" + r.UserDefinedCode,
                             ProductCode = r.ProductCodeStr
                         }).ToList();
             return Json(list, JsonRequestBehavior.AllowGet);

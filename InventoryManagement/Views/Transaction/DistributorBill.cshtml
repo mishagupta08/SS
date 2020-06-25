@@ -2017,7 +2017,7 @@
                        if (index != -1) {
                            var freeQty = (parseInt(Freedata[i].Qty) * parseInt(offset));
                            var finalQty = freeQty + parseInt(ProductGrid[index].Qty);
-                           GetProductInfo("P", Freedata[i].ProductName, true, finalQty);
+                           GetProductInfo("P", Freedata[i].ProductName + "=" + Freedata[i].ProductCode, true, finalQty);
                            if (parseInt(ProductArray.AvailStock) >= parseInt(finalQty)) {
                                $("#Quantity").val(finalQty);
                                DoCalculationforBTGT(freeQty, finalQty,ProductArray.DP, 'P');
@@ -2036,7 +2036,7 @@
                        else {
 
                            var freeQty = parseInt(Freedata[i].Qty) * parseInt(offset);
-                           GetProductInfo("P", Freedata[i].ProductName, true, freeQty);
+                           GetProductInfo("P", Freedata[i].ProductName + "=" + Freedata[i].ProductCode, true, freeQty);
                            if (parseInt(ProductArray.AvailStock) >= parseInt(freeQty)) {
                                $("#Quantity").val(freeQty);
                                DoCalculationforBTGT(freeQty, freeQty, Freedata[i].Amount, 'F');
@@ -2114,14 +2114,14 @@
                ProductArray.RPValue = ProductArray.RP * Quantity;
                ProductArray.CVValue = ProductArray.CV * Quantity;
 
-               ProductArray.PVValue = ProductArray.PV * Quantity;
+               ProductArray.PVValue = 0;
                ProductArray.WeightVal = ProductArray.Weight * Quantity;
                ProductArray.Qty = Quantity;
                ProductArray.DiscAmt = 0;
                ProductArray.TotalAmt = (dpValue * Quantity);
                ProductArray.ProductTye = PType;
                ProductArray.BV = ProductArray.PV;
-               ProductArray.BVValue = ProductArray.PV * Quantity;
+               ProductArray.BVValue = 0;
                
                $("#DiscAmt").val((ProductArray.DiscAmt).toFixed(2));
                $("#TaxAmt").val((ProductArray.TaxAmt).toFixed(2));

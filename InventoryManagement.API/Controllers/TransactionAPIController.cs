@@ -1517,6 +1517,21 @@ namespace InventoryManagement.API.Controllers
                                 // tempTableList.Add(objDTBillData);
                                 entity.TrnBillDatas.Add(objDTBillData);
                             }
+
+                            if (!string.IsNullOrEmpty(objModel.AppliedOffers))
+                            {                                
+                                var OfferIDs = objModel.AppliedOffers.Split(',').ToList();
+                                foreach (var id in OfferIDs)
+                                {
+                                    if (id != "0")
+                                    {
+                                        TrnBillOffer objoffer = new TrnBillOffer();
+                                        objoffer.BillNo = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo;
+                                        objoffer.OfferUID = Convert.ToInt16(id);
+                                        entity.TrnBillOffers.Add(objoffer);
+                                    }
+                                }
+                            }
                             int i = 0;
 
                             using (var objDTTrans = entity.Database.BeginTransaction())
@@ -1532,19 +1547,21 @@ namespace InventoryManagement.API.Controllers
                                 }
                                 catch (DbUpdateConcurrencyException ex)
                                 {
+                                    SendExcepToDB(ex, "DistributorBill", objModel.objCustomer.UserDetails);
                                     objDTTrans.Rollback();
                                 }
                                 catch (DbUpdateException ex)
                                 {
-
+                                    SendExcepToDB(ex, "DistributorBill", objModel.objCustomer.UserDetails);
                                 }
 
                                 catch (Exception ex)
                                 {
+                                    SendExcepToDB(ex, "DistributorBill", objModel.objCustomer.UserDetails);
                                     objDTTrans.Rollback();
                                 }
                             }
-                            if (i == objModel.objListProduct.Count)
+                            if (i >0)
                             {
 
 
@@ -1570,7 +1587,7 @@ namespace InventoryManagement.API.Controllers
                                 }
                                 i = 0;
                                 i = entity.SaveChanges();
-                                if (i == objDTListPayMode.Count)
+                                if (i>0)
                                 {
 
                                     var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
@@ -1597,6 +1614,7 @@ namespace InventoryManagement.API.Controllers
                         }
                         catch (DbEntityValidationException e)
                         {
+                            SendExcepToDB(e, "DistributorBill", objModel.objCustomer.UserDetails);
                             objResponse.ResponseMessage = "Something went wrong!";
                             objResponse.ResponseStatus = "FAILED";
                         }
@@ -1978,6 +1996,7 @@ namespace InventoryManagement.API.Controllers
                                 }
                                 catch (Exception ex)
                                 {
+                                    SendExcepToDB(ex, "DistributorBill", objModel.objCustomer.UserDetails);
                                     objDTTrans.Rollback();
                                 }
                             }
@@ -2013,6 +2032,7 @@ namespace InventoryManagement.API.Controllers
                         }
                         catch (DbEntityValidationException e)
                         {
+                            SendExcepToDB(e, "DistributorBill", objModel.objCustomer.UserDetails);
                             objResponse.ResponseMessage = "Something went wrong!";
                             objResponse.ResponseStatus = "FAILED";
                         }
@@ -2363,6 +2383,7 @@ namespace InventoryManagement.API.Controllers
                                 }
                                 catch (Exception ex)
                                 {
+                                    SendExcepToDB(ex, "DistributorBill", objModel.objCustomer.UserDetails);
                                     objDTTrans.Rollback();
                                 }
                             }
@@ -2398,6 +2419,7 @@ namespace InventoryManagement.API.Controllers
                         }
                         catch (DbEntityValidationException e)
                         {
+                            SendExcepToDB(e, "DistributorBill", objModel.objCustomer.UserDetails);
                             objResponse.ResponseMessage = "Something went wrong!";
                             objResponse.ResponseStatus = "FAILED";
                         }
@@ -2407,7 +2429,7 @@ namespace InventoryManagement.API.Controllers
             }
             catch (Exception e)
             {
-
+                SendExcepToDB(e, "DistributorBill", objModel.objCustomer.UserDetails);
             }
             return objResponse;
         }
@@ -8271,6 +8293,39 @@ namespace InventoryManagement.API.Controllers
 
             }
             return (offerList);
+        }
+
+        public static void SendExcepToDB(Exception exdb, string exepurl, User userdetail)
+        {
+            try
+            {
+                using (var entities = new InventoryEntities())
+                {
+                    M_ErrorLogMaster error = new M_ErrorLogMaster();
+                    error.ExceptionMsg = exdb.Message != null ? exdb.Message.ToString():"";
+                    error.ExceptionType = exdb.GetType().Name.ToString();
+                    error.ExceptionURL = exepurl != null ? exepurl : "";
+                    error.ExceptionSource = exdb.StackTrace != null ? exdb.StackTrace.ToString():"";
+                    error.RecTimeStamp = DateTime.Now;
+                    if (userdetail != null)
+                    {
+                        error.UserId =  userdetail.UserId;
+                        error.UserName = userdetail.UserName != null ? userdetail.UserName:"";
+                    }
+                    else
+                    {
+                        error.UserId = 0;
+                        error.UserName = "";
+                    }
+                    error.UID = exdb.InnerException!=null?exdb.InnerException.ToString(): "";
+                    entities.M_ErrorLogMaster.Add(error);
+                    entities.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
 

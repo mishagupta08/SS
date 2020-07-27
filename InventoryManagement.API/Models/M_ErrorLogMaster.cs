@@ -12,15 +12,16 @@ namespace InventoryManagement.API.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class M_PackageProductMaster
+    public partial class M_ErrorLogMaster
     {
-        public decimal KId { get; set; }
-        public decimal KitId { get; set; }
-        public string ProdId { get; set; }
-        public string ProductName { get; set; }
-        public string IsCompulsory { get; set; }
-        public string ActiveStatus { get; set; }
+        public decimal AId { get; set; }
+        public decimal UserId { get; set; }
+        public string UserName { get; set; }
+        public string ExceptionMsg { get; set; }
+        public string ExceptionType { get; set; }
+        public string ExceptionSource { get; set; }
+        public string ExceptionURL { get; set; }
         public System.DateTime RecTimeStamp { get; set; }
-        public string LastModified { get; set; }
+        public string UID { get; set; }
     }
 }

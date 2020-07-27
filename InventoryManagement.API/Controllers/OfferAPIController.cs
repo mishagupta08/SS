@@ -649,14 +649,11 @@ namespace InventoryManagement.API.Controllers
 
                 if (!string.IsNullOrEmpty(offerID))
                 {
-                    if (OType == "1")
-                    {
-                        Sql = "Select * from VisionOfferProducts where OfferId =  '" + offerID + "'";
-                    }
-                    else
-                    {
-                        Sql = "Select A.OfferID,A.ProdID,A.ActiveStatus,A.Qty,A.FreeQty,ISNULL(A.OfferMRP,0) OfferMRP,ProductName ProdName,IsBuyProduct from M_OfferProducts A With(Nolock) INNER JOIN M_ProductMaster B With(Nolock) On A.ProdID=B.ProdID where A.OfferId =  '" + offerID + "'";
-                    }
+                    if(OType == "1")
+                        Sql = "Select * from VisionOfferProducts where OfferId in (" + offerID + ")";
+                     else
+                        Sql += "Select A.OfferID,A.ProdID,A.ActiveStatus,A.Qty,A.FreeQty,ISNULL(A.OfferMRP,0) OfferMRP,ProductName ProdName,IsBuyProduct from M_OfferProducts A With(Nolock) INNER JOIN M_ProductMaster B With(Nolock) On A.ProdID=B.ProdID where A.OfferId in (  " + offerID + ")";
+                    
 
                     cmd.CommandText = Sql;
                     cmd.Connection = SC;
@@ -668,6 +665,7 @@ namespace InventoryManagement.API.Controllers
                         while (reader.Read())
                         {
                             OfferProduct tempobj = new OfferProduct();
+                            tempobj.AID = reader["OfferID"] != null ? Convert.ToDecimal(reader["OfferID"]) : 0;
                             tempobj.ProductCode = reader["ProdID"] != null ? reader["ProdID"].ToString() : "";
                             tempobj.ProductName = reader["ProdName"] != null ? reader["ProdName"].ToString() : "";
                             tempobj.Qty = reader["Qty"] != null ? Convert.ToDecimal(reader["Qty"]) : 0;

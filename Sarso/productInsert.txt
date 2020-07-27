@@ -340,6 +340,26 @@ where pcode not in(select prodcode from M_TaxMaster)
 GO
 
 
+--Update Rate from main server
+select PCode
+from sarso.[sarsobiz].[dbo].[repurchaseproducts] c
+INNER JOIN M_ProductMAster t ON t.ProdId = c.Pcode
+where c.DP != t.DP and t.ActiveStatus = 'Y'
+
+
+UPDATE M_ProductMaster
+SET PV = c.PV
+FROM sarso.[sarsobiz].[dbo].[repurchaseproducts] c
+INNER JOIN M_ProductMAster t ON t.ProdId = c.Pcode
+where t.ActiveStatus = 'Y'
+
+
+UPDATE M_BarcodeMaster
+SET DP = c.DP
+FROM M_ProductMaster c
+INNER JOIN M_BarcodeMaster t ON c.ProdId = t.ProdId;
+
+
 
 
 

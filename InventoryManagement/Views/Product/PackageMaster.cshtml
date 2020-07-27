@@ -1,0 +1,1079 @@
+﻿@model InventoryManagement.Entity.Common.Package
+@using InventoryManagement.Common
+@using InventoryManagement.Entity.Common
+@{
+    ViewBag.Title = "Package";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    string CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+    string CurrentPartyName = (Session["LoginUser"] as User).PartyName;
+
+    string CVCaption = System.Configuration.ConfigurationManager.AppSettings["CVCaption"];
+    string BVCaption = System.Configuration.ConfigurationManager.AppSettings["BVCaption"];
+    string PVCaption = System.Configuration.ConfigurationManager.AppSettings["PVCaption"];
+    string RPCaption = System.Configuration.ConfigurationManager.AppSettings["RPCaption"];
+}
+
+<style>
+    .RowMargin {
+        margin-bottom: 1%;
+    }
+
+    .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: scroll !important;
+    }
+
+    .ui-widget-header {
+        margin-top: -1% !important;
+        width: 102% !important;
+        margin-left: -1% !important;
+    }
+
+    .ui-dialog-titlebar-close {
+        margin-right: 1% !important;
+    }
+
+    .ui-widget-content {
+        background: white !important;
+        border-radius: 15px !important;
+        -webkit-border-radius: 4px !important;
+    }
+    /*.ui-widget-header .ui-icon {
+        background-color: black!important;
+    }*/
+    ui-autocomplete-input {
+        z-index: 100;
+    }
+
+    .input-readonly {
+        background-color: #EBEBE4;
+    }
+
+    #paymode_details {
+        display: none;
+        background: white;
+        position: absolute;
+        border: 1px solid black;
+        border-radius: 6px;
+        /*width: 100%;*/
+        padding: 15px;
+        overflow: hidden;
+        text-shadow: none;
+        z-index: 50;
+    }
+</style>
+
+<script type="text/javascript">
+    var IsYes = false;
+    var ProdAttributeFieldList = [];
+    var ProdAttributeList = [];
+    var ItemCodes = [];
+	var AvailableProductList = [{}];
+    var AvailableBarcodeList=[];    
+	 var formdata;
+    var ProductSearchList;
+    var ItemList = [];
+    var grid, dialog;    
+    var ProductArray;    
+    var SearchText;
+    var count = 0;
+    var TotalQty = 0;
+    var TotalRP = 0; 
+    var TotalDisc = 0;
+    var TotalTaxtAmt = 0;
+	var TotalTaxtPer = 0;
+    var TotalSumNetAmount = 0;
+    var NetAmounPayable = 0;
+    var RoundOff = 0;
+    var CashAmount = 0;           
+    var FinalAmountToPay;
+    var LatestAmountEnteresdInPayMode = [{}];
+    var IsRegisteredCustomerCheck = true;
+    var IsCommissionAdd =1, IsDiscountAdd = 1;    
+    var ProductGrid = [{ "AvailStock": "", "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "BatchNo": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "" }];
+   
+
+    $(document).ready(function () {
+        $(".preloader").hide();
+        getAllProductNames();
+
+        fillGrid();
+        changeValues();
+
+        $("#KitName").focus();
+
+
+        $("#SearchText").focusout(function () {
+            if ($(this).val() == "") {
+                $(this).val("P");
+            }
+            changeValues();
+        });
+
+        $("#Quantity").focusout(function () {
+            var qtyCurrent = $("#Quantity").val();
+            if (qtyCurrent != "") {
+                qtyCurrent = parseFloat(qtyCurrent);
+                if (qtyCurrent != 0) {
+                    DoCalculation();
+                }                
+            }
+            else {
+                $("#Quantity").val(0);
+            }
+        });
+
+        $('#SearchText').bind('keydown', function (event) {
+            var key = event.keyCode || event.charCode;
+
+            var node = $(this).val();
+
+            if (key != 8 && key != 46 && key != 13) {
+                //up
+                if (key == 38) {
+                    $(this).val("P");
+                    changeValues();
+                }
+                    //down
+                else if (key == 40) {
+                    $(this).val("B");
+                    changeValues();
+                }
+                else {
+                    if (key == 66) {
+                        $(this).val("B");
+                        changeValues();
+                    }
+                    if (key == 80) {
+                        $(this).val("P");
+                        changeValues();
+                    }
+                }
+            }
+
+        });
+
+        
+
+
+        function changeValues() {
+            SearchText = $("#SearchText").val();
+            if (SearchText == "P") {
+
+                $("#Barcode").prop("readonly", true);
+                $("#Barcode").addClass("input-readonly");
+                $("#ProductName").prop("readonly", '');
+                $("#ProductName").removeClass("input-readonly");
+                $("#Barcode").hide();
+                $("#BarcodeList").show();
+                $("#BarcodeList").empty();
+                $("#ProductName").show();
+                $("#ProductNameList").hide();
+                $("#ProductNameList").empty();
+                $("#ProductName").autocomplete({
+                    source: function (request, response) {
+                        var results = $.ui.autocomplete.filter(ItemList, request.term);
+                        response(results.slice(0, 50));
+                    },
+                    minLength: 1,
+                    scroll: true,
+                    select: function (event, ui) {
+                        $("#ProductName").val(ui.item.label);
+                        GetProductInfo("P", ui.item.label);
+                        $("#Quantity").focus();
+                        return false;
+                    },
+
+                }).focus(function () {
+                    $(this).autocomplete("search", "");
+                });
+
+                $("#Barcode").unbind("focusout");
+                $("#ProductName").focus();
+            }
+
+        }
+        $("#ProductName").focusin(function () {
+            if ($("#KitName").val() == "") {
+                $("#KitName").focus();
+            }
+            else if ($("#KitAmount").val() == "") {
+                $("#KitAmount").focus();
+            }
+        });
+
+        //$("#ProductName").keydown(function (event) {
+        //    if (event.keyCode == 13) {
+        //        $("#BarcodeList").focus();
+        //        event.preventDefault();
+        //        return false;
+        //    }
+        //});
+
+        //$("#ProductName").keydown(function (event) {
+        //    if (event.keyCode == 13) {
+        //        if ($("#ProductName").val().length == 0) {
+        //            $("#BarcodeList").focus();
+        //            $("#ProductName").attr('style', 'border-color:none;width:89%');
+        //            return true;
+        //        }
+        //    }
+        //});
+
+                
+        function DoCalculation() {
+           if (ProductArray != null && ProductArray != undefined) {
+                var Quantity = parseFloat(($("#Quantity").val() != "" || $("#Quantity").val() != null) ? $("#Quantity").val() : 0);                              
+                   ProductArray.PVValue = ProductArray.PV * Quantity;
+                   ProductArray.Qty = Quantity;                   
+                }
+        }
+
+
+        $("#AddRecordInGrid").click(function (e) {
+            count++;
+            if (ProductArray != undefined) {
+                ProductArray.SNo = count;
+            }
+            var Qty = $("#Quantity").val();
+            var itemCode = $("#itemCode").val();            
+            if (Qty != null && Qty != "") {
+                Qty = parseFloat(Qty);
+            }
+            else {
+                Qty = 0;
+            }
+
+            var MRP = $("#MRP").val();
+            if (MRP != null && MRP != "") {
+                MRP = parseFloat(MRP);
+            }
+            else {
+                MRP = 0;
+            }
+
+            var IsReplaceRecord = false;
+
+            if ((ProductArray != null) && (Qty > 0)) {
+                var Flag = true;
+                var i;
+                for (i = 0; i < ProductGrid.length; i++) {
+                    if (ProductGrid[i].itemCode == itemCode) {
+                        Flag = false;
+
+                        break;
+                    }
+                }
+                if (ProductGrid.length > 0 && ProductGrid != null) {
+                    if (ProductGrid[0].SNo == "" || ProductGrid[0].SNo == null || ProductGrid[0].SNo == undefined) {
+                        ProductGrid = ProductGrid.splice(1);
+                    }
+                }
+                if (Flag) {
+                    ProductGrid.push({ "itemCode": itemCode,  "SNo": ProductArray.SNo, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": MRP, "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": Qty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount).toFixed(2), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer, "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2) });
+                }
+                else {
+                    var Qty = (parseFloat(ProductGrid[i].Qty) + parseFloat(ProductArray.Qty)).toFixed(2);
+                    
+                        ProductGrid[i].Qty = Qty;
+                        var TaxAmt = (parseFloat(ProductGrid[i].TaxAmt) + parseFloat(ProductArray.TaxAmt)).toFixed(2);
+                        ProductGrid[i].TaxAmt = TaxAmt;
+                        var DiscAmt = (parseFloat(ProductGrid[i].DiscAmt) + parseFloat(ProductArray.DiscAmt)).toFixed(2);
+                        ProductGrid[i].DiscAmt = DiscAmt;
+                        var TotalAmount = (parseFloat(ProductGrid[i].TotalAmount) + parseFloat(ProductArray.TotalAmt)).toFixed(2);
+                        ProductGrid[i].TotalAmount = TotalAmount;
+                        var Amount = (parseFloat(ProductGrid[i].Amount) + parseFloat(ProductArray.Amount)).toFixed(2);
+                        ProductGrid[i].Amount = Amount;
+                        var Rate = (parseFloat(ProductGrid[i].MRP) + parseFloat(ProductArray.MRP)).toFixed(2);
+                        ProductGrid[i].Rate = MRP;
+                        var CommsnAmt = (parseFloat(ProductGrid[i].CommsnAmt) + parseFloat(ProductArray.CommssnAmt)).toFixed(2);
+                        ProductGrid[i].CommsnAmt = CommsnAmt;
+                        var RPValue = (parseFloat(ProductGrid[i].RPValue) + parseFloat(ProductArray.RPValue)).toFixed(2);
+                        ProductGrid[i].RPValue = RPValue;
+                        var CVValue = (parseFloat(ProductGrid[i].CVValue) + parseFloat(ProductArray.CVValue)).toFixed(2);
+                        ProductGrid[i].CVValue = CVValue;
+                        var PVValue = (parseFloat(ProductGrid[i].PVValue) + parseFloat(ProductArray.PVValue)).toFixed(2);
+                        ProductGrid[i].PVValue = PVValue;
+                        var BVValue = (parseFloat(ProductGrid[i].BVValue) + parseFloat(ProductArray.BVValue)).toFixed(2);
+                        ProductGrid[i].BVValue = BVValue;
+                    
+                }
+                fillGrid();
+                CalculateTotals();
+                resetProductDetails();
+                $("#ProductName").val('');
+                $("#Barcode").val('');
+                $("#itemCode").val('');
+                $("#ProductNameList").empty();
+                $("#BarcodeList").empty();
+                SearchText = $("#SearchText").val();
+                if (SearchText == "P") {
+                    $("#ProductName").focus();
+                }
+                else {
+                    $("#Barcode").focus();
+                }
+            }
+            else {
+                SearchText = $("#SearchText").val();
+                var ToFocuselemement = "";
+                if (SearchText == "P")
+                    ToFocuselemement = "ProductName";
+                else
+                    ToFocuselemement = "Barcode";
+               
+                if (Qty == 0) {
+                    OpenDialog("dialogMessage", "Please Enter Quantity!", "false");
+                    $("#Quantity").focus();
+                }
+
+            }            
+        });
+
+        $("#ClearDetails").click(function (e) {
+            $("#ProductName").val('');
+            $("#Barcode").val('');
+            $("#itemCode").val('');
+            $("#ProductNameList").empty();
+            $("#BarcodeList").empty();
+            resetProductDetails();
+            changeValues();           
+        });
+
+        function resetProductDetails() {
+            $("#itemCode").val('');
+            $("#DP").val(0);
+            $("#Quantity").val(0);
+            $("#MRP").val(0);
+        }
+
+        function ClearProductdetailsWithoutChangingValues() {
+            $("#ProductNameList").empty();
+            $("#BarcodeList").empty();
+            $("#ProductName").val('');
+            $("#Barcode").val('');           
+            $("#itemCode").val('');
+            $("#Quantity").val(0);
+            $("#MRP").val(0);
+            $("#StockAvailable").val(0);           
+        }
+        function ResetDetails() {            
+            $("#ProductName").val('');
+            $("#Barcode").val('');
+            $("#itemCode").val('');
+            $("#ProductNameList").empty();
+            $("#BarcodeList").empty();
+            resetProductDetails();
+            changeValues();           
+            $("#TotalRP").val(0);
+            $("#TotalQty").val(0);
+            $("#TotalAmount").val(0);
+            $("#TotalDisc").val(0);
+            $("#TotalTax").val(0);
+            $("#TotalNetAmount").val(0);
+            $("#RoundOff").val(0);
+            $("#CashAmount").val(0);
+            $("#NetPayable").val(0);
+            ProductGrid = [{}];
+            fillGrid();
+
+        }
+
+        
+
+
+        function GetProductInfo(isProductSearch, data) {
+            var dataValue = data;
+            if (isProductSearch == "P" || isProductSearch == "B") {
+                //if (isProductSearch == "P")
+                //    dataValue = $("#ProductName").val();
+                if (isProductSearch == "B") {
+                    dataValue = $("#Barcode").val();
+                }
+                if (dataValue != "" && dataValue != null && dataValue != undefined) {
+                    $.ajax({
+                        url: '@Url.Action("GetProductInfo", "Transaction")',
+                        type: 'POST',
+                        data: { "SearchType": isProductSearch, "data": dataValue, "isCForm": false, "BillType": "party", "IsBillOnMrp": true },
+                        dataType: "json",
+                        success: function (objResult) {
+                            if (objResult != null && objResult.length > 0) {
+                                //fill values
+                                ProductSearchList = null
+                                IsCommissionAdd = objResult[0].IsCommissonAdd;
+                                IsDiscountAdd = objResult[0].IsDiscountAdd;
+                                ProductSearchList = objResult;
+                                $("#ProductNameList").empty();
+                                $("#BarcodeList").empty();
+                                AvailableBarcodeList = [];
+                                AvailableProductList = [{}];
+                                if (isProductSearch == "P") {
+                                    $("#ProductName").val(objResult[0].ProductName);
+                                    $("#ProductHidden").val(objResult[0].ProductName);
+                                    var f = true;
+                                    for (var i = 0; i < objResult.length; i++) {
+                                        if (f == true) {
+                                            f = false;
+                                            $("#BarcodeHidden").val(objResult[i].Barcode);
+                                        }
+                                        // $("#BarcodeList").empty();
+                                        AvailableBarcodeList = AvailableBarcodeList.splice(1);
+                                        AvailableBarcodeList.push(objResult[i].Barcode);
+                                        $("#BarcodeList").append("<option value=" + objResult[i].Barcode + ">" + objResult[i].Barcode + "</option>");
+                                    }
+
+                                }
+                                if (isProductSearch == "B") {
+                                    $("#Barcode").val(objResult[0].Barcode);
+                                    $("#BarcodeHidden").val(objResult[0].Barcode);
+                                    var f = true;
+                                    for (var i = 0; i < objResult.length; i++) {
+                                        if (f == true) {
+                                            f = false;
+                                            $("#ProductHidden").val(objResult[i].ProductName);
+                                        }
+                                        AvailableProductList = AvailableProductList.splice(1);
+                                        AvailableProductList.push({ "ProdCode": objResult[i].ProdCode, "ProductName": objResult[i].ProductName });
+                                        $("#ProductNameList").append("<option value=" + objResult[i].ProdCode + ">" + objResult[i].ProductName + "</option>");
+                                    }
+
+                                }
+                                ItemCodes = objResult[0].itemCodes;
+                                fillProductValues(objResult[0]);
+                            }
+                            else {
+                                OpenDialog("dialogMessage", "No Product Found!", "false");
+                                //$("#ProductName").val("");
+
+                                ClearProductdetailsWithoutChangingValues();
+                            }
+                        },
+                        error: function (xhr, data) {
+                            //  return false;
+                            console.log(xhr);
+                            console.log("Error:", data);
+                        }
+                    });
+                }
+
+            }
+        }
+        
+        $("#BarcodeList").change(function () {
+            var SelectedVal = $("#BarcodeList").val();
+            $("#BarcodeHidden").val(SelectedVal);
+            if (ProductSearchList != null && ProductSearchList.length > 0) {
+                for (var i = 0; i < ProductSearchList.length; i++) {
+                    if (SelectedVal == ProductSearchList[i].Barcode) {
+                        fillProductValues(ProductSearchList[i]);
+                        break;
+                    }
+                }
+            }
+            $("#Quantity").focus();
+        });
+
+        $("#setProdAttributes").click(function () {
+            GetItemCodes(true, 0);
+            $("#AttributeDialog").dialog("close");
+
+        });
+
+        function getProductAttributes(ProductCode) {
+            $.ajax({
+                url: '/Transaction/GetProductAttibutes',
+                dataType: 'JSON',
+                method: 'GET',
+                data: { 'ProdId': ProductCode },
+                success: function (data) {
+                    ProdAttributeList = [];
+                    ProdAttributeFieldList = [];
+                    if (data != null && data.length > 0) {
+
+
+                        if (ProdAttributeList != null && ProdAttributeList.length > 0) {
+                            ProdAttributeList = $.grep(ProdAttributeList, function (e) {
+                                return e.Pcode != ProductCode;
+                            });
+                        }
+
+                        for (var i = 0; i < data.length; i++) {
+
+                            ProdAttributeList.push({ "Pcode": data[i].Pcode, "Attribute_Name": data[i].Attribute_Name });
+
+
+                            if (ProdAttributeFieldList != null && ProdAttributeFieldList.length > 0) {
+                                ProdAttributeFieldList = $.grep(ProdAttributeFieldList, function (e) {
+                                    return e.Pcode != data[i].Pcode && e.Attribute_Name != data[i].Attribute_Name;
+                                });
+                            }
+                            for (var j = 0; j < data[i].fields.length; j++) {
+                                ProdAttributeFieldList.push({ "Pcode": data[i].fields[j].Pcode, "Attribute_Name": data[i].fields[j].Attribute_Name, "Field": data[i].fields[j].Field });
+                            }
+                        }
+                    }
+                    if (ProdAttributeList == null || ProdAttributeList.length == 0) {
+                        GetItemCodes(false, ProductCode);
+                    }
+                    else {
+                        AddAttributeSelect(ProductCode);
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function AddAttributeSelect(prodID) {
+            var i = 1;
+            for (var j = 0; j < ProdAttributeList.length; j++) {
+
+                var divId = "div_" + i;
+                var labelID = "label_" + i;
+                var selectID = "Attrib" + i;
+
+                $("#" + divId).show();
+                $("#" + labelID).html(ProdAttributeList[j].Attribute_Name);
+
+                $("#" + selectID).empty();
+                for (var k = 0 ; k < ProdAttributeFieldList.length; k++) {
+                    $("#" + selectID).append("<option value=" + ProdAttributeFieldList[k].Field + ">" + ProdAttributeFieldList[k].Field + "</option>");
+                }
+                i = i + 1;
+            }
+
+            $("#AttributeDialog").dialog({
+                modal: true,
+                width: "50%"
+            });
+
+        }
+
+        function GetItemCodes(WithAttributes, prodID) {
+            if (WithAttributes == true) {
+                var attr1 = $("#Attrib1").val();
+                var attr2 = $("#Attrib2").val();
+                var attr3 = $("#Attrib3").val();
+                var attr4 = $("#Attrib4").val();
+                var attr5 = $("#Attrib5").val();
+                var attr6 = $("#Attrib6").val();
+                var attr7 = $("#Attrib7").val();
+                var attr8 = $("#Attrib8").val();
+                var attr9 = $("#Attrib9").val();
+                var attr10 = $("#Attrib10").val();
+                var selectedItem = $.grep(ItemCodes, function (e) {
+                    return e.Attrib1 != null ? e.Attrib1 == attr1 : true
+                        && e.Attrib2 != null ? e.Attrib2 == attr2 : true
+                        && e.Attrib3 != null ? e.Attrib3 == attr3 : true
+                        && e.Attrib4 != null ? e.Attrib4 == attr4 : true
+                        && e.Attrib5 != null ? e.Attrib5 == attr5 : true
+                        && e.Attrib6 != null ? e.Attrib6 == attr6 : true
+                        && e.Attrib7 != null ? e.Attrib7 == attr7 : true
+                        && e.Attrib8 != null ? e.Attrib8 == attr8 : true
+                        && e.Attrib9 != null ? e.Attrib9 == attr9 : true
+                        && e.Attrib10 != null ? e.Attrib10 == attr10 : true
+                });
+                $("#itemCode").val(selectedItem[0].ItemCode1);
+                $("#StockAvailable").val(selectedItem[0].stockAvailable);
+            }
+            else {
+
+                //var selectedItem =  $.grep(ItemCodes, function (e) {
+                //    return e.PCode == prodID
+                //});
+                $("#itemCode").val(ItemCodes[0].ItemCode1);
+                $("#StockAvailable").val(ItemCodes[0].stockAvailable);
+            }
+        }
+
+        function fillProductValues(objResult) {
+            SearchText = $("#SearchText").val();
+            var TempProductArray = [{}];
+
+            var Qty = $("#Quantity").val();
+            if (Qty != "" && Qty != null) {
+                Qty = parseFloat(Qty);
+            }
+            else {
+                Qty = 0;
+            }
+
+            if ((TempProductArray[0].SNo) != undefined) {
+                TempProductArray = TempProductArray.splice(1);
+            }
+            TempProductArray.push({ "AvailStock": objResult.StockAvailable, "SNo": count, "ProductName": objResult.ProductName, "Barcode": objResult.Barcode, "BatchNo": objResult.BatchNo, "ProdCode": objResult.ProdCode, "Qty": Qty, "TaxType": objResult.TaxType, "MRP": objResult.MRP, "DP": objResult.DP, "RP": objResult.RP, "BV": objResult.BV, "CV": objResult.CV, "PV": objResult.PV, "CommsnPer": objResult.CommissionPer, "DiscPer": objResult.DiscPer, "TaxPer": objResult.TaxPer, "CommssnAmt": 0, "TaxAmt": 0, "RPValue": 0, "CVValue": 0, "PVValue": 0, "BVValue": 0, "DiscAmt": objResult.DiscAmt, "Amount": 0, "TotalAmt": 0, "Rate": 0 });
+            if (SearchText == "P") {
+                $("#ProductName").val(objResult.ProductName);
+                $("#BarcodeList").val(objResult.Barcode);
+            }
+            else {
+                $("#Barcode").val(objResult.Barcode);
+                $("#ProductList").val(objResult.ProductName);
+            }
+
+            $("#MRP").val(0);
+            $("#Quantity").val(0);
+
+            ProductArray = TempProductArray[1];
+            getProductAttributes(objResult.ProductCodeStr);
+        }
+
+        function getAllProductNames() {
+            $.ajax({
+                url: '/Transaction/GetAllProductNames',
+                dataType: 'JSON',
+                method: 'GET',
+                success: function (data) {
+                    ItemList = [];
+                    if (data != null) {
+                        var i = 0;
+                        for (i = 0; i < data.length; i++) {
+                            ItemList.push(data[i]);
+                        }
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+        }
+        function Delete(e) {
+            if (confirm('Are you sure?')) {                
+                var RecordNo = e.data.record.SNo;
+                ProductGrid = $.grep(ProductGrid, function (e) {
+                    return e.SNo != RecordNo;
+                });
+                count--;                
+                fillGrid();
+                CalculateTotals();                
+            }
+        }
+
+        function fillGrid() {
+            if (ProductGrid.length >= 1) {
+                if (ProductGrid[0].SNo == "" || ProductGrid[0].SNo == null || ProductGrid[0].SNo == undefined)
+                    ProductGrid = ProductGrid.splice(1);
+            }
+            $("#noRecord").hide();
+            if (grid != null) {
+                grid.destroy();
+                $('#grid').empty();
+
+            }
+
+            grid = $('#grid').grid({
+                dataSource: ProductGrid,
+                uiLibrary: 'bootstrap',
+                headerFilter: true,
+                columns: [
+                    { field: 'SNo', width: 80, title: 'S.No.', sortable: true, hidden: false, filterable: false },
+                    { field: 'Code', width: 100, title: 'Code', sortable: true, hidden: false, filterable: true },
+                    { field: 'ProductName', width: 150, title: 'Product Name', sortable: true, hidden: false, filterable: true },
+                    { field: 'itemCode', width: 150, title: 'Item Code', sortable: true, hidden: false, filterable: true },
+                    { field: 'Qty', width: 80, title: 'Qty', sortable: true, hidden: false, filterable: true },
+                    { field: 'Rate', width: 80, title: 'Rate', sortable: true, hidden: false, filterable: true },
+                    { field: 'PV', width: 80, title: '@PVCaption', sortable: true, hidden: false, filterable: true },
+                    { title: '', field: 'Delete', width: 30, type: 'icon', icon: 'glyphicon-remove', tooltip: 'Delete', events: { 'click': Delete }, filterable: false }
+                ],
+                pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+            });
+           
+        }
+       
+        function OpenDialog(dialogId, Message, isConfirmation) {
+            $("#" + dialogId).empty();
+            $("#" + dialogId).append('<p>' + Message + '</p>');
+            if (isConfirmation == "true") {
+                $("#" + dialogId).dialog({
+                    modal: true,
+                    buttons: [{
+                        text: "Yes",
+                        id: "btnYes" + dialogId,
+                        click: function () {
+                            IsYes = true;
+                            $("#" + dialogId).dialog("close");
+                        }
+                    },
+                    {
+                        text: "No",
+                        id: "btnNo" + dialogId,
+                        click: function () {                            
+                            IsYes = false;
+                            $("#" + dialogId).dialog("close");
+                        }
+                    }
+                    ]
+                });
+                $(".ui-dialog-titlebar-close").empty();
+                $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+            }
+            else {
+
+
+                $("#" + dialogId).dialog({
+                    modal: true,
+                    buttons: [{
+                        text: "OK",
+                        id: "btn" + dialogId,
+                        click: function () {
+                            $("#" + dialogId).dialog("close");
+                        }
+                    }]
+                });
+                $(".ui-dialog-titlebar-close").empty();
+                $(".ui-dialog-titlebar-close").append('<i class="fa fa-close"></i>');
+            }
+
+        }
+
+        function CalculateTotals() {
+           if (ProductGrid != null) {
+                if (ProductGrid[0].SNo == "" || ProductGrid[0].SNo == null || ProductGrid[0].SNo == undefined)
+                    ProductGrid = ProductGrid.splice(1);
+                
+                var TotalPV = 0;
+                var TotalQty = 0;                
+                var TotalSumNetAmount = 0;
+                
+                var i = 0;
+                for (i = 0; i < ProductGrid.length; i++) {
+                    if (ProductGrid[i].SNo != "") {
+                        TotalPV += parseFloat(ProductGrid[i].PVValue);                       
+                        TotalQty += parseFloat(ProductGrid[i].Qty);                       
+                        TotalSumNetAmount += parseFloat(ProductGrid[i].Rate);
+                    }
+                }
+                                
+                $("#TotalPV").val(TotalPV);               
+                $("#TotalQty").val(TotalQty);                
+                $("#TotalTotalAmount").val(TotalSumNetAmount.toFixed(2));
+                FinalAmountToPay = NetAmounPayable;                
+            }
+        }
+      
+        $("#cancelClick").click(function () {
+            window.location.href = '@Url.Action("ProductMaster", "Product")';
+        });
+
+        $("form[name=distributorForm]").unbind("submit");
+        $("form[name=distributorForm]").bind('submit', function (e) {
+            $("#SaveCustomerForm").attr("disabled", true);
+            if (ProductGrid != null) {
+                if (ProductGrid[0].SNo == "" || ProductGrid[0].SNo == null || ProductGrid[0].SNo == undefined) {
+                    ProductGrid = ProductGrid.splice(1);
+                }
+            }
+            if (ProductGrid.length > 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                var ListObjStr = JSON.stringify(ProductGrid);
+                $("#ListObjHidden").val(ListObjStr);
+                formdata = new FormData($(this)[0]);
+                SaveBill();
+            }
+            else {
+                $("#SaveCustomerForm").attr("disabled", false);
+                OpenDialog("dialogMessage", "There should be atleast one product in grid", "false");
+            }
+        });
+
+
+
+        function SaveBill() {
+                $.ajax({
+                url: '@Url.Action("SavePackage", "Product")',
+                type: 'POST',
+                data: formdata,
+                processData: false,
+                contentType: false,
+                dataType: "json",
+                success: function (objResponse) {
+                    $("#SaveCustomerForm").attr("disabled", false);
+                    if (objResponse != null) {
+                        if (objResponse.ResponseStatus == "OK") {
+                            window.location.href = '@Url.Action("Packages", "Product")';
+                        }
+                        else {
+                            OpenDialog("dialogMessage", objResponse.ResponseMessage, "false");
+                        }
+                    }
+                },
+                error: function (xhr, data) {
+                    //  return false;
+                    console.log(xhr);
+                    console.log("Error:", data);
+                }
+            });
+        }
+
+    });
+
+        
+</script>
+
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Product</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
+
+            </div>
+        </div>
+    </div>
+
+    <div class="clearfix"></div>
+
+    <div class="row">
+        <div class="col-lg-12 ">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Package Master</h2>
+
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <form id="distributorForm" method="post" name="distributorForm" onsubmit="false" data-parsley-validate class="validateForm form-horizontal form-label-left">
+                        @Html.HiddenFor(m=>m.IsAdd,new { name = "isAdd", id = "isAdd" })
+                        @Html.HiddenFor(m => m.objProductListStr, new { name = "ListObjHidden", id = "ListObjHidden" })
+                        <div class="row RowMargin">
+                            <div class="col-lg-12">
+                                <center><h5 style="color:red">Press Shift+n to focus out of Product Section</h5></center>
+                            </div>
+                        </div>
+                        <div class="row RowMargin">
+                            <div class="col-lg-6">
+
+                                <label class="control-label col-lg-2" for="category-name">
+                                    Package Name: <span class="required">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.KitName, new { name = "KitName", tabindex = "0", id = "KitName", @maxlength = "20", @class = "form-control" })
+                                </div>
+
+                            </div>
+
+                           
+
+                        
+                            <div class="col-lg-6">
+
+                                <label class="control-label col-lg-2" for="category-name">
+                                    Package Amount: <span class="required">*</span>
+                                </label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.KitAmount, new { name = "KitAmount", tabindex = "1", id = "KitAmount", @class = "form-control onlyDecimalValues" })
+                                </div>
+
+                            </div>
+
+                            
+                        </div>
+
+                        <div class="row RowMargin">
+                            <div class="col-lg-6">
+
+                                <label class="control-label col-lg-2" for="category-name">
+                                    Active Status: @*<span class="required">*</span>*@
+                                </label>
+                                <div class="col-lg-6">
+                                    <select id="ActiveStatus" name="ActiveStatus" tabindex="3" class = "form-control">
+                                        <option value="Y">Active</option>
+                                        <option value="N">InActive</option>
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            @*<div class="col-lg-6">
+
+                                <label class="control-label col-lg-2" for="category-name">
+                                    Remark: 
+                                </label>
+                                <div class="col-lg-6">
+                                    @Html.TextBoxFor(m => m.Remark, new { name = "Remark", tabindex = "4", id = "Remark", @class = "form-control" })
+                                </div>
+
+                            </div>*@
+
+
+                        </div>
+                 
+                        <div class="row RowMargin">
+
+                            <div class="col-lg-12" style="margin-top: 2%;margin-bottom: 2%;">
+                                <label class="control-label"><u>Product Details:</u></label>
+                            </div>
+                            <div class="ln_solid" style="margin-top:18px"></div>
+                            @*<div class="form-group">*@
+                            <div class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <label class="control-label col-lg-2" for="category-name" style="padding-left: 0px;">
+                                        Product
+                                    </label>
+                                    <div class="col-lg-8" style="padding-left:0px">
+                                        <input class="form-control col-lg-5 input-readonly" style="width:11%" type="text" id="SearchText" name="SearchText" value="P" maxlength="1" />
+                                        @Html.HiddenFor(m => m.objProduct.ProductName, new { id = "ProductHidden" })
+                                        @Html.TextBoxFor(m => m.objProduct.ProductName, new { tabindex = "0", name = "ProductName", id = "ProductName", @class = "form-control col-lg-7", @style = "width:89%" })
+                                        <select tabindex="0" name="ProductNameList" id="ProductNameList" style="display:none;width:89%" class="form-control col-lg-7">
+                                            <option value="0">--Select product</option>
+                                        </select>
+                                       </div>
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <label class="control-label col-lg-2" for="category-name">
+                                        Barcode
+                                    </label>
+                                    <div class="col-lg-8" style="padding-right:0px">
+                                        @Html.HiddenFor(m => m.objProduct.Barcode, new { id = "BarcodeHidden" })
+                                        @Html.TextBoxFor(m => m.objProduct.Barcode, new { tabindex = "0", name = "Barcode", id = "Barcode", @class = "form-control", @readonly = "readonly" })
+                                        <select tabindex="0" name="BarcodeList" id="BarcodeList" style="display:none;width:100%" class="form-control">
+                                            <option value="0">--Select barcode</option>
+                                        </select>
+                                       </div>
+                                </div>
+                            </div>
+                           </div>
+                        <div class="row RowMargin">
+                            <div class="col-lg-12">
+                                <div class="col-lg-6">
+                                    <label class="control-label col-lg-2" for="category-name" style="padding-left: 0px;">
+                                        ItemCode
+                                    </label>
+                                    <div class="col-lg-8" style="padding-left:0px">
+                                        <input type="text" id="itemCode" readonly class="form-control">
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <label class="control-label col-lg-2" for="category-name">
+
+                                    </label>
+                                    <div class="col-lg-8" style="padding-right:0px">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row RowMargin">
+                            <div class="col-lg-6">
+                                <label class="control-label col-lg-2" for="category-name">
+                                    Qty
+                                </label>
+                                <div class="col-lg-8">
+                                    @Html.TextBoxFor(m => m.objProduct.Quantity, new { name = "Quantity", maxlength = "10", tabindex = "0", id = "Quantity",  @class = "form-control col-lg-6 onlyDecimalValues" })                                    
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="control-label col-lg-2" for="category-name">
+                                    MRP
+                                </label>
+                                <div class="col-lg-8 col-sm-8">
+
+                                    @Html.TextBoxFor(m => m.objProduct.MRP, new { name = "MRP", id = "MRP", @class = "form-control onlyDecimalValues" })
+                                </div>
+
+                            </div>
+                        </div>
+                                                
+                        <div class="row RowMargin">
+                            <div class="col-lg-6 col-lg-offset-3">
+
+                                @*<button class="btn btn-primary" type="reset" onclick="reset()">Reset</button>*@
+                                <button type="button" id="AddRecordInGrid" class="btn btn-success" tabindex="0">Add</button>
+                                <button class="btn btn-primary" type="button" id="ClearDetails" tabindex="0">Clear</button>
+                            </div>
+                        </div>
+
+                        <div class="ln_solid"></div>
+
+                        @*grid section*@
+                        <div class="row RowMargin">
+                            <div class="col-lg-12">
+                                <table class="table bootstrap-datatable" id="grid"></table>
+                                <center><span style="display:none" id="noRecord">No Records Found</span></center>
+
+                            </div>
+                        </div>                        
+
+                        &nbsp;
+
+                        <div class="ln_solid"></div>
+
+                        @*Calculation Part*@
+
+                        <div class="row RowMargin">
+                            <div class="col-lg-4">
+                                <label class="control-label col-lg-4" for="category-name">
+                                    Total @PVCaption
+                                </label>
+                                <div class="col-lg-8">
+                                    @Html.TextBoxFor(m => m.objProduct.TotalPV, new { name = "TotalPV", id = "TotalPV", @class = "form-control", @readonly = "readonly" })
+                                    @*<input type="text" id="TotalRP"/>*@
+                                </div>
+                            </div>                           
+
+                        
+                            <div class="col-lg-4">
+                                <label class="control-label col-lg-4" for="category-name">
+                                    Total Qty
+                                </label>
+                                <div class="col-lg-8">
+                                    @Html.TextBoxFor(m => m.objProduct.TotalQty, new { name = "TotalQty", id = "TotalQty", @class = "form-control", @readonly = "readonly" })
+                                    @*<input type="text" id="TotalQty" />*@
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="control-label col-lg-4 col-sm-4" for="category-name">
+                                    Amount
+                                </label>
+                                <div class="col-lg-8">
+                                    @Html.TextBoxFor(m => m.objProduct.TotalTotalAmount, new { name = "TotalTotalAmount", id = "TotalTotalAmount", @class = "form-control", @readonly = "readonly" })                                    
+                                </div>
+                            </div>
+                            
+                        </div>
+                  
+                        <div class="row RowMargin">
+                            <div class="col-lg-6 col-md-offset-3">                                
+                                    <button type="submit" id="SaveCustomerForm" class="btn btn-success" tabindex="0">Save</button>
+                                    <button class="btn btn-primary" type="button" tabindex="0" id="cancelClick">Cancel</button>                               
+                            </div>
+                        </div>
+                        <div id="dialogMessage" title="Message">
+
+                        </div>
+                        <div id="AttributeDialog" title="Product Specification" style="display: none">
+                            @for (var i = 1; i <= 10; i++)
+                            {
+                                var divId = "div_" + i;
+                                var labelID = "label_" + i;
+                                var selectID = "Attrib" + i;
+                                <div class="col-lg-12" id="@divId" style="display:none;">
+                                    <label class="col-lg-4" id=@labelID></label>
+                                    <select id="@selectID">
+                                        <option value="">--Select--</option>
+                                    </select>
+                                </div>
+                            }
+                            <input type="button" value="OK" id="setProdAttributes">
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -82,7 +82,6 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<M_NewsSeminarMaster> M_NewsSeminarMaster { get; set; }
         public virtual DbSet<M_OccupationMaster> M_OccupationMaster { get; set; }
         public virtual DbSet<M_OfferType> M_OfferType { get; set; }
-        public virtual DbSet<M_PackageProductMaster> M_PackageProductMaster { get; set; }
         public virtual DbSet<M_PartyDiscount> M_PartyDiscount { get; set; }
         public virtual DbSet<M_PayModeMaster> M_PayModeMaster { get; set; }
         public virtual DbSet<M_PlanMaster> M_PlanMaster { get; set; }
@@ -259,6 +258,18 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<V_BillWiseSaleSummary> V_BillWiseSaleSummary { get; set; }
         public virtual DbSet<M_OfferProducts> M_OfferProducts { get; set; }
         public virtual DbSet<M_Offers> M_Offers { get; set; }
+        public virtual DbSet<M_KitMaster> M_KitMaster { get; set; }
+        public virtual DbSet<M_KitProductDetail> M_KitProductDetail { get; set; }
+        public virtual DbSet<PackageItem> PackageItems { get; set; }
+        public virtual DbSet<trnbillData19062020> trnbillData19062020 { get; set; }
+        public virtual DbSet<trnbilldatabak16052020> trnbilldatabak16052020 { get; set; }
+        public virtual DbSet<trnbilldetails19062020> trnbilldetails19062020 { get; set; }
+        public virtual DbSet<trnbilldetailsbak16052020> trnbilldetailsbak16052020 { get; set; }
+        public virtual DbSet<trnbillmain19062020> trnbillmain19062020 { get; set; }
+        public virtual DbSet<trnbillmainsbak16052020> trnbillmainsbak16052020 { get; set; }
+        public virtual DbSet<trnvoucherbak13052020> trnvoucherbak13052020 { get; set; }
+        public virtual DbSet<TrnBillOffer> TrnBillOffers { get; set; }
+        public virtual DbSet<M_ErrorLogMaster> M_ErrorLogMaster { get; set; }
     
         [DbFunction("InventoryEntities", "MonthWiseSummary")]
         public virtual IQueryable<MonthWiseSummary_Result> MonthWiseSummary(string partyCode, string rptType, string prodType)

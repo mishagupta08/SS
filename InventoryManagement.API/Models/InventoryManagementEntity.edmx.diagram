@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="6e03417a89da46cebeda9110b63f6fd5" Name="Diagram1" ZoomLevel="45">
+      <Diagram DiagramId="6e03417a89da46cebeda9110b63f6fd5" Name="Diagram1" ZoomLevel="90">
         <EntitySetMapping Name="V_PartyBalance">
             <EntityTypeMapping TypeName="InventoryModel.V_PartyBalance">
               <MappingFragment StoreEntitySet="V#PartyBalance">
@@ -75,7 +75,6 @@
         <EntityTypeShape EntityType="InventoryModel.M_NewsSeminarMaster" Width="1.5" PointX="2.75" PointY="14.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.M_OccupationMaster" Width="1.5" PointX="14.75" PointY="4.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.M_OfferType" Width="1.5" PointX="4.75" PointY="14.75" IsExpanded="false" />
-        <EntityTypeShape EntityType="InventoryModel.M_PackageProductMaster" Width="1.5" PointX="14.75" PointY="6.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.M_PartyDiscount" Width="1.5" PointX="6.75" PointY="14.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.M_PayModeMaster" Width="1.5" PointX="14.75" PointY="8.75" IsExpanded="false" />
         <EntityTypeShape EntityType="InventoryModel.M_PlanMaster" Width="1.5" PointX="8.75" PointY="14.75" IsExpanded="false" />
@@ -252,6 +251,18 @@
         <EntityTypeShape EntityType="InventoryModel.V_BillWiseSaleSummary" Width="1.5" PointX="11.449788825330225" PointY="26.184645292435142" />
         <EntityTypeShape EntityType="InventoryModel.M_OfferProducts" Width="1.5" PointX="9.5897173851680559" PointY="5.7529336687889572" />
         <EntityTypeShape EntityType="InventoryModel.M_Offers" Width="1.5" PointX="1.3984395812258308" PointY="8.9071575146667463" />
+        <EntityTypeShape EntityType="InventoryModel.M_KitMaster" Width="1.5" PointX="11.812367683189162" PointY="9.5872830048144255" />
+        <EntityTypeShape EntityType="InventoryModel.M_KitProductDetail" Width="1.5" PointX="4.4040803575907272" PointY="19.97310743665933" />
+        <EntityTypeShape EntityType="InventoryModel.PackageItem" Width="1.5" PointX="2.628483883397879" PointY="18.766286769307353" />
+        <EntityTypeShape EntityType="InventoryModel.trnbillData19062020" Width="1.5" PointX="11.967488463952899" PointY="25.553780090787345" />
+        <EntityTypeShape EntityType="InventoryModel.trnbilldatabak16052020" Width="1.5" PointX="7.7362072429322666" PointY="4.044773267602908" />
+        <EntityTypeShape EntityType="InventoryModel.trnbilldetails19062020" Width="1.5" PointX="11.388902613608586" PointY="31.628418698733867" />
+        <EntityTypeShape EntityType="InventoryModel.trnbilldetailsbak16052020" Width="1.5" PointX="9.821829841389242" PointY="22.884296398090335" />
+        <EntityTypeShape EntityType="InventoryModel.trnbillmain19062020" Width="1.5" PointX="11.370540255387565" PointY="29.95651604140015" />
+        <EntityTypeShape EntityType="InventoryModel.trnbillmainsbak16052020" Width="1.5" PointX="11.668107244962876" PointY="20.790248090769278" />
+        <EntityTypeShape EntityType="InventoryModel.trnvoucherbak13052020" Width="1.5" PointX="9.43848739445139" PointY="15.814360119315964" />
+        <EntityTypeShape EntityType="InventoryModel.TrnBillOffer" Width="1.5" PointX="6.5304671686750222" PointY="23.488753285020941" />
+        <EntityTypeShape EntityType="InventoryModel.M_ErrorLogMaster" Width="1.5" PointX="5.2920727922078559" PointY="21.382915476981044" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

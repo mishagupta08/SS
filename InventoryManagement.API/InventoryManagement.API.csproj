@@ -435,6 +435,9 @@
     <Compile Include="Models\M_DivisionMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\M_ErrorLogMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\M_ExtraDiscount.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
@@ -475,6 +478,12 @@
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_JType.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_KitMaster.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\M_KitProductDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_KitProductMaster.cs">
@@ -535,9 +544,6 @@
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_OfferType.cs">
-      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\M_PackageProductMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\M_PartyDiscount.cs">
@@ -643,6 +649,9 @@
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OLDBillMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PackageItem.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ProductSummary_Result.cs">
@@ -768,10 +777,31 @@
     <Compile Include="Models\TrnBillData.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\trnbillData19062020.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\trnbilldatabak16052020.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TrnBillDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\trnbilldetails19062020.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\trnbilldetailsbak16052020.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TrnBillMain.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\trnbillmain19062020.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\trnbillmainsbak16052020.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\TrnBillOffer.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrnCancelOrder.cs">
@@ -862,6 +892,9 @@
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\TrnVoucher.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\trnvoucherbak13052020.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\VisionOffer.cs">

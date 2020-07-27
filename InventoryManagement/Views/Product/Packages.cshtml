@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewBag.Title = "ProductList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<style type="text/css">
+    .gj-grid-wrapper {
+        min-width: 100% !important;
+        overflow-x: scroll !important;
+    }
+</style>
+<script type="text/javascript">        
+    var ProductModel = null;
+    var grid, dialog;
+    $(document).ready(function () {
+        $(".preloader").hide();
+        fillGrid();
+        $("#btnAdd").click(function () {
+            var link = '@Url.Action("PackageMaster", "Product",new { ActionName = "Add", PackageCode = "-1"})';
+            link=link.replace("-1",null);
+            window.location.href = link;
+        });
+        function Edit(ev) {                                
+            window.location.href = "/Product/PackageMaster?ActionName=Edit&PackageCode=" + ev.data.record.KitId;
+        }
+
+        
+        function fillGrid(){
+            var link = '@Url.Action("GetAllPackages", "Product")';
+            var CanEdit = true;
+            var UserAccess = '@ViewBag.UserCanAccess';
+            if (UserAccess == 'Edit')
+            {
+                CanEdit = false;
+            }
+            $.ajax({
+                type: 'POST',
+                url: link,
+                success: function (resultData) {
+                    $(".preloader").hide();                   
+                    if (resultData != null) {
+                        var i = 0;                       
+                        $("#noRecord").hide();
+                        grid = $('#grid').grid({
+                            dataSource: resultData,
+                            uiLibrary: 'bootstrap',
+                            headerFilter: true,
+                            columns: [
+                                { field: 'KitId', title: 'KitId', sortable: false, width: 70, hidden: true, cssClass: "noExl", filterable: false },
+                                { field: 'KitName', title: 'Kit Name', sortable: false, width: 70, hidden: false, filterable: false },
+                                { field: 'KitAmount', title: 'Kit Amount', sortable: false, width: 70, hidden: false, filterable: false },                               
+                                { field: 'ActiveStatus', title: 'Status', sortable: true, width: 70, filterable: false }                                
+                            ],
+                            pager: { limit: 20, sizes: [15, 20, 35, 50, 65, 80, 95, 100] }
+                        });
+
+                    }
+                    else {
+                        $("#noRecord").show();
+                    }
+
+                }
+            });
+        }
+    });
+</script>
+<div class="row">
+    <div class="page-title">
+        <div class="title_left">
+            <h3>Product</h3>
+        </div>
+        <div class="title_right">
+            <div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">              
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="x_panel">
+                <div class="x_title">
+                    <h2>Package List</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                        <li>
+                            <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        </li>                       
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="x_content">
+                    <br />
+                    <div id="dialogMessage" title="Message">
+
+                    </div>
+                    <div class="col-lg-offset-10 col-lg-2">
+                        @if (ViewBag.UserCanAccess == "Edit")
+                        {
+                            <button id="btnAdd" type="button" class="btn btn-default" style="margin-top: 5%;margin-bottom: 5%">Add New Package</button>
+                        }
+                    </div>
+                    <div class="col-lg-12">
+                        <table class="table bootstrap-datatable" id="grid"></table>
+                        <center><span style="display:none" id="noRecord">No Records Found</span></center>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

@@ -19,7 +19,7 @@ namespace InventoryManagement.API.Models
         public System.DateTime OfferToDt { get; set; }
         public string OfferDatePart { get; set; }
         public decimal OfferOnValue { get; set; }
-        public decimal? OfferOnBV { get; set; }
+        public decimal OfferOnBV { get; set; }
         public decimal TotalQty { get; set; }
         public string ActiveStatus { get; set; }
         public System.DateTime RecTimeStamp { get; set; }

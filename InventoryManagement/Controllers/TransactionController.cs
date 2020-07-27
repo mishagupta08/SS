@@ -408,7 +408,7 @@ namespace InventoryManagement.Controllers
                             else if (app.Key == "WeightVal")
                             {
                                 objTemp.WeightVal = (decimal)app.Value;
-                            }
+                            }                            
                         }
                         objModel.objListProduct.Add(objTemp);
                     }

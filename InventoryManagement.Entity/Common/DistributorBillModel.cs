@@ -29,6 +29,7 @@ namespace InventoryManagement.Entity.Common
         public decimal OldTaxAmount { get; set; }
         public string BillType { get; set; }
         public int offerId { get; set; }
+        public string AppliedOffers { get; set; }
         public string StateGSTName { get; set; }
         public string CompCity { get; set; }
         public string FreightType { get; set; }

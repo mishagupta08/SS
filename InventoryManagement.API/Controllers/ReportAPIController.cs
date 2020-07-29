@@ -443,8 +443,8 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                 List<SalesReport> objSales = new List<SalesReport>();
                                 objSales = (from result in entity.V_BillWiseSaleSummary
                                             where result.BType != BType
-                                            group result by new { result.UserBillNo, result.SBillNo, result.BillNo, result.BillDate,result.BillDateStr,result.OfferUID,result.FType, result.PartyCode, result.PartyName, result.FCode, result.Name,result.PVValue   , result.OrderNo, result.FSessId, result.OrderDate, result.BillType, result.SGSTAmt, result.CGSTAmt, result.IGSTAmt }
-                                                    into BillResult
+                                            group result by new { result.UserBillNo, result.SBillNo, result.BillNo, result.BillDate,result.BillDateStr,result.OfferUID,result.FType, result.PartyCode, result.PartyName, result.FCode, result.Name,result.PVValue   , result.OrderNo, result.FSessId, result.OrderDate, result.BillType, result.SGSTAmt, result.CGSTAmt, result.IGSTAmt,result.Series,result.ISChallanBill }
+                                            into BillResult
                                             orderby BillResult.Key.BillDate descending, BillResult.Key.SBillNo descending, BillResult.Key.PartyCode, BillResult.Key.FType
                                             select new SalesReport
                                             {
@@ -470,7 +470,8 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                                 Reason = "",
                                                 UserId = 0,
                                                 InvoiceType = BillResult.Key.BillType,
-                                                FType=BillResult.Key.FType
+                                                FType=BillResult.Key.FType,
+                                                ChallanAgainst = BillResult.Key.ISChallanBill!=null && BillResult.Key.ISChallanBill == "Y"? "Challan Against "+ BillResult.Key.Series : "",
                                             }).ToList();
 
                                 if (FType != null && FType != "" && FType != "A")
@@ -506,6 +507,10 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                     else if(InvoiceType=="JI")
                                     {
                                         objSales = objSales.Where(m => m.InvoiceType == "B").ToList();
+                                    }
+                                    else if (InvoiceType == "CB")
+                                    {
+                                        objSales = objSales.Where(m => m.ChallanAgainst != "").ToList();
                                     }
                                 }
                                 if (FromDate != "All" && ToDate != "All")

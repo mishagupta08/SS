@@ -12,7 +12,7 @@ namespace InventoryManagement.API.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DeletedBillMain
+    public partial class trnbillmain19062020
     {
         public decimal BillId { get; set; }
         public decimal FSessId { get; set; }
@@ -27,9 +27,9 @@ namespace InventoryManagement.API.Models
         public string FCode { get; set; }
         public string PartyName { get; set; }
         public decimal SupplierId { get; set; }
-        public Nullable<decimal> ChDDNo { get; set; }
+        public decimal ChDDNo { get; set; }
         public Nullable<System.DateTime> ChDate { get; set; }
-        public Nullable<decimal> ChAmt { get; set; }
+        public decimal ChAmt { get; set; }
         public decimal BankCode { get; set; }
         public string BankName { get; set; }
         public decimal FormNo { get; set; }
@@ -121,13 +121,9 @@ namespace InventoryManagement.API.Models
         public string TotalCorton { get; set; }
         public string TotalMonoCorton { get; set; }
         public decimal SGrNo { get; set; }
-        public string GRNo { get; set; }
+        public string GrNo { get; set; }
         public string BuyerAddress { get; set; }
         public string BuyerTIN { get; set; }
         public decimal CGSTAmt { get; set; }
-        public System.DateTime DRecTimeStamp { get; set; }
-        public string DReason { get; set; }
-        public decimal DUserId { get; set; }
-        public string IsChallanBill { get; set; }
     }
 }

@@ -377,7 +377,7 @@
                             InvoicePath = InvoicePath.replace("-1", EncryptedB64Url);
 
                             var TaxAmount = objResult[i].IGSTAmount + objResult[i].CGSTAmount + objResult[i].SGSTAmount;
-                            BillWiseGrid.push({ "FsessId": objResult[i].FsessId, "InvoicePath": InvoicePath, "SNo": i + 1, "BillNo": objResult[i].BillNo, "InternalBillNo": objResult[i].InternalBillNo, "BillDate": myDate, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Code": objResult[i].CustCode, "Name": objResult[i].CustName, "Amount": objResult[i].Amount, "TaxAmount": TaxAmount, "IGSTAmount": objResult[i].IGSTAmount, "CGSTAmount": objResult[i].CGSTAmount, "SGSTAmount": objResult[i].SGSTAmount, "NetAmount": objResult[i].NetAmount });
+                            BillWiseGrid.push({ "FsessId": objResult[i].FsessId, "InvoicePath": InvoicePath, "SNo": i + 1, "BillNo": objResult[i].BillNo, "InternalBillNo": objResult[i].InternalBillNo, "BillDate": myDate, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Code": objResult[i].CustCode, "Name": objResult[i].CustName, "Amount": objResult[i].Amount, "TaxAmount": TaxAmount, "IGSTAmount": objResult[i].IGSTAmount, "CGSTAmount": objResult[i].CGSTAmount, "SGSTAmount": objResult[i].SGSTAmount, "NetAmount": objResult[i].NetAmount, "IsChallan": objResult[i].ChallanAgainst });
                         }
                         $("#buttonRow").show();
                     }
@@ -486,6 +486,7 @@
                 { field: 'SNo', title: 'S.No.', width: 80, sortable: true, hidden: false, filterable: false },
                  { field: 'BillNo', title: 'Bill No', width: 100, sortable: true, hidden: false, filterable: true, tmpl: '<a target="_blank" style="text-decoration:underline;color:blue" href={InvoicePath}>{BillNo}</a>', align: 'center' },
                   { field: 'BillDate', title: 'Bill Date', width: 100, sortable: true, hidden: false, filterable: true },
+                  { field: 'IsChallan', title: 'IsChallan', width: 90, sortable: true, hidden: false, filterable: true },
                    { field: 'PartyCode', title: 'Party Code', width: 90, sortable: true, hidden: false, filterable: true },
                     { field: 'PartyName', title: 'Party Name', width: 150, sortable: true, hidden: false, filterable: true },
 

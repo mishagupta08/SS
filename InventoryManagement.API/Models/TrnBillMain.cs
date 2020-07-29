@@ -125,5 +125,6 @@ namespace InventoryManagement.API.Models
         public string BuyerAddress { get; set; }
         public string BuyerTIN { get; set; }
         public decimal CGSTAmt { get; set; }
+        public string IsChallanBill { get; set; }
     }
 }

@@ -810,6 +810,9 @@
     <Compile Include="Models\TrnCancelOrderDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TrnChallanBill.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TrnChallanDetail.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>

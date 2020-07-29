@@ -12,7 +12,7 @@ namespace InventoryManagement.API.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class TrnBillDetail
+    public partial class trnbilldetails19062020
     {
         public decimal BillId { get; set; }
         public decimal FSessId { get; set; }
@@ -82,6 +82,5 @@ namespace InventoryManagement.API.Models
         public string UID { get; set; }
         public decimal FreeQty { get; set; }
         public string itemcode { get; set; }
-        public string IsChallanBill { get; set; }
     }
 }

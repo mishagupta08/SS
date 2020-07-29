@@ -84,5 +84,6 @@ namespace InventoryManagement.API.Models
         public Nullable<System.DateTime> DRecTimeStamp { get; set; }
         public decimal FreeQty { get; set; }
         public string itemcode { get; set; }
+        public string IsChallanBill { get; set; }
     }
 }

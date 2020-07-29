@@ -49,12 +49,13 @@ namespace InventoryManagement.API.Models
         public decimal RefId { get; set; }
         public string RefName { get; set; }
         public string KitName { get; set; }
-        public string Series { get; set; }
         public string BType { get; set; }
         public string BillType { get; set; }
         public string IsReceive { get; set; }
         public string FType { get; set; }
         public string Remarks { get; set; }
         public string DispatchStatus { get; set; }
+        public string ISChallanBill { get; set; }
+        public string Series { get; set; }
     }
 }

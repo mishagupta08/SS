@@ -21,9 +21,9 @@ namespace InventoryManagement.DataAccess
         {
             return (objTransacAPI.GetAutocompProductsOnly());
         }
-        public List<ProductModel> GetproductInfo(string SearchType, string data, bool isCForm, string BillType, decimal CurrentStateCode, string CurrentPartyCode, bool IsBillOnMrp)
+        public List<ProductModel> GetproductInfo(string SearchType, string data, bool isCForm, string BillType, decimal CurrentStateCode, string CurrentPartyCode, bool IsBillOnMrp,string IschallanBill)
         {
-            return (objTransacAPI.GetproductInfo(SearchType, data, isCForm, BillType, CurrentStateCode, CurrentPartyCode, IsBillOnMrp));
+            return (objTransacAPI.GetproductInfo(SearchType, data, isCForm, BillType, CurrentStateCode, CurrentPartyCode, IsBillOnMrp, IschallanBill));
         }
         public CustomerDetail GetCustInfo(string IdNo)
         {

@@ -77,6 +77,7 @@ namespace InventoryManagement.Controllers
             objListInvoiceType.Add(new SelectListItem { Text = "All", Value = "" });
             objListInvoiceType.Add(new SelectListItem { Text = "Repurchase Invoice", Value = "RI" });
             objListInvoiceType.Add(new SelectListItem { Text = "Joining Invoice", Value = "JI" });
+            objListInvoiceType.Add(new SelectListItem { Text = "Challan Invoice", Value = "CB" });
             ViewBag.InvoiceTypes = objListInvoiceType;            
             if (new UserController().CanUserAccessMenu((Session["LoginUser"] as User).UserId, "SalesReport"))
             {

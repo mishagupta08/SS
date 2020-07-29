@@ -17,6 +17,8 @@ namespace InventoryManagement.Entity.Common
         public string CompanyTel { get; set; }
         public string CompanyMail { get; set; }
         public string BillNo { get; set; }
+        public string IsChallan { get; set; }
+        public string AgainstBillNo { get; set; }
         public DateTime BillDate { get; set; }
         public string GSTNo { get; set; }
         public string SoldBy { get; set; }
@@ -106,6 +108,7 @@ namespace InventoryManagement.Entity.Common
     }
     public class ProductModel
     {
+        public string IsChallanBill { get; set; }
         public List<ProdItemCodes> itemCodes { get; set; }
         public string itemCode { get; set; }
         public string buyerTin { get; set; }

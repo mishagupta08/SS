@@ -40,5 +40,6 @@ namespace InventoryManagement.API.Models
         public string BillType { get; set; }
         public string ProdType { get; set; }
         public string ItemCode { get; set; }
+        public string IsFree { get; set; }
     }
 }

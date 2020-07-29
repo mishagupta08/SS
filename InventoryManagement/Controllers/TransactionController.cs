@@ -41,7 +41,91 @@ namespace InventoryManagement.Controllers
             return new EmptyResult();
             // return View("Test.aspx?Mobile=" + objpay.Mobile);
         }
+        [SessionExpire]
+        public ActionResult ChallanDistributorBill()
+        {
+            DistributorBillModel objDistributorModel = new DistributorBillModel();
+            try
+            {
+                objDistributorModel.objCustomer = new CustomerDetail();
+                objDistributorModel.objProduct = new ProductModel();
 
+                List<SelectListItem> objBankList = new List<SelectListItem>();
+                var result = objTransacManager.GetBankList();
+                objDistributorModel.objProduct.PayDetails = new PayDetails();
+                foreach (var obj in result)
+                {
+                    if (obj.BankCode == 0)
+                    {
+                        objBankList.Add(new SelectListItem { Text = obj.BankName, Value = obj.BankCode.ToString(), Selected = true });
+                        objDistributorModel.objProduct.PayDetails.BDBankName = obj.BankCode.ToString();
+                    }
+                    else
+                    {
+                        objBankList.Add(new SelectListItem { Text = obj.BankName, Value = obj.BankCode.ToString() });
+                    }
+                }
+                ViewBag.BankNames = objBankList;
+                List<SelectListItem> CardTypes = new List<SelectListItem>();
+                CardTypes.Add(new SelectListItem { Text = "Credit Card", Value = "CC" });
+                CardTypes.Add(new SelectListItem { Text = "Debit Card", Value = "DB" });
+                ViewBag.CardTypes = CardTypes;
+
+                objDistributorModel.objProduct.PayDetails.CardType = "CC";
+
+             
+
+                objDistributorModel.objCustomer.CustomerType = "New";
+                var KitIdlist = objTransacManager.GetKitIdList();
+                List<SelectListItem> KidIsListObj = new List<SelectListItem>();
+                KidIsListObj.Add(new SelectListItem { Text = "--Select Kit--", Value = "0" });
+                foreach (var obj in KitIdlist)
+                {
+                    KidIsListObj.Add(new SelectListItem { Text = obj.KitName, Value = obj.KitId.ToString() });
+                }
+                ViewBag.objKitList = KidIsListObj;
+
+                List<SelectListItem> Offer = new List<SelectListItem>();
+                Offer.Add(new SelectListItem { Text = "Choose Offer", Value = "0" });
+                ViewBag.OfferList = Offer;
+
+
+                objDistributorModel.objCustomer.KitId = 0;
+                List<StateModel> objStateMdl = new List<StateModel>();
+                objStateMdl = objRegistrationManager.GetStateList();
+                List<SelectListItem> StateList = new List<SelectListItem>();
+                foreach (var obj in objStateMdl)
+                {
+                    if (obj.StateCode != 0)
+                    {
+                        StateList.Add(new SelectListItem
+                        {
+                            Text = obj.StateName,
+                            Value = obj.StateCode.ToString()
+                        });
+                    }
+                }
+                ViewBag.StateList = StateList;
+                
+                InventorySession.StoredDistributorValues = null;
+                objDistributorModel.IsChallan = "Y";
+
+            }
+            catch (Exception ex)
+            {
+                LogError(ex);
+                Console.Write("Exception:", ex.Message);
+            }
+
+            var AccessTo = new UserController().UserCanAccess((Session["LoginUser"] as User).UserId, "DistributorBill");
+            if (!string.IsNullOrEmpty(AccessTo))
+            {
+                ViewBag.UserCanAccess = AccessTo;
+                return View(objDistributorModel);
+            }
+            else
+                return RedirectToAction("Dashboard", "Home");
+        }
         [SessionExpire]
         public ActionResult DistributorBill()
         {
@@ -164,6 +248,49 @@ namespace InventoryManagement.Controllers
                 writer.Close();
             }
         }
+
+        [SessionExpire]
+        public ActionResult ChallanPartyBill()
+        {
+            DistributorBillModel objDistributorModel = new DistributorBillModel();
+            objDistributorModel.objCustomer = new CustomerDetail();
+            objDistributorModel.objProduct = new ProductModel();
+            List<SelectListItem> objBankList = new List<SelectListItem>();
+            var result = objTransacManager.GetBankList();
+            objDistributorModel.objProduct.PayDetails = new PayDetails();
+            foreach (var obj in result)
+            {
+                if (obj.BankCode == 0)
+                {
+                    objBankList.Add(new SelectListItem { Text = obj.BankName, Value = obj.BankCode.ToString(), Selected = true });
+                    objDistributorModel.objProduct.PayDetails.BDBankName = obj.BankCode.ToString();
+                }
+                else
+                {
+                    objBankList.Add(new SelectListItem { Text = obj.BankName, Value = obj.BankCode.ToString() });
+                }
+            }
+            ViewBag.BankNames = objBankList;
+            List<SelectListItem> CardTypes = new List<SelectListItem>();
+            CardTypes.Add(new SelectListItem { Text = "Credit Card", Value = "CC" });
+            CardTypes.Add(new SelectListItem { Text = "Debit Card", Value = "DB" });
+            ViewBag.CardTypes = CardTypes;
+
+            objDistributorModel.objProduct.PayDetails.CardType = "CC";            
+            objDistributorModel.objCustomer.CustomerType = "New";
+            objDistributorModel.IsChallan = "Y";
+            var AccessTo = new UserController().UserCanAccess((Session["LoginUser"] as User).UserId, "PartyBill");
+            if (!string.IsNullOrEmpty(AccessTo))
+            {
+                ViewBag.UserCanAccess = AccessTo;
+                return View(objDistributorModel);
+            }
+            else
+                return RedirectToAction("Dashboard", "Home");
+
+        }
+
+
         [SessionExpire]
         public ActionResult PartyBill()
         {
@@ -551,10 +678,10 @@ namespace InventoryManagement.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetProductInfo(string SearchType, string data, bool isCForm, string BillType, bool IsBillOnMrp)
+        public ActionResult GetProductInfo(string SearchType, string data, bool isCForm, string BillType, bool IsBillOnMrp,string IsChallanBill)
         {
             List<ProductModel> model = new List<ProductModel>();
-            model = objTransacManager.GetproductInfo(SearchType, data, isCForm, BillType, (Session["LoginUser"] as User).StateCode, (Session["LoginUser"] as User).PartyCode, IsBillOnMrp);
+            model = objTransacManager.GetproductInfo(SearchType, data, isCForm, BillType, (Session["LoginUser"] as User).StateCode, (Session["LoginUser"] as User).PartyCode, IsBillOnMrp, IsChallanBill);
             return Json(model, JsonRequestBehavior.AllowGet);
         }
 

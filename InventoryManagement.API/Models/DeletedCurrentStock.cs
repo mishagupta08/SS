@@ -43,5 +43,6 @@ namespace InventoryManagement.API.Models
         public string DReason { get; set; }
         public Nullable<System.DateTime> DRecTimeStamp { get; set; }
         public string ItemCode { get; set; }
+        public string IsFree { get; set; }
     }
 }

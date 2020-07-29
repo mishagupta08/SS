@@ -33,20 +33,20 @@ IF Exists(SELECT * FROM Im_CurrentStock WHERE RefNo=@BillNo And FSessId=@FSessId
       --WHERE ProdType<>'F'(Condition added on 22Apr17)
    IF UPPER(@InTransit)='N' --- IF Found IsTransit No Add: 07Jan14@12:45PM,Tuesday
    --- INSERT QUERY
-    INSERT INTO Im_CurrentStock(FSessId,SupplierCode,StockDate,RefNo,FCode,GroupId,ProdId,BatchCode,Barcode,Qty,SType,BType,Remarks,ActiveStatus,EntryBy,StockFor,RecTimeStamp,UserId,Version,BillType,ProdType,ItemCode)      
+    INSERT INTO Im_CurrentStock(FSessId,SupplierCode,StockDate,RefNo,FCode,GroupId,ProdId,BatchCode,Barcode,Qty,SType,BType,Remarks,ActiveStatus,EntryBy,StockFor,RecTimeStamp,UserId,Version,BillType,ProdType,ItemCode,IsFree)      
     --BEGIN
           --Less Entry    
-     Select FSessId,FCode,BillDate,BillNo,SoldBy,SupplierId,ProductId,BatchNo,Barcode,'-'+ Cast(Qty as Varchar) as Qty,'O' as SType,'SI' as BType,'SI' as Remarks,'Y' as ActiveStatus,SoldBy,'Gen.Thr.TRG.' as StockFor,GetDate()as RecTimeStamp,UserId,Version,@BillType,ProdType,itemcode From INSERTED WHERE (@OrderType <> 'T' or ProdType<>'F')
+     Select FSessId,FCode,BillDate,BillNo,SoldBy,SupplierId,ProductId,BatchNo,Barcode,'-'+ Cast(Qty as Varchar) as Qty,'O' as SType,'SI' as BType,'SI' as Remarks,'Y' as ActiveStatus,SoldBy,'Gen.Thr.TRG.' as StockFor,GetDate()as RecTimeStamp,UserId,Version,@BillType,ProdType,itemcode,IsChallanBill From INSERTED WHERE (@OrderType <> 'T' or ProdType<>'F')
        Union ALL 
           --Add Entry    
-     Select FSessId,SoldBy,BillDate,BillNo,FCode,SupplierId,ProductId,BatchNo,Barcode,Qty ,'I' as SType,'SI' as BType,'SI' as Remarks,'Y' as ActiveStatus,SoldBy,'Gen.Thr.TRG.' as StockFor,GetDate()as RecTimeStamp,UserId,Version,@BillType,ProdType,itemcode From INSERTED WHERE (@OrderType <> 'T' or ProdType<>'F')
+     Select FSessId,SoldBy,BillDate,BillNo,FCode,SupplierId,ProductId,BatchNo,Barcode,Qty ,'I' as SType,'SI' as BType,'SI' as Remarks,'Y' as ActiveStatus,SoldBy,'Gen.Thr.TRG.' as StockFor,GetDate()as RecTimeStamp,UserId,Version,@BillType,ProdType,itemcode,IsChallanBill From INSERTED WHERE (@OrderType <> 'T' or ProdType<>'F')
     --END
    ELSE
     --BEGIN
       --- INSERT QUERY
-     INSERT INTO Im_CurrentStock(FSessId,SupplierCode,StockDate,RefNo,FCode,GroupId,ProdId,BatchCode,Barcode,Qty,SType,BType,Remarks,ActiveStatus,EntryBy,StockFor,RecTimeStamp,UserId,Version,BillType,ProdType,ItemCode)      
+     INSERT INTO Im_CurrentStock(FSessId,SupplierCode,StockDate,RefNo,FCode,GroupId,ProdId,BatchCode,Barcode,Qty,SType,BType,Remarks,ActiveStatus,EntryBy,StockFor,RecTimeStamp,UserId,Version,BillType,ProdType,ItemCode,IsFree)      
           --Less Entry    
-     Select FSessId,FCode,BillDate,BillNo,SoldBy,SupplierId,ProductId,BatchNo,Barcode,'-'+ Cast(Qty as Varchar) as Qty,'O' as SType,'SI' as BType,'SI' as Remarks,'Y' as ActiveStatus,SoldBy,'Gen.Thr.TRG.' as StockFor,GetDate()as RecTimeStamp,UserId,Version,@BillType,ProdType,itemcode From INSERTED WHERE (@OrderType <> 'T' or ProdType<>'F')
+     Select FSessId,FCode,BillDate,BillNo,SoldBy,SupplierId,ProductId,BatchNo,Barcode,'-'+ Cast(Qty as Varchar) as Qty,'O' as SType,'SI' as BType,'SI' as Remarks,'Y' as ActiveStatus,SoldBy,'Gen.Thr.TRG.' as StockFor,GetDate()as RecTimeStamp,UserId,Version,@BillType,ProdType,itemcode,IsChallanBill From INSERTED WHERE (@OrderType <> 'T' or ProdType<>'F')
     --END
     
  END -- TRGFire Closing

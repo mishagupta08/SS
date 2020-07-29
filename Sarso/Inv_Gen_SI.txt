@@ -46,7 +46,7 @@ BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightTy
 FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
 DiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
 RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
-StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,CGSTAmt,DocketNo)-- Add: (BuyerTIN - 03Mar15@07:29PM,Tue)..(BuyerAddress - 30Jan15@02:51PM,Fri)..(,TotalCorton,TotalMonoCorton - 23May14@03:22PM,Friday)...(UId-02Jan14@06:19PM,Thursday)...(STNFormNo,StkRecv,StkRecvDate,StkRecvUserId,InTransit)-28Nov13@03:23P,Thursday ...(OrderType)-09Nov13@12:46PM....(,OrderNo,OrderDate)..(16Oct13)... (LocId,LocName,Pincode,CourierId,CourierName)Dtd: 01Oct13...(,IDType,BranchName)On Dated: 26Sep13,Thursday ....DelvPlace,PaymentDtl 28Jun13,Friday
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,CGSTAmt,DocketNo,IsChallanBill)-- Add: (BuyerTIN - 03Mar15@07:29PM,Tue)..(BuyerAddress - 30Jan15@02:51PM,Fri)..(,TotalCorton,TotalMonoCorton - 23May14@03:22PM,Friday)...(UId-02Jan14@06:19PM,Thursday)...(STNFormNo,StkRecv,StkRecvDate,StkRecvUserId,InTransit)-28Nov13@03:23P,Thursday ...(OrderType)-09Nov13@12:46PM....(,OrderNo,OrderDate)..(16Oct13)... (LocId,LocName,Pincode,CourierId,CourierName)Dtd: 01Oct13...(,IDType,BranchName)On Dated: 26Sep13,Thursday ....DelvPlace,PaymentDtl 28Jun13,Friday
 SELECT TOP 1 FSessId,UserSBillNo,UserBillNo,SBillNo,BillNo,RefNo,BillDate,CType,SoldBy,BillBy,FType,FCode,PartyName,SupplierId,ChDDNo,ChDate,ChAmt,BankCode,BankName,
 FormNo,@IGST,@SGST,TotalDiscount,TotalKitBvValue,TotalBvValue,TotalCvValue,TotalPvValue,TotalRPValue
 ,CashDiscPer,CashDiscAmount,NetPayable,TotalAmount,RndOff,CardAmount,PayMode,PayPrefix,@SessId,
@@ -54,7 +54,7 @@ BvTransfer,Remarks,DispatchStatus,LR,LRDate,TransporterName,DispatchTo,FreightTy
 FreightAmt,Series,Scratch,RefId,RefName,JType,Unit,BillTo,PSessId,BillFor,DcNo,Imported,IsReceive,IsCredit,BillType,
 TotalDiscountAmt,VDiscountAmt,ReceiverID,ReceiverName,ReceiverMNo,ReceiverIDProof,TotalFPoint,TotalQty,CommssnAmt,CashReward,
 RecvAmount,ReturnToCustAmt,Version,UserId,UserName,ActiveStatus,DelvPlace,PaymentDtl,IDType,BranchName,LocId,LocName,Pincode,CourierId,CourierName,OrderNo,OrderDate,OrderType,STNFormNo,StkRecv,StkRecvDate,
-StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,@CGST,DocketNo FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
+StkRecvUserId,InTransit,UId,TotalCorton,TotalMonoCorton,BuyerAddress,BuyerTIN,@CGST,DocketNo,IsChallanBill FROM INSERTED WHERE ActiveStatus='Y' --- Add: WHERE ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
 --- END ---
 
 --- Update User Bill No (If It found Blank)----- 19Nov13@09:23PM,Tuesday
@@ -67,12 +67,12 @@ INSERT INTO TrnBillDetails
 (FSessId,SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
 Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
 TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
-UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID,FreeQty,itemcode)-- Add: (VAT-24Dec14@04:30PM,Wed)..(SpclOfferId - 25Aug14@12:27PM,Monday)...(Two - ,IsKit,ProdType (08Mar14)...Three New Clms (,OrdStatus,OrdQty,RemQty,DP1) : 26Sep13
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID,FreeQty,itemcode,IsChallanBill)-- Add: (VAT-24Dec14@04:30PM,Wed)..(SpclOfferId - 25Aug14@12:27PM,Monday)...(Two - ,IsKit,ProdType (08Mar14)...Three New Clms (,OrdStatus,OrdQty,RemQty,DP1) : 26Sep13
 
 SELECT FSessId,@SessId,SBillNo,BillNo,BillDate,SupplierId,SoldBy,FType,RefNo,FCode,FormNo,ProductId,ProductName,BatchNo,
 Barcode,Qty,MRP,DP,Rate,BV,BvValue,CV,CvValue,PV,PvValue,RP,RPValue,IsKitBv,DiscountPer,Discount,ProdCommssn,ProdCommssnAmt,TaxType,Tax,
 TaxAmount,NetAmount,Series,Remarks,BillFor,Imported,IMEINo,BNo,ItemType,VDiscount,VDiscountValue,FPoint,FPointValue,
-UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID,ISNULL(FreeQty,0),itemcode FROM TrnBillData WHERE BillNo Not In(
+UserId,Version,ActiveStatus,OrdStatus,OrdQty,RemQty,DP1,OfferUID,IsKit,ProdType,SpclOfferId,VAT,CGST,CGSTAmt,SGST,SGSTAmt,UID,ISNULL(FreeQty,0),itemcode,IsChallanBill FROM TrnBillData WHERE BillNo Not In(
 Select Distinct BillNo From TrnBillDetails) AND ActiveStatus='Y' --- Add: AND ActiveStatus='Y' on Dated: 13May14@03:34PM,Tuesday
 --CmtDt: 30Apr14@12:40PM,Wednesday For Resolve the Product Insert Sequence... INSERTED
 --- END ---

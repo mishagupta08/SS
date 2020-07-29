@@ -255,7 +255,6 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<M_InwardData> M_InwardData { get; set; }
         public virtual DbSet<M_InwardDetail> M_InwardDetail { get; set; }
         public virtual DbSet<V_CurrentStockDetailNotForStockist> V_CurrentStockDetailNotForStockist { get; set; }
-        public virtual DbSet<V_BillWiseSaleSummary> V_BillWiseSaleSummary { get; set; }
         public virtual DbSet<M_OfferProducts> M_OfferProducts { get; set; }
         public virtual DbSet<M_Offers> M_Offers { get; set; }
         public virtual DbSet<M_KitMaster> M_KitMaster { get; set; }
@@ -270,6 +269,8 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<trnvoucherbak13052020> trnvoucherbak13052020 { get; set; }
         public virtual DbSet<TrnBillOffer> TrnBillOffers { get; set; }
         public virtual DbSet<M_ErrorLogMaster> M_ErrorLogMaster { get; set; }
+        public virtual DbSet<TrnChallanBill> TrnChallanBills { get; set; }
+        public virtual DbSet<V_BillWiseSaleSummary> V_BillWiseSaleSummary { get; set; }
     
         [DbFunction("InventoryEntities", "MonthWiseSummary")]
         public virtual IQueryable<MonthWiseSummary_Result> MonthWiseSummary(string partyCode, string rptType, string prodType)

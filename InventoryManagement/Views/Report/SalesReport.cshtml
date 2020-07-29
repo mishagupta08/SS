@@ -421,7 +421,7 @@
                                             totalBV = totalBV + parseFloat(objResult[i].TotalBV);
                                             totalAmt = totalAmt + parseFloat(objResult[i].Amount);
                                             netAmt = netAmt + parseFloat(objResult[i].NetAmount);
-                                            BillWiseGrid.push({ "InvoicePath": InvoicePath, "SNo": i + 1, "BillNo": objResult[i].BillNo, "BillDate": objResult[i].StrBillDate, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Code": objResult[i].CustCode, "Name": objResult[i].CustName, "BVValue": objResult[i].TotalBV, "Amount": objResult[i].Amount, "TaxAmount": TaxAmount, "IGSTAmount": objResult[i].IGSTAmount, "CGSTAmount": objResult[i].CGSTAmount, "SGSTAmount": objResult[i].SGSTAmount, "NetAmount": objResult[i].NetAmount });
+                                            BillWiseGrid.push({ "InvoicePath": InvoicePath, "SNo": i + 1, "BillNo": objResult[i].BillNo, "BillDate": objResult[i].StrBillDate, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Code": objResult[i].CustCode, "Name": objResult[i].CustName, "BVValue": objResult[i].TotalBV, "Amount": objResult[i].Amount, "TaxAmount": TaxAmount, "IGSTAmount": objResult[i].IGSTAmount, "CGSTAmount": objResult[i].CGSTAmount, "SGSTAmount": objResult[i].SGSTAmount, "NetAmount": objResult[i].NetAmount,"IsChallan":objResult[i].ChallanAgainst });
                                         }
                                     
                                 }
@@ -429,7 +429,7 @@
                                     totalBV = totalBV + parseFloat(objResult[i].TotalBV);
                                     totalAmt = totalAmt + parseFloat(objResult[i].Amount);
                                     netAmt = netAmt + parseFloat(objResult[i].NetAmount);
-                                    BillWiseGrid.push({ "InvoicePath": InvoicePath, "SNo": i + 1, "BillNo": objResult[i].BillNo, "BillDate": objResult[i].StrBillDate, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Code": objResult[i].CustCode, "Name": objResult[i].CustName, "BVValue": objResult[i].TotalBV, "Amount": objResult[i].Amount, "TaxAmount": TaxAmount, "IGSTAmount": objResult[i].IGSTAmount, "CGSTAmount": objResult[i].CGSTAmount, "SGSTAmount": objResult[i].SGSTAmount, "NetAmount": objResult[i].NetAmount });
+                                    BillWiseGrid.push({ "InvoicePath": InvoicePath, "SNo": i + 1, "BillNo": objResult[i].BillNo, "BillDate": objResult[i].StrBillDate, "PartyCode": objResult[i].PartyCode, "PartyName": objResult[i].PartyName, "Code": objResult[i].CustCode, "Name": objResult[i].CustName, "BVValue": objResult[i].TotalBV, "Amount": objResult[i].Amount, "TaxAmount": TaxAmount, "IGSTAmount": objResult[i].IGSTAmount, "CGSTAmount": objResult[i].CGSTAmount, "SGSTAmount": objResult[i].SGSTAmount, "NetAmount": objResult[i].NetAmount, "IsChallan": objResult[i].ChallanAgainst });
                                 }
                             }
                             console.log("totalBV", totalBV);
@@ -675,10 +675,11 @@
             uiLibrary: 'bootstrap',
             headerFilter: true,
             columns: [
-                { field: 'SNo', title: 'S.No.', width: 80, sortable: true, hidden: false, filterable: false },
-                 { field: 'BillNo', title: 'Bill No', width: 100, sortable: true, hidden: false, filterable: true, tmpl: '<a target="_blank" style="text-decoration:underline;color:blue" href={InvoicePath}>{BillNo}</a>', align: 'center' },
-                  { field: 'BillDate', title: 'Bill Date', width: 100, sortable: true, hidden: false, filterable: true },
-                   { field: 'PartyCode', title: 'Party Code', width: 90, sortable: true, hidden: false, filterable: true },
+                    { field: 'SNo', title: 'S.No.', width: 80, sortable: true, hidden: false, filterable: false },
+                    { field: 'BillNo', title: 'Bill No', width: 100, sortable: true, hidden: false, filterable: true, tmpl: '<a target="_blank" style="text-decoration:underline;color:blue" href={InvoicePath}>{BillNo}</a>', align: 'center' },
+                    { field: 'BillDate', title: 'Bill Date', width: 100, sortable: true, hidden: false, filterable: true },
+                    { field: 'IsChallan', title: 'IsChallan', width: 90, sortable: true, hidden: false, filterable: true },
+                    { field: 'PartyCode', title: 'Party Code', width: 90, sortable: true, hidden: false, filterable: true },                  
                     { field: 'PartyName', title: 'Party Name', width: 150, sortable: true, hidden: false, filterable: true },
                     { field: 'Code', title: 'Cust. Code', width: 100, sortable: true, hidden: false, filterable: true },
                     { field: 'Name', title: 'Cust. Name', width: 150, sortable: true, hidden: false, filterable: true },

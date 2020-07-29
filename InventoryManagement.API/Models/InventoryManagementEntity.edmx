@@ -200,6 +200,7 @@ warning 6002: The table/view 'SrsInv.dbo.DeletedBillDetails' does not have a pri
           <Property Name="UID" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="FreeQty" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="itemcode" Type="nvarchar" MaxLength="150" />
+          <Property Name="IsChallanBill" Type="char" MaxLength="1" />
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="DRecTimeStamp" Type="datetime" />
         </EntityType>
@@ -416,6 +417,7 @@ warning 6002: The table/view 'SrsInv.dbo.DeletedBillMain' does not have a primar
           <Property Name="BuyerAddress" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="BuyerTIN" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="CGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="IsChallanBill" Type="char" MaxLength="1" />
           <Property Name="DRecTimeStamp" Type="datetime" Nullable="false" />
           <Property Name="DReason" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
@@ -542,6 +544,7 @@ warning 6002: The table/view 'SrsInv.dbo.DeletedCurrentStock' does not have a pr
           <Property Name="BillType" Type="char" MaxLength="10" Nullable="false" />
           <Property Name="ProdType" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="ItemCode" Type="nvarchar" MaxLength="1000" />
+          <Property Name="IsFree" Type="char" MaxLength="1" />
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="DReason" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="DRecTimeStamp" Type="datetime" />
@@ -1499,6 +1502,7 @@ warning 6002: The table/view 'SrsInv.dbo.DeletedVoucher' does not have a primary
           <Property Name="BillType" Type="char" MaxLength="10" Nullable="false" />
           <Property Name="ProdType" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="ItemCode" Type="nvarchar" MaxLength="1000" />
+          <Property Name="IsFree" Type="char" MaxLength="1" />
         </EntityType>
         <EntityType Name="Inv_M_ConfigMaster">
           <Key>
@@ -2230,10 +2234,10 @@ warning 6002: The table/view 'SrsInv.dbo.M_ConfigMaster' does not have a primary
           <Property Name="AId" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="ExceptionMsg" Type="varchar" MaxLength="100" />
-          <Property Name="ExceptionType" Type="varchar" MaxLength="100" />
+          <Property Name="ExceptionMsg" Type="nvarchar(max)" />
+          <Property Name="ExceptionType" Type="nvarchar(max)" />
           <Property Name="ExceptionSource" Type="nvarchar(max)" />
-          <Property Name="ExceptionURL" Type="varchar" MaxLength="100" />
+          <Property Name="ExceptionURL" Type="nvarchar(max)" />
           <Property Name="RecTimeStamp" Type="datetime" Nullable="false" />
           <Property Name="UID" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
@@ -5696,6 +5700,7 @@ warning 6002: The table/view 'SrsInv.dbo.TransMaster' does not have a primary ke
           <Property Name="SGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="FreeQty" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="itemcode" Type="nvarchar" MaxLength="150" />
+          <Property Name="IsChallanBill" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.trnbillData19062020' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -6399,6 +6404,7 @@ warning 6002: The table/view 'SrsInv.dbo.trnbilldatabak16052020' does not have a
           <Property Name="UID" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="FreeQty" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="itemcode" Type="nvarchar" MaxLength="150" />
+          <Property Name="IsChallanBill" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.trnbilldetails19062020' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -6795,6 +6801,7 @@ warning 6002: The table/view 'SrsInv.dbo.trnbilldetailsbak16052020' does not hav
           <Property Name="BuyerAddress" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="BuyerTIN" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="CGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="IsChallanBill" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.trnbillmain19062020' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -7358,6 +7365,16 @@ warning 6002: The table/view 'SrsInv.dbo.trnbillmainsbak16052020' does not have 
           <Property Name="ProdType" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="SpclOfferId" Type="int" Nullable="false" />
           <Property Name="OfferUId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TrnChallanBill">
+          <Key>
+            <PropertyRef Name="BillNo" />
+          </Key>
+          <Property Name="BillId" Type="numeric" Precision="18" Scale="0" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BillNo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BillDate" Type="datetime" Nullable="false" />
+          <Property Name="UserBillNo" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="AgainstBillNo" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
         <EntityType Name="TrnChallanDetail">
           <Key>
@@ -8703,13 +8720,13 @@ warning 6002: The table/view 'SrsInv.dbo.V#BillWiseSaleSummary' does not have a 
             <PropertyRef Name="RefId" />
             <PropertyRef Name="RefName" />
             <PropertyRef Name="KitName" />
-            <PropertyRef Name="Series" />
             <PropertyRef Name="BType" />
             <PropertyRef Name="BillType" />
             <PropertyRef Name="IsReceive" />
             <PropertyRef Name="FType" />
             <PropertyRef Name="Remarks" />
             <PropertyRef Name="DispatchStatus" />
+            <PropertyRef Name="Series" />
           </Key>
           <Property Name="FSessId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="OrderNo" Type="varchar" MaxLength="50" Nullable="false" />
@@ -8746,13 +8763,14 @@ warning 6002: The table/view 'SrsInv.dbo.V#BillWiseSaleSummary' does not have a 
           <Property Name="RefId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="RefName" Type="varchar" MaxLength="250" Nullable="false" />
           <Property Name="KitName" Type="varchar" MaxLength="100" Nullable="false" />
-          <Property Name="Series" Type="varchar" MaxLength="1000" Nullable="false" />
           <Property Name="BType" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="BillType" Type="varchar" MaxLength="21" Nullable="false" />
           <Property Name="IsReceive" Type="char" MaxLength="1" Nullable="false" />
           <Property Name="FType" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Remarks" Type="varchar" MaxLength="1001" Nullable="false" />
           <Property Name="DispatchStatus" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="ISChallanBill" Type="char" MaxLength="1" />
+          <Property Name="Series" Type="varchar" MaxLength="1000" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.V#City' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -10420,6 +10438,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="TrnBillOffers" EntityType="Self.TrnBillOffers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrnCancelOrder" EntityType="Self.TrnCancelOrder" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrnCancelOrderDetail" EntityType="Self.TrnCancelOrderDetail" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TrnChallanBill" EntityType="Self.TrnChallanBill" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrnChallanDetail" EntityType="Self.TrnChallanDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrnChallanMain" EntityType="Self.TrnChallanMain" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrnFormGeneration" EntityType="Self.TrnFormGeneration" Schema="dbo" store:Type="Tables" />
@@ -10533,6 +10552,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [DeletedBillDetails].[UID] AS [UID], 
     [DeletedBillDetails].[FreeQty] AS [FreeQty], 
     [DeletedBillDetails].[itemcode] AS [itemcode], 
+    [DeletedBillDetails].[IsChallanBill] AS [IsChallanBill], 
     [DeletedBillDetails].[DUserId] AS [DUserId], 
     [DeletedBillDetails].[DRecTimeStamp] AS [DRecTimeStamp]
     FROM [dbo].[DeletedBillDetails] AS [DeletedBillDetails]</DefiningQuery>
@@ -10650,6 +10670,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [DeletedBillMain].[BuyerAddress] AS [BuyerAddress], 
     [DeletedBillMain].[BuyerTIN] AS [BuyerTIN], 
     [DeletedBillMain].[CGSTAmt] AS [CGSTAmt], 
+    [DeletedBillMain].[IsChallanBill] AS [IsChallanBill], 
     [DeletedBillMain].[DRecTimeStamp] AS [DRecTimeStamp], 
     [DeletedBillMain].[DReason] AS [DReason], 
     [DeletedBillMain].[DUserId] AS [DUserId]
@@ -10683,6 +10704,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [DeletedCurrentStock].[BillType] AS [BillType], 
     [DeletedCurrentStock].[ProdType] AS [ProdType], 
     [DeletedCurrentStock].[ItemCode] AS [ItemCode], 
+    [DeletedCurrentStock].[IsFree] AS [IsFree], 
     [DeletedCurrentStock].[DUserId] AS [DUserId], 
     [DeletedCurrentStock].[DReason] AS [DReason], 
     [DeletedCurrentStock].[DRecTimeStamp] AS [DRecTimeStamp]
@@ -13241,13 +13263,14 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [V#BillWiseSaleSummary].[RefId] AS [RefId], 
     [V#BillWiseSaleSummary].[RefName] AS [RefName], 
     [V#BillWiseSaleSummary].[KitName] AS [KitName], 
-    [V#BillWiseSaleSummary].[Series] AS [Series], 
     [V#BillWiseSaleSummary].[BType] AS [BType], 
     [V#BillWiseSaleSummary].[BillType] AS [BillType], 
     [V#BillWiseSaleSummary].[IsReceive] AS [IsReceive], 
     [V#BillWiseSaleSummary].[FType] AS [FType], 
     [V#BillWiseSaleSummary].[Remarks] AS [Remarks], 
-    [V#BillWiseSaleSummary].[DispatchStatus] AS [DispatchStatus]
+    [V#BillWiseSaleSummary].[DispatchStatus] AS [DispatchStatus], 
+    [V#BillWiseSaleSummary].[ISChallanBill] AS [ISChallanBill], 
+    [V#BillWiseSaleSummary].[Series] AS [Series]
     FROM [dbo].[V#BillWiseSaleSummary] AS [V#BillWiseSaleSummary]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="V#City" EntityType="Self.V#City" store:Type="Views" store:Schema="dbo">
@@ -14301,7 +14324,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="M_InwardData" EntityType="InventoryModel.M_InwardData" />
           <EntitySet Name="M_InwardDetail" EntityType="InventoryModel.M_InwardDetail" />
           <EntitySet Name="V_CurrentStockDetailNotForStockist" EntityType="InventoryModel.V_CurrentStockDetailNotForStockist" />
-          <EntitySet Name="V_BillWiseSaleSummary" EntityType="InventoryModel.V_BillWiseSaleSummary" />
           <EntitySet Name="M_OfferProducts" EntityType="InventoryModel.M_OfferProducts" />
           <EntitySet Name="M_Offers" EntityType="InventoryModel.M_Offers" />
           <EntitySet Name="M_KitMaster" EntityType="InventoryModel.M_KitMaster" />
@@ -14316,6 +14338,8 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="trnvoucherbak13052020" EntityType="InventoryModel.trnvoucherbak13052020" />
           <EntitySet Name="TrnBillOffers" EntityType="InventoryModel.TrnBillOffer" />
           <EntitySet Name="M_ErrorLogMaster" EntityType="InventoryModel.M_ErrorLogMaster" />
+          <EntitySet Name="TrnChallanBills" EntityType="InventoryModel.TrnChallanBill" />
+          <EntitySet Name="V_BillWiseSaleSummary" EntityType="InventoryModel.V_BillWiseSaleSummary" />
         </EntityContainer>
         <ComplexType Name="MonthWiseSummary_Result">
           <Property Type="String" Name="Mnth" Nullable="false" MaxLength="10" />
@@ -15167,6 +15191,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="BillType" Type="String" Nullable="false" MaxLength="10" FixedLength="true" Unicode="false" />
           <Property Name="ProdType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="ItemCode" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="IsFree" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="Inv_M_ConfigMaster">
           <Key>
@@ -16632,6 +16657,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="BuyerAddress" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="BuyerTIN" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="IsChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="TrnCancelOrder">
           <Key>
@@ -17776,6 +17802,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="DRecTimeStamp" Type="DateTime" Precision="3" />
           <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="itemcode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="IsChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="DeletedBillMain">
           <Key>
@@ -17991,6 +18018,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="DRecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="DReason" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="DUserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="IsChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="DeletedCurrentStock">
           <Key>
@@ -18050,6 +18078,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="DReason" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="DRecTimeStamp" Type="DateTime" Precision="3" />
           <Property Name="ItemCode" Type="String" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Name="IsFree" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="DeletedInwardDetail">
           <Key>
@@ -22398,6 +22427,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="itemcode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="IsChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="TrnBillDetail">
           <Key>
@@ -22471,6 +22501,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="UID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="itemcode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="IsChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <ComplexType Name="DailyStockDetail_Result">
           <Property Type="String" Name="PartyCode" Nullable="false" MaxLength="20" />
@@ -22766,86 +22797,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="itemcode" Type="String" MaxLength="1500" FixedLength="false" Unicode="true" />
           <Property Name="PV" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="PVStockValue" Type="Decimal" Precision="18" Scale="2" />
-        </EntityType>
-        <EntityType Name="V_BillWiseSaleSummary">
-          <Key>
-            <PropertyRef Name="FSessId" />
-            <PropertyRef Name="OrderNo" />
-            <PropertyRef Name="UserSBillNo" />
-            <PropertyRef Name="UserBillNo" />
-            <PropertyRef Name="SBillNo" />
-            <PropertyRef Name="BillNo" />
-            <PropertyRef Name="BillDate" />
-            <PropertyRef Name="Formno" />
-            <PropertyRef Name="FCode" />
-            <PropertyRef Name="Name" />
-            <PropertyRef Name="OrderType" />
-            <PropertyRef Name="DownIDNo" />
-            <PropertyRef Name="DownMemName" />
-            <PropertyRef Name="BillBVValue" />
-            <PropertyRef Name="BVValue" />
-            <PropertyRef Name="PVValue" />
-            <PropertyRef Name="RPValue" />
-            <PropertyRef Name="Amount" />
-            <PropertyRef Name="IGSTAmt" />
-            <PropertyRef Name="SGSTAmt" />
-            <PropertyRef Name="CGSTAmt" />
-            <PropertyRef Name="OfferUID" />
-            <PropertyRef Name="TaxAmount" />
-            <PropertyRef Name="PayMode" />
-            <PropertyRef Name="RefId" />
-            <PropertyRef Name="RefName" />
-            <PropertyRef Name="KitName" />
-            <PropertyRef Name="Series" />
-            <PropertyRef Name="BType" />
-            <PropertyRef Name="BillType" />
-            <PropertyRef Name="IsReceive" />
-            <PropertyRef Name="FType" />
-            <PropertyRef Name="Remarks" />
-            <PropertyRef Name="DispatchStatus" />
-          </Key>
-          <Property Name="FSessId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="OrderNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="OrderDate" Type="DateTime" Precision="3" />
-          <Property Name="UserSBillNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="UserBillNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SBillNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="BillNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BillDateStr" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
-          <Property Name="BillDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="GroupId" Type="Decimal" Precision="18" Scale="0" />
-          <Property Name="GroupName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="PartyCode" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="PartyName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="Formno" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="FCode" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
-          <Property Name="NewFCode" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="OrderType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="DownIDNo" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="DownMemName" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="BillBVValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="BVValue" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
-          <Property Name="PVValue" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
-          <Property Name="RPValue" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
-          <Property Name="IGSTAmt" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
-          <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
-          <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
-          <Property Name="OfferUID" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="TaxAmount" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
-          <Property Name="NetAmt" Type="Decimal" Precision="38" Scale="2" />
-          <Property Name="PayMode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="RefId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
-          <Property Name="RefName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="KitName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Series" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
-          <Property Name="BType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="BillType" Type="String" Nullable="false" MaxLength="21" FixedLength="false" Unicode="false" />
-          <Property Name="IsReceive" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="FType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="1001" FixedLength="false" Unicode="false" />
-          <Property Name="DispatchStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="M_OfferProducts">
           <Key>
@@ -24361,12 +24312,103 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="AId" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ExceptionMsg" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="ExceptionType" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ExceptionMsg" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ExceptionType" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="ExceptionSource" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="ExceptionURL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ExceptionURL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="RecTimeStamp" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="UID" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="TrnChallanBill">
+          <Key>
+            <PropertyRef Name="BillNo" />
+          </Key>
+          <Property Name="BillId" Type="Decimal" Nullable="false" Precision="18" Scale="0" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BillNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BillDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="UserBillNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AgainstBillNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="V_BillWiseSaleSummary">
+          <Key>
+            <PropertyRef Name="FSessId" />
+            <PropertyRef Name="OrderNo" />
+            <PropertyRef Name="UserSBillNo" />
+            <PropertyRef Name="UserBillNo" />
+            <PropertyRef Name="SBillNo" />
+            <PropertyRef Name="BillNo" />
+            <PropertyRef Name="BillDate" />
+            <PropertyRef Name="Formno" />
+            <PropertyRef Name="FCode" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="OrderType" />
+            <PropertyRef Name="DownIDNo" />
+            <PropertyRef Name="DownMemName" />
+            <PropertyRef Name="BillBVValue" />
+            <PropertyRef Name="BVValue" />
+            <PropertyRef Name="PVValue" />
+            <PropertyRef Name="RPValue" />
+            <PropertyRef Name="Amount" />
+            <PropertyRef Name="IGSTAmt" />
+            <PropertyRef Name="SGSTAmt" />
+            <PropertyRef Name="CGSTAmt" />
+            <PropertyRef Name="OfferUID" />
+            <PropertyRef Name="TaxAmount" />
+            <PropertyRef Name="PayMode" />
+            <PropertyRef Name="RefId" />
+            <PropertyRef Name="RefName" />
+            <PropertyRef Name="KitName" />
+            <PropertyRef Name="BType" />
+            <PropertyRef Name="BillType" />
+            <PropertyRef Name="IsReceive" />
+            <PropertyRef Name="FType" />
+            <PropertyRef Name="Remarks" />
+            <PropertyRef Name="DispatchStatus" />
+            <PropertyRef Name="Series" />
+          </Key>
+          <Property Name="FSessId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="OrderNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderDate" Type="DateTime" Precision="3" />
+          <Property Name="UserSBillNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="UserBillNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SBillNo" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="BillNo" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BillDateStr" Type="String" MaxLength="8000" FixedLength="false" Unicode="false" />
+          <Property Name="BillDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="GroupId" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="GroupName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PartyCode" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PartyName" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Formno" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="FCode" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="NewFCode" Type="String" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OrderType" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DownIDNo" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="DownMemName" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="BillBVValue" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="BVValue" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="PVValue" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="RPValue" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="IGSTAmt" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="SGSTAmt" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="OfferUID" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="TaxAmount" Type="Decimal" Nullable="false" Precision="38" Scale="2" />
+          <Property Name="NetAmt" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="PayMode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RefId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="RefName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="KitName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BillType" Type="String" Nullable="false" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="IsReceive" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="FType" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="1001" FixedLength="false" Unicode="false" />
+          <Property Name="DispatchStatus" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="ISChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Series" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -25170,6 +25212,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="Im_CurrentStock">
             <EntityTypeMapping TypeName="InventoryModel.Im_CurrentStock">
               <MappingFragment StoreEntitySet="Im_CurrentStock">
+                <ScalarProperty Name="IsFree" ColumnName="IsFree" />
                 <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="ProdType" ColumnName="ProdType" />
                 <ScalarProperty Name="BillType" ColumnName="BillType" />
@@ -26599,6 +26642,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="TrnBillMains">
             <EntityTypeMapping TypeName="InventoryModel.TrnBillMain">
               <MappingFragment StoreEntitySet="TrnBillMain">
+                <ScalarProperty Name="IsChallanBill" ColumnName="IsChallanBill" />
                 <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
                 <ScalarProperty Name="BuyerTIN" ColumnName="BuyerTIN" />
                 <ScalarProperty Name="BuyerAddress" ColumnName="BuyerAddress" />
@@ -27736,6 +27780,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="DeletedBillDetails">
             <EntityTypeMapping TypeName="InventoryModel.DeletedBillDetail">
               <MappingFragment StoreEntitySet="DeletedBillDetails">
+                <ScalarProperty Name="IsChallanBill" ColumnName="IsChallanBill" />
                 <ScalarProperty Name="itemcode" ColumnName="itemcode" />
                 <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
                 <ScalarProperty Name="DRecTimeStamp" ColumnName="DRecTimeStamp" />
@@ -27812,6 +27857,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="DeletedBillMains">
             <EntityTypeMapping TypeName="InventoryModel.DeletedBillMain">
               <MappingFragment StoreEntitySet="DeletedBillMain">
+                <ScalarProperty Name="IsChallanBill" ColumnName="IsChallanBill" />
                 <ScalarProperty Name="DUserId" ColumnName="DUserId" />
                 <ScalarProperty Name="DReason" ColumnName="DReason" />
                 <ScalarProperty Name="DRecTimeStamp" ColumnName="DRecTimeStamp" />
@@ -27932,6 +27978,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="DeletedCurrentStocks">
             <EntityTypeMapping TypeName="InventoryModel.DeletedCurrentStock">
               <MappingFragment StoreEntitySet="DeletedCurrentStock">
+                <ScalarProperty Name="IsFree" ColumnName="IsFree" />
                 <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="DRecTimeStamp" ColumnName="DRecTimeStamp" />
                 <ScalarProperty Name="DReason" ColumnName="DReason" />
@@ -30694,6 +30741,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="TrnBillDatas">
             <EntityTypeMapping TypeName="InventoryModel.TrnBillData">
               <MappingFragment StoreEntitySet="TrnBillData">
+                <ScalarProperty Name="IsChallanBill" ColumnName="IsChallanBill" />
                 <ScalarProperty Name="itemcode" ColumnName="itemcode" />
                 <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
                 <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
@@ -30860,6 +30908,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="TrnBillDetails">
             <EntityTypeMapping TypeName="InventoryModel.TrnBillDetail">
               <MappingFragment StoreEntitySet="TrnBillDetails">
+                <ScalarProperty Name="IsChallanBill" ColumnName="IsChallanBill" />
                 <ScalarProperty Name="itemcode" ColumnName="itemcode" />
                 <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
                 <ScalarProperty Name="UID" ColumnName="UID" />
@@ -31167,54 +31216,6 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
                 <ScalarProperty Name="CatId" ColumnName="CatId" />
                 <ScalarProperty Name="PartyName" ColumnName="PartyName" />
                 <ScalarProperty Name="PartyCode" ColumnName="PartyCode" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="V_BillWiseSaleSummary">
-            <EntityTypeMapping TypeName="InventoryModel.V_BillWiseSaleSummary">
-              <MappingFragment StoreEntitySet="V#BillWiseSaleSummary">
-                <ScalarProperty Name="DispatchStatus" ColumnName="DispatchStatus" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="FType" ColumnName="FType" />
-                <ScalarProperty Name="IsReceive" ColumnName="IsReceive" />
-                <ScalarProperty Name="BillType" ColumnName="BillType" />
-                <ScalarProperty Name="BType" ColumnName="BType" />
-                <ScalarProperty Name="Series" ColumnName="Series" />
-                <ScalarProperty Name="KitName" ColumnName="KitName" />
-                <ScalarProperty Name="RefName" ColumnName="RefName" />
-                <ScalarProperty Name="RefId" ColumnName="RefId" />
-                <ScalarProperty Name="PayMode" ColumnName="PayMode" />
-                <ScalarProperty Name="NetAmt" ColumnName="NetAmt" />
-                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
-                <ScalarProperty Name="OfferUID" ColumnName="OfferUID" />
-                <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
-                <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
-                <ScalarProperty Name="IGSTAmt" ColumnName="IGSTAmt" />
-                <ScalarProperty Name="Amount" ColumnName="Amount" />
-                <ScalarProperty Name="RPValue" ColumnName="RPValue" />
-                <ScalarProperty Name="PVValue" ColumnName="PVValue" />
-                <ScalarProperty Name="BVValue" ColumnName="BVValue" />
-                <ScalarProperty Name="BillBVValue" ColumnName="BillBVValue" />
-                <ScalarProperty Name="DownMemName" ColumnName="DownMemName" />
-                <ScalarProperty Name="DownIDNo" ColumnName="DownIDNo" />
-                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="NewFCode" ColumnName="NewFCode" />
-                <ScalarProperty Name="FCode" ColumnName="FCode" />
-                <ScalarProperty Name="Formno" ColumnName="Formno" />
-                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
-                <ScalarProperty Name="PartyCode" ColumnName="PartyCode" />
-                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
-                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
-                <ScalarProperty Name="BillDate" ColumnName="BillDate" />
-                <ScalarProperty Name="BillDateStr" ColumnName="BillDateStr" />
-                <ScalarProperty Name="BillNo" ColumnName="BillNo" />
-                <ScalarProperty Name="SBillNo" ColumnName="SBillNo" />
-                <ScalarProperty Name="UserBillNo" ColumnName="UserBillNo" />
-                <ScalarProperty Name="UserSBillNo" ColumnName="UserSBillNo" />
-                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
-                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
-                <ScalarProperty Name="FSessId" ColumnName="FSessId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -32094,6 +32095,66 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="AId" ColumnName="AId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TrnChallanBills">
+            <EntityTypeMapping TypeName="InventoryModel.TrnChallanBill">
+              <MappingFragment StoreEntitySet="TrnChallanBill">
+                <ScalarProperty Name="AgainstBillNo" ColumnName="AgainstBillNo" />
+                <ScalarProperty Name="UserBillNo" ColumnName="UserBillNo" />
+                <ScalarProperty Name="BillDate" ColumnName="BillDate" />
+                <ScalarProperty Name="BillNo" ColumnName="BillNo" />
+                <ScalarProperty Name="BillId" ColumnName="BillId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_BillWiseSaleSummary">
+            <EntityTypeMapping TypeName="InventoryModel.V_BillWiseSaleSummary">
+              <MappingFragment StoreEntitySet="V#BillWiseSaleSummary">
+                <ScalarProperty Name="Series" ColumnName="Series" />
+                <ScalarProperty Name="ISChallanBill" ColumnName="ISChallanBill" />
+                <ScalarProperty Name="DispatchStatus" ColumnName="DispatchStatus" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="FType" ColumnName="FType" />
+                <ScalarProperty Name="IsReceive" ColumnName="IsReceive" />
+                <ScalarProperty Name="BillType" ColumnName="BillType" />
+                <ScalarProperty Name="BType" ColumnName="BType" />
+                <ScalarProperty Name="KitName" ColumnName="KitName" />
+                <ScalarProperty Name="RefName" ColumnName="RefName" />
+                <ScalarProperty Name="RefId" ColumnName="RefId" />
+                <ScalarProperty Name="PayMode" ColumnName="PayMode" />
+                <ScalarProperty Name="NetAmt" ColumnName="NetAmt" />
+                <ScalarProperty Name="TaxAmount" ColumnName="TaxAmount" />
+                <ScalarProperty Name="OfferUID" ColumnName="OfferUID" />
+                <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
+                <ScalarProperty Name="SGSTAmt" ColumnName="SGSTAmt" />
+                <ScalarProperty Name="IGSTAmt" ColumnName="IGSTAmt" />
+                <ScalarProperty Name="Amount" ColumnName="Amount" />
+                <ScalarProperty Name="RPValue" ColumnName="RPValue" />
+                <ScalarProperty Name="PVValue" ColumnName="PVValue" />
+                <ScalarProperty Name="BVValue" ColumnName="BVValue" />
+                <ScalarProperty Name="BillBVValue" ColumnName="BillBVValue" />
+                <ScalarProperty Name="DownMemName" ColumnName="DownMemName" />
+                <ScalarProperty Name="DownIDNo" ColumnName="DownIDNo" />
+                <ScalarProperty Name="OrderType" ColumnName="OrderType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="NewFCode" ColumnName="NewFCode" />
+                <ScalarProperty Name="FCode" ColumnName="FCode" />
+                <ScalarProperty Name="Formno" ColumnName="Formno" />
+                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
+                <ScalarProperty Name="PartyCode" ColumnName="PartyCode" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="BillDate" ColumnName="BillDate" />
+                <ScalarProperty Name="BillDateStr" ColumnName="BillDateStr" />
+                <ScalarProperty Name="BillNo" ColumnName="BillNo" />
+                <ScalarProperty Name="SBillNo" ColumnName="SBillNo" />
+                <ScalarProperty Name="UserBillNo" ColumnName="UserBillNo" />
+                <ScalarProperty Name="UserSBillNo" ColumnName="UserSBillNo" />
+                <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
+                <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
+                <ScalarProperty Name="FSessId" ColumnName="FSessId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

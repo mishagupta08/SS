@@ -174,5 +174,6 @@ namespace InventoryManagement.API.Models
         public decimal SGSTAmt { get; set; }
         public decimal FreeQty { get; set; }
         public string itemcode { get; set; }
+        public string IsChallanBill { get; set; }
     }
 }

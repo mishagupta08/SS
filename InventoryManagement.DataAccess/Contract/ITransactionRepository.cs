@@ -11,7 +11,7 @@ namespace InventoryManagement.DataAccess.Contract
     {
         List<string> GetAutocompleteProductNames(bool RestrictedproductsAlso);
         List<string> GetAutocompProductsOnly();
-        List<ProductModel> GetproductInfo(string SearchType, string data, bool isCForm, string BillType, decimal CurrentStateCode, string CurrentPartyCode, bool IsBillOnMrp);
+        List<ProductModel> GetproductInfo(string SearchType, string data, bool isCForm, string BillType, decimal CurrentStateCode, string CurrentPartyCode, bool IsBillOnMrp,string IschallanBill);
         CustomerDetail GetCustInfo(string IdNo);
         ResponseDetail SaveDistributorBill(DistributorBillModel objModel);
         List<BankModel> GetBankList();

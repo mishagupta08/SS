@@ -122,6 +122,7 @@ namespace InventoryManagement.Entity.Common
         public string OrderNo { get; set; }
         public string MobileNO { get; set; }
         public string CID { get; set; }
+        public string ChallanAgainst { get; set; }
         public List<User> UserList { get; set; }
 
     }

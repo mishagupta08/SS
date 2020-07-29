@@ -12,10 +12,11 @@ namespace InventoryManagement.API.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class DeletedBillMain
+    public partial class trnbilldatabak16052020
     {
-        public decimal BillId { get; set; }
+        public decimal AId { get; set; }
         public decimal FSessId { get; set; }
+        public decimal SessId { get; set; }
         public decimal SBillNo { get; set; }
         public string BillNo { get; set; }
         public string RefNo { get; set; }
@@ -27,33 +28,30 @@ namespace InventoryManagement.API.Models
         public string FCode { get; set; }
         public string PartyName { get; set; }
         public decimal SupplierId { get; set; }
-        public Nullable<decimal> ChDDNo { get; set; }
+        public decimal ChDDNo { get; set; }
         public Nullable<System.DateTime> ChDate { get; set; }
-        public Nullable<decimal> ChAmt { get; set; }
+        public decimal ChAmt { get; set; }
         public decimal BankCode { get; set; }
         public string BankName { get; set; }
         public decimal FormNo { get; set; }
-        public decimal TaxAmount { get; set; }
-        public decimal STaxAmount { get; set; }
-        public decimal Discount { get; set; }
-        public decimal KitBvValue { get; set; }
-        public decimal BvValue { get; set; }
-        public decimal CVValue { get; set; }
-        public decimal PVValue { get; set; }
-        public decimal RPValue { get; set; }
+        public decimal TotalTaxAmount { get; set; }
+        public decimal TotalSTaxAmount { get; set; }
+        public decimal TotalDiscount { get; set; }
+        public decimal TotalKitBvValue { get; set; }
+        public decimal TotalBvValue { get; set; }
+        public decimal TotalCVValue { get; set; }
+        public decimal TotalPVValue { get; set; }
+        public decimal TotalRPValue { get; set; }
         public decimal CashDiscPer { get; set; }
         public decimal CashDiscAmount { get; set; }
         public decimal NetPayable { get; set; }
-        public decimal Amount { get; set; }
+        public decimal TotalAmount { get; set; }
         public decimal RndOff { get; set; }
         public decimal CardAmount { get; set; }
         public string PayMode { get; set; }
         public string PayPrefix { get; set; }
-        public decimal SessId { get; set; }
         public string BvTransfer { get; set; }
         public string Remarks { get; set; }
-        public string ActiveStatus { get; set; }
-        public System.DateTime RecTimeStamp { get; set; }
         public string DispatchStatus { get; set; }
         public string LR { get; set; }
         public Nullable<System.DateTime> LRDate { get; set; }
@@ -75,7 +73,7 @@ namespace InventoryManagement.API.Models
         public string IsReceive { get; set; }
         public string IsCredit { get; set; }
         public string BillType { get; set; }
-        public decimal DiscountAmt { get; set; }
+        public decimal TotalDiscountAmt { get; set; }
         public decimal VDiscountAmt { get; set; }
         public string ReceiverID { get; set; }
         public string ReceiverName { get; set; }
@@ -87,9 +85,11 @@ namespace InventoryManagement.API.Models
         public decimal CashReward { get; set; }
         public decimal RecvAmount { get; set; }
         public decimal ReturnToCustAmt { get; set; }
-        public string Version { get; set; }
+        public string ActiveStatus { get; set; }
+        public System.DateTime RecTimeStamp { get; set; }
         public decimal UserId { get; set; }
         public string UserName { get; set; }
+        public string Version { get; set; }
         public string DelvPlace { get; set; }
         public string PaymentDtl { get; set; }
         public string IDType { get; set; }
@@ -99,6 +99,47 @@ namespace InventoryManagement.API.Models
         public string Pincode { get; set; }
         public decimal CourierId { get; set; }
         public string CourierName { get; set; }
+        public string ProductId { get; set; }
+        public string ProductName { get; set; }
+        public string BatchNo { get; set; }
+        public string Barcode { get; set; }
+        public decimal Qty { get; set; }
+        public decimal MRP { get; set; }
+        public decimal DP { get; set; }
+        public decimal Rate { get; set; }
+        public decimal BV { get; set; }
+        public decimal BVValue { get; set; }
+        public decimal CV { get; set; }
+        public decimal CVValue { get; set; }
+        public decimal PV { get; set; }
+        public decimal PVValue { get; set; }
+        public decimal RP { get; set; }
+        public decimal RPValue { get; set; }
+        public string IsKitBV { get; set; }
+        public string TaxType { get; set; }
+        public decimal Tax { get; set; }
+        public decimal TaxAmount { get; set; }
+        public decimal DiscountPer { get; set; }
+        public decimal Discount { get; set; }
+        public decimal NetAmount { get; set; }
+        public string DSeries { get; set; }
+        public string DImported { get; set; }
+        public string IMEINo { get; set; }
+        public string BNo { get; set; }
+        public string ItemType { get; set; }
+        public decimal VDiscount { get; set; }
+        public decimal VDiscountValue { get; set; }
+        public decimal FPoint { get; set; }
+        public decimal FPointValue { get; set; }
+        public decimal ProdCommssn { get; set; }
+        public decimal ProdCommssnAmt { get; set; }
+        public string OrdStatus { get; set; }
+        public decimal OrdQty { get; set; }
+        public decimal RemQty { get; set; }
+        public decimal DP1 { get; set; }
+        public string DReason { get; set; }
+        public decimal DUserId { get; set; }
+        public Nullable<System.DateTime> DRecTimeStamp { get; set; }
         public decimal DocWeight { get; set; }
         public string DocketNo { get; set; }
         public Nullable<System.DateTime> DOD { get; set; }
@@ -118,16 +159,20 @@ namespace InventoryManagement.API.Models
         public decimal StkRecvUserId { get; set; }
         public string InTransit { get; set; }
         public string UID { get; set; }
+        public decimal OfferUID { get; set; }
+        public string IsKit { get; set; }
+        public string ProdType { get; set; }
         public string TotalCorton { get; set; }
         public string TotalMonoCorton { get; set; }
-        public decimal SGrNo { get; set; }
-        public string GRNo { get; set; }
+        public int SpclOfferId { get; set; }
+        public decimal VAT { get; set; }
         public string BuyerAddress { get; set; }
         public string BuyerTIN { get; set; }
+        public decimal CGST { get; set; }
         public decimal CGSTAmt { get; set; }
-        public System.DateTime DRecTimeStamp { get; set; }
-        public string DReason { get; set; }
-        public decimal DUserId { get; set; }
-        public string IsChallanBill { get; set; }
+        public decimal SGST { get; set; }
+        public decimal SGSTAmt { get; set; }
+        public decimal FreeQty { get; set; }
+        public string itemcode { get; set; }
     }
 }

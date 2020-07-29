@@ -518,7 +518,7 @@ namespace InventoryManagement.API.Controllers
         //    return objListBanks;
         //}
 
-        public List<ProductModel> GetproductInfo(string SearchType, string data, bool isCForm, string BillType, decimal CurrentStateCode, string CurrentPartyCode, bool IsBillOnMrp)
+        public List<ProductModel> GetproductInfo(string SearchType, string data, bool isCForm, string BillType, decimal CurrentStateCode, string CurrentPartyCode, bool IsBillOnMrp,string IschallanBill)
         {
             List<ProductModel> objProductModel = new List<ProductModel>();
             List<ProductModel> TempResult = new List<ProductModel>();
@@ -699,10 +699,20 @@ namespace InventoryManagement.API.Controllers
                                 int IsDiscount = Convert.ToInt32(valueIsDiscountAdd);
                                 TempObj.IsCommissionAdd = IsCommission;
                                 TempObj.IsDiscountAdd = IsDiscount;
-                                TempObj.StockAvailable = (from stockAvail in entity.Im_CurrentStock
-                                                          where stockAvail.BatchCode == TempObj.Barcode.ToString() && stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode)
-                                                          select stockAvail.Qty
-                                                     ).DefaultIfEmpty(0).Sum();
+                                if (!string.IsNullOrEmpty(IschallanBill) && IschallanBill == "Y" && CurrentPartyCode != System.Web.Configuration.WebConfigurationManager.AppSettings["WRPartyCode"])
+                                {
+                                    TempObj.StockAvailable = (from stockAvail in entity.Im_CurrentStock
+                                                              where stockAvail.IsFree == "Y" && stockAvail.BatchCode == TempObj.Barcode.ToString() && stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode)
+                                                              select stockAvail.Qty
+                                                         ).DefaultIfEmpty(0).Sum();
+                                }
+                                else
+                                {
+                                    TempObj.StockAvailable = (from stockAvail in entity.Im_CurrentStock
+                                                              where stockAvail.IsFree != "Y" && stockAvail.BatchCode == TempObj.Barcode.ToString() && stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode)
+                                                              select stockAvail.Qty
+                                                         ).DefaultIfEmpty(0).Sum();
+                                }
                                 //var RatesMaster = (from r in entity.M_ProdRatesMaster where r.ProdID == TempObj.ProductCodeStr && r.SoldBy==CurrentPartyCode select r).FirstOrDefault();
                                 //if (RatesMaster != null)
                                 //{
@@ -752,11 +762,21 @@ namespace InventoryManagement.API.Controllers
                                                                }).ToList();
 
                                 foreach (var code in objItemCodes)
-                                {
-                                    code.stockAvailable = (from stockAvail in entity.Im_CurrentStock
-                                                              where  stockAvail.ItemCode==code.ItemCode1 &&  stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode) 
-                                                              select stockAvail.Qty
-                                                     ).DefaultIfEmpty(0).Sum();
+                                {                                   
+                                    if (!string.IsNullOrEmpty(IschallanBill) && IschallanBill == "Y" && CurrentPartyCode != System.Web.Configuration.WebConfigurationManager.AppSettings["WRPartyCode"])
+                                    {
+                                        code.stockAvailable = (from stockAvail in entity.Im_CurrentStock
+                                                               where stockAvail.IsFree=="Y" && stockAvail.ItemCode == code.ItemCode1 && stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode)
+                                                               select stockAvail.Qty
+                                                    ).DefaultIfEmpty(0).Sum();
+                                    }
+                                    else
+                                    {
+                                        code.stockAvailable = (from stockAvail in entity.Im_CurrentStock
+                                                               where stockAvail.IsFree != "Y" && stockAvail.ItemCode == code.ItemCode1 && stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode)
+                                                               select stockAvail.Qty
+                                                    ).DefaultIfEmpty(0).Sum();
+                                    }
                                 }
 
                                 TempObj.itemCodes = objItemCodes;
@@ -1281,6 +1301,7 @@ namespace InventoryManagement.API.Controllers
                             {
                                 objListProductModel.Add(obj);
                                 TrnBillData objDTBillData = new TrnBillData();
+                                objDTBillData.IsChallanBill = !string.IsNullOrEmpty(objModel.IsChallan) ? "Y" : "N";
                                 objDTBillData.SBillNo = maxSbillNo;
                                 objDTBillData.FSessId = FsessId ?? 0;
                                 objDTBillData.SessId = SessId ?? 0;
@@ -1414,8 +1435,8 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.RndOff = objModel.objProduct.Roundoff;
                                 }
                                 objDTBillData.CardAmount = 0;
-                                objDTBillData.PayMode = Paymode.Count > 1 ? string.Join(",", Paymode) : Paymode[0];
-                                objDTBillData.PayPrefix = PayPrefix.Count > 1 ? string.Join(",", PayPrefix) : PayPrefix[0];
+                                objDTBillData.PayMode = Paymode!=null && Paymode.Count >= 1 ? string.Join(",", Paymode) : "";
+                                objDTBillData.PayPrefix = PayPrefix!=null && PayPrefix.Count >=1 ? string.Join(",", PayPrefix) : "";
                                 objDTBillData.BvTransfer = "N";
 
                                 //objDTBillData.UserSBillNo = maxSbillNo;
@@ -1429,7 +1450,10 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.DispatchTo = objModel.objCustomer.IdNo;
                                 objDTBillData.FreightType = objModel.FreightType;
                                 objDTBillData.FreightAmt = objModel.FreightAmt;
-                                objDTBillData.Series = "";
+                                if (!string.IsNullOrEmpty(objModel.IsChallan) && objModel.IsChallan == "Y")
+                                    objDTBillData.Series = objModel.AgainstBillNo;
+                                else
+                                    objDTBillData.Series = "";
                                 objDTBillData.Scratch = "";
                                 //if (objModel.objCustomer.IsBillOnMrp)
                                 //{
@@ -1532,6 +1556,9 @@ namespace InventoryManagement.API.Controllers
                                     }
                                 }
                             }
+
+                           
+
                             int i = 0;
 
                             using (var objDTTrans = entity.Database.BeginTransaction())
@@ -1587,7 +1614,7 @@ namespace InventoryManagement.API.Controllers
                                 }
                                 i = 0;
                                 i = entity.SaveChanges();
-                                if (i>0)
+                                if (i>=0)
                                 {
 
                                     var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
@@ -1777,6 +1804,7 @@ namespace InventoryManagement.API.Controllers
                             {
                                 objListProductModel.Add(obj);
                                 TrnBillData objDTBillData = new TrnBillData();
+                                objDTBillData.IsChallanBill = !string.IsNullOrEmpty(objModel.IsChallan) ? "Y" : "N";
                                 objDTBillData.SBillNo = maxSbillNo;
                                 objDTBillData.FSessId = FsessId ?? 0;
                                 objDTBillData.SessId = SessId ?? 0;
@@ -1894,8 +1922,8 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.RndOff = objModel.objProduct.Roundoff;
                                 }
                                 objDTBillData.CardAmount = 0;
-                                objDTBillData.PayMode = Paymode.Count > 1 ? string.Join(",", Paymode) : Paymode[0];
-                                objDTBillData.PayPrefix = PayPrefix.Count > 1 ? string.Join(",", PayPrefix) : PayPrefix[0];
+                                objDTBillData.PayMode = Paymode!=null && Paymode.Count >= 1 ? string.Join(",", Paymode) :"";
+                                objDTBillData.PayPrefix = PayPrefix != null && PayPrefix.Count >= 1 ? string.Join(",", PayPrefix) : "";
                                 objDTBillData.BvTransfer = "N";
 
                                 //objDTBillData.UserSBillNo = maxSbillNo;
@@ -1909,7 +1937,10 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.DispatchTo = "";
                                 objDTBillData.FreightType = objModel.FreightType;
                                 objDTBillData.FreightAmt = objModel.FreightAmt;
-                                objDTBillData.Series = "";
+                                if (!string.IsNullOrEmpty(objModel.IsChallan) && objModel.IsChallan == "Y")
+                                    objDTBillData.Series = objModel.AgainstBillNo;
+                                else
+                                    objDTBillData.Series = "";
                                 objDTBillData.Scratch = "";
 
                                 objDTBillData.Unit = 0;
@@ -2455,6 +2486,7 @@ namespace InventoryManagement.API.Controllers
                                                           where r.UserBillNo == BillNo && (id == "F" || id == r.FCode)
                                                           select new ProductModel
                                                           {
+															  IsChallanBill = r.IsChallanBill,
                                                               IdNo = r.FCode,
                                                               Mobileno = r.ReceiverMNo,
                                                               itemCode = t.itemcode,
@@ -2599,6 +2631,9 @@ namespace InventoryManagement.API.Controllers
                                 objDistributorModel.objCustomer.PANNo = "";
                             }
                         }
+						
+						objDistributorModel.IsChallan = objDistributorModel.objListProduct[0].IsChallanBill;
+
                         objDistributorModel.DelvAddress = objDistributorModel.objListProduct[0].DeliveryPlace;
                         objDistributorModel.StateGSTName = GetStateGstName(objDistributorModel.objCustomer.StateCode);
                         objDistributorModel.objProduct = new ProductModel();
@@ -5569,7 +5604,7 @@ namespace InventoryManagement.API.Controllers
                     {
                         billList = (from r in entity.TrnBillMains
                                     let date = r.OrderType == "T" ? date1 : date2
-                                    where r.FCode == Fcode && r.FType == "M" && (r.BillDate >= date2) && (r.BillDate <= date1)
+                                    where r.FCode == Fcode && r.IsChallanBill!="Y" && r.FType == "M" && (r.BillDate >= date2) && (r.BillDate <= date1)
                                     select new PartyBill
                                     {
                                         BillNo = r.BillNo,

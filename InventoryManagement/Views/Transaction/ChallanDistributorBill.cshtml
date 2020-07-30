@@ -690,10 +690,10 @@
                     //    ProductArray.TaxAmt = parseFloat(ProductArray.TaxAmt) - 0.01;
                     //}
 
-                    ProductArray.RPValue = ProductArray.RP * Quantity;
-                    ProductArray.CVValue = ProductArray.CV * Quantity;
-                    ProductArray.BVValue = ProductArray.BV * Quantity;
-                    ProductArray.PVValue = ProductArray.PV * Quantity;
+                    ProductArray.RPValue = 0;
+                    ProductArray.CVValue = 0;
+                    ProductArray.BVValue = 0;
+                    ProductArray.PVValue = 0;
                     ProductArray.WeightVal = ProductArray.Weight * Quantity;
                     ProductArray.Qty = Quantity;
                     if (offerproduct) {

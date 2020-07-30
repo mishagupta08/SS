@@ -5260,7 +5260,8 @@ namespace InventoryManagement.API.Controllers
 
                 string InvConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["InventoryServices"].ConnectionString;
                 SqlConnection SC = new SqlConnection(InvConnectionString);
-
+                string AppConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["SarsoServices"].ConnectionString;
+                SqlConnection SC1 = new SqlConnection(AppConnectionString);
                 string sqlQry = "";
                 var billNoArray = BillNo.Split(',');
                 var FsessIdArray = FsessId.Split(',');
@@ -5283,6 +5284,22 @@ namespace InventoryManagement.API.Controllers
                 int i = cmd.ExecuteNonQuery();
                 if (i > 0)
                 {
+                    sqlQry = "";
+                    for (var j = 0; j < billNoArray.Length; j++)
+                    {
+                        if (!string.IsNullOrEmpty(billNoArray[j]))
+                        {
+                            sqlQry += "Exec DeleteFranchiseBill '" + billNoArray[j] + "';";
+                        }
+                    }
+
+                    cmd = new SqlCommand();
+                    cmd.CommandText = sqlQry;
+                    cmd.Connection = SC1;
+                    SC1.Close();
+                    SC1.Open();
+                    int t = cmd.ExecuteNonQuery();
+
                     objResponse.ResponseMessage = "Successfully Deleted!";
                     objResponse.ResponseStatus = "OK";
 

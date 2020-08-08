@@ -129,5 +129,6 @@ namespace InventoryManagement.API.Models
         public string DReason { get; set; }
         public decimal DUserId { get; set; }
         public string IsChallanBill { get; set; }
+        public Nullable<decimal> ChallanSno { get; set; }
     }
 }

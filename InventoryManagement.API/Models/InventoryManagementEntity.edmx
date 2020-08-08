@@ -418,6 +418,7 @@ warning 6002: The table/view 'SrsInv.dbo.DeletedBillMain' does not have a primar
           <Property Name="BuyerTIN" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="CGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="IsChallanBill" Type="char" MaxLength="1" />
+          <Property Name="ChallanSno" Type="numeric" Precision="18" Scale="0" />
           <Property Name="DRecTimeStamp" Type="datetime" Nullable="false" />
           <Property Name="DReason" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="DUserId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
@@ -5701,6 +5702,7 @@ warning 6002: The table/view 'SrsInv.dbo.TransMaster' does not have a primary ke
           <Property Name="FreeQty" Type="numeric" Precision="18" Scale="0" Nullable="false" />
           <Property Name="itemcode" Type="nvarchar" MaxLength="150" />
           <Property Name="IsChallanBill" Type="char" MaxLength="1" />
+          <Property Name="ChallanSno" Type="numeric" Precision="18" Scale="0" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.trnbillData19062020' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -6802,6 +6804,7 @@ warning 6002: The table/view 'SrsInv.dbo.trnbilldetailsbak16052020' does not hav
           <Property Name="BuyerTIN" Type="varchar" MaxLength="30" Nullable="false" />
           <Property Name="CGSTAmt" Type="numeric" Precision="18" Scale="2" Nullable="false" />
           <Property Name="IsChallanBill" Type="char" MaxLength="1" />
+          <Property Name="ChallanSno" Type="numeric" Precision="18" Scale="0" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.trnbillmain19062020' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -10671,6 +10674,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [DeletedBillMain].[BuyerTIN] AS [BuyerTIN], 
     [DeletedBillMain].[CGSTAmt] AS [CGSTAmt], 
     [DeletedBillMain].[IsChallanBill] AS [IsChallanBill], 
+    [DeletedBillMain].[ChallanSno] AS [ChallanSno], 
     [DeletedBillMain].[DRecTimeStamp] AS [DRecTimeStamp], 
     [DeletedBillMain].[DReason] AS [DReason], 
     [DeletedBillMain].[DUserId] AS [DUserId]
@@ -16658,6 +16662,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="BuyerTIN" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
           <Property Name="CGSTAmt" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="IsChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ChallanSno" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="TrnCancelOrder">
           <Key>
@@ -18019,6 +18024,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="DReason" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="DUserId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="IsChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ChallanSno" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="DeletedCurrentStock">
           <Key>
@@ -22428,6 +22434,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="FreeQty" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="itemcode" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
           <Property Name="IsChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ChallanSno" Type="Decimal" Precision="18" Scale="0" />
         </EntityType>
         <EntityType Name="TrnBillDetail">
           <Key>
@@ -26642,6 +26649,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="TrnBillMains">
             <EntityTypeMapping TypeName="InventoryModel.TrnBillMain">
               <MappingFragment StoreEntitySet="TrnBillMain">
+                <ScalarProperty Name="ChallanSno" ColumnName="ChallanSno" />
                 <ScalarProperty Name="IsChallanBill" ColumnName="IsChallanBill" />
                 <ScalarProperty Name="CGSTAmt" ColumnName="CGSTAmt" />
                 <ScalarProperty Name="BuyerTIN" ColumnName="BuyerTIN" />
@@ -27857,6 +27865,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="DeletedBillMains">
             <EntityTypeMapping TypeName="InventoryModel.DeletedBillMain">
               <MappingFragment StoreEntitySet="DeletedBillMain">
+                <ScalarProperty Name="ChallanSno" ColumnName="ChallanSno" />
                 <ScalarProperty Name="IsChallanBill" ColumnName="IsChallanBill" />
                 <ScalarProperty Name="DUserId" ColumnName="DUserId" />
                 <ScalarProperty Name="DReason" ColumnName="DReason" />
@@ -30741,6 +30750,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="TrnBillDatas">
             <EntityTypeMapping TypeName="InventoryModel.TrnBillData">
               <MappingFragment StoreEntitySet="TrnBillData">
+                <ScalarProperty Name="ChallanSno" ColumnName="ChallanSno" />
                 <ScalarProperty Name="IsChallanBill" ColumnName="IsChallanBill" />
                 <ScalarProperty Name="itemcode" ColumnName="itemcode" />
                 <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />

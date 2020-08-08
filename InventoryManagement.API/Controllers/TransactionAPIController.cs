@@ -1123,18 +1123,28 @@ namespace InventoryManagement.API.Controllers
                     maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType != "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
                     maxUserSBillNo = maxUserSBillNo + 1;
                     string strMaxUserSBillNo = maxUserSBillNo.ToString();
+                    decimal? maxCHBillNo = 0;
+
                     if (strMaxUserSBillNo.Count() < 3)
                     {
                         var countNum = strMaxUserSBillNo.Count();
                         var ToBeAddedDigits = 3 - countNum;
-                        //strMaxUserSBillNo = maxUserSBillNo.ToString().PadLeft(ToBeAddedDigits,'0');
                         for (var j = 0; j < ToBeAddedDigits; j++)
                         {
                             strMaxUserSBillNo = "0" + strMaxUserSBillNo;
-                        }
-                        // maxUserSBillNo = decimal.Parse(strMaxUserSBillNo);
+                        }                        
                     }
-                    UserBillNo = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + strMaxUserSBillNo;
+
+                    if (!string.IsNullOrEmpty(objModel.IsChallan) && objModel.IsChallan == "Y")
+                    {
+                        maxCHBillNo = (from result in entity.TrnBillMains where result.IsChallanBill == "Y" select result.ChallanSno).DefaultIfEmpty(0).Max();
+                        maxCHBillNo = maxCHBillNo + 1;
+                        UserBillNo = "CH/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + maxCHBillNo.ToString();
+                    }
+                    else {
+                        UserBillNo = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + strMaxUserSBillNo;
+                    }
+
                     version = (from result in entity.M_NewHOVersionInfo select result.VersionNo).FirstOrDefault();
 
 
@@ -1300,8 +1310,9 @@ namespace InventoryManagement.API.Controllers
                             foreach (var obj in objModel.objListProduct)
                             {
                                 objListProductModel.Add(obj);
-                                TrnBillData objDTBillData = new TrnBillData();
-                                objDTBillData.IsChallanBill = !string.IsNullOrEmpty(objModel.IsChallan) ? "Y" : "N";
+                                TrnBillData objDTBillData = new TrnBillData();                    
+                                objDTBillData.ChallanSno = maxCHBillNo;
+                                objDTBillData.IsChallanBill = !string.IsNullOrEmpty(objModel.IsChallan) && objModel.IsChallan == "Y" ? "Y" : "N";
                                 objDTBillData.SBillNo = maxSbillNo;
                                 objDTBillData.FSessId = FsessId ?? 0;
                                 objDTBillData.SessId = SessId ?? 0;
@@ -1804,7 +1815,8 @@ namespace InventoryManagement.API.Controllers
                             {
                                 objListProductModel.Add(obj);
                                 TrnBillData objDTBillData = new TrnBillData();
-                                objDTBillData.IsChallanBill = !string.IsNullOrEmpty(objModel.IsChallan) ? "Y" : "N";
+                                objDTBillData.ChallanSno = maxCHBillNo;
+                                objDTBillData.IsChallanBill = !string.IsNullOrEmpty(objModel.IsChallan) && objModel.IsChallan == "Y" ? "Y" : "N";
                                 objDTBillData.SBillNo = maxSbillNo;
                                 objDTBillData.FSessId = FsessId ?? 0;
                                 objDTBillData.SessId = SessId ?? 0;

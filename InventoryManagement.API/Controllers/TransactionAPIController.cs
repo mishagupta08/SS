@@ -1137,9 +1137,11 @@ namespace InventoryManagement.API.Controllers
 
                     if (!string.IsNullOrEmpty(objModel.IsChallan) && objModel.IsChallan == "Y")
                     {
+
                         maxCHBillNo = (from result in entity.TrnBillMains where result.IsChallanBill == "Y" select result.ChallanSno).DefaultIfEmpty(0).Max();
                         maxCHBillNo = maxCHBillNo + 1;
                         UserBillNo = "CH/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + maxCHBillNo.ToString();
+                        maxUserSBillNo = 0;
                     }
                     else {
                         UserBillNo = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + strMaxUserSBillNo;

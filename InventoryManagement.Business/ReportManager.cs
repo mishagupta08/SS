@@ -13,6 +13,7 @@ namespace InventoryManagement.Business
     public class ReportManager: IReportManager
     {
         ReportRepository objReportRepo = new ReportRepository();
+
         public List<ProductDetails> GetAllProducts(decimal CategoryCode)
         {
             return (objReportRepo.GetAllProducts(CategoryCode));

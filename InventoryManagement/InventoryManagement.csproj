@@ -1964,6 +1964,7 @@
     <Content Include="Views\Transaction\OfferMaster.cshtml" />
     <Content Include="Views\Transaction\ChallanDistributorBill.cshtml" />
     <Content Include="Views\Transaction\ChallanPartyBill.cshtml" />
+    <Content Include="Views\Report\PaymentGatewayReport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -4113,5 +4113,82 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
             return objLogDetail;
         }
 
+
+        public List<PaymentGatewayReport> GetPaymentGatewayReport(string FromDate, string ToDate, string User)
+        {
+            List<PaymentGatewayReport> objPaymentGateway = new List<PaymentGatewayReport>();
+
+            DateTime StartDate = DateTime.Now;
+            DateTime EndDate = DateTime.Now;
+
+            if (!string.IsNullOrEmpty(FromDate) && FromDate != "All")
+            {
+                var SplitDate = FromDate.Split('-');
+                string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                StartDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
+                StartDate = StartDate.Date;
+            }
+            if (!string.IsNullOrEmpty(ToDate) && ToDate != "All")
+            {
+                var SplitDate = ToDate.Split('-');
+                string NewDate = SplitDate[1] + "/" + ("0" + SplitDate[0]).Substring(("0" + SplitDate[0]).Length - 2, 2) + "/" + SplitDate[2];
+                EndDate = Convert.ToDateTime(DateTime.ParseExact(NewDate, "MM/dd/yyyy", CultureInfo.InvariantCulture));
+                EndDate = EndDate.Date;
+            }
+            
+            try
+            {
+                using (var entity = new InventoryEntities())
+                {                    
+
+                    if (!string.IsNullOrEmpty(FromDate) && FromDate != "All" && !string.IsNullOrEmpty(ToDate) && ToDate != "All")
+                    {
+
+                        objPaymentGateway = (from r in entity.TblPaymentGetWayRequests
+                                             where r.invdate >= StartDate && r.invdate <= EndDate 
+                                             join t in entity.M_LedgerMaster on r.IdNo equals t.PartyCode into payment
+                                             from tt in payment.DefaultIfEmpty()
+                                             select new PaymentGatewayReport
+                                             {
+                                                 IdNo = r.IdNo,
+                                                 ORDER_ID = r.ORDER_ID,
+                                                 TXNID = r.TXNID,
+                                                 invdate = r.invdate,
+                                                 PartyName = tt.PartyName,
+                                                 reqAmt = r.reqAmt,
+                                                 remarks = r.remarks,
+                                                 mop = r.mop
+                                             }).ToList();
+                    }
+                    else
+                    {
+                        objPaymentGateway = (from r in entity.TblPaymentGetWayRequests
+                                             join t in entity.M_LedgerMaster on r.IdNo equals t.PartyCode into payment
+                                             from tt in payment.DefaultIfEmpty()
+                                             select new PaymentGatewayReport
+                                             {
+                                                 IdNo = r.IdNo,
+                                                 ORDER_ID = r.ORDER_ID,
+                                                 TXNID = r.TXNID,
+                                                 invdate = r.invdate,
+                                                 PartyName = tt.PartyName,
+                                                 reqAmt = r.reqAmt,
+                                                 remarks = r.remarks,
+                                                 mop = r.mop
+                                             }).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(User))
+                    {
+                        objPaymentGateway = objPaymentGateway.Where(r => r.IdNo == User).ToList();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return objPaymentGateway;
+        }
+
     }
 }

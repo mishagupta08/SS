@@ -1048,5 +1048,37 @@ namespace InventoryManagement.Controllers
 
             return Json(objOfferReport, JsonRequestBehavior.AllowGet);
         }
+
+
+        [SessionExpire]
+        public ActionResult PaymentGatewayReport()
+        {
+            SalesReport objsalesreport = new Entity.Common.SalesReport();            
+            return View("PaymentGatewayReport", objsalesreport);           
+        }
+
+        [HttpPost]
+        public ActionResult GetPaymentGatewayReport(string FromDate, string ToDate, string PartyCode)
+        {
+
+            List<PaymentGatewayReport> objOfferReport = new List<PaymentGatewayReport>();
+
+            string CurrentPartyCode = "";
+            if (Session["LoginUser"] != null)
+                CurrentPartyCode = (Session["LoginUser"] as User).PartyCode;
+
+            if (CurrentPartyCode != System.Web.Configuration.WebConfigurationManager.AppSettings["WRPartyCode"] &&( PartyCode == "" || PartyCode.ToUpper() == "ALL"))
+                PartyCode = CurrentPartyCode;
+
+            objOfferReport = objReportManager.GetPaymentGatewayReport(FromDate, ToDate, PartyCode);
+
+            //Added log
+            string hostName = Dns.GetHostName();
+            string myIP = Dns.GetHostEntry(hostName).AddressList[0].ToString();
+            string currentDate = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+            objLogManager.SaveLog(Session["LoginUser"] as User, "Generated log report", myIP + currentDate);
+
+            return Json(objOfferReport, JsonRequestBehavior.AllowGet);
+        }
     }
 }

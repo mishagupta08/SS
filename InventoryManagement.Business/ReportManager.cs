@@ -157,5 +157,10 @@ namespace InventoryManagement.Business
         {
             return objReportRepo.GetLogReport(FromDate, ToDate, User);
         }
+        
+        public List<PaymentGatewayReport> GetPaymentGatewayReport(string FromDate, string ToDate, string User)
+        {
+            return objReportRepo.GetPaymentGatewayReport(FromDate, ToDate, User);
+        }
     }
 }

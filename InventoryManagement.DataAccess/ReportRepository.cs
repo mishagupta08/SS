@@ -155,5 +155,10 @@ namespace InventoryManagement.DataAccess
             return objReportAPI.GetLogReport(FromDate, ToDate,User);
         }
 
+        public List<PaymentGatewayReport> GetPaymentGatewayReport(string FromDate, string ToDate, string User)
+        {
+            return objReportAPI.GetPaymentGatewayReport(FromDate, ToDate, User);
+        }
+
     }
 }

@@ -271,6 +271,7 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<M_ErrorLogMaster> M_ErrorLogMaster { get; set; }
         public virtual DbSet<TrnChallanBill> TrnChallanBills { get; set; }
         public virtual DbSet<V_BillWiseSaleSummary> V_BillWiseSaleSummary { get; set; }
+        public virtual DbSet<TblRefBussiness> TblRefBussinesses { get; set; }
     
         [DbFunction("InventoryEntities", "MonthWiseSummary")]
         public virtual IQueryable<MonthWiseSummary_Result> MonthWiseSummary(string partyCode, string rptType, string prodType)

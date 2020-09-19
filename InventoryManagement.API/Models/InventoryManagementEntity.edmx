@@ -2855,6 +2855,7 @@ warning 6002: The table/view 'SrsInv.dbo.M_IsCardIssue' does not have a primary 
           <Property Name="UserName" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="LastModified" Type="varchar" MaxLength="250" Nullable="false" />
           <Property Name="RecvdCForm" Type="char" MaxLength="1" Nullable="false" />
+          <Property Name="RefID" Type="int" />
         </EntityType>
         <EntityType Name="M_LogMaster">
           <Key>
@@ -4318,6 +4319,18 @@ warning 6002: The table/view 'SrsInv.dbo.RepurchIncome' does not have a primary 
           <Property Name="pgtype" Type="varchar" MaxLength="100" />
           <Property Name="PGTranStatus" Type="varchar" MaxLength="100" />
           <Property Name="UpdateDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="TblRefBussiness">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdNo" Type="int" />
+          <Property Name="Cv" Type="numeric" Precision="18" Scale="2" />
+          <Property Name="BillNo" Type="nvarchar" MaxLength="100" />
+          <Property Name="BillDate" Type="datetime" />
+          <Property Name="SessionId" Type="int" />
+          <Property Name="RefIdNo" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.TempBankMaster' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -10431,6 +10444,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="TargetDetail" EntityType="Self.TargetDetail" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TargetMaster" EntityType="Self.TargetMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TblPaymentGetWayRequest" EntityType="Self.TblPaymentGetWayRequest" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TblRefBussiness" EntityType="Self.TblRefBussiness" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TempBillMain" EntityType="Self.TempBillMain" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TempCourierMaster" EntityType="Self.TempCourierMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TempLeaderWiseOffer" EntityType="Self.TempLeaderWiseOffer" Schema="dbo" store:Type="Tables" />
@@ -14344,6 +14358,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="M_ErrorLogMaster" EntityType="InventoryModel.M_ErrorLogMaster" />
           <EntitySet Name="TrnChallanBills" EntityType="InventoryModel.TrnChallanBill" />
           <EntitySet Name="V_BillWiseSaleSummary" EntityType="InventoryModel.V_BillWiseSaleSummary" />
+          <EntitySet Name="TblRefBussinesses" EntityType="InventoryModel.TblRefBussiness" />
         </EntityContainer>
         <ComplexType Name="MonthWiseSummary_Result">
           <Property Type="String" Name="Mnth" Nullable="false" MaxLength="10" />
@@ -15941,6 +15956,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="UserName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="LastModified" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="RecvdCForm" Type="String" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RefID" Type="Int32" />
         </EntityType>
         <EntityType Name="M_LogMaster">
           <Key>
@@ -24417,6 +24433,18 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="ISChallanBill" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="Series" Type="String" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="false" />
         </EntityType>
+        <EntityType Name="TblRefBussiness">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdNo" Type="Int32" />
+          <Property Name="Cv" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="BillNo" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="BillDate" Type="DateTime" Precision="3" />
+          <Property Name="SessionId" Type="Int32" />
+          <Property Name="RefIdNo" Type="Int32" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -25965,6 +25993,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySetMapping Name="M_LedgerMaster">
             <EntityTypeMapping TypeName="InventoryModel.M_LedgerMaster">
               <MappingFragment StoreEntitySet="M_LedgerMaster">
+                <ScalarProperty Name="RefID" ColumnName="RefID" />
                 <ScalarProperty Name="RecvdCForm" ColumnName="RecvdCForm" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="UserName" ColumnName="UserName" />
@@ -32165,6 +32194,19 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
                 <ScalarProperty Name="OrderDate" ColumnName="OrderDate" />
                 <ScalarProperty Name="OrderNo" ColumnName="OrderNo" />
                 <ScalarProperty Name="FSessId" ColumnName="FSessId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TblRefBussinesses">
+            <EntityTypeMapping TypeName="InventoryModel.TblRefBussiness">
+              <MappingFragment StoreEntitySet="TblRefBussiness">
+                <ScalarProperty Name="RefIdNo" ColumnName="RefIdNo" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+                <ScalarProperty Name="BillDate" ColumnName="BillDate" />
+                <ScalarProperty Name="BillNo" ColumnName="BillNo" />
+                <ScalarProperty Name="Cv" ColumnName="Cv" />
+                <ScalarProperty Name="IdNo" ColumnName="IdNo" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

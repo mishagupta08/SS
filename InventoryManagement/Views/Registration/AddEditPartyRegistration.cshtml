@@ -430,7 +430,10 @@
                             <div class="col-lg-6">
 
                                 <div class="row" style="margin-top:1%;padding-bottom:3%">
-                                    &nbsp;
+                                    <label class="col-lg-3">Ref Id</label>
+                                    <div class="col-lg-6">
+                                        @Html.TextBoxFor(m => m.RefId, new { id = "RefId", name = "RefId", tabindex = "0", maxlength = "50", @class = "form-control" })
+                                    </div>
                                 </div>
                                 <div class="row" style="margin-top:1%;" >
                                     <label class="col-lg-3">User Party Code</label>

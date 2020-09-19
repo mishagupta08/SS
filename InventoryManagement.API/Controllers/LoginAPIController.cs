@@ -77,7 +77,8 @@ namespace InventoryManagement.API.Controllers
                                        IsAdmin = result.IsAdmin,
                                        ParentPartyCode = ledger.ParentPartyCode,
                                        MobileNo = ledger.MobileNo,
-                                       Email = ledger.E_MailAdd
+                                       Email = ledger.E_MailAdd,
+                                       RefID = ledger.RefID??0
                                    }
 
                                  ).FirstOrDefault();

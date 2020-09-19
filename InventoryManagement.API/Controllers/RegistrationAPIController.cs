@@ -87,7 +87,7 @@ namespace InventoryManagement.API.Controllers
                             objDTLedger.Company = "";
                             objDTLedger.UserId = objPartyModel.LoginUser.UserId;
                             objDTLedger.UserName = objPartyModel.LoginUser.UserName;
-
+                            objDTLedger.RefID = objPartyModel.RefId;
                             objDTLedger.RecvdCForm = "N";
                             var i = 0;
                             if (objPartyModel.IsActionName == "Add")
@@ -144,6 +144,7 @@ namespace InventoryManagement.API.Controllers
                                     objDTUserMaster.RecTimeStamp = DateTime.Now;
                                     objDTUserMaster.CreateBy = objPartyModel.objUserDetails.UserName;
                                     objDTUserMaster.CreateDate = DateTime.Now;
+                                    
                                 }
                                 if (objPartyModel.IsActionName == "Add")
                                 {
@@ -595,6 +596,7 @@ namespace InventoryManagement.API.Controllers
                                                        NewFId4 = r.NewFld4,
                                                        Company = r.Company,
                                                        RecvdCForm = r.RecvdCForm,
+                                                       RefId = r.RefID,
                                                        objUserDetails = new User
                                                        {
                                                            UserName = u.UserName,
@@ -653,6 +655,7 @@ namespace InventoryManagement.API.Controllers
                                             NewFId4 = p.NewFId4,
                                             Company = p.Company,
                                             RecvdCForm = p.RecvdCForm,
+                                            RefId = p.RefId??0,
                                             objUserDetails = new User
                                             {
                                                 UserName = p.objUserDetails.UserName,

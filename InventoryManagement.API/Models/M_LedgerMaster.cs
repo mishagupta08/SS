@@ -58,5 +58,6 @@ namespace InventoryManagement.API.Models
         public string UserName { get; set; }
         public string LastModified { get; set; }
         public string RecvdCForm { get; set; }
+        public Nullable<int> RefID { get; set; }
     }
 }

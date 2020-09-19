@@ -306,11 +306,11 @@
                             <th scope="col" align="left" class="addAllPadding AllBorder">Price</th>
                             <th scope="col" align="left" class="addAllPadding AllBorder">Total Dis</th>
 
-                            @if (Model.objListProduct[0].OrderType != "T")
+                            @*@if (Model.objListProduct[0].OrderType != "T")
                             {
                                 <th scope="col" align="left" class="addAllPadding AllBorder">@PVCaption</th>
                                 colcount = colcount + 1;
-                            }
+                            }*@
                             <th scope="col" align="left" class="addAllPadding AllBorder">Taxable Amount</th>
                             @{
                                 DateTime CheckDate = new DateTime(2017, 7, 1);
@@ -386,13 +386,13 @@
                                     @if (!(obj.OrderType == "T" && obj.Rate == 0))
                                     {@obj.DiscAmt}
                                 </td>
-                                @if (Model.objListProduct[0].OrderType != "T")
+                                @*@if (Model.objListProduct[0].OrderType != "T")
                                 {
                                     <td class="addAllPadding rightBorderOnly" align="right">
                                         @obj.PVValue
                                        
                                     </td>
-                                }
+                                }*@
                                 <td scope="col" class="addAllPadding rightBorderOnly">
                                     @obj.Amount
                                 </td>
@@ -455,9 +455,9 @@
                             @*<td class="addAllPadding NoBorder">Pcs.</td>*@
                             <td class="addAllPadding NoBorder">&nbsp;</td>
                             <td class="addAllPadding NoBorder">&nbsp;</td>
-                            @if (Model.objListProduct[0].OrderType != "T")
+                            @*@if (Model.objListProduct[0].OrderType != "T")
                             {
-                                <td class="addAllPadding NoBorder" align="right">@TotalPV</td>}
+                                <td class="addAllPadding NoBorder" align="right">@TotalPV</td>}*@
                             <td class="addAllPadding NoBorder">&nbsp;</td>
                             @{
                                 if ((CheckDate - Model.BillDate.Date).TotalDays <= 0)

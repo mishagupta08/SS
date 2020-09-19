@@ -690,6 +690,9 @@
     <Compile Include="Models\TblPaymentGetWayRequest.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\TblRefBussiness.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\TempBankMaster.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>

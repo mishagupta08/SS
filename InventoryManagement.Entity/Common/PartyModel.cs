@@ -62,6 +62,8 @@ namespace InventoryManagement.Entity.Common
         public User objUserDetails { get; set; }
 
         public bool IsSupplier { get; set; }
-        
+
+        public int RefId { get; set; }
+
     }
 }

@@ -1063,9 +1063,6 @@ namespace InventoryManagement.API.Controllers
             return objProductNames;
         }
 
-
-
-
         public ResponseDetail SaveDistributorBill(DistributorBillModel objModel)
         {
             ResponseDetail objResponse = new ResponseDetail();
@@ -1073,6 +1070,7 @@ namespace InventoryManagement.API.Controllers
 
             decimal maxUserSBillNo = 0;
             decimal? SessId = 0;
+            int? iSessId = 0;
             string billPrefix = "";
             decimal maxSbillNo = 0;
             decimal? FsessId = 0;
@@ -1087,6 +1085,7 @@ namespace InventoryManagement.API.Controllers
             List<string> Paymode = new List<string>();
             List<string> PayPrefix = new List<string>();
             List<TrnPayModeDetail> objDTListPayMode = new List<TrnPayModeDetail>();
+            TblRefBussiness objBusiness = new TblRefBussiness();
             objResponse.ResponseMessage = "Something went wrong!";
             objResponse.ResponseStatus = "FAILED";
             try
@@ -1096,7 +1095,7 @@ namespace InventoryManagement.API.Controllers
                 SqlConnection SC = new SqlConnection(AppConnectionString);
                 SqlConnection SC1 = new SqlConnection(InvConnectionString);
 
-                string query = "Select Max(PayNo) as MaxSessId from pay_monthly_record";
+                string query = "Select max(PayNo) as MaxSessId from pay_monthly_record";
                 SqlCommand cmd = new SqlCommand();
                 cmd.CommandText = query;
                 cmd.Connection = SC;
@@ -1108,6 +1107,7 @@ namespace InventoryManagement.API.Controllers
                     if (reader.Read())
                     {
                         SessId = decimal.Parse(reader["MaxSessId"].ToString());
+                        iSessId = int.Parse(reader["MaxSessId"].ToString());
                     }
                 }
                 //SessId = SessId + 1;
@@ -1330,7 +1330,7 @@ namespace InventoryManagement.API.Controllers
                                 SoldByCode = objDTBillData.SoldBy;
                                 objDTBillData.itemcode = obj.itemCode;
                                 objDTBillData.BillBy = objDTBillData.SoldBy;
-                                objDTBillData.BillNo = billPrefix + "/" + objDTBillData.BillBy + "/" + maxSbillNo;
+                                objDTBillData.BillNo = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo;
                                 objDTBillData.FType = "M";
                                 objDTBillData.FCode = objModel.objCustomer.IdNo;
                                 objDTBillData.PartyName = objModel.objCustomer.Name;
@@ -1555,6 +1555,16 @@ namespace InventoryManagement.API.Controllers
                                 entity.TrnBillDatas.Add(objDTBillData);
                             }
 
+                            objBusiness.BillNo = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo;
+                            objBusiness.BillDate = DateTime.Now.Date;
+                            objBusiness.RefIdNo = objModel.objCustomer.UserDetails.RefID;
+                            objBusiness.IdNo = Convert.ToInt16(objModel.objCustomer.IdNo);
+                            objBusiness.Cv = objModel.objProduct.TotalPV;
+                            objBusiness.SessionId = iSessId??0;
+
+                            entity.TblRefBussinesses.Add(objBusiness);
+
+
                             if (!string.IsNullOrEmpty(objModel.AppliedOffers))
                             {                                
                                 var OfferIDs = objModel.AppliedOffers.Split(',').ToList();
@@ -1629,9 +1639,9 @@ namespace InventoryManagement.API.Controllers
                                 i = entity.SaveChanges();
                                 if (i>=0)
                                 {
-
+                                    var SBillno = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo;
                                     var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
-                                    var BillDetails = entity.TrnBillDetails.Where(r => r.BillNo == billPrefix + "/" + SoldByCode + "/" + maxSbillNo).ToList();
+                                    var BillDetails = entity.TrnBillDetails.Where(r => r.BillNo == SBillno).ToList();
                                     var BillMainXML = Serialize(BillMain);
                                     var BillDetailsXML = Serialize(BillDetails);
 
@@ -1640,6 +1650,10 @@ namespace InventoryManagement.API.Controllers
                                     SC.Close();
                                     SC.Open();
                                     int t = cmd.ExecuteNonQuery();
+
+                                    
+                                    
+                                    
 
                                     objResponse.ResponseMessage = "Saved Successfully!";
                                     objResponse.ResponseStatus = "OK";

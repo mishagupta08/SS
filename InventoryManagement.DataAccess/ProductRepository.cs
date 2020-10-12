@@ -119,5 +119,13 @@ namespace InventoryManagement.DataAccess
             ProductDetails objproduct = objProductAPI.GetProductDetail(ProductId,LoginStateCode);
             return objproduct;
         }
+        public List<Package> GetAllPackages()
+        {
+            return objProductAPI.GetAllPackages();
+        }
+        public ResponseDetail SavePackage(Package objPackage)
+        {
+            return objProductAPI.SavePackage(objPackage);
+        }
     }
 }

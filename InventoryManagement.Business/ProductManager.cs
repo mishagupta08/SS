@@ -119,5 +119,13 @@ namespace InventoryManagement.Business
             ProductDetails objproduct = objProductRepository.GetProductDetail(ProductId,LoginStateCode);
             return objproduct;
         }
+        public List<Package> GetAllPackages()
+        {            
+            return objProductRepository.GetAllPackages();
+        }
+        public ResponseDetail SavePackage(Package objPackage)
+        {
+            return objProductRepository.SavePackage(objPackage);
+        }
     }
 }

@@ -1965,6 +1965,8 @@
     <Content Include="Views\Transaction\ChallanDistributorBill.cshtml" />
     <Content Include="Views\Transaction\ChallanPartyBill.cshtml" />
     <Content Include="Views\Report\PaymentGatewayReport.cshtml" />
+    <Content Include="Views\Product\PackageMaster.cshtml" />
+    <Content Include="Views\Product\Packages.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

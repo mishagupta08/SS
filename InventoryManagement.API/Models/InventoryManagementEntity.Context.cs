@@ -27,6 +27,8 @@ namespace InventoryManagement.API.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        
+        
         public virtual DbSet<ChildProductRegistration> ChildProductRegistrations { get; set; }
         public virtual DbSet<DeletedChallanDetail> DeletedChallanDetails { get; set; }
         public virtual DbSet<DeletedChallanMain> DeletedChallanMains { get; set; }

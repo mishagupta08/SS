@@ -2,6 +2,7 @@
 using InventoryManagement.Business;
 using InventoryManagement.Common;
 using InventoryManagement.Entity.Common;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -626,5 +627,92 @@ namespace InventoryManagement.Controllers
             List<SubCategoryDetails> objSubCategoryDetails = objProductManager.GetSubcategoryDetails(0, "Y");
             return Json(objSubCategoryDetails, JsonRequestBehavior.AllowGet);
         }
+
+        public ActionResult Packages()
+
+        {
+            ViewBag.UserCanAccess = "Edit";
+           return View();
+        }
+
+        public ActionResult GetAllPackages()
+        {
+            var packages = objProductManager.GetAllPackages();
+            return Json(packages, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult PackageMaster(string ActionName,string PackageCode)
+        {
+            return View();
+        }
+
+        public ActionResult SavePackage(Package objPackageModel)
+        {
+            ResponseDetail objResponse = new ResponseDetail();
+            if (objPackageModel != null)
+            {
+                objPackageModel.objProductList = new List<ProductModel>();
+                if (!string.IsNullOrEmpty(objPackageModel.objProductListStr))
+                {
+                    var objects = JArray.Parse(objPackageModel.objProductListStr); // parse as array  
+                    foreach (JObject root in objects)
+                    {
+                        ProductModel objTemp = new ProductModel();
+                        foreach (KeyValuePair<String, JToken> app in root)
+                        {                            
+                            if (app.Key == "itemCode")
+                            {
+                                objTemp.itemCode = (string)app.Value;
+                            }
+                            else if (app.Key == "Code")
+                            {
+                                objTemp.ProdCode = (int)app.Value;
+                            }
+                            else if (app.Key == "ProductName")
+                            {
+                                objTemp.ProductName = (string)app.Value;
+                            }
+                            
+                            else if (app.Key == "Barcode")
+                            {
+                                objTemp.Barcode = app.Value.ToString();
+                            }
+                           
+                            else if (app.Key == "Rate")
+                            {
+                                objTemp.MRP = (decimal?)app.Value;
+                            }
+                            else if (app.Key == "Qty")
+                            {
+                                objTemp.Quantity = (decimal)app.Value;
+                            }                            
+                        }
+                        objPackageModel.objProductList.Add(objTemp);
+                    }
+                    objPackageModel.UserId = (Session["LoginUser"] as User).UserId;
+                    objPackageModel.UserDetails = Session["LoginUser"] as User;
+                    // Retrive the Name of HOST
+                    string hostName = Dns.GetHostName();
+                    // Get the IP  
+                    string myIP = Dns.GetHostEntry(hostName).AddressList[0].ToString();
+                    string currentDate = DateTime.Now.ToString("yyyyMMddHHmmssfff"); ;
+                    objPackageModel.objProduct.UID = myIP + currentDate;
+                    objResponse = objProductManager.SavePackage(objPackageModel);
+                    if (objResponse.ResponseStatus == "OK")
+                    {
+                        //Added log                        
+                        objLogManager.SaveLog(Session["LoginUser"] as User, "Created Package", myIP + currentDate);
+                    }
+                }
+            }
+            else
+            {
+                objResponse.ResponseMessage = "Something went wrong!";
+                objResponse.ResponseStatus = "FAILED";
+            }
+
+            return Json(objResponse, JsonRequestBehavior.AllowGet);           
+        }
+
     }
 }

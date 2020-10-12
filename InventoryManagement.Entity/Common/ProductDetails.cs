@@ -15,6 +15,7 @@ namespace InventoryManagement.Entity.Common
         public CurrentStockModel ProductCurrentStockDetails { get; set; }
         public int ProductId { get; set; }
         public int ProductCode { get; set; }
+        public int BrandCode { get; set; }
         public string MinQtyStr { get; set; }
         public string ProductCodeStr { get; set; }
         public string UserDefinedCode { get; set; }

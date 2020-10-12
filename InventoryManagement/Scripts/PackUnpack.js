@@ -62,7 +62,7 @@ function showKitDetail()
                     $("#maxkit").val(objResult[0].MaxPack);
                     console.log(objResult[0].MaxPack);
                     for (var i = 0; i < objResult.length; i++) {                        
-                        ProductGrid.push({ "ProductId": objResult[i].ProductId, "ProductName": objResult[i].ProductName, "Qunatity": objResult[i].Qunatity, "AvailStock": objResult[i].AvailStock});
+                        ProductGrid.push({ "ItemCode": objResult[i].ItemCode, "ProductId": objResult[i].ProductId, "ProductName": objResult[i].ProductName, "Qunatity": objResult[i].Qunatity, "AvailStock": objResult[i].AvailStock });
                     }
                 }
                 fillGrid();
@@ -98,6 +98,7 @@ function fillGrid(type) {
         columns: [
             { field: 'ProductId', title: 'Prod Id', width: 80, sortable: true, hidden: false, filterable: false },
             { field: 'ProductName', title: 'Product Name', width: 100, sortable: true, hidden: false, filterable: true },
+            { field: 'ItemCode', title: 'ItemCode', width: 80, sortable: true, hidden: false, filterable: false },
             { field: 'Qunatity', title: 'Qunatity', width: 100, sortable: true, hidden: false, filterable: true },
             { field: 'AvailStock', title: 'Avail Stock', width: 80, sortable: true, hidden: false, filterable: true },
         ],

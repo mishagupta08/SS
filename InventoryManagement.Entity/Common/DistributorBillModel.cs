@@ -164,6 +164,7 @@ namespace InventoryManagement.Entity.Common
         public decimal? Rate { get; set; }
         public decimal? MRP { get; set; }
         public decimal? RP { get; set; }
+        public decimal? ProdId { get; set; }
         public decimal? RPValue { get; set; }
         public int ProdCode { get; set; }
         public string TaxType { get; set; }

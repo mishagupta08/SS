@@ -30,6 +30,7 @@ namespace InventoryManagement.Entity.Common
     public class PackUnpackProduct
     {
         public string ProductId { get; set; }
+        public string ItemCode { get; set; }
         public string ProductName { get; set; }
         public string Qunatity { get; set; }
         public string AvailStock { get; set; }

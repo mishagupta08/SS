@@ -64,7 +64,7 @@
 <script type="text/javascript">
     var IsYes = false;
     var ProdAttributeFieldList =[];
-    var ProdAttributeList =[];     
+    var ProdAttributeList =[];
     var ItemCodes =[];
     var AvailableProductList = [{}];
     var AvailableBarcodeList=[];
@@ -122,21 +122,21 @@
 
     $(document).ready(function () {
         $(".preloader").hide();
-        getAllProductNames();       
+        getAllProductNames();
         fillGrid();
         changeValues();
         $("#IdNo").focus();
 
 
         $('#OfferList').on('blur', function () {
-            
+
             $(this).find('option:selected').each(function (i, e) {
                 selected.push(e.value);
             });
             var OfferArray = selected.join(',');
             OfferError = "";
             ResetDetails();
-            
+
             GetBuythisGetthatProducts(OfferArray, "1");
         });
 
@@ -678,7 +678,7 @@
 
                     var temp = (ProductArray.TaxAmt.toFixed(2)).toString();
                     var lastNum = parseInt(temp[temp.length - 1]);
-                   
+
                     //if ((parseInt(lastNum) % 2) != 0) {
                     //    $("#OldTaxAmount").val(parseFloat(ProductArray.TaxAmt));
                     //    ProductArray.Amount = parseFloat(ProductArray.Amount) + 0.01;
@@ -757,7 +757,7 @@
                 else if (IsEditGrid==false) {
 
                     var Qty = (parseFloat(ProductGrid[i].Qty) + parseFloat(ProductArray.Qty)).toFixed(2);
-                    
+
                     if ((parseFloat(Qty)) <= Stock) {
                     ProductGrid[i].Qty = Qty;
 
@@ -774,7 +774,7 @@
                     ProductGrid[i].TotalAmount = TotalAmount;
                     var Amount = (parseFloat(ProductGrid[i].Amount) + parseFloat(ProductArray.Amount)).toFixed(2);
                     ProductGrid[i].Amount = Amount;
-                    
+
                     var CommsnAmt = (parseFloat(ProductGrid[i].CommsnAmt) + parseFloat(ProductArray.CommssnAmt)).toFixed(2);
                     ProductGrid[i].CommsnAmt = CommsnAmt;
                     var RPValue = (parseFloat(ProductGrid[i].RPValue) + parseFloat(ProductArray.RPValue)).toFixed(2);
@@ -812,7 +812,7 @@
                     ProductGrid[i].TotalAmount = TotalAmount;
                     var Amount = (parseFloat(ProductArray.Amount)).toFixed(2);
                     ProductGrid[i].Amount = Amount;
-                    
+
                     var CommsnAmt = (parseFloat(ProductArray.CommssnAmt)).toFixed(2);
                     ProductGrid[i].CommsnAmt = CommsnAmt;
                     var RPValue = (parseFloat(ProductArray.RPValue)).toFixed(2);
@@ -848,7 +848,7 @@
                 else
                     ToFocuselemement = "Barcode";
 
-                
+
 
                 if (Stock == 0) {
                     OpenDialog("dialogMessage", "InSufficient Stock!", "false");
@@ -1262,7 +1262,7 @@
             $("#Quantity").focus();
         });
 
-        
+
         $("#setProdAttributes").click(function () {
             GetItemCodes(true, 0);
             $("#AttributeDialog").dialog("close");
@@ -1371,13 +1371,13 @@
             else {
 
                 //var selectedItem =  $.grep(ItemCodes, function (e) {
-                //    return e.PCode == prodID 
+                //    return e.PCode == prodID
                 //});
                 $("#itemCode").val(ItemCodes[0].ItemCode1);
                 $("#StockAvailable").val(ItemCodes[0].stockAvailable);
             }
         }
-        
+
 
         function fillProductValues(objResult,offerProduct,OfferQty) {
             SearchText = $("#SearchText").val();
@@ -1424,13 +1424,43 @@
             else {
                 $("#Quantity").val(0);
             }
-           
+
             ProductArray = TempProductArray[1];
             getProductAttributes(objResult.ProductCodeStr);
         }
-        
-        
-       
+
+
+
+        function getKitProucts(KitID,Qty) {
+            $.ajax({
+                url: '@Url.Action("GetKitProducts", "Transaction")',
+                type: 'POST',
+                data: { "KitID": KitID },
+                dataType: "json",
+                async: false,
+                success: function (objResult) {
+                    if (objResult != null && objResult.length != 0) {
+                        for (var i = 0; i < objResult.length; i++) {
+                            var Total = parseInt(objResult[i].TotalQty) * parseInt(Qty);
+                            $("#Quantity").val(Total);
+                            $("#BrandCode").val(objResult[i].BrandCode);
+                            ProductArray = { "ProductTye": "P", "AvailStock": objResult[i].StockAvailable, "SNo": count, "ProductName": objResult[i].ProductName, "Barcode": objResult[i].Barcode, "BatchNo": objResult[i].BatchNo, "ProdCode": objResult[i].ProdCode, "Qty": objResult[i].Qty, "TaxType": objResult[i].TaxType, "MRP": objResult[i].MRP, "DP": objResult[i].DP, "RP": objResult[i].RP, "BV": objResult[i].BV, "CV": objResult[i].CV, "PV": objResult[i].PV, "CommsnPer": objResult[i].CommissionPer, "DiscPer": objResult[i].DiscPer, "TaxPer": objResult[i].TaxPer, "CommssnAmt": 0, "TaxAmt": 0, "RPValue": 0, "CVValue": 0, "PVValue": 0, "BVValue": 0, "DiscAmt": objResult[i].DiscAmt, "Amount": 0, "TotalAmt": 0, "Rate": 0, "Weight": objResult[i].Weight, "WeightVal": 0 };
+                            DoCalculation(false,"KP", Qty);
+                            var TotalWeight = (ProductArray.Weight * ProductArray.Qty).toFixed(3);
+                            count++;
+                            ProductGrid.push({ "itemCode": objResult[i].itemCode, "AvailStock": 0, "SNo": count, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": (ProductArray.Rate).toFixed(2), "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount).toFixed(2), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer, "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "Weight": ProductArray.Weight, "WeightVal": TotalWeight, "ProductTye": ProductArray.ProductTye });
+                        }
+                        fillGrid();
+                        CalculateTotals();
+                    }
+                },
+                error: function (xhr, data) {
+                    //  return false;
+                    console.log(xhr);
+                    console.log("Error:", data);
+                }
+            });
+        }
 
         function getAllProductNames() {
             $.ajax({
@@ -1507,7 +1537,7 @@
                     { field: 'CatName', width: 80, title: 'Cat. Name', sortable: true, hidden: true, filterable: false },
                     { field: 'Code', width: 100, title: 'Code', sortable: true, hidden: false, filterable: true },
                     { field: 'ProductName', width: 150, title: 'Product Name', sortable: true, hidden: false, filterable: true },
-                    { field: 'itemCode', width: 150, title: 'Item Code', sortable: true, hidden: false, filterable: true },                    
+                    { field: 'itemCode', width: 150, title: 'Item Code', sortable: true, hidden: false, filterable: true },
                     { field: 'MRP', width: 80, title: 'MRP', sortable: true, hidden: true, filterable: true },
                     { field: 'DP', width: 80, title: 'DP', sortable: true, hidden: true, filterable: true },
                     { field: 'Rate', width: 80, title: 'Rate', sortable: true, hidden: false, filterable: true },
@@ -1984,20 +2014,20 @@
             $(".preloader").show();
             var OfferID = $('option:selected', $("#OfferList")).val();
             var OType = $('option:selected', $("#OfferList")).val();
-            var nooffer = true;                        
+            var nooffer = true;
             if (OfferID != null && OfferID != "") {
                 nooffer = false;
                 $.each(selected, function (index, value) {
                     if (OfferApplied) {
                         AddBtGTProducts(value, "1");
-                    }                   
+                    }
                 });
 
                 if (OfferApplied) {
                     SaveBill();
-                }                
+                }
             }
-            
+
             if (nooffer) {
                 $(".preloader").hide();
                 $("#NoOfferDialog").dialog({
@@ -2025,7 +2055,7 @@
            });
 
 
-           if (BuyProductArray != null && BuyProductArray.length >= 0) {               
+           if (BuyProductArray != null && BuyProductArray.length >= 0) {
                for (var i = 0; i < BuyProductArray.length; i++) {
                    var index = ProductGrid.map(function (o) { return o.Code; }).indexOf(BuyProductArray[i].ProductCode);
                    if (index != -1) {
@@ -2060,7 +2090,7 @@
                                if (OType == "1") {
                                    $("#Quantity").val(finalQty);
                                    DoCalculationforBTGT(freeQty, finalQty, ProductArray.DP, 'P', OType);
-                                   ProductArray.FreeQty = freeQty;                                   
+                                   ProductArray.FreeQty = freeQty;
                                }
                                else {
                                    $("#Quantity").val(finalQty);
@@ -2095,14 +2125,14 @@
                                break;
                            }
                        }
-                       $("#AddRecordInGrid").click();                      
+                       $("#AddRecordInGrid").click();
                    }
                    if (StockError == true) {
                        OfferApplied = false;
                        $(".preloader").hide();
                        $("#SaveDistributorForm").attr("disabled", false);
                        OpenDialog("dialogMessage", "Free Product " + StockErrorProduct + " stock is not sufficient.", "false");
-                   }                   
+                   }
 
                }
                else if (IsOfferApplicable == false) {
@@ -2111,12 +2141,12 @@
                    $("#SaveDistributorForm").attr("disabled", false);
                    OpenDialog("dialogMessage", "Offer can't be applied as selected products does not meet the requirments.", "false");
                }
-               
+
                }
-               
+
            }
-       
-       
+
+
        function DoCalculationforBTGT(freeQty, finalqty, DP, PType, OType) {
            //  var ProductGrid = [{ "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "" }];
            if (ProductArray != null && ProductArray != undefined) {
@@ -2127,11 +2157,11 @@
                ProductArray.Qty = finalqty;
                if (PType == "P" && OType == "1") {
                    dpValue = DP;
-                 
+
                    var tdp = dpValue * QtyWithoutFree;
-                   ProductArray.DP = tdp / Quantity;                  
+                   ProductArray.DP = tdp / Quantity;
                    dpValue = tdp / Quantity;
-               }               
+               }
                else {
                    dpValue = DP;
                }
@@ -2164,7 +2194,7 @@
                ProductArray.ProductTye = PType;
                ProductArray.BV = ProductArray.PV;
                ProductArray.BVValue = ProductArray.PV * QtyWithoutFree;
-               
+
                $("#DiscAmt").val((ProductArray.DiscAmt).toFixed(2));
                $("#TaxAmt").val((ProductArray.TaxAmt).toFixed(2));
                $("#Amount").val((ProductArray.Amount));
@@ -2188,12 +2218,12 @@
                     $("#SaveDistributorForm").attr("disabled", false);
                     $(".preloader").hide();
                     if (objResponse != null) {
-                        if (objResponse.ResponseStatus == "OK") {                            
+                        if (objResponse.ResponseStatus == "OK") {
                             var BillNo = objResponse.ResponseDetailsToPrint.BillNo;
                             var SoldBy=objResponse.ResponseDetailsToPrint.SoldBy;
                             console.log("BillNo", BillNo);
                             openBill(BillNo, SoldBy);
-                            window.location.href = '@Url.Action("DistributorBill", "Transaction")';                            
+                            window.location.href = '@Url.Action("DistributorBill", "Transaction")';
                         }
                         else {
                             OpenDialog("dialogMessage", objResponse.ResponseMessage, "false");

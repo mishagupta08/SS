@@ -60,6 +60,7 @@ namespace InventoryManagement.API.Controllers
                                           select new ProductModel
                                           {
                                               ProductName = product.ProductName,
+                                              BrandCode = product.BrandCode,
                                               CatId = product.CatId,
                                               CatName = c.CatName,
                                               Barcode = barcode.BarCode,
@@ -561,7 +562,7 @@ namespace InventoryManagement.API.Controllers
                 using (var entity = new InventoryEntities())
                 {
                     objProductNames = (from result in entity.M_ProductMaster
-                                       where result.ActiveStatus == "Y" && result.IsCardIssue == "N" && result.PType != "K"
+                                       where result.ActiveStatus == "Y" && result.IsCardIssue == "N"
                                        select result.ProductName + "=" + result.UserProdId).ToList();
                 }
             }
@@ -1407,7 +1408,10 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.IsCredit = "F";
                                 //objDTBillData.BillType = "R";
                                 objDTBillData.BillType = "V";
-                                objDTBillData.ProdType = "P";
+                                if (!string.IsNullOrEmpty(obj.ProductTye))
+                                    objDTBillData.ProdType = obj.ProductTye;
+                                else
+                                    objDTBillData.ProdType = "P";
                                 objDTBillData.PaymentDtl = "Cash:" + objModel.objProduct.TotalNetPayable;
 
                                 objDTBillData.TotalAmount = objModel.objProduct.TotalTotalAmount;
@@ -1816,7 +1820,12 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.IsCredit = "F";
                                 //objDTBillData.BillType = "R";
                                 objDTBillData.BillType = "G";
-                                objDTBillData.ProdType = "P";
+
+                                if (!string.IsNullOrEmpty(obj.ProductTye))
+                                    objDTBillData.ProdType = obj.ProductTye;
+                                else
+                                    objDTBillData.ProdType = "P";
+
                                 objDTBillData.PaymentDtl = "Cash:" + objModel.objProduct.TotalNetPayable;
 
                                 objDTBillData.TotalAmount = objModel.objProduct.TotalTotalAmount;
@@ -1996,6 +2005,8 @@ namespace InventoryManagement.API.Controllers
         }
 
         public DistributorBillModel getInvoice(string BillNo, string CurrentPartyCode, string id)
+
+
         {
             DistributorBillModel objDistributorModel = new DistributorBillModel();
             try
@@ -2018,11 +2029,13 @@ namespace InventoryManagement.API.Controllers
                                                           {
 															  IsChallanBill = r.IsChallanBill,
                                                               IdNo = r.FCode,
+                                                              BrandCode = M.BrandCode,
                                                               Mobileno = r.ReceiverMNo,
                                                               itemCode = t.itemcode,
                                                               PartyName = r.PartyName,
                                                               ProductCodeStr = t.ProductId,
                                                               ProductName = t.ProductName,
+                                                              DP = t.DP,
                                                               Rate = t.Rate,
                                                               Quantity = t.Qty,
                                                               Amount = t.NetAmount,
@@ -2044,7 +2057,7 @@ namespace InventoryManagement.API.Controllers
                                                               TaxType = t.TaxType,
                                                               ProductType = t.ProdType,
                                                               HSNCode = M.HSNCode,
-                                                              DiscAmt = r.DiscountAmt,
+                                                              DiscAmt = t.Discount,
                                                               PVValue = t.PVValue,
                                                               TotalPV = r.PVValue,
                                                               DeliveryPlace = string.IsNullOrEmpty(r.DelvAddress) ? r.DelvPlace : r.DelvAddress,
@@ -2063,6 +2076,8 @@ namespace InventoryManagement.API.Controllers
                     objDistributorModel.CashdisAmount = (from r in entity.TrnBillMains
                                                          where r.UserBillNo == BillNo
                                                          select r.CashDiscAmount).FirstOrDefault();
+
+                    objDistributorModel.CashdisAmount = 0;
                     decimal? TotalTaxableAmount = 0;
                     string OrderType = objDistributorModel.objListProduct[0].OrderType;
                     objDistributorModel.objTaxSummary = new List<TaxSummary>();
@@ -5895,20 +5910,18 @@ namespace InventoryManagement.API.Controllers
                 string Sql = string.Empty;
                 if (PackUnpack.ToLower() == "pack")
                 {
-                    Sql = "Select a.ProdID ,a.ProductName ,SUM(a.Qty ) as Qty ,SUM(b.AvailStock) as AvailStock FROM (";
-                    Sql += " Select b.ProdID,b.ProductName,a.Qty,0 as AvailStock FROM " + db + "..M_KitProductDetail a,M_ProductMaster b ";
-                    Sql += " WHERE a.ProdID=b.ProdID AND a.KItID=" + KitId + " AND a.RowStatus='Y' AND a.Qty>0 ) a ";
+                    Sql = "Select a.Itemcode,a.ProdID ,a.ProductName ,SUM(a.Qty ) as Qty ,SUM(b.AvailStock) as AvailStock FROM (";
+                    Sql += " Select a.Itemcode,b.ProdID,b.ProductName,a.Qty,0 as AvailStock FROM " + db + "..M_KitProductDetail a,M_ProductMaster b ";
+                    Sql += " WHERE a.ProdID=b.ProductCode AND a.KItID=" + KitId + "  AND a.Qty>0 ) a ";
                     Sql += "Left Join";
-                    Sql += "(Select b.ProdID,b.ProductName,0 Qty,SUM(a.Qty) as AvailStock FROM IM_CurrentStock a,M_ProductMaster b ";
-                    Sql += " WHERE a.ProdID=b.ProdID AND a.FCode='" + LoginPartyCode + "' GROUP BY b.ProdID,b.ProductName) b";
-                    Sql += " ON a.ProdID=b.ProdID";
-                    Sql += " GROUP BY a.ProdID,a.ProductName";
+                    Sql += "(Select a.Itemcode,a.ProdID,'' as ProductName,0 Qty,SUM(a.Qty) as AvailStock FROM IM_CurrentStock a";
+                    Sql += " WHERE a.FCode='" + LoginPartyCode + "' GROUP BY a.Itemcode,a.ProdID) b";
+                    Sql += " ON a.Itemcode=b.Itemcode";
+                    Sql += " GROUP BY a.Itemcode,a.ProdID,a.ProductName";
                 }
                 else
                 {
-                    //Sql = "Select b.ProdID,b.ProductName,1 Qty,ISNULL(SUM(a.Qty),0) as AvailStock FROM IM_CurrentStock a RIGHT JOIN M_ProductMaster b ";
-                    //Sql += " ON a.ProdID=b.ProdID AND a.FCode='" + LoginPartyCode + "' AND a.ProdID='" + prodID + "' GROUP BY b.ProdID,b.ProductName";
-                    Sql = "Select b.ProdID,a.ProductName,1 Qty,ISNULL(AvailStock,0) as AvailStock  FROM M_ProductMaster a LEFT JOIN ( ";
+                    Sql = "Select '' as ItemCode,b.ProdID,a.ProductName,1 Qty,ISNULL(AvailStock,0) as AvailStock  FROM M_ProductMaster a LEFT JOIN ( ";
                     Sql += "Select ProdID, ISNULL(SUM(a.Qty), 0) as AvailStock FROM IM_CurrentStock a WHERE a.FCode='" + LoginPartyCode + "' AND a.ProdID = '" + prodID + "'  GROUP BY ProdID) b ";
                     Sql += "ON a.ProdID = b.ProdID WHERE a.ProdID ='" + prodID + "' ";
                 }
@@ -5932,6 +5945,7 @@ namespace InventoryManagement.API.Controllers
                         MaxKit = Math.Min(NoOfKit, MaxKit);
                         PackUnpackProduct tempobj = new PackUnpackProduct();
                         tempobj.ProductId = reader["ProdID"] != null ? reader["ProdID"].ToString() : "";
+                        tempobj.ItemCode = reader["ItemCode"] != null ? reader["ItemCode"].ToString() : "";
                         tempobj.ProductName = reader["ProductName"] != null ? reader["ProductName"].ToString() : "";
                         tempobj.Qunatity = reader["Qty"] != null ? reader["Qty"].ToString() : "";
                         tempobj.AvailStock = reader["AvailStock"] != null ? reader["AvailStock"].ToString() : "";
@@ -6008,9 +6022,9 @@ namespace InventoryManagement.API.Controllers
                         objkit.Remarks = obj.qunatity + " Kits UnPacked.";
 
                         string db = System.Configuration.ConfigurationManager.AppSettings["Database"];
-                        string Sql = " Select b.ProdID,b.ProductName,a.Qty " +
-   "FROM " + db + "..M_KitProductDetail a, M_ProductMaster b WHERE a.ProdID = b.ProdID AND a.KItID = " + obj.kitId +
-   " AND a.ActiveStatus = 'Y' AND a.RowStatus='Y' AND a.Qty>0";
+                        string Sql = " Select b.ProdID,b.ProductName,a.Qty,a.Itemcode " +
+   "FROM " + db + "..M_KitProductDetail a, M_ProductMaster b WHERE a.ProdID = b.ProductCode AND a.KItID = " + obj.kitId +
+   " AND a.ActiveStatus = 'Y' AND a.Qty>0";
                         string InvConnectionString = System.Configuration.ConfigurationManager.ConnectionStrings["InventoryServices"].ConnectionString;
                         SqlConnection SC = new SqlConnection(InvConnectionString);
                         SqlCommand cmd = new SqlCommand();
@@ -6026,6 +6040,7 @@ namespace InventoryManagement.API.Controllers
                             {
                                 PackUnpackProduct objpackProd = new PackUnpackProduct();
                                 objpackProd.ProductId = reader["ProdID"].ToString();
+                                objpackProd.ItemCode = reader["Itemcode"].ToString();
                                 objpackProd.ProductName = reader["ProductName"].ToString();
                                 objpackProd.Qunatity = reader["Qty"].ToString();
                                 obj.productList.Add(objpackProd);
@@ -6095,6 +6110,7 @@ namespace InventoryManagement.API.Controllers
                         objprod.Barcode = prodbarcodedetail.BarCode;
                         var prodDetail = (from result in entity.M_ProductMaster where result.ProdId == product.ProductId select result).FirstOrDefault();
                         objprod.BatchCode = Convert.ToString(prodbarcodedetail.BCode);
+                        objprod.ItemCode = product.ItemCode;
                         objprod.Version = version;
                         objprod.IsDisp = "N";
                         entity.Im_CurrentStock.Add(objprod);
@@ -7908,6 +7924,56 @@ namespace InventoryManagement.API.Controllers
             {
 
             }
+        }
+
+
+        public List<ProductModel> GetKitProducts(int KitID)
+        {
+            List<ProductModel> KitProducts = new List<ProductModel>();
+            try {
+                using (var entity = new InventoryEntities())
+                {
+
+                    KitProducts = (from r in entity.M_KitProductDetail where r.KitId == KitID
+                                       join  product in entity.M_ProductMaster    on  r.ProdId equals product.ProductCode                                   
+                                       join barcode in entity.M_BarCodeMaster on product.ProdId equals barcode.ProdId
+                                       join tax in entity.M_TaxMaster on product.ProdId equals tax.ProdCode                                       
+                                       select new ProductModel
+                                      {
+                                      ProductName = product.ProductName,
+                                      BrandCode = product.BrandCode,
+                                      TotalQty = r.Qty,
+                                      CatId = product.CatId,                                      
+                                      Barcode = barcode.BarCode,
+                                      BatchNo = barcode.BatchNo,
+                                      DP = r.Rate,
+                                      itemCode = r.Itemcode,
+                                      RP = product.RP,
+                                      DiscPer = product.Discount,
+                                      DiscAmt = product.DiscInRs,
+                                      ProdCode = (int)product.ProductCode,
+                                      ProductCodeStr = product.ProdId,
+                                      TaxPer = tax.VatTax,
+                                      ProdStateCode = tax.StateCode,
+                                      MRP = barcode.MRP,
+                                      BV = product.BV,
+                                      PV = product.PV,
+                                      CV = product.CV,
+                                      Weight = product.Weight,
+                                      IsExpirable = barcode.IsExpired == "Y" ? true : false,
+                                      ExpDate = barcode.ExpDate,
+                                      TaxType = "GST",
+                                      Rate = product.PurchaseRate,
+                                      CommissionPer = product.ProdCommssn,
+                                      SubCatId = product.SubCatId
+                                  }).ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return KitProducts;
         }
 
 

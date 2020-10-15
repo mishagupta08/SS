@@ -385,5 +385,9 @@ namespace InventoryManagement.DataAccess
         {
             return (objTransacAPI.GetAllOfferList(OfferType));
         }
+        public List<ProductModel> GetKitProducts(int KitID)
+        {
+            return (objTransacAPI.GetKitProducts(KitID));
+        }
     }        
 }

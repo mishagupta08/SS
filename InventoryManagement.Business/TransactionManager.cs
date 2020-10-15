@@ -397,5 +397,9 @@ namespace InventoryManagement.Business
         {
             return (objTransacRepo.GetAllOfferList(OfferType));
         }
-    }
+        public List<ProductModel> GetKitProducts(int KitID)
+        {
+            return (objTransacRepo.GetKitProducts(KitID));
+        }
+        }
 }

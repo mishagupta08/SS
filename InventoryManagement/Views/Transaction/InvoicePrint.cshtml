@@ -13,6 +13,8 @@
     decimal? TotalQty = 0;
     decimal? TotalPV = 0;
     decimal TotalAmount = 0;
+    decimal TotalPrice = 0;
+    decimal TotalDiscount = 0;
 }
 
 <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
@@ -304,6 +306,7 @@
                             @*<th scope="col" align="left" class="addAllPadding AllBorder">Unit</th>*@
 
                             <th scope="col" align="left" class="addAllPadding AllBorder">Price</th>
+                            <th scope="col" align="left" class="addAllPadding AllBorder">Total Price</th>
                             <th scope="col" align="left" class="addAllPadding AllBorder">Total Dis</th>
 
                             @*@if (Model.objListProduct[0].OrderType != "T")
@@ -335,6 +338,8 @@
                         </tr>
                         @foreach (var obj in Model.objListProduct)
                         {
+                            if(obj.BrandCode == 0)
+                            { 
                             TotalPV += obj.PVValue;
                             if (!(obj.OrderType == "T" && obj.Rate == 0))
                             {
@@ -380,11 +385,19 @@
 
                                 <td class="addAllPadding rightBorderOnly" align="right">
                                     @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                    {@obj.Rate}
+                                    {@obj.Rate}
                                 </td>
+                                    <td class="addAllPadding rightBorderOnly" align="right">
+                                        @if (!(obj.OrderType == "T" && obj.Rate == 0))
+                                        {
+                                            var tp = obj.Amount + obj.DiscAmt;
+                                            TotalPrice += tp??0;
+                                            @tp
+                                        }
+                                    </td>
                                 <td class="addAllPadding rightBorderOnly" align="right">
-                                    @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                                    {@obj.DiscAmt}
+                                    @{TotalDiscount += obj.DiscAmt??0; }
+                                        @obj.DiscAmt                                    
                                 </td>
                                 @*@if (Model.objListProduct[0].OrderType != "T")
                                 {
@@ -403,30 +416,30 @@
                                         {
                                             <td scope="col" class="addAllPadding rightBorderOnly">
                                                 @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                            {@obj.TaxPer}
+                                                {@obj.TaxPer}
                                             </td>
                                             <td scope="col" class="addAllPadding rightBorderOnly" align="right">
                                                 @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                            {@obj.TaxAmt}
+                                                {@obj.TaxAmt}
                                             </td>
                                         }
                                         else
                                         {
                                             <td scope="col" class="addAllPadding rightBorderOnly">
                                                 @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                            {@obj.CGST}
+                                                {@obj.CGST}
                                             </td>
                                             <td scope="col" class="addAllPadding rightBorderOnly" align="right">
                                                 @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                            {@obj.CGSTAmount}
+                                                {@obj.CGSTAmount}
                                             </td>
                                             <td scope="col" class="addAllPadding rightBorderOnly">
                                                 @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                            {@obj.SGST}
+                                                {@obj.SGST}
                                             </td>
                                             <td scope="col" class="addAllPadding rightBorderOnly" align="right">
                                                 @if (!(obj.OrderType == "T" && obj.Rate == 0))
-                            {@obj.SGSTAmount}
+                                                {@obj.SGSTAmount}
                                             </td>
                                         }
                                     }
@@ -434,13 +447,14 @@
                                 <td class="addAllPadding rightBorderOnly" align="right">
                                     @if (!(obj.OrderType == "T" && obj.Rate == 0))
                                     {
-                                        @Math.Round(obj.Amount + (obj.TaxAmt??0) + obj.SGSTAmount + obj.CGSTAmount)
+                                        @Math.Round(obj.Amount + (obj.TaxAmt ?? 0) + obj.SGSTAmount + obj.CGSTAmount)
                                     }
                                     @{TotalAmount += Math.Round((obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount) ?? 0, 0);}
                                 </td>
                             </tr>
+                                                }
+                                                //count = count + 1;
                                             }
-                                            //count = count + 1;
                                         }
                         <tr class="topborder NoBorder">
                             <td class="addAllPadding NoBorder">&nbsp;</td>
@@ -454,7 +468,8 @@
 
                             @*<td class="addAllPadding NoBorder">Pcs.</td>*@
                             <td class="addAllPadding NoBorder">&nbsp;</td>
-                            <td class="addAllPadding NoBorder">&nbsp;</td>
+                            <td class="addAllPadding NoBorder" align="right">@TotalPrice</td>
+                            <td class="addAllPadding NoBorder" align="right">@TotalDiscount</td>
                             @*@if (Model.objListProduct[0].OrderType != "T")
                             {
                                 <td class="addAllPadding NoBorder" align="right">@TotalPV</td>}*@

@@ -214,6 +214,7 @@ namespace InventoryManagement.Entity.Common
         public string OrderNo { get; set; }
         public DateTime? OrderDate { get; set; }
         public string OrderDateStr { get; set; }
+        public decimal BrandCode { get; set;}
     }
     public class ProductSearchModel
     {

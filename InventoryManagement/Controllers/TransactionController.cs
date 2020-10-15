@@ -559,7 +559,6 @@ namespace InventoryManagement.Controllers
                 objResponse.ResponseMessage = "Something went wrong!";
                 objResponse.ResponseStatus = "FAILED";
             }
-
             return Json(objResponse, JsonRequestBehavior.AllowGet);
         }
 
@@ -755,8 +754,7 @@ namespace InventoryManagement.Controllers
                     string hostName = Dns.GetHostName();
                     string myIP = Dns.GetHostEntry(hostName).AddressList[0].ToString();
                     string currentDate = DateTime.Now.ToString("yyyyMMddHHmmssfff");
-                    objLogManager.SaveLog(Session["LoginUser"] as User, "Invoice Print for Bill - " + model.BillNo, myIP + currentDate);
-                
+                    objLogManager.SaveLog(Session["LoginUser"] as User, "Invoice Print for Bill - " + model.BillNo, myIP + currentDate);                
             }
             return View(model);
         }
@@ -3838,6 +3836,11 @@ namespace InventoryManagement.Controllers
         public ActionResult GetAllOfferList(decimal OfferType)
         {
             return Json(objTransacManager.GetAllOfferList(OfferType), JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult GetKitProducts(int KitID)
+        {
+            return Json(objTransacManager.GetKitProducts(KitID), JsonRequestBehavior.AllowGet);
         }
     }
 }

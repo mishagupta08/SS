@@ -447,7 +447,7 @@ namespace InventoryManagement.API.Controllers
             {
                 using (var entity = new InventoryEntities())
                 {
-                    maxCode = (from result in entity.M_ProductMaster select result.ProductCode).DefaultIfEmpty(0).Max();
+                    maxCode = (from result in entity.M_ProductMaster where result.PType!="K" select result.ProductCode).DefaultIfEmpty(0).Max();
 
                 }
 
@@ -459,6 +459,29 @@ namespace InventoryManagement.API.Controllers
             if (maxCode == 0)
             {
                 maxCode = 1000;
+            }
+            return ((int)maxCode + 1);
+        }
+
+        public int MaxKitProductCode()
+        {
+            decimal maxCode = 9000;
+            try
+            {
+                using (var entity = new InventoryEntities())
+                {
+                    maxCode = (from result in entity.M_ProductMaster where result.PType=="K" select result.ProductCode).DefaultIfEmpty(0).Max();
+
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+            }
+            if (maxCode == 0)
+            {
+                maxCode = 9000;
             }
             return ((int)maxCode + 1);
         }
@@ -1623,6 +1646,7 @@ namespace InventoryManagement.API.Controllers
         {
             bool IsSave = false;
             M_ProductMaster objDTProduct = new M_ProductMaster();
+            itemcode objItemcode = new itemcode();
             M_BarCodeMaster objDTBarcode = new M_BarCodeMaster();
             M_TaxMaster objDTTax = new M_TaxMaster();
             TrnStockJv objDtStock = new TrnStockJv();
@@ -1645,7 +1669,8 @@ namespace InventoryManagement.API.Controllers
                         if (objDTProduct == null)
                         {
                             objDTProduct = new M_ProductMaster();
-                            model.ProductCode = MaxProductCode();
+                            objItemcode = new itemcode();
+                            model.ProductCode = MaxKitProductCode();
                         }
 
                         i = 0;
@@ -1675,6 +1700,25 @@ namespace InventoryManagement.API.Controllers
                         objDTProduct.CV = model.CV;
                         objDTProduct.BV = model.BV;
                         objDTProduct.HSNCode = string.IsNullOrEmpty(model.HSNCode) ? "" : model.HSNCode;
+
+                        objItemcode.PCode = model.ProductCode.ToString();
+                        objItemcode.ItemCode1 = model.ProductCode.ToString();
+                        objItemcode.descr = model.ProductName;
+                        objItemcode.Status = false;
+                        objItemcode.myChoice = false;
+                        objItemcode.Attrib1 = "";
+                        objItemcode.Attrib2 = "";
+                        objItemcode.Attrib3 = "";
+                        objItemcode.Attrib4 = "";
+                        objItemcode.Attrib5 = "";
+                        objItemcode.Attrib6 = "";
+                        objItemcode.Attrib7 = "";
+                        objItemcode.Attrib8 = "";
+                        objItemcode.Attrib9 = "";
+                        objItemcode.Attrib10 = "";
+                        objItemcode.CreationDate = DateTime.Now;
+                        objItemcode.RPCId = model.SubCatgeoryId;
+
                         if (model.UserDetails != null)
                         {
                             objDTProduct.UserId = model.UserDetails.UserId;
@@ -1775,6 +1819,8 @@ namespace InventoryManagement.API.Controllers
                         objDTProduct.GenerateBy = model.UserDetails.UserName;
                         objDTProduct.HSNCode = "";
                         entity.M_ProductMaster.Add(objDTProduct);
+                        entity.itemcodes.Add(objItemcode);
+
                         try
                         {
                             i = entity.SaveChanges();

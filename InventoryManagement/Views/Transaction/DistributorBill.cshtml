@@ -102,7 +102,7 @@
     var IsCommissionAdd = 0, IsDiscountAdd = 1;
     var SelectedKitFalse = false;
     var KitDescriptionList;
-    var ProductGrid = [{ "AvailStock": "", "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "BatchNo": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "FreeQty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "","ProductTye":"","Weight": 0, "WeightVal": 0 }];
+    var ProductGrid = [{ "ForBrandCode": "", "AvailStock": "", "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "BatchNo": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "FreeQty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "", "ProductTye": "", "Weight": 0, "WeightVal": 0 }];
     var SelectedInvoiceTypeFalse = false;
     var OfferArray = [];
     var BuyProductArray = [];
@@ -587,7 +587,7 @@
             if (qtyCurrent != "") {
                 qtyCurrent = parseFloat(qtyCurrent);
                 if (qtyCurrent <= 1000.999) {
-                    DoCalculation(false);
+                    DoCalculation(false, "P", 0);
                 }
                 else {
                     OpenDialog("dialogMessage", "Please enter quantity less than 1000.999!", "false");
@@ -600,19 +600,16 @@
             }
 
         });
-        //$("#DiscPer").focusout(function () {
-        //    DoCalculation();
-        //});
+               
 
-        function DoCalculation(offerproduct) {
-            //  var ProductGrid = [{ "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "" }];
+        function DoCalculation(offerproduct, ProductType, KitQty) {
+            var BrandCode = $("#BrandCode").val();
             if (ProductArray != null && ProductArray != undefined) {
                 var Quantity = parseFloat(($("#Quantity").val() != "" || $("#Quantity").val() != null) ? $("#Quantity").val() : 0);
                 var dpValue;
                 var CommissionLessDp;
 
-             //   if (Quantity <= ProductArray.AvailStock || ProductArray.AvailStock<=0) {
-                    if (IsCommissionAdd == 1) {
+             if (IsCommissionAdd == 1) {
                         var Commssn = ProductArray.DP * ProductArray.CommsnPer / 100;
                         dpValue = ProductArray.DP - Commssn;
                         CommissionLessDp = dpValue;
@@ -622,30 +619,18 @@
                         dpValue = ProductArray.DP;
                     }
 
-
-                    //to be calculated if value for this in config is "Y"
-                    @*var IsDiscountCalculated = '@Model.objConfigDetails.C_AllowDiscount';
-                    var IsDiscountForAllCust = '@Model.objConfigDetails.C_DiscForAllCust';
-                    var ToCalculateDiscount = true;
-                    if (IsDiscountForAllCust == "Y") {
-                        ToCalculateDiscount = true;
-                    }
-                    else {
-                        if (IsRegisteredCustomerCheck) {
-                            ToCalculateDiscount = true;
-                        }
-                        else {
-                            ToCalculateDiscount = false;
-                        }
-                    }*@
-                    //if (IsDiscountCalculated == "Y" && ToCalculateDiscount == true) {
+                     if (BrandCode != null && BrandCode != "" && BrandCode != undefined && BrandCode != "0") {
+                         dpValue = 0;
+                         ProductArray.RP = 0;
+                         ProductArray.CV = 0;
+                         ProductArray.BV = 0;
+                         ProductArray.PV = 0;
+                     }
+                    
                     var DiscPer = ProductArray.DiscPer;
                     var DiscAmt = ProductArray.DiscAmt;
 
-                    /*if (IsQty == "D") {
-                        dpValue = CommissionLessDp;
-                        DiscPer = parseInt($("#DiscPer").val());
-                    }*/
+                    
                     if (IsDiscountAdd == 1) {
                         if (DiscAmt == 0 && DiscPer != 0) {
                             var Discount = dpValue * DiscPer / 100;
@@ -664,26 +649,23 @@
                     else {
                         ProductArray.DiscAmt = 0;
                     }
-                    //}
-                    //else {
-                    //    ProductArray.DiscAmt = 0;
-                    //}
-
+                    
 
                     ProductArray.Rate = dpValue * 100 / (100 + parseFloat(ProductArray.TaxPer));
                     ProductArray.Rate = parseFloat(ProductArray.Rate).toFixed(2);
-                    ProductArray.Amount = parseFloat(Quantity * ProductArray.Rate).toFixed(2);
+                    
 
-                    ProductArray.TaxAmt = (dpValue * Quantity) - ProductArray.Amount;
-
-                    var temp = (ProductArray.TaxAmt.toFixed(2)).toString();
-                    var lastNum = parseInt(temp[temp.length - 1]);
-
-                    //if ((parseInt(lastNum) % 2) != 0) {
-                    //    $("#OldTaxAmount").val(parseFloat(ProductArray.TaxAmt));
-                    //    ProductArray.Amount = parseFloat(ProductArray.Amount) + 0.01;
-                    //    ProductArray.TaxAmt = parseFloat(ProductArray.TaxAmt) - 0.01;
-                    //}
+                    if (ProductType == "KP") {
+                        ProductArray.Amount = parseFloat(KitQty * ProductArray.Rate).toFixed(2);
+                        ProductArray.TaxAmt = (dpValue * KitQty) - ProductArray.Amount;
+                        ProductArray.TotalAmt = (dpValue * KitQty);                        
+                    }
+                    else  {
+                        ProductArray.Amount = parseFloat(Quantity * ProductArray.Rate).toFixed(2);
+                        ProductArray.TaxAmt = (dpValue * Quantity) - ProductArray.Amount;
+                        ProductArray.TotalAmt = (dpValue * Quantity);
+                    }
+                   
 
                     ProductArray.RPValue = ProductArray.RP * Quantity;
                     ProductArray.CVValue = ProductArray.CV * Quantity;
@@ -703,7 +685,7 @@
                         ProductArray.ProductTye = "F";
                         }
                     else {
-                        ProductArray.TotalAmt = (dpValue * Quantity);
+                      
                         ProductArray.ProductTye = "P";
                     }
                     $("#DiscAmt").val((ProductArray.DiscAmt).toFixed(2));
@@ -721,6 +703,7 @@
                 ProductArray.SNo = count;
             }
             var Qty = $("#Quantity").val();
+            var Brand = $("#BrandCode").val();
             var itemCode = $("#itemCode").val();
             var Stock = parseFloat($("#StockAvailable").val());
             if (Qty != null && Qty != "") {
@@ -752,11 +735,11 @@
                 }
                 if (Flag) {
                     var TotalWeight = (ProductArray.Weight * ProductArray.Qty).toFixed(3);
-                    ProductGrid.push({ "itemCode":itemCode,"CatName": ProductArray.CatName, "CatId": ProductArray.CatId, "AvailStock": Stock, "SNo": ProductArray.SNo, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": (ProductArray.Rate), "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "FreeQty": ProductArray.FreeQty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer.toFixed(2), "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "ProductTye": ProductArray.ProductTye, "Weight": ProductArray.Weight, "WeightVal": TotalWeight });
+                    ProductGrid.push({ "ForBrandCode": 0, "itemCode": itemCode, "CatName": ProductArray.CatName, "CatId": ProductArray.CatId, "AvailStock": Stock, "SNo": ProductArray.SNo, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": (ProductArray.Rate), "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "FreeQty": ProductArray.FreeQty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer.toFixed(2), "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "ProductTye": ProductArray.ProductTye, "Weight": ProductArray.Weight, "WeightVal": TotalWeight });
                 }
                 else if (IsEditGrid==false) {
 
-                    var Qty = (parseFloat(ProductGrid[i].Qty) + parseFloat(ProductArray.Qty)).toFixed(2);
+                     Qty = (parseFloat(ProductGrid[i].Qty) + parseFloat(ProductArray.Qty)).toFixed(2);
 
                     if ((parseFloat(Qty)) <= Stock) {
                     ProductGrid[i].Qty = Qty;
@@ -827,6 +810,11 @@
 
                 fillGrid();
                 CalculateTotals();
+
+                if (Qty<=Stock && Brand != null && Brand != "" && Brand != undefined && Brand != "0") {
+                    getKitProucts(Brand, Qty);
+                }
+
                 resetProductDetails();
                 $("#ProductName").val('');
                 $("#Barcode").val('');
@@ -1177,6 +1165,7 @@
                                 ProductSearchList = objResult;
                                 $("#ProductNameList").empty();
                                 $("#BarcodeList").empty();
+                                $("#BrandCode").val(objResult[0].BrandCode);
                                 AvailableBarcodeList = [];
                                 AvailableProductList = [{}];
                                 if (isProductSearch == "P") {
@@ -1440,15 +1429,21 @@
                 async: false,
                 success: function (objResult) {
                     if (objResult != null && objResult.length != 0) {
-                        for (var i = 0; i < objResult.length; i++) {
+
+                        ProductGrid = $.grep(ProductGrid, function (e) {
+                            return e.ForBrandCode != KitID;
+                        });
+
+                        for (var i = 0; i < objResult.length; i++) {                           
                             var Total = parseInt(objResult[i].TotalQty) * parseInt(Qty);
-                            $("#Quantity").val(Total);
-                            $("#BrandCode").val(objResult[i].BrandCode);
+                            $("#Quantity").val(Total);                           
+                            $("#BrandCode").val(objResult[i].BrandCode);                        
                             ProductArray = { "ProductTye": "P", "AvailStock": objResult[i].StockAvailable, "SNo": count, "ProductName": objResult[i].ProductName, "Barcode": objResult[i].Barcode, "BatchNo": objResult[i].BatchNo, "ProdCode": objResult[i].ProdCode, "Qty": objResult[i].Qty, "TaxType": objResult[i].TaxType, "MRP": objResult[i].MRP, "DP": objResult[i].DP, "RP": objResult[i].RP, "BV": objResult[i].BV, "CV": objResult[i].CV, "PV": objResult[i].PV, "CommsnPer": objResult[i].CommissionPer, "DiscPer": objResult[i].DiscPer, "TaxPer": objResult[i].TaxPer, "CommssnAmt": 0, "TaxAmt": 0, "RPValue": 0, "CVValue": 0, "PVValue": 0, "BVValue": 0, "DiscAmt": objResult[i].DiscAmt, "Amount": 0, "TotalAmt": 0, "Rate": 0, "Weight": objResult[i].Weight, "WeightVal": 0 };
                             DoCalculation(false,"KP", Qty);
                             var TotalWeight = (ProductArray.Weight * ProductArray.Qty).toFixed(3);
                             count++;
-                            ProductGrid.push({ "itemCode": objResult[i].itemCode, "AvailStock": 0, "SNo": count, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": (ProductArray.Rate).toFixed(2), "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": (ProductArray.Amount).toFixed(2), "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer, "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "Weight": ProductArray.Weight, "WeightVal": TotalWeight, "ProductTye": ProductArray.ProductTye });
+                         
+                            ProductGrid.push({ "ForBrandCode": KitID, "itemCode": objResult[i].itemCode, "AvailStock": 0, "SNo": count, "Code": ProductArray.ProdCode, "ProductName": ProductArray.ProductName, "MRP": ProductArray.MRP, "DP": ProductArray.DP, "Rate": ProductArray.Rate, "BatchNo": ProductArray.BatchNo, "Barcode": ProductArray.Barcode, "RP": ProductArray.RP, "BV": ProductArray.BV, "CV": ProductArray.CV, "PV": ProductArray.PV, "Qty": ProductArray.Qty, "RPValue": ProductArray.RPValue, "BVValue": ProductArray.BVValue, "CVValue": ProductArray.CVValue, "PVValue": ProductArray.PVValue, "CommsnPer": ProductArray.CommsnPer, "CommsnAmt": (ProductArray.CommssnAmt).toFixed(2), "DiscPer": ProductArray.DiscPer, "DiscAmt": (ProductArray.DiscAmt).toFixed(2), "Amount": ProductArray.Amount, "TaxType": ProductArray.TaxType, "TaxPer": ProductArray.TaxPer, "TaxAmt": (ProductArray.TaxAmt).toFixed(2), "TotalAmount": (ProductArray.TotalAmt).toFixed(2), "Weight": ProductArray.Weight, "WeightVal": TotalWeight, "ProductTye": ProductArray.ProductTye });
                         }
                         fillGrid();
                         CalculateTotals();
@@ -1619,7 +1614,7 @@
             console.log("ProductArray[0] in fill", ProductArray);
             ProductArray = TempProductArray[1];
             $("#Quantity").focus();
-            DoCalculation(false);
+            DoCalculation(false, "P", 0);
         }
         function OpenDialog(dialogId, Message, isConfirmation) {
             $("#" + dialogId).empty();
@@ -1860,7 +1855,7 @@
             var qty = $('input[name="freeproduct"]:checked').attr("data-qty");
             console.log(selectedProduct);
             GetProductInfo("P", selectedProduct, true, qty);
-            DoCalculation(true);
+            DoCalculation(true,"P",0);
             $("#dialogOffer").dialog("close");
             $("#AddRecordInGrid").click();
             if (ProductGrid.length > 0) {
@@ -2484,7 +2479,8 @@
                                         <input class="form-control col-lg-5 input-readonly" style="width:11%" type="text" id="SearchText" name="SearchText" value="P" maxlength="1" />
                                         @Html.HiddenFor(m => m.objProduct.ProductName, new { id = "ProductHidden" })
                                         @Html.TextBoxFor(m => m.objProduct.ProductName, new { tabindex = "0", name = "ProductName", id = "ProductName", @class = "form-control col-lg-7", @style = "width:89%" })
-                                        <select tabindex = "0" name="ProductNameList" id="ProductNameList" style="display:none;width:89%" class="form-control col-lg-7">
+                                        @Html.HiddenFor(m => m.objProduct.BrandCode, new { id = "BrandCode" })
+                                         <select tabindex = "0" name="ProductNameList" id="ProductNameList" style="display:none;width:89%" class="form-control col-lg-7">
                                             <option value="0">--Select product--</option>
                                         </select>
                                         @*@Html.DropDownListFor(m => m.objProduct.ProductName,new SelectListItem { Text="--Select Product--", Value="0", Selected=true} as IEnumerable<SelectListItem>, new { tabindex = "4", name = "ProductNameList", id = "ProductNameList",@style="display:none", @class = "form-control col-md-7 col-xs-12" })*@

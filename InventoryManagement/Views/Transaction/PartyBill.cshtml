@@ -831,11 +831,12 @@
                 }
                 fillGrid();
                 CalculateTotals();
-                resetProductDetails();
-                if (Brand != null && Brand != "" && Brand != undefined && Brand != "0")
+               
+                if ((parseFloat(Qty)) <= Stock && Brand != null && Brand != "" && Brand != undefined && Brand != "0")
                 { 
                     getKitProucts(Brand, Qty);
                 }
+                resetProductDetails();
                 $("#ProductName").val('');
                 $("#Barcode").val('');
                 $("#itemCode").val('');

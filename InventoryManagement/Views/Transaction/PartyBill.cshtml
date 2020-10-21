@@ -99,6 +99,7 @@
     var billDate = "";
     var PartyList = [];
     var FullPartyList;
+    var TaxORStock = "tax";
     var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var ProductGrid = [{ "ForBrandCode": "", "ProductTye": "", "AvailStock": "", "SNo": "", "Code": "", "ProductName": "", "MRP": "", "DP": "", "Rate": "", "BatchNo": "", "Barcode": "", "RP": "", "BV": "", "CV": "", "PV": "", "Qty": "", "RPValue": "", "BVValue": "", "CVValue": "", "PVValue": "", "CommsnPer": "", "CommsnAmt": "", "DiscPer": "", "DiscAmt": "", "Amount": "", "TaxType": "", "TaxPer": "", "TaxAmt": "", "TotalAmount": "", "Weight": 0, "WeightVal": 0 }];
     $(document).keydown(function (event) {
@@ -129,7 +130,10 @@
         $('#BillDateStr').val(currentDate);
         billDate = currentDate;
         console.log("billDate", billDate);
-
+        $('input[type=radio][name=TaxORStock]').change(function () {
+            TaxORStock = $("input[name='TaxORStock']:checked").val();
+            resetBilltype();
+        });
         $("#ReferenceIdNo").focus();
         $("#ProductName").focusin(function () {
             if ($("#PartyCode").val() == "" || $("#PartyCode").val() == null) {
@@ -172,7 +176,23 @@
             $('body').append('<div class="overlay"></div>')
             $('#paymode_details').slideToggle(300);
             $('#paymode_details').css('top', '700px');
+
         }
+
+
+        function resetBilltype() {
+            ProductGrid = [];
+            $("#ProductName").val('');
+            $("#itemCode").val();
+            $("#Barcode").val('');
+            $("#ProductNameList").empty();
+            $("#BarcodeList").empty();
+            resetProductDetails();
+            changeValues();
+            fillGrid();
+        }
+
+
 
         function SetCashAmountTextbox(enteredValue) {
             console.log("NetPayableAmountFinal in set func", NetPayableAmountFinal);
@@ -656,14 +676,20 @@
                 console.log("Quantity", Quantity);
                 console.log("ProductArray.AvailStock", ProductArray.AvailStock);
                 if (Quantity <= ProductArray.AvailStock || ProductArray.AvailStock<=0) {
-                    if (IsCommissionAdd == 1) {
-                        var Commssn = ProductArray.DP * ProductArray.CommsnPer / 100;
-                        dpValue = ProductArray.DP - Commssn;
-                        CommissionLessDp = dpValue;
-                        ProductArray.CommssnAmt = Commssn * Quantity;
+                    if (TaxORStock == "tax") {
+                        if (IsCommissionAdd == 1) {
+                            var Commssn = ProductArray.DP * ProductArray.CommsnPer / 100;
+                            dpValue = ProductArray.DP - Commssn;
+                            CommissionLessDp = dpValue;
+                            ProductArray.CommssnAmt = Commssn * Quantity;
+                        }
+                        else {
+                            dpValue = ProductArray.DP;
+                        }
                     }
                     else {
                         dpValue = ProductArray.DP;
+                        ProductArray.TaxPer = 0;
                     }
 
 
@@ -679,16 +705,21 @@
                     var DiscPer = ProductArray.DiscPer;
                     var DiscAmt = ProductArray.DiscAmt;
                     
-                    if (IsDiscountAdd == 1) {
-                        if (DiscAmt == 0 && DiscPer != 0) {
-                            var Discount = dpValue * DiscPer / 100;
-                            dpValue = dpValue - Discount;
-                            ProductArray.DiscAmt = Discount * Quantity;
-                        }
-                        else if (DiscPer == 0 && DiscAmt != 0) {
-                            var Discount = dpValue * DiscAmt;
-                            dpValue = dpValue - Discount;
-                            ProductArray.DiscAmt = Discount * Quantity;
+                    if (TaxORStock == "tax") {
+                        if (IsDiscountAdd == 1) {
+                            if (DiscAmt == 0 && DiscPer != 0) {
+                                var Discount = dpValue * DiscPer / 100;
+                                dpValue = dpValue - Discount;
+                                ProductArray.DiscAmt = Discount * Quantity;
+                            }
+                            else if (DiscPer == 0 && DiscAmt != 0) {
+                                var Discount = dpValue * DiscAmt;
+                                dpValue = dpValue - Discount;
+                                ProductArray.DiscAmt = Discount * Quantity;
+                            }
+                            else {
+                                ProductArray.DiscAmt = 0;
+                            }
                         }
                         else {
                             ProductArray.DiscAmt = 0;
@@ -732,7 +763,8 @@
                     ProductArray.WeightVal = ProductArray.Weight * Quantity;
                     ProductArray.Qty = Quantity;
 
-                    if (BrandCode != null && BrandCode != "" && BrandCode != undefined && BrandCode != "0") {
+                    
+                    if (ProductType == "P") {
                         ProductArray.ProductTye = 'P';
                     }
                     else {
@@ -1308,7 +1340,10 @@
             }
             console.log("objResult:",objResult);
             console.log("objResult.StockAvailable", objResult.StockAvailable);
-            // ProductGrid.push({ "SNo": count, "Code": objResult.ProdCode, });
+            var taxValue = 0;
+            if (TaxORStock == "tax") {
+                taxValue = objResult.TaxPer;
+            }
             TempProductArray.push({ "ProductTye": "P", "AvailStock": objResult.StockAvailable, "SNo": count, "ProductName": objResult.ProductName, "Barcode": objResult.Barcode, "BatchNo": objResult.BatchNo, "ProdCode": objResult.ProdCode, "Qty": Qty, "TaxType": objResult.TaxType, "MRP": objResult.MRP, "DP": objResult.DP, "RP": objResult.RP, "BV": objResult.BV, "CV": objResult.CV, "PV": objResult.PV, "CommsnPer": objResult.CommissionPer, "DiscPer": objResult.DiscPer, "TaxPer": objResult.TaxPer, "CommssnAmt": 0, "TaxAmt": 0, "RPValue": 0, "CVValue": 0, "PVValue": 0, "BVValue": 0, "DiscAmt": objResult.DiscAmt, "Amount": 0, "TotalAmt": 0, "Rate": 0, "Weight": objResult.Weight, "WeightVal": 0 });
             if (SearchText == "P") {
                 $("#ProductName").val(objResult.ProductName);
@@ -1689,7 +1724,7 @@
             errorPaymode = false;
             //validations of paymode if selected
 
-
+            $("#hdnTaxORStock").val(TaxORStock);
 
             if ($("#CC").prop('checked') == true) {
                 //do something
@@ -1893,6 +1928,20 @@
                     $("#PartyCode").val(FullPartyList[i].PartyCode);
                     $("#SelectedPartyStateCode").val(FullPartyList[i].StateCode);
                     $("#UserPartyCode").val(FullPartyList[i].UserPartyCode);
+                    if (FullPartyList[i].GroupId == 0 || FullPartyList[i].GroupId == 1) {
+                        $("#dvBillType").show();
+                        if (TaxORStock == "tax")
+                            resetBilltype();
+                        TaxORStock = "stock";
+                        $("input[name=TaxORStock][value='stock']").prop("checked", true);
+                    }
+                    else {
+                        $("#dvBillType").hide();
+                        if (TaxORStock == "stock")
+                            resetBilltype();
+                        TaxORStock = "tax";
+                        $("input[name=TaxORStock][value='tax']").prop("checked", true);
+                    }
                     break;
                 }
             }
@@ -1924,7 +1973,20 @@
                     $("#PartyName").val(FullPartyList[i].PartyName);
                     $("#PartyCode").val(FullPartyList[i].PartyCode);
                     $("#SelectedPartyStateCode").val(FullPartyList[i].StateCode);
-                   // $("#UserPartyCode").val(FullPartyList[i].UserPartyCode);
+                    if (FullPartyList[i].GroupId == 0 || FullPartyList[i].GroupId == 1) {
+                        // $("#dvBillType").show();
+                        if (TaxORStock == "tax")
+                            resetBilltype();
+                        TaxORStock = "stock";
+                        $("input[name=TaxORStock][value='stock']").prop("checked", true);
+                    }
+                    else {
+                        // $("#dvBillType").hide();
+                        if (TaxORStock == "stock")
+                            resetBilltype();
+                        TaxORStock = "tax";
+                        $("input[name=TaxORStock][value='tax']").prop("checked", true);
+                    }
                     break;
                 }
         }
@@ -2103,11 +2165,18 @@
                                 </div>
 
                             </div>
-                            <div class="col-lg-4">
-                                &nbsp;
-                            </div>
-                            <div class="col-lg-4">
-                                &nbsp;
+                            <div class="col-lg-8" id="dvBillType">
+
+                                <div class="col-lg-8">
+                                    <label class="control-label col-lg-3" for="category-name">
+                                        Bill Type:
+                                    </label>
+                                    <div class="col-lg-9" style="padding-left: 1%;">
+                                        <label><input type="radio" name="TaxORStock" value="stock">Stock Transfer </label>&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <label><input type="radio" name="TaxORStock" value="tax" checked="checked">Tax Invoice</label>
+                                        @Html.HiddenFor(m => m.TaxORStock, new { id = "hdnTaxORStock", name = "hdnTaxORStock" })
+                                    </div>
+                                </div>
                             </div>
 
                         </div>

@@ -7,6 +7,7 @@ namespace InventoryManagement.Entity.Common
 {
     public class DistributorBillModel
     {
+        public string TaxORStock { get; set; }
         public CustomerDetail objCustomer { get; set; }
         public ProductModel objProduct { get; set; }
         public List<ProductModel> objListProduct { get; set; }
@@ -108,6 +109,7 @@ namespace InventoryManagement.Entity.Common
     }
     public class ProductModel
     {
+        public string BillType { get; set; }
         public string IsChallanBill { get; set; }
         public List<ProdItemCodes> itemCodes { get; set; }
         public string itemCode { get; set; }

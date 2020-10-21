@@ -1,0 +1,457 @@
+﻿
+@model InventoryManagement.Entity.Common.DistributorBillModel
+@{
+    ViewBag.Title = "StockTransferPrint";
+    Layout = null;
+
+    string CVCaption = System.Configuration.ConfigurationManager.AppSettings["CVCaption"];
+    string BVCaption = System.Configuration.ConfigurationManager.AppSettings["BVCaption"];
+    string PVCaption = System.Configuration.ConfigurationManager.AppSettings["PVCaption"];
+    string RPCaption = System.Configuration.ConfigurationManager.AppSettings["RPCaption"];
+    int count = 1;
+    int colcount = 12;
+    decimal? TotalQty = 0;
+}
+
+<link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
+<link href="~/Content/jquery-ui-1.10.4.min.css" rel="stylesheet" />
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery-1.12.4.js"></script>
+<style>
+    body {
+        font-family: Verdana;
+        font-size:10px !important;
+    }
+
+    .addAllPadding {
+        padding: 2px !important;
+    }
+
+    .rightBorderOnly {
+        border-right: 1px solid black !important;
+        border-left: 1px solid black !important;
+        border-top: none !important;
+        border-bottom: none !important;
+         /*font-size:11px;*/
+    }
+
+    .AllBorder {
+        border: 1px solid black !important;
+        border-right: 1px solid black !important;
+        border-left: 1px solid black !important;
+        border-top: 1px solid black !important;
+        border-bottom: 1px solid black !important;
+        font-size:11px;
+    }
+
+    .NoBorder {
+        border: None !important;
+        border-right: None !important;
+        border-left: None !important;
+        border-top: None !important;
+        border-bottom: None !important;
+        vertical-align:top;
+         /*font-size:11px;*/
+    }
+
+    table {
+        border-collapse: collapse !important;
+        width: 100%;
+         font-size:11px;
+        
+    }
+
+    .borderbottom {
+        border-right: none !important;
+        border-top: none !important;
+        border-left: none !important;
+        border-bottom: 1px solid black;
+         font-size:11px;
+    }
+
+    .topborder {
+        border-top: 1px solid black !important;
+        border-right: none !important;
+        border-left: none !important;
+        border-bottom: none !important;
+         font-size:11px;
+    }
+</style>
+<script type="text/javascript">
+    function printPageElement() {
+        //var url = window.location.href;
+        //console.log("url", url);
+        ////var printWindow = window.open(url, 'PRINT', 'height=400,width=600');
+        ////console.log("printWindow", printWindow);
+        ////    var printAndClose = function () {
+        ////        if (printWindow.document.readyState == 'complete') {
+        ////            clearInterval(sched);
+        ////            printWindow.print();
+        ////            printWindow.close();
+        ////        }
+        ////    }
+        ////    var sched = setInterval(printAndClose, 200);
+
+        ////    return true;
+        //console.log("in print");
+        //var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+        //console.log("mywindow", mywindow);
+        //var PrintHtml = $("#DivToPrint").html();
+        //mywindow.document.write('<html><head><title>' + document.title + '</title>');
+        //mywindow.document.write('</head><body >');
+        //mywindow.document.write(PrintHtml);
+        ////mywindow.document.write(document.getElementById(elem).innerHTML);
+        //mywindow.document.write('</body></html>');
+
+        //mywindow.document.close(); // necessary for IE >= 10
+        //mywindow.focus(); // necessary for IE >= 10*/
+
+        //mywindow.print();
+        //mywindow.close();
+        window.print();
+        return true;
+    }
+    $(document).ready(function () {
+        $(".preloader").hide();
+    });
+</script>
+<div id="DivToPrint" class="fontStyle" style="font-size:10px">
+    <div>
+        <button id="PrintPage" style="margin-left: 2%;" onclick="printPageElement()">Print</button>
+        <br>
+    </div>
+    <div>&nbsp;</div>
+    <table border="1" align="center" cellspacing="0" id="InvoicePrint" frame="box" style="font-size:0px;" >
+        <tbody>
+            <tr class="borderbottom">
+                <td colspan="2" class="addAllPadding">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td colspan="2">
+                                    <b>
+                                        GSTIN&nbsp;&nbsp;:&nbsp;&nbsp;
+                                        @if (!string.IsNullOrEmpty(Model.GSTNo))
+                                        {
+                                            <span id="lblTinNotxt">@Model.GSTNo</span>
+                                        }
+                                    </b>
+                                </td>
+                                <td align="right">
+                                    
+                                </td>
+                            </tr>
+                            <tr><td align="center" colspan="3"><span style="font-size:14px"><u>Stock Transfer</u></span></td></tr>
+                            <tr>
+                                <td align="center" colspan="3">
+                                    <span style="font-size:20px">
+                                        <b>
+                                            @if (!string.IsNullOrEmpty(Model.SoldByName))
+                                            {@Model.SoldByName }
+                                        </b>
+                                    </span>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td align="center" width="20%">
+                                    <img src="~/images/logo.png" style="max-height:40px" />
+                                </td>
+                                <td width="40%">
+                                    <table>
+                                       
+                                    <tr>
+                                        <td align="center">
+                                            @if (!string.IsNullOrEmpty(Model.SoldByAddress))
+                                            {@Model.SoldByAddress}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">
+                                            CIN&nbsp;&nbsp;:@if (!string.IsNullOrEmpty(Model.CinNo))
+                                            {@Model.CinNo}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="center">
+                                            <em>
+                                                <b>
+                                                    Tel.&nbsp;&nbsp;:@if (!string.IsNullOrEmpty(Model.CompanyTel))
+                                                    {@Model.CompanyTel}
+                                                    email&nbsp;&nbsp;:@if (!string.IsNullOrEmpty(Model.CompanyMail))
+                                                    {@Model.CompanyMail}
+                                                </b>
+                                            </em>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                            <td align="center" width="20%">
+                                &nbsp;
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr class="borderbottom">
+            <td class="addAllPadding rightBorderOnly" width="50%">
+                <table>
+                    <tr>
+                        <td width="30%">Invoice No</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            <span id="lblInvoiceNoTxt" text-align="right">
+                                @if (!string.IsNullOrEmpty(Model.BillNo))
+                                {@Model.BillNo}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="30%">Date of Invoice</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            <span id="lblInvoiceNoTxt" text-align="right">
+                                @if (Model.BillDate != null)
+                                {@Model.BillDate.ToString("dd-MMM-yyyy")}
+                            </span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="30%">VR ID</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            @if (!string.IsNullOrEmpty(Model.objCustomer.IdNo))
+                            {@Model.objCustomer.IdNo}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="30%">Mobile No</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            @if (!string.IsNullOrEmpty(Model.objCustomer.MobileNo))
+                            {@Model.objCustomer.MobileNo}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td width="30%">Place of Supply</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            @if (Model.StateGSTName != null)
+                            {@Model.StateGSTName.ToString()}
+                        </td>
+                    </tr>
+                    @*<tr>
+         <td width="30%">Reverse Charge</td>
+         <td width="10%">:</td>
+         <td width="60%">
+            N
+         </td>
+     </tr>
+    <tr><td width="30%">Transport</td><td width="10%">:</td><td width="60%"></td></tr>*@
+                </table>
+            </td>
+            <td class="addAllPadding" width="50%">
+                <table>
+                    <tr>
+                        <td width="30%">Pan No</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            @if (!string.IsNullOrEmpty(Model.objCustomer.PANNo))
+                            {@Model.objCustomer.PANNo}
+                        </td>
+                    </tr>
+                    <tr>
+                        @*<td width="30%">Transport</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            @if (!string.IsNullOrEmpty(Model.objListProduct[0].TransporterName))
+                            {@Model.objListProduct[0].TransporterName}
+                        </td>*@
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        @*<td width="30%">Vehicle No.</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            @if (!string.IsNullOrEmpty(Model.objListProduct[0].VehicleNo))
+                            {@Model.objListProduct[0].VehicleNo}
+                        </td>*@
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        @*<td width="30%">Station</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            @if (!string.IsNullOrEmpty(Model.objListProduct[0].Station))
+                            {@Model.objListProduct[0].Station}
+                        </td>*@
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        @*<td width="30%">Eway Bill No.</td>
+                        <td width="10%">:</td>
+                        <td width="60%">
+                            @if (!string.IsNullOrEmpty(Model.objListProduct[0].EWayBillNo))
+                            {@Model.objListProduct[0].EWayBillNo       }
+                        </td>*@
+                        <td >&nbsp;</td>
+</tr>
+                    
+                  
+                </table>
+            </td>
+        </tr>
+
+        <tr class="borderbottom">
+            <td class="addAllPadding rightBorderOnly" width="50%">
+                <em><b>Billed To:</b></em><br />
+                <span id="lblDistNametxt" align="left">
+                    @if (!string.IsNullOrEmpty(Model.objCustomer.Name))
+                    {@Model.objCustomer.Name}
+                </span>
+                <br />
+                @if (!string.IsNullOrEmpty(Model.objCustomer.Address))
+                {@Model.objCustomer.Address}
+                <br /><br />
+                <span>GSTIN/UIN :</span>
+                <span id="lblDistGSTtxt" align="left">
+                    @Model.objCustomer.GSTNo
+                </span>
+            </td>
+            <td class="addAllPadding" width="50%">
+                <em><b>Shipped To:</b></em><br />
+                <span id="lblDistNametxt" align="left">
+                    @if (!string.IsNullOrEmpty(Model.objCustomer.Name))
+                    {@Model.objCustomer.Name}
+                </span>
+                <br />
+                @if (!string.IsNullOrEmpty(Model.DelvAddress))
+                { @Model.DelvAddress}
+                else
+                {@Model.objCustomer.Address}
+                <br /><br />
+                <span>GSTIN/UIN :</span>
+                <span id="lblDistGSTtxt" align="left">
+                    @Model.objCustomer.GSTNo
+                </span>
+            </td>
+        </tr>
+        
+        <tr class="borderbottom ">
+            <td colspan="2" class="addAllPadding ">
+                <table border="1" class="NoBorder " cellspacing="0" style="font-size:9px !important">
+                    <tr>
+                        <th scope="col" align="left" class="AllBorder" style="width:2%">S.No.</th>
+                        <th scope="col" align="left" class="addAllPadding AllBorder">Decription Of Goods</th>
+                        <th scope="col" align="left" class="addAllPadding AllBorder">Item Code</th>
+                        <th scope="col" align="left" class="addAllPadding AllBorder">HSN Code</th>
+                        <th scope="col" align="left" class="addAllPadding AllBorder">Qty</th>
+                        <th scope="col" align="left" class="addAllPadding AllBorder">Unit</th>
+                        <th scope="col" align="left" class="addAllPadding AllBorder">Total Dis</th>
+                        <th scope="col" align="left" class="addAllPadding AllBorder">Price</th>
+                        <th scope="col" align="left" class="addAllPadding AllBorder">P.V.</th>
+                       
+                        <th scope="col" align="left" class="addAllPadding AllBorder">Amount</th>
+                    </tr>
+                    @foreach (var obj in Model.objListProduct)
+                    {
+                        if (obj.BrandCode == 0)
+                        {
+                        <tr>
+
+                            <td class="rightBorderOnly" align="right">@count.</td>
+                            <td class="addAllPadding rightBorderOnly">
+                                @if (obj.OrderType == "T" && obj.Rate == 0)
+                                {
+                                    <b>@obj.ProductName</b>
+                                }
+                                else
+                                {
+                                    @obj.ProductName
+                                }
+
+
+                            </td>
+
+                            <td class="addAllPadding rightBorderOnly">@obj.ProductCodeStr</td>
+                            <td class="addAllPadding rightBorderOnly">@obj.HSNCode</td>
+                            <td class="addAllPadding rightBorderOnly" align="right">
+                            @{ var qty = (int)obj.Quantity;
+                                
+                                TotalQty += qty;
+                            }
+                                @qty
+                            </td>
+                            <td class="addAllPadding rightBorderOnly">Pcs.</td>
+                            <td class="addAllPadding rightBorderOnly" align="right">@obj.DiscAmt</td>
+                            <td class="addAllPadding rightBorderOnly" align="right">@obj.Rate</td>
+                            <td class="addAllPadding rightBorderOnly" align="right">@obj.BVValue </td>
+                           
+                            <td class="addAllPadding rightBorderOnly" align="right">@(obj.Amount + obj.TaxAmt + obj.SGSTAmount + obj.CGSTAmount)</td>
+                        </tr>
+
+                                        count = count + 1;
+                                    }
+                                }
+                    <tr class="topborder NoBorder">
+                        <td class="addAllPadding NoBorder" colspan="2"><b>Total Weight: &nbsp;</b>@Model.objListProduct[0].TotalWeight gms.</td>                        
+                        <td class="addAllPadding NoBorder" colspan="2" align="right"><b>Grand Total</b></td>
+                        <td class="addAllPadding NoBorder" align="right">@TotalQty</td>
+                        <td class="addAllPadding NoBorder">Pcs.</td>
+                        <td class="addAllPadding NoBorder">&nbsp;</td>
+                        <td class="addAllPadding NoBorder">&nbsp;</td>
+                        <td class="addAllPadding NoBorder" align="right">@Model.objProduct.TotalBV</td>
+                      
+                        
+                        <td class="addAllPadding AllBorder" align="right"><img src="~/images/rupee.png" /> &nbsp;@Model.objProduct.TotalNetPayable</td>
+                    </tr>
+                    <tr class="NoBorder"><td colspan=@colcount class="NoBorder">&nbsp;</td></tr>
+                    
+                    <tr class="NoBorder"><td colspan=@colcount class="NoBorder">&nbsp;</td></tr>
+                    <tr class="NoBorder"><td colspan=@colcount class="NoBorder"><b>Rupee @Model.objProduct.TotalAmountString</b></td></tr>
+                </table>
+            </td>
+        </tr>
+        <tr class="borderbottom"></tr>
+        <tr>
+            <td width="40%" class="rightBorderOnly addAllPadding" style="font-size:10px">
+                @if (Model.objListProduct[0].CourierName != "")
+                {
+                <b>Courier Name: </b>@Model.objListProduct[0].CourierName<br />
+                <b>Docket No.: </b>@Model.objListProduct[0].DocketNo<br />
+                <b>Docket Date: </b>@Model.objListProduct[0].DocketDate<br /><br />
+                }
+                <b><u>Terms & Conditions:</u></b><br />
+                <span>E. & O.E.</span>
+                <ol>
+                    <li>Goods once sold will not be taken back.</li>
+                    <li>Interest @@ 18% p.a. will be charged if the payment is not made with in the stipulated time.</li>
+                    <li>Subject to 'Delhi' jurisdiction only.</li>
+                </ol>
+            </td>
+            <td width="60%" >
+                <table border="1" class="NoBorder">
+                    <tr class="borderbottom">
+                        <td class="borderbottom addAllPadding"><b>Receiver's Signature:</b><br /><br /><br /></td>
+                    </tr>
+                    <tr class="NoBorder">
+                        <td align="right" class="NoBorder addAllPadding">
+                            <br /><b>
+                                @if (!string.IsNullOrEmpty(Model.SoldByName))
+                                {@Model.SoldByName }
+                                <br /><br /><br /><br />
+                                <span>Authorised Signatory</span>
+                            </b>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<center><span id="lblRegdOffice" align="center" style="font-size:11px;">This is computer generated invoice, doesn't require signature.</span></center>
+</div>

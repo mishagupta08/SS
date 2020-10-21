@@ -636,6 +636,15 @@ namespace InventoryManagement.API.Controllers
                     string strMaxUserSBillNo = maxUserSBillNo.ToString();
                     decimal? maxCHBillNo = 0;
 
+                        if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
+                        {
+                            maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType == "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
+                            maxUserSBillNo = maxUserSBillNo + 1;
+                             strMaxUserSBillNo = maxUserSBillNo.ToString();
+                                                      
+                        }
+
+
                     if (strMaxUserSBillNo.Count() < 3)
                     {
                         var countNum = strMaxUserSBillNo.Count();
@@ -654,6 +663,10 @@ namespace InventoryManagement.API.Controllers
                         UserBillNo = "CH/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + maxCHBillNo.ToString();
                         maxUserSBillNo = 0;
                     }
+					if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
+                        {
+					 UserBillNo = billPrefix + "/ST/" + strMaxUserSBillNo;
+						}
                     else {
                         UserBillNo = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + strMaxUserSBillNo;
                     }
@@ -1407,7 +1420,14 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.IsReceive = "N";
                                 objDTBillData.IsCredit = "F";
                                 //objDTBillData.BillType = "R";
-                                objDTBillData.BillType = "V";
+                                if (objModel.TaxORStock.ToLower() == "tax")
+                                {
+                                    objDTBillData.BillType = "V";
+                                }
+                                else
+                                {
+                                    objDTBillData.BillType = "S";
+                                }
                                 if (!string.IsNullOrEmpty(obj.ProductTye))
                                     objDTBillData.ProdType = obj.ProductTye;
                                 else
@@ -1811,8 +1831,6 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillData.BNo = "";
                                 objDTBillData.ItemType = "N";
 
-
-
                                 objDTBillData.JType = "Cash:" + objModel.objProduct.TotalNetPayable;
                                 objDTBillData.BillTo = string.IsNullOrEmpty(objModel.objCustomer.Name) ? "" : objModel.objCustomer.Name;
                                 objDTBillData.BillFor = string.IsNullOrEmpty(objModel.objCustomer.Name) ? "" : objModel.objCustomer.Name;
@@ -2065,7 +2083,8 @@ namespace InventoryManagement.API.Controllers
                                                               DocketNo = r.DocketNo,
                                                               DocketDate = r.DocketDate,
                                                               OrderNo = r.OrderNo,
-                                                              OrderDate = r.OrderDate
+                                                              OrderDate = r.OrderDate,
+                                                              BillType = r.BillType
 
                                                           }
                                                          ).ToList();

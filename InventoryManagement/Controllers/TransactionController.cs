@@ -733,6 +733,7 @@ namespace InventoryManagement.Controllers
         public ActionResult InvoicePrint(string Pm)
         {
             DistributorBillModel model = new DistributorBillModel();
+            string InvoiceFormat = "InvoicePrint";
             if (Session["LoginUser"] != null)
             {
                 var base64DecodedBytes = System.Convert.FromBase64String(Pm);
@@ -748,15 +749,20 @@ namespace InventoryManagement.Controllers
                 {
                     model = new DistributorBillModel();
                 }
+                if (model.objListProduct.Count > 0)
+                {
+                    if (model.objListProduct[0].BillType == "S")
+                        InvoiceFormat = "StockTransferPrint";
+                }
 
-                
-                    //Added log
-                    string hostName = Dns.GetHostName();
+
+                //Added log
+                string hostName = Dns.GetHostName();
                     string myIP = Dns.GetHostEntry(hostName).AddressList[0].ToString();
                     string currentDate = DateTime.Now.ToString("yyyyMMddHHmmssfff");
                     objLogManager.SaveLog(Session["LoginUser"] as User, "Invoice Print for Bill - " + model.BillNo, myIP + currentDate);                
             }
-            return View(model);
+            return View(InvoiceFormat,model);
         }
 
         [HttpPost]

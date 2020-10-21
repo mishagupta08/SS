@@ -1967,6 +1967,7 @@
     <Content Include="Views\Report\PaymentGatewayReport.cshtml" />
     <Content Include="Views\Product\PackageMaster.cshtml" />
     <Content Include="Views\Product\Packages.cshtml" />
+    <Content Include="Views\Transaction\StockTransferPrint.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

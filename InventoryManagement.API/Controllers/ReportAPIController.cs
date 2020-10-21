@@ -442,7 +442,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                             case "BillWise":
                                 List<SalesReport> objSales = new List<SalesReport>();
                                 objSales = (from result in entity.V_BillWiseSaleSummary
-                                            where result.BType != BType
+                                            //where result.BType != BType
                                             group result by new { result.UserBillNo, result.SBillNo, result.BillNo, result.BillDate,result.BillDateStr,result.OfferUID,result.FType, result.PartyCode, result.PartyName, result.FCode, result.Name,result.PVValue   , result.OrderNo, result.FSessId, result.OrderDate, result.BillType, result.SGSTAmt, result.CGSTAmt, result.IGSTAmt,result.Series,result.ISChallanBill }
                                             into BillResult
                                             orderby BillResult.Key.BillDate descending, BillResult.Key.SBillNo descending, BillResult.Key.PartyCode, BillResult.Key.FType
@@ -502,15 +502,19 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                 {
                                     if (InvoiceType == "RI")
                                     {
-                                        objSales = objSales.Where(m => m.InvoiceType != "B").ToList();
+                                        objSales = objSales.Where(m => m.InvoiceType != "B" && m.InvoiceType.ToLower() != "stock transfer").ToList();
                                     }
                                     else if(InvoiceType=="JI")
                                     {
-                                        objSales = objSales.Where(m => m.InvoiceType == "B").ToList();
+                                        objSales = objSales.Where(m => m.InvoiceType == "B" && m.InvoiceType.ToLower() != "stock transfer").ToList();
                                     }
                                     else if (InvoiceType == "CB")
                                     {
                                         objSales = objSales.Where(m => m.ChallanAgainst != "").ToList();
+                                    }
+                                    else if (InvoiceType == "S")
+                                    {
+                                        objSales = objSales.Where(m => m.InvoiceType.ToLower() == "stock transfer").ToList();
                                     }
                                 }
                                 if (FromDate != "All" && ToDate != "All")

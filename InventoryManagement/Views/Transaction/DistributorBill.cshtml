@@ -685,8 +685,12 @@
                         ProductArray.ProductTye = "F";
                         }
                     else {
-                      
-                        ProductArray.ProductTye = "P";
+                        if (ProductType == "KP") {
+                            ProductArray.ProductTye = "F";
+                        }
+                        else {
+                            ProductArray.ProductTye = "P";
+                        }
                     }
                     $("#DiscAmt").val((ProductArray.DiscAmt).toFixed(2));
                     $("#TaxAmt").val((ProductArray.TaxAmt).toFixed(2));

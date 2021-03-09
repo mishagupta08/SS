@@ -927,6 +927,9 @@
     <Compile Include="Models\V_CurrentStockDetailNotForStockist.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\V_CurrentStockDetailNotForStockist2.cs">
+      <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\V_CurrentStockDetail_STK.cs">
       <DependentUpon>InventoryManagementEntity.tt</DependentUpon>
     </Compile>

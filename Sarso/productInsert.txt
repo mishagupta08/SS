@@ -11,7 +11,6 @@ set @i = 1 --initialize
 
 
 CREATE TABLE #tbl(
-	
 	[GenerateBy] [varchar](50) NOT NULL,
 	[BrandCode] [numeric](18, 0) NOT NULL,
 	[CatId] [numeric](18, 0) NOT NULL,
@@ -88,7 +87,9 @@ CREATE TABLE #tbl(
 	[ImgPath3] [varchar](100) NOT NULL,
 	[ImgPath4] [varchar](100) NOT NULL,
 	[AlterID] [numeric](18, 0) NOT NULL,
-	[HSNCode] [varchar](50) NOT NULL
+	[HSNCode] [varchar](50) NOT NULL,
+	[BFund] [numeric](18, 0) NULL,
+	[CFund] [numeric](18, 0) NULL,
 )
 
 

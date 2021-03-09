@@ -20,6 +20,8 @@ namespace InventoryManagement.Entity.Common
         public string MRP { get; set; }
         public string PV { get; set; }
         public string Qty { get; set; }
+        public decimal FreeQty { get; set; }
+        public decimal BasicQty { get; set; }
         public decimal Quantity { get; set; }
         public string StockValue { get; set; }
         public string DPStockValue { get; set; }

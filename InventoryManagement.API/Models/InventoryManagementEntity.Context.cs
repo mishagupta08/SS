@@ -27,8 +27,6 @@ namespace InventoryManagement.API.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        
-        
         public virtual DbSet<ChildProductRegistration> ChildProductRegistrations { get; set; }
         public virtual DbSet<DeletedChallanDetail> DeletedChallanDetails { get; set; }
         public virtual DbSet<DeletedChallanMain> DeletedChallanMains { get; set; }
@@ -274,6 +272,7 @@ namespace InventoryManagement.API.Models
         public virtual DbSet<TrnChallanBill> TrnChallanBills { get; set; }
         public virtual DbSet<V_BillWiseSaleSummary> V_BillWiseSaleSummary { get; set; }
         public virtual DbSet<TblRefBussiness> TblRefBussinesses { get; set; }
+        public virtual DbSet<V_CurrentStockDetailNotForStockist2> V_CurrentStockDetailNotForStockist2 { get; set; }
     
         [DbFunction("InventoryEntities", "MonthWiseSummary")]
         public virtual IQueryable<MonthWiseSummary_Result> MonthWiseSummary(string partyCode, string rptType, string prodType)

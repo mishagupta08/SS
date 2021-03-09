@@ -265,6 +265,7 @@
         <EntityTypeShape EntityType="InventoryModel.TrnChallanBill" Width="1.5" PointX="32.75" PointY="4.75" />
         <EntityTypeShape EntityType="InventoryModel.V_BillWiseSaleSummary" Width="1.5" PointX="32.75" PointY="7.75" />
         <EntityTypeShape EntityType="InventoryModel.TblRefBussiness" Width="1.5" PointX="6.6978061658785712" PointY="25.875881326327047" />
+        <EntityTypeShape EntityType="InventoryModel.V_CurrentStockDetailNotForStockist2" Width="1.5" PointX="2.5705819477190177" PointY="13.879183209444948" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -663,7 +663,7 @@ namespace InventoryManagement.API.Controllers
                         UserBillNo = "CH/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + maxCHBillNo.ToString();
                         maxUserSBillNo = 0;
                     }
-					if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
+					else if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
                         {
 					 UserBillNo = billPrefix + "/ST/" + strMaxUserSBillNo;
 						}
@@ -1605,7 +1605,23 @@ namespace InventoryManagement.API.Controllers
                                 i = entity.SaveChanges();
                                 if (i == objDTListPayMode.Count)
                                 {
-                                    objResponse.ResponseMessage = "Saved Successfully!";
+
+                                    
+                                        var SBillno = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo;
+                                        var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
+                                        BillMain.SupplierId = entity.M_LedgerMaster.Where(r => r.PartyCode == BillMain.FCode).FirstOrDefault().RefID ?? 0;
+                                        var BillMainXML = Serialize(BillMain);
+
+                                    if (BillMain.SupplierId != 0)
+                                    {
+                                        cmd.CommandText = "Exec FranchisePurchase '" + BillMainXML + "'";
+                                        cmd.Connection = SC;
+                                        SC.Close();
+                                        SC.Open();
+                                        int t = cmd.ExecuteNonQuery();
+                                    }
+
+                                        objResponse.ResponseMessage = "Saved Successfully!";
                                     objResponse.ResponseStatus = "OK";
                                     objResponse.ResponseDetailsToPrint = new DistributorBillModel();
                                     objResponse.ResponseDetailsToPrint.BillNo = UserBillNo;
@@ -4231,6 +4247,23 @@ namespace InventoryManagement.API.Controllers
 
                         if (i > 0)
                         {
+
+                            var SBillno = billPrefix + "/" + objPartyDispatchOrder.LoginUser.PartyCode + "/" + maxSbillNo;
+                            var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
+
+                            BillMain.SupplierId = entity.M_LedgerMaster.Where(r=>r.PartyCode == BillMain.FCode).FirstOrDefault().RefID??0;
+                            var BillMainXML = Serialize(BillMain);
+
+                            if (BillMain.SupplierId != 0)
+                            {
+                                cmd.CommandText = "Exec FranchisePurchase '" + BillMainXML + "'";
+                                cmd.Connection = SC;
+                                SC.Close();
+                                SC.Open();
+                                int t = cmd.ExecuteNonQuery();
+                            }
+
+
                             if (objPartyDispatchOrder.FType != "M")
                             {
                                 string Sql = "Update TrnPartyOrderDetail Set DispatchQty=a.DispQty,DispatchAmt=a.DispAmt,Discount=a.DiscountAmt";

@@ -8941,6 +8941,59 @@ warning 6002: The table/view 'SrsInv.dbo.V#CurrentStockDetailNotForStockist' doe
           <Property Name="PVStockValue" Type="numeric" Precision="18" Scale="2" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'SrsInv.dbo.V#CurrentStockDetailNotForStockist2' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="V#CurrentStockDetailNotForStockist2">
+          <Key>
+            <PropertyRef Name="PartyCode" />
+            <PropertyRef Name="PartyName" />
+            <PropertyRef Name="CatId" />
+            <PropertyRef Name="ProductName" />
+            <PropertyRef Name="BatchCode" />
+            <PropertyRef Name="Barcode" />
+            <PropertyRef Name="PurchaseRate" />
+            <PropertyRef Name="MfgDate" />
+            <PropertyRef Name="ExpDate" />
+            <PropertyRef Name="DP" />
+            <PropertyRef Name="MRP" />
+            <PropertyRef Name="RP" />
+            <PropertyRef Name="PV" />
+            <PropertyRef Name="MinStockQty" />
+            <PropertyRef Name="KitProdQty" />
+            <PropertyRef Name="NSProdQty" />
+            <PropertyRef Name="FreeProdQty" />
+          </Key>
+          <Property Name="PartyCode" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="PartyName" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="CatId" Type="numeric" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="CatName" Type="varchar" MaxLength="255" />
+          <Property Name="ProdId" Type="nvarchar" MaxLength="1500" />
+          <Property Name="ProductName" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="BatchCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Barcode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="PurchaseRate" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="MfgDate" Type="datetime" Nullable="false" />
+          <Property Name="ExpDate" Type="datetime" Nullable="false" />
+          <Property Name="DP" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="MRP" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="RP" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PV" Type="numeric" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Qty" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="MinStockQty" Type="int" Nullable="false" />
+          <Property Name="stockIn" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="StockOut" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="KitProdQty" Type="int" Nullable="false" />
+          <Property Name="NSProdQty" Type="int" Nullable="false" />
+          <Property Name="FreeProdQty" Type="int" Nullable="false" />
+          <Property Name="BasicQty" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="FreeQty" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="RPValue" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="StockValue" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="DPStockValue" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="MRPStockValue" Type="numeric" Precision="38" Scale="2" />
+          <Property Name="itemcode" Type="nvarchar" MaxLength="1500" />
+          <Property Name="PVStockValue" Type="numeric" Precision="38" Scale="2" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'SrsInv.dbo.V#DeletedSaleSummary' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="V#DeletedSaleSummary">
           <Key>
@@ -13381,6 +13434,40 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
     [V#CurrentStockDetailNotForStockist].[PVStockValue] AS [PVStockValue]
     FROM [dbo].[V#CurrentStockDetailNotForStockist] AS [V#CurrentStockDetailNotForStockist]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="V#CurrentStockDetailNotForStockist2" EntityType="Self.V#CurrentStockDetailNotForStockist2" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V#CurrentStockDetailNotForStockist2].[PartyCode] AS [PartyCode], 
+    [V#CurrentStockDetailNotForStockist2].[PartyName] AS [PartyName], 
+    [V#CurrentStockDetailNotForStockist2].[CatId] AS [CatId], 
+    [V#CurrentStockDetailNotForStockist2].[CatName] AS [CatName], 
+    [V#CurrentStockDetailNotForStockist2].[ProdId] AS [ProdId], 
+    [V#CurrentStockDetailNotForStockist2].[ProductName] AS [ProductName], 
+    [V#CurrentStockDetailNotForStockist2].[BatchCode] AS [BatchCode], 
+    [V#CurrentStockDetailNotForStockist2].[Barcode] AS [Barcode], 
+    [V#CurrentStockDetailNotForStockist2].[PurchaseRate] AS [PurchaseRate], 
+    [V#CurrentStockDetailNotForStockist2].[MfgDate] AS [MfgDate], 
+    [V#CurrentStockDetailNotForStockist2].[ExpDate] AS [ExpDate], 
+    [V#CurrentStockDetailNotForStockist2].[DP] AS [DP], 
+    [V#CurrentStockDetailNotForStockist2].[MRP] AS [MRP], 
+    [V#CurrentStockDetailNotForStockist2].[RP] AS [RP], 
+    [V#CurrentStockDetailNotForStockist2].[PV] AS [PV], 
+    [V#CurrentStockDetailNotForStockist2].[Qty] AS [Qty], 
+    [V#CurrentStockDetailNotForStockist2].[MinStockQty] AS [MinStockQty], 
+    [V#CurrentStockDetailNotForStockist2].[stockIn] AS [stockIn], 
+    [V#CurrentStockDetailNotForStockist2].[StockOut] AS [StockOut], 
+    [V#CurrentStockDetailNotForStockist2].[KitProdQty] AS [KitProdQty], 
+    [V#CurrentStockDetailNotForStockist2].[NSProdQty] AS [NSProdQty], 
+    [V#CurrentStockDetailNotForStockist2].[FreeProdQty] AS [FreeProdQty], 
+    [V#CurrentStockDetailNotForStockist2].[BasicQty] AS [BasicQty], 
+    [V#CurrentStockDetailNotForStockist2].[FreeQty] AS [FreeQty], 
+    [V#CurrentStockDetailNotForStockist2].[RPValue] AS [RPValue], 
+    [V#CurrentStockDetailNotForStockist2].[StockValue] AS [StockValue], 
+    [V#CurrentStockDetailNotForStockist2].[DPStockValue] AS [DPStockValue], 
+    [V#CurrentStockDetailNotForStockist2].[MRPStockValue] AS [MRPStockValue], 
+    [V#CurrentStockDetailNotForStockist2].[itemcode] AS [itemcode], 
+    [V#CurrentStockDetailNotForStockist2].[PVStockValue] AS [PVStockValue]
+    FROM [dbo].[V#CurrentStockDetailNotForStockist2] AS [V#CurrentStockDetailNotForStockist2]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="V#DeletedSaleSummary" EntityType="Self.V#DeletedSaleSummary" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [V#DeletedSaleSummary].[FSessId] AS [FSessId], 
@@ -14359,6 +14446,7 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <EntitySet Name="TrnChallanBills" EntityType="InventoryModel.TrnChallanBill" />
           <EntitySet Name="V_BillWiseSaleSummary" EntityType="InventoryModel.V_BillWiseSaleSummary" />
           <EntitySet Name="TblRefBussinesses" EntityType="InventoryModel.TblRefBussiness" />
+          <EntitySet Name="V_CurrentStockDetailNotForStockist2" EntityType="InventoryModel.V_CurrentStockDetailNotForStockist2" />
         </EntityContainer>
         <ComplexType Name="MonthWiseSummary_Result">
           <Property Type="String" Name="Mnth" Nullable="false" MaxLength="10" />
@@ -24445,6 +24533,57 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
           <Property Name="SessionId" Type="Int32" />
           <Property Name="RefIdNo" Type="Int32" />
         </EntityType>
+        <EntityType Name="V_CurrentStockDetailNotForStockist2">
+          <Key>
+            <PropertyRef Name="PartyCode" />
+            <PropertyRef Name="PartyName" />
+            <PropertyRef Name="CatId" />
+            <PropertyRef Name="ProductName" />
+            <PropertyRef Name="BatchCode" />
+            <PropertyRef Name="Barcode" />
+            <PropertyRef Name="PurchaseRate" />
+            <PropertyRef Name="MfgDate" />
+            <PropertyRef Name="ExpDate" />
+            <PropertyRef Name="DP" />
+            <PropertyRef Name="MRP" />
+            <PropertyRef Name="RP" />
+            <PropertyRef Name="PV" />
+            <PropertyRef Name="MinStockQty" />
+            <PropertyRef Name="KitProdQty" />
+            <PropertyRef Name="NSProdQty" />
+            <PropertyRef Name="FreeProdQty" />
+          </Key>
+          <Property Name="PartyCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PartyName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="CatId" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="CatName" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ProdId" Type="String" MaxLength="1500" FixedLength="false" Unicode="true" />
+          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="BatchCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Barcode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="PurchaseRate" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="MfgDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ExpDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="MRP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="RP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PV" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Qty" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="MinStockQty" Type="Int32" Nullable="false" />
+          <Property Name="stockIn" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="StockOut" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="KitProdQty" Type="Int32" Nullable="false" />
+          <Property Name="NSProdQty" Type="Int32" Nullable="false" />
+          <Property Name="FreeProdQty" Type="Int32" Nullable="false" />
+          <Property Name="BasicQty" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="FreeQty" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="RPValue" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="StockValue" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="DPStockValue" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="MRPStockValue" Type="Decimal" Precision="38" Scale="2" />
+          <Property Name="itemcode" Type="String" MaxLength="1500" FixedLength="false" Unicode="true" />
+          <Property Name="PVStockValue" Type="Decimal" Precision="38" Scale="2" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -32207,6 +32346,42 @@ warning 6002: The table/view 'SrsInv.dbo.V#WebBillDetail' does not have a primar
                 <ScalarProperty Name="Cv" ColumnName="Cv" />
                 <ScalarProperty Name="IdNo" ColumnName="IdNo" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_CurrentStockDetailNotForStockist2">
+            <EntityTypeMapping TypeName="InventoryModel.V_CurrentStockDetailNotForStockist2">
+              <MappingFragment StoreEntitySet="V#CurrentStockDetailNotForStockist2">
+                <ScalarProperty Name="PVStockValue" ColumnName="PVStockValue" />
+                <ScalarProperty Name="itemcode" ColumnName="itemcode" />
+                <ScalarProperty Name="MRPStockValue" ColumnName="MRPStockValue" />
+                <ScalarProperty Name="DPStockValue" ColumnName="DPStockValue" />
+                <ScalarProperty Name="StockValue" ColumnName="StockValue" />
+                <ScalarProperty Name="RPValue" ColumnName="RPValue" />
+                <ScalarProperty Name="FreeQty" ColumnName="FreeQty" />
+                <ScalarProperty Name="BasicQty" ColumnName="BasicQty" />
+                <ScalarProperty Name="FreeProdQty" ColumnName="FreeProdQty" />
+                <ScalarProperty Name="NSProdQty" ColumnName="NSProdQty" />
+                <ScalarProperty Name="KitProdQty" ColumnName="KitProdQty" />
+                <ScalarProperty Name="StockOut" ColumnName="StockOut" />
+                <ScalarProperty Name="stockIn" ColumnName="stockIn" />
+                <ScalarProperty Name="MinStockQty" ColumnName="MinStockQty" />
+                <ScalarProperty Name="Qty" ColumnName="Qty" />
+                <ScalarProperty Name="PV" ColumnName="PV" />
+                <ScalarProperty Name="RP" ColumnName="RP" />
+                <ScalarProperty Name="MRP" ColumnName="MRP" />
+                <ScalarProperty Name="DP" ColumnName="DP" />
+                <ScalarProperty Name="ExpDate" ColumnName="ExpDate" />
+                <ScalarProperty Name="MfgDate" ColumnName="MfgDate" />
+                <ScalarProperty Name="PurchaseRate" ColumnName="PurchaseRate" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="BatchCode" ColumnName="BatchCode" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProdId" ColumnName="ProdId" />
+                <ScalarProperty Name="CatName" ColumnName="CatName" />
+                <ScalarProperty Name="CatId" ColumnName="CatId" />
+                <ScalarProperty Name="PartyName" ColumnName="PartyName" />
+                <ScalarProperty Name="PartyCode" ColumnName="PartyCode" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

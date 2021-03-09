@@ -194,7 +194,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                 {
                     if (IsBatchWise)
                     {
-                        objStockModel = (from r in entity.V_CurrentStockDetailNotForStockist
+                        objStockModel = (from r in entity.V_CurrentStockDetailNotForStockist2
                                          orderby r.CatName, r.ProductName, r.BatchCode
                                          select new StockReportModel
                                          {
@@ -215,14 +215,16 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                              ExpDateD = r.ExpDate,
                                              MfgDateD = r.MfgDate,
                                              BatchNo = r.BatchCode,
-                                             InStock=r.StockIn??0,
+                                             InStock=r.stockIn??0,
                                              StockOut=r.StockOut??0,
                                              Barcode = r.Barcode,
 
-                                             Quantity = r.Qty ,//?? 0,
+                                             Quantity = r.Qty??0 ,//?? 0,
                                              CatCode = r.CatId,
                                              PV = r.PV.ToString(),
-                                             PVStockValue = r.PVStockValue.ToString()
+                                             PVStockValue = r.PVStockValue.ToString(),
+                                             FreeQty = r.FreeQty??0,
+                                             BasicQty = r.BasicQty??0
                                          }
 
                                                ).ToList();
@@ -230,7 +232,7 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                     }
                     else
                     {
-                        objStockModel = (from r in entity.V_CurrentStockDetailNotForStockist
+                        objStockModel = (from r in entity.V_CurrentStockDetailNotForStockist2
                                          orderby r.CatName, r.ProductName
                                          select new StockReportModel
                                          {
@@ -250,12 +252,14 @@ query = query + " (Select DISTINCT ProdID FROM TrnProductTransfer) a,VRINV..M_Pr
                                              ExpDate = "",
                                              BatchNo = r.BatchCode,
                                              Barcode = r.Barcode,
-                                             InStock = r.StockIn ?? 0,
+                                             InStock = r.stockIn ?? 0,
                                              StockOut = r.StockOut ?? 0,
-                                             Quantity = r.Qty,// ?? 0,
+                                             Quantity = r.Qty?? 0,
                                              CatCode = r.CatId,
                                              PV = r.PV.ToString(),
-                                             PVStockValue = r.PVStockValue.ToString()
+                                             PVStockValue = r.PVStockValue.ToString(),
+                                             BasicQty = r.BasicQty??0,
+                                             FreeQty = r.FreeQty??0
                                          }
 
                                                ).ToList();

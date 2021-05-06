@@ -587,6 +587,7 @@ namespace InventoryManagement.API.Controllers
             decimal? FsessId = 0;
             string UserBillNo = "";
             string version = "";
+            string billseries = "";
             SqlTransaction objTrans = null;
             decimal WalletBalance = 0;
             decimal LastBillAmt = 0;
@@ -629,6 +630,7 @@ namespace InventoryManagement.API.Controllers
                     maxSbillNo = maxSbillNo + 1;
                     FsessId = (from result in entity.M_FiscalMaster where result.ActiveStatus == "Y" select result.FSessId).Max();
                     ////decimal? SessId = (from result in entity.M_SessnMaster select result.SessID).Max();
+                    billseries = (from result in entity.M_FiscalMaster where result.FSessId == FsessId select result.BillSeries).FirstOrDefault();
                     billPrefix = (from result in entity.M_ConfigMaster select result.BillPrefix).FirstOrDefault();
                     string fbillSeries = (from result in entity.M_FiscalMaster where result.FSessId == FsessId select result.BillSeries).FirstOrDefault();
                     maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType != "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
@@ -636,14 +638,29 @@ namespace InventoryManagement.API.Controllers
                     string strMaxUserSBillNo = maxUserSBillNo.ToString();
                     decimal? maxCHBillNo = 0;
 
-                        if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
-                        {
-                            maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType == "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
-                            maxUserSBillNo = maxUserSBillNo + 1;
-                             strMaxUserSBillNo = maxUserSBillNo.ToString();
+                        //if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
+                        //{
+                        //    maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType == "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
+                        //    maxUserSBillNo = maxUserSBillNo + 1;
+                        //     strMaxUserSBillNo = maxUserSBillNo.ToString();
                                                       
-                        }
-
+                        //}
+                    if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
+                    {
+                        maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType == "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
+                        maxUserSBillNo = maxUserSBillNo + 1;
+                        strMaxUserSBillNo = maxUserSBillNo.ToString();
+                        //if (strMaxUserSBillNo.Count() < 3)
+                        //{
+                        //    var countNum = strMaxUserSBillNo.Count();
+                        //    var ToBeAddedDigits = 3 - countNum;
+                        //    for (var j = 0; j < ToBeAddedDigits; j++)
+                        //    {
+                        //        strMaxUserSBillNo = "0" + strMaxUserSBillNo;
+                        //    }
+                        //}
+                        UserBillNo = billPrefix + "/" + billseries.Trim() + "/" + "ST/" + strMaxUserSBillNo;
+                    }
 
                     if (strMaxUserSBillNo.Count() < 3)
                     {

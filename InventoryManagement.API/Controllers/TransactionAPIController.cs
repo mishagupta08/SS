@@ -26,9 +26,9 @@ namespace InventoryManagement.API.Controllers
     {
         private static string _numbers = "0123456789";
         Random random = new Random();
-    
 
-        public List<ProductModel> GetproductInfo(string SearchType, string data, bool isCForm, string BillType, decimal CurrentStateCode, string CurrentPartyCode, bool IsBillOnMrp,string IschallanBill)
+
+        public List<ProductModel> GetproductInfo(string SearchType, string data, bool isCForm, string BillType, decimal CurrentStateCode, string CurrentPartyCode, bool IsBillOnMrp, string IschallanBill)
         {
             List<ProductModel> objProductModel = new List<ProductModel>();
             List<ProductModel> TempResult = new List<ProductModel>();
@@ -42,7 +42,7 @@ namespace InventoryManagement.API.Controllers
             {
                 if (!string.IsNullOrEmpty(data))
                 {
-                   
+
                     using (var entity = new InventoryEntities())
                     {
 
@@ -50,7 +50,7 @@ namespace InventoryManagement.API.Controllers
                         {
 
                             TempResult = (from product in entity.M_ProductMaster
-                                          where (product.ProductName +"="+product.UserProdId).Equals(data) && product.ActiveStatus == "Y" //&& product.IsCardIssue == "N"
+                                          where (product.ProductName + "=" + product.UserProdId).Equals(data) && product.ActiveStatus == "Y" //&& product.IsCardIssue == "N"
                                           join barcode in entity.M_BarCodeMaster on product.ProdId equals barcode.ProdId
 
                                           join tax in entity.M_TaxMaster on product.ProdId equals tax.ProdCode
@@ -185,7 +185,7 @@ namespace InventoryManagement.API.Controllers
                         {
                             IsPendingOrder = false;
                         }
-                        
+
                         foreach (var obj in TempResult)
                         {
                             ProductModel TempObj = new ProductModel();
@@ -252,32 +252,33 @@ namespace InventoryManagement.API.Controllers
                                 //{
                                 //    TempObj.TaxPer = 0;
                                 //}
-                               
-                                
-                            List<ProdItemCodes> objItemCodes = (from r in entity.itemcodes
-                                                                where r.PCode == obj.ProductCodeStr
-                                                                select new ProdItemCodes {
-                                                                    PCode = r.PCode,
-                                                                   ItemCode1 = r.ItemCode1,
-                                                                   Attrib1 = r.Attrib1,
-                                                                   Attrib2 = r.Attrib2,
-                                                                   Attrib3 = r.Attrib3,
-                                                                   Attrib4 = r.Attrib4,
-                                                                    Attrib5 = r.Attrib5,
-                                                                    Attrib6 = r.Attrib6,
-                                                                    Attrib7 = r.Attrib7,
-                                                                    Attrib8 = r.Attrib8,
-                                                                    Attrib9 = r.Attrib9,
-                                                                    Attrib10 = r.Attrib10,
-                                                                    stockAvailable = 0
-                                                               }).ToList();
+
+
+                                List<ProdItemCodes> objItemCodes = (from r in entity.itemcodes
+                                                                    where r.PCode == obj.ProductCodeStr
+                                                                    select new ProdItemCodes
+                                                                    {
+                                                                        PCode = r.PCode,
+                                                                        ItemCode1 = r.ItemCode1,
+                                                                        Attrib1 = r.Attrib1,
+                                                                        Attrib2 = r.Attrib2,
+                                                                        Attrib3 = r.Attrib3,
+                                                                        Attrib4 = r.Attrib4,
+                                                                        Attrib5 = r.Attrib5,
+                                                                        Attrib6 = r.Attrib6,
+                                                                        Attrib7 = r.Attrib7,
+                                                                        Attrib8 = r.Attrib8,
+                                                                        Attrib9 = r.Attrib9,
+                                                                        Attrib10 = r.Attrib10,
+                                                                        stockAvailable = 0
+                                                                    }).ToList();
 
                                 foreach (var code in objItemCodes)
-                                {                                   
+                                {
                                     if (!string.IsNullOrEmpty(IschallanBill) && IschallanBill == "Y" && CurrentPartyCode != System.Web.Configuration.WebConfigurationManager.AppSettings["WRPartyCode"])
                                     {
                                         code.stockAvailable = (from stockAvail in entity.Im_CurrentStock
-                                                               where stockAvail.IsFree=="Y" && stockAvail.ItemCode == code.ItemCode1 && stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode)
+                                                               where stockAvail.IsFree == "Y" && stockAvail.ItemCode == code.ItemCode1 && stockAvail.ProdId == TempObj.ProductCodeStr.ToString() && stockAvail.FCode.Equals(CurrentPartyCode)
                                                                select stockAvail.Qty
                                                     ).DefaultIfEmpty(0).Sum();
                                     }
@@ -638,13 +639,13 @@ namespace InventoryManagement.API.Controllers
                     string strMaxUserSBillNo = maxUserSBillNo.ToString();
                     decimal? maxCHBillNo = 0;
 
-                        //if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
-                        //{
-                        //    maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType == "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
-                        //    maxUserSBillNo = maxUserSBillNo + 1;
-                        //     strMaxUserSBillNo = maxUserSBillNo.ToString();
-                                                      
-                        //}
+                    //if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
+                    //{
+                    //    maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType == "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
+                    //    maxUserSBillNo = maxUserSBillNo + 1;
+                    //     strMaxUserSBillNo = maxUserSBillNo.ToString();
+
+                    //}
                     if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
                     {
                         maxUserSBillNo = (from result in entity.TrnBillMains where result.FSessId == FsessId && result.SoldBy == objModel.objCustomer.UserDetails.PartyCode && result.BillType == "S" select result.UserSBillNo).DefaultIfEmpty(0).Max();
@@ -669,7 +670,7 @@ namespace InventoryManagement.API.Controllers
                         for (var j = 0; j < ToBeAddedDigits; j++)
                         {
                             strMaxUserSBillNo = "0" + strMaxUserSBillNo;
-                        }                        
+                        }
                     }
 
                     if (!string.IsNullOrEmpty(objModel.IsChallan) && objModel.IsChallan == "Y")
@@ -680,11 +681,12 @@ namespace InventoryManagement.API.Controllers
                         UserBillNo = "CH/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + maxCHBillNo.ToString();
                         maxUserSBillNo = 0;
                     }
-					else if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
-                        {
-					 UserBillNo = billPrefix + "/ST/" + strMaxUserSBillNo;
-						}
-                    else {
+                    else if (!string.IsNullOrEmpty(objModel.TaxORStock) && objModel.TaxORStock.ToLower() == "stock")
+                    {
+                        UserBillNo = billPrefix + "/" + billseries.Trim() + "/" + "ST/" + strMaxUserSBillNo;
+                    }
+                    else
+                    {
                         UserBillNo = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + fbillSeries.Trim() + "/" + strMaxUserSBillNo;
                     }
 
@@ -774,7 +776,7 @@ namespace InventoryManagement.API.Controllers
                                         cmd = new SqlCommand();
                                         cmd.CommandText = query;
                                         cmd.Connection = SC;
-                                        cmd.Transaction = objTrans;                                        
+                                        cmd.Transaction = objTrans;
                                         int ii = cmd.ExecuteNonQuery();
                                         objTrans.Commit();
                                         SC.Close();
@@ -853,7 +855,7 @@ namespace InventoryManagement.API.Controllers
                             foreach (var obj in objModel.objListProduct)
                             {
                                 objListProductModel.Add(obj);
-                                TrnBillData objDTBillData = new TrnBillData();                    
+                                TrnBillData objDTBillData = new TrnBillData();
                                 objDTBillData.ChallanSno = maxCHBillNo;
                                 objDTBillData.IsChallanBill = !string.IsNullOrEmpty(objModel.IsChallan) && objModel.IsChallan == "Y" ? "Y" : "N";
                                 objDTBillData.SBillNo = maxSbillNo;
@@ -989,8 +991,8 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.RndOff = objModel.objProduct.Roundoff;
                                 }
                                 objDTBillData.CardAmount = 0;
-                                objDTBillData.PayMode = Paymode!=null && Paymode.Count >= 1 ? string.Join(",", Paymode) : "";
-                                objDTBillData.PayPrefix = PayPrefix!=null && PayPrefix.Count >=1 ? string.Join(",", PayPrefix) : "";
+                                objDTBillData.PayMode = Paymode != null && Paymode.Count >= 1 ? string.Join(",", Paymode) : "";
+                                objDTBillData.PayPrefix = PayPrefix != null && PayPrefix.Count >= 1 ? string.Join(",", PayPrefix) : "";
                                 objDTBillData.BvTransfer = "N";
 
                                 //objDTBillData.UserSBillNo = maxSbillNo;
@@ -1095,10 +1097,10 @@ namespace InventoryManagement.API.Controllers
                                 // tempTableList.Add(objDTBillData);
                                 entity.TrnBillDatas.Add(objDTBillData);
                             }
-                           
+
 
                             if (!string.IsNullOrEmpty(objModel.AppliedOffers))
-                            {                                
+                            {
                                 var OfferIDs = objModel.AppliedOffers.Split(',').ToList();
                                 foreach (var id in OfferIDs)
                                 {
@@ -1112,7 +1114,7 @@ namespace InventoryManagement.API.Controllers
                                 }
                             }
 
-                           
+
 
                             int i = 0;
 
@@ -1143,7 +1145,7 @@ namespace InventoryManagement.API.Controllers
                                     objDTTrans.Rollback();
                                 }
                             }
-                            if (i >0)
+                            if (i > 0)
                             {
 
 
@@ -1169,11 +1171,11 @@ namespace InventoryManagement.API.Controllers
                                 }
                                 i = 0;
                                 i = entity.SaveChanges();
-                                if (i>=0)
+                                if (i >= 0)
                                 {
                                     var SBillno = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo;
                                     var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
-                                    BillMain.SupplierId = objModel.objCustomer.UserDetails.RefID; 
+                                    BillMain.SupplierId = objModel.objCustomer.UserDetails.RefID;
                                     var BillDetails = entity.TrnBillDetails.Where(r => r.BillNo == SBillno).ToList();
                                     var BillMainXML = Serialize(BillMain);
                                     var BillDetailsXML = Serialize(BillDetails);
@@ -1184,9 +1186,9 @@ namespace InventoryManagement.API.Controllers
                                     SC.Open();
                                     int t = cmd.ExecuteNonQuery();
 
-                                    
-                                    
-                                    
+
+
+
 
                                     objResponse.ResponseMessage = "Saved Successfully!";
                                     objResponse.ResponseStatus = "OK";
@@ -1493,7 +1495,7 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.RndOff = objModel.objProduct.Roundoff;
                                 }
                                 objDTBillData.CardAmount = 0;
-                                objDTBillData.PayMode = Paymode!=null && Paymode.Count >= 1 ? string.Join(",", Paymode) :"";
+                                objDTBillData.PayMode = Paymode != null && Paymode.Count >= 1 ? string.Join(",", Paymode) : "";
                                 objDTBillData.PayPrefix = PayPrefix != null && PayPrefix.Count >= 1 ? string.Join(",", PayPrefix) : "";
                                 objDTBillData.BvTransfer = "N";
 
@@ -1623,11 +1625,11 @@ namespace InventoryManagement.API.Controllers
                                 if (i == objDTListPayMode.Count)
                                 {
 
-                                    
-                                        var SBillno = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo;
-                                        var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
-                                        BillMain.SupplierId = entity.M_LedgerMaster.Where(r => r.PartyCode == BillMain.FCode).FirstOrDefault().RefID ?? 0;
-                                        var BillMainXML = Serialize(BillMain);
+
+                                    var SBillno = billPrefix + "/" + objModel.objCustomer.UserDetails.PartyCode + "/" + maxSbillNo;
+                                    var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
+                                    BillMain.SupplierId = entity.M_LedgerMaster.Where(r => r.PartyCode == BillMain.FCode).FirstOrDefault().RefID ?? 0;
+                                    var BillMainXML = Serialize(BillMain);
 
                                     if (BillMain.SupplierId != 0)
                                     {
@@ -1638,7 +1640,7 @@ namespace InventoryManagement.API.Controllers
                                         int t = cmd.ExecuteNonQuery();
                                     }
 
-                                        objResponse.ResponseMessage = "Saved Successfully!";
+                                    objResponse.ResponseMessage = "Saved Successfully!";
                                     objResponse.ResponseStatus = "OK";
                                     objResponse.ResponseDetailsToPrint = new DistributorBillModel();
                                     objResponse.ResponseDetailsToPrint.BillNo = UserBillNo;
@@ -2078,7 +2080,7 @@ namespace InventoryManagement.API.Controllers
                                                           where r.UserBillNo == BillNo && (id == "F" || id == r.FCode)
                                                           select new ProductModel
                                                           {
-															  IsChallanBill = r.IsChallanBill,
+                                                              IsChallanBill = r.IsChallanBill,
                                                               IdNo = r.FCode,
                                                               BrandCode = M.BrandCode,
                                                               Mobileno = r.ReceiverMNo,
@@ -2133,7 +2135,7 @@ namespace InventoryManagement.API.Controllers
                     decimal? TotalTaxableAmount = 0;
                     string OrderType = objDistributorModel.objListProduct[0].OrderType;
                     objDistributorModel.objTaxSummary = new List<TaxSummary>();
-                    
+
                     objDistributorModel.objTaxSummary = objDistributorModel.objListProduct.GroupBy(m => new
                     {
                         m.TaxPer,
@@ -2228,8 +2230,8 @@ namespace InventoryManagement.API.Controllers
                                 objDistributorModel.objCustomer.PANNo = "";
                             }
                         }
-						
-						objDistributorModel.IsChallan = objDistributorModel.objListProduct[0].IsChallanBill;
+
+                        objDistributorModel.IsChallan = objDistributorModel.objListProduct[0].IsChallanBill;
 
                         objDistributorModel.DelvAddress = objDistributorModel.objListProduct[0].DeliveryPlace;
                         objDistributorModel.StateGSTName = GetStateGstName(objDistributorModel.objCustomer.StateCode);
@@ -2241,7 +2243,7 @@ namespace InventoryManagement.API.Controllers
                         objDistributorModel.objProduct.TotalSGSTPer = TotSGSTTaxPer ?? 0;
                         objDistributorModel.objProduct.TotalSGSTAmt = TotSGSTTaxAmt ?? 0;
                         objDistributorModel.objProduct.TotalTaxableAmt = TotalTaxableAmount ?? 0;
-                        objDistributorModel.objProduct.TotalNetPayable = objDistributorModel.objProduct.TotalTaxAmount +objDistributorModel.objProduct.TotalCGSTAmt +objDistributorModel.objProduct.TotalSGSTAmt+objDistributorModel.objProduct.TotalTaxableAmt;
+                        objDistributorModel.objProduct.TotalNetPayable = objDistributorModel.objProduct.TotalTaxAmount + objDistributorModel.objProduct.TotalCGSTAmt + objDistributorModel.objProduct.TotalSGSTAmt + objDistributorModel.objProduct.TotalTaxableAmt;
                         //objDistributorModel.objProduct.TotalNetPayable = TotalNetPayableTobill;
                         //objDistributorModel.objProduct.TotalAmount = TotalNetAmount ?? 0;
                         objDistributorModel.objProduct.Roundoff = objDistributorModel.objListProduct[0].Roundoff;
@@ -2818,7 +2820,7 @@ namespace InventoryManagement.API.Controllers
                                     objDTBillData.TaxBase = "I";
                                 }
                                 objDTBillData.ItemCode = obj.itemCode;
-                               
+
 
 
 
@@ -3746,7 +3748,7 @@ namespace InventoryManagement.API.Controllers
                                 objDTBillMain.Version = version;
                                 objDTBillMain.UserId = objPartyOrderModel.LoginUser.UserId;
                                 objDTBillMain.RecTimeStamp = DateTime.Now;
-                                objDTBillMain.FSessId =  FsessId ?? 0;
+                                objDTBillMain.FSessId = FsessId ?? 0;
                                 objDTBillMain.UserName = objPartyOrderModel.LoginUser.UserName;
                                 objDTBillMain.IsConfirm = "N";
                                 objDTBillMain.ConfDate = DateTime.Now;
@@ -4268,7 +4270,7 @@ namespace InventoryManagement.API.Controllers
                             var SBillno = billPrefix + "/" + objPartyDispatchOrder.LoginUser.PartyCode + "/" + maxSbillNo;
                             var BillMain = entity.TrnBillMains.Where(r => r.UserBillNo == UserBillNo).FirstOrDefault();
 
-                            BillMain.SupplierId = entity.M_LedgerMaster.Where(r=>r.PartyCode == BillMain.FCode).FirstOrDefault().RefID??0;
+                            BillMain.SupplierId = entity.M_LedgerMaster.Where(r => r.PartyCode == BillMain.FCode).FirstOrDefault().RefID ?? 0;
                             var BillMainXML = Serialize(BillMain);
 
                             if (BillMain.SupplierId != 0)
@@ -5072,7 +5074,7 @@ namespace InventoryManagement.API.Controllers
                             TrnSalesReturnDetail objDTBillData = new TrnSalesReturnDetail();
                             if (product.ReturnQty > 0)
                             {
-                                objDTBillData.Reason = objSalesReturnOrder.reason; 
+                                objDTBillData.Reason = objSalesReturnOrder.reason;
                                 objDTBillData.SReturnNo = UserReturnNo;
                                 objDTBillData.SRNo = part2;
                                 objDTBillData.ReturnBy = objSalesReturnOrder.partyCode;
@@ -5190,7 +5192,7 @@ namespace InventoryManagement.API.Controllers
             return objResponse;
         }
 
-        public List<PartyBill> GetBillList(string partyType, string Fcode,string LoginPartyCode)
+        public List<PartyBill> GetBillList(string partyType, string Fcode, string LoginPartyCode)
         {
             List<PartyBill> billList = null;
             try
@@ -5235,7 +5237,7 @@ namespace InventoryManagement.API.Controllers
                     {
                         billList = (from r in entity.TrnBillMains
                                     let date = r.OrderType == "T" ? date1 : date2
-                                    where r.FCode == Fcode && r.IsChallanBill!="Y" && r.FType == "M" && (r.BillDate >= date2) && (r.BillDate <= date1)
+                                    where r.FCode == Fcode && r.IsChallanBill != "Y" && r.FType == "M" && (r.BillDate >= date2) && (r.BillDate <= date1)
                                     select new PartyBill
                                     {
                                         BillNo = r.BillNo,
@@ -6542,7 +6544,7 @@ namespace InventoryManagement.API.Controllers
                             objTrnVoucher.DrTo = "";
                             objTrnVoucher.CrTo = payment.regid;
                             objTrnVoucher.Amount = Convert.ToDecimal(payment.amount);
-                            objTrnVoucher.Narration = "Wallet credited against Req No. "+ payment.TxnId +".";
+                            objTrnVoucher.Narration = "Wallet credited against Req No. " + payment.TxnId + ".";
                             objTrnVoucher.RefNo = "WReq/" + payment.TxnId + "."; ;
                             objTrnVoucher.BType = "O";
                             objTrnVoucher.AccDocNo = 0;
@@ -6588,7 +6590,7 @@ namespace InventoryManagement.API.Controllers
                                    where result.ORDER_ID == orderId
                                    select result).ToList();
 
-                                  
+
                 }
             }
             catch (Exception ex)
@@ -7707,7 +7709,7 @@ namespace InventoryManagement.API.Controllers
                 string dbInv = System.Configuration.ConfigurationManager.AppSettings["INVDatabase"];
                 SqlConnection SC = new SqlConnection(InvConnectionString);
                 SqlCommand cmd = new SqlCommand();
-                
+
                 string query = "Select SUM(CrAmt) - Sum(DrAmt) as Balance  FROM(Select SUM(Amount)CrAmt, 0 as DrAmt FROM " + dbInv + "..TrnVoucher WHERE Vtype = 'R' AND  CrTo = '" + LoginPartyCode + "' UNION ALL Select 0, SUM(Amount) DrAmt FROM " + dbInv + "..TrnVoucher WHERE Vtype = 'R' AND  DrTo = '" + LoginPartyCode + "')as a";
                 cmd.CommandText = query;
                 //cmd.Parameters.AddWithValue("@IdNo", IdNo);
@@ -7742,7 +7744,8 @@ namespace InventoryManagement.API.Controllers
                 {
                     objprodAttr = (from r in entities.Prod_attributes
                                    where r.Pcode == ProdId
-                                   select new ProdAttributes {
+                                   select new ProdAttributes
+                                   {
                                        Pcode = r.Pcode,
                                        Attribute_Name = r.Attribute_Name,
                                        PrdAttrId = r.PrdAttrId
@@ -7765,7 +7768,7 @@ namespace InventoryManagement.API.Controllers
             }
             catch (Exception ex)
             {
-                
+
             }
             return objprodAttr;
         }
@@ -7969,22 +7972,22 @@ namespace InventoryManagement.API.Controllers
                 using (var entities = new InventoryEntities())
                 {
                     M_ErrorLogMaster error = new M_ErrorLogMaster();
-                    error.ExceptionMsg = exdb.Message != null ? exdb.Message.ToString():"";
+                    error.ExceptionMsg = exdb.Message != null ? exdb.Message.ToString() : "";
                     error.ExceptionType = exdb.GetType().Name.ToString();
                     error.ExceptionURL = exepurl != null ? exepurl : "";
-                    error.ExceptionSource = exdb.StackTrace != null ? exdb.StackTrace.ToString():"";
+                    error.ExceptionSource = exdb.StackTrace != null ? exdb.StackTrace.ToString() : "";
                     error.RecTimeStamp = DateTime.Now;
                     if (userdetail != null)
                     {
-                        error.UserId =  userdetail.UserId;
-                        error.UserName = userdetail.UserName != null ? userdetail.UserName:"";
+                        error.UserId = userdetail.UserId;
+                        error.UserName = userdetail.UserName != null ? userdetail.UserName : "";
                     }
                     else
                     {
                         error.UserId = 0;
                         error.UserName = "";
                     }
-                    error.UID = exdb.InnerException!=null?exdb.InnerException.ToString(): "";
+                    error.UID = exdb.InnerException != null ? exdb.InnerException.ToString() : "";
                     entities.M_ErrorLogMaster.Add(error);
                     entities.SaveChanges();
                 }
@@ -7999,43 +8002,45 @@ namespace InventoryManagement.API.Controllers
         public List<ProductModel> GetKitProducts(int KitID)
         {
             List<ProductModel> KitProducts = new List<ProductModel>();
-            try {
+            try
+            {
                 using (var entity = new InventoryEntities())
                 {
 
-                    KitProducts = (from r in entity.M_KitProductDetail where r.KitId == KitID
-                                       join  product in entity.M_ProductMaster    on  r.ProdId equals product.ProductCode                                   
-                                       join barcode in entity.M_BarCodeMaster on product.ProdId equals barcode.ProdId
-                                       join tax in entity.M_TaxMaster on product.ProdId equals tax.ProdCode                                       
-                                       select new ProductModel
-                                      {
-                                      ProductName = product.ProductName,
-                                      BrandCode = product.BrandCode,
-                                      TotalQty = r.Qty,
-                                      CatId = product.CatId,                                      
-                                      Barcode = barcode.BarCode,
-                                      BatchNo = barcode.BatchNo,
-                                      DP = r.Rate,
-                                      itemCode = r.Itemcode,
-                                      RP = product.RP,
-                                      DiscPer = product.Discount,
-                                      DiscAmt = product.DiscInRs,
-                                      ProdCode = (int)product.ProductCode,
-                                      ProductCodeStr = product.ProdId,
-                                      TaxPer = tax.VatTax,
-                                      ProdStateCode = tax.StateCode,
-                                      MRP = barcode.MRP,
-                                      BV = product.BV,
-                                      PV = product.PV,
-                                      CV = product.CV,
-                                      Weight = product.Weight,
-                                      IsExpirable = barcode.IsExpired == "Y" ? true : false,
-                                      ExpDate = barcode.ExpDate,
-                                      TaxType = "GST",
-                                      Rate = product.PurchaseRate,
-                                      CommissionPer = product.ProdCommssn,
-                                      SubCatId = product.SubCatId
-                                  }).ToList();
+                    KitProducts = (from r in entity.M_KitProductDetail
+                                   where r.KitId == KitID
+                                   join product in entity.M_ProductMaster on r.ProdId equals product.ProductCode
+                                   join barcode in entity.M_BarCodeMaster on product.ProdId equals barcode.ProdId
+                                   join tax in entity.M_TaxMaster on product.ProdId equals tax.ProdCode
+                                   select new ProductModel
+                                   {
+                                       ProductName = product.ProductName,
+                                       BrandCode = product.BrandCode,
+                                       TotalQty = r.Qty,
+                                       CatId = product.CatId,
+                                       Barcode = barcode.BarCode,
+                                       BatchNo = barcode.BatchNo,
+                                       DP = r.Rate,
+                                       itemCode = r.Itemcode,
+                                       RP = product.RP,
+                                       DiscPer = product.Discount,
+                                       DiscAmt = product.DiscInRs,
+                                       ProdCode = (int)product.ProductCode,
+                                       ProductCodeStr = product.ProdId,
+                                       TaxPer = tax.VatTax,
+                                       ProdStateCode = tax.StateCode,
+                                       MRP = barcode.MRP,
+                                       BV = product.BV,
+                                       PV = product.PV,
+                                       CV = product.CV,
+                                       Weight = product.Weight,
+                                       IsExpirable = barcode.IsExpired == "Y" ? true : false,
+                                       ExpDate = barcode.ExpDate,
+                                       TaxType = "GST",
+                                       Rate = product.PurchaseRate,
+                                       CommissionPer = product.ProdCommssn,
+                                       SubCatId = product.SubCatId
+                                   }).ToList();
                 }
             }
             catch (Exception ex)
